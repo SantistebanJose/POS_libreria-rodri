@@ -1,3 +1,12 @@
+<?php
+session_start(); // Iniciar la sesión, necesario para usar $_SESSION
+
+// Verificar si el usuario ha iniciado sesión
+$rol =  $_SESSION['rol']; 
+$nombre =  $_SESSION['nombre']; 
+$correo =  $_SESSION['correo']; 
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,7 +60,7 @@
                 <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
 
-                    <a href="index.html" class="logo">
+                    <a href="index.php" class="logo">
                         <img
                             src="assets/img/kaiadmin/logo_light.svg"
                             alt="navbar brand"
@@ -83,20 +92,59 @@
                                 class="collapsed"
                                 aria-expanded="false">
                                 <i class="fas fa-home"></i>
-                                <p>Dashboard</p>
+                                <p>Adiministrador</p>
                                 <span class="caret"></span>
                             </a>
                             <div class="collapse" id="dashboard">
                                 <ul class="nav nav-collapse">
+                                <?php if ($rol === '1') { ?>
                                     <li>
                                         <a href="../demo1/index.html">
-                                            <span class="sub-item">Dashboard 1</span>
+                                            <span class="sub-item">Usuarios</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../demo1/index.html">
+                                            <span class="sub-item">Personas</span>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                                    <li>
+                                        <a href="../demo1/index.html">
+                                            <span class="sub-item">Articulos</span>
+                                        </a>
+                                    </li>
+                                  
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#servicios"
+                                class="collapsed"
+                                aria-expanded="false">
+                                <i class="fas fa-store"></i>
+                                <p>Servicios</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="servicios">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="venta.php">
+                                            <span class="sub-item">Venta</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../demo1/index.html">
+                                            <span class="sub-item">Compra</span>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
-                        <li class="nav-section">
+    <!-- <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
                             </span>
@@ -327,7 +375,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -366,7 +414,7 @@
                     <div class="container-fluid">
                         <nav
                             class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-                            <div class="input-group">
+                            <!-- <div class="input-group">
                                 <div class="input-group-prepend">
                                     <button type="submit" class="btn btn-search pe-1">
                                         <i class="fa fa-search search-icon"></i>
@@ -377,9 +425,11 @@
                                     placeholder="Search ..."
                                     class="form-control" />
                             </div>
+                            -->
                         </nav>
 
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                           <!-- 
                             <li
                                 class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a
@@ -631,7 +681,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </li> 
+                            -->
 
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a
@@ -646,8 +697,8 @@
                                             class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
-                                        <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">Hizrian</span>
+                                        <span class="op-7">Hola,</span>
+                                        <span class="fw-bold"><?php echo $nombre ? $nombre :'Error'; ?></span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -661,23 +712,18 @@
                                                         class="avatar-img rounded" />
                                                 </div>
                                                 <div class="u-text">
-                                                    <h4>Hizrian</h4>
-                                                    <p class="text-muted">hello@example.com</p>
-                                                    <a
-                                                        href="profile.html"
-                                                        class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                                    <h4><?php echo $nombre; ?></h4>
+                                                    <p class="text-muted"><?php echo $correo ? $correo : 'Sin correo'; ?></p>
+                                                    
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">My Profile</a>
-                                            <a class="dropdown-item" href="#">My Balance</a>
-                                            <a class="dropdown-item" href="#">Inbox</a>
+                                            <a class="dropdown-item" href="#">Mi Perfil</a>
+                                            
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Account Setting</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="logica/logout.php">Logout</a>
+                                            <a class="dropdown-item" href="logica/logout.php">Salir</a>
                                         </li>
                                     </div>
                                 </ul>
