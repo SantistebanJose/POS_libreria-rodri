@@ -1,0 +1,7 @@
+{
+    "name": "caracol_soft/vysam",
+    "type": "project",
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
