@@ -1,5 +1,6 @@
 <?php
 include("cabecera.php");
+include("logica/clssVenta.php");
 ?>
 
 <div
@@ -26,10 +27,12 @@ include("cabecera.php");
                     name=""
                     id="">
                     <option selected>Seleccione</option>
-                    <option value="">VENTA DE MATERIALES y/O CORTE DE MATERIALES</option>
-                    <option value="">PLOTEO</option>
-                    <option value="">IMPRESIÓN</option>
-                    <option value="">PRODUCTOS DE VITRINA</option>
+                    <?php foreach(listarMovimientos() as $movimiento): ?>
+                        <option value="<?php echo htmlspecialchars($movimiento['id']); ?>">
+                            <?php echo htmlspecialchars($movimiento['descripcion']); ?>
+                        </option>
+                    <?php endforeach ?>
+
                 </select>
             </div>
             <div
