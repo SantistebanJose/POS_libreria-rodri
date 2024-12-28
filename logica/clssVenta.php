@@ -7,9 +7,11 @@ function listarMovimientos(): array {
     try {
         $orden = $conectar->prepare("
             SELECT 
-            *
+            id, descripcion
             FROM
             movimiento
+            where deleted_at is null
+            ORDER BY id
         ");
         
         $orden->execute();
