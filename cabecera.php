@@ -6,7 +6,7 @@ session_start(); // Iniciar la sesión, necesario para usar $_SESSION
 $rol =  $_SESSION['rol']; 
 $nombre =  $_SESSION['nombre']; 
 $correo =  $_SESSION['correo']; 
-
+include('logica/clssConsultas.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,6 +14,7 @@ $correo =  $_SESSION['correo'];
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>PEPPERS</title>
+    <meta charset="UTF-8">
     <meta
         content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
         name="viewport" />
@@ -132,34 +133,20 @@ $correo =  $_SESSION['correo'];
                             </a>
                             <div class="collapse" id="servicios">
                                 <ul class="nav nav-collapse">
+                                <?php foreach(listarMovimientos() as $movimiento): ?>
                                     <li>
-                                        <a href="venta.php">
-                                            <span class="sub-item">Venta Corte y/o Material</span>
+                                        <a href="<?php echo htmlspecialchars($movimiento['ruta_php']) . "?id=" . htmlspecialchars($movimiento['id']); ?>">
+                                            <span class="sub-item">
+                                                <?php 
+                                                    // Convertir a minúsculas y luego capitalizar la primera letra
+                                                    echo ucfirst(htmlspecialchars(strtolower($movimiento['descripcion'])));
+                                                ?>
+                                            </span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="venta_simple.php">
-                                            <span class="sub-item">Venta Simple</span>
-                                        </a>
-                                    </li>
-                                    
-                                    <li>
-                                        <a href="venta.php">
-                                            <span class="sub-item">Impresíon</span>
-                                        </a>
-                                    </li>
+                                <?php endforeach ?>
 
-                                    <li>
-                                        <a href="venta.php">
-                                            <span class="sub-item">Ploteo</span>
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a href="venta.php">
-                                            <span class="sub-item">Venta</span>
-                                        </a>
-                                    </li>
+                                   
 
                                     <li>
                                         <a href="../demo1/index.html">

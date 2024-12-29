@@ -2,7 +2,7 @@
 include("bd.php");
 
 
-function listarMovimientos(): array {
+function listarMovimientos2(): array {
     global $conectar;
     try {
         $orden = $conectar->prepare("
