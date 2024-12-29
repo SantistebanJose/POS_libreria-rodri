@@ -13,8 +13,9 @@ include('logica/clssConsultas.php');
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>PEPPERS</title>
+    <title>VYSAM</title>
     <meta charset="UTF-8">
+    
     <meta
         content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
         name="viewport" />
@@ -135,7 +136,7 @@ include('logica/clssConsultas.php');
                                 <ul class="nav nav-collapse">
                                 <?php foreach(listarMovimientos() as $movimiento): ?>
                                     <li>
-                                        <a href="<?php echo htmlspecialchars($movimiento['ruta_php']) . "?id=" . htmlspecialchars($movimiento['id']); ?>">
+                                        <a href="<?php echo htmlspecialchars($movimiento['ruta_php'] . "?id=" . $movimiento['id'], ENT_QUOTES, 'UTF-8'); ?>">
                                             <span class="sub-item">
                                                 <?php 
                                                     // Convertir a minúsculas y luego capitalizar la primera letra
