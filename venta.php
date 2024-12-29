@@ -1,6 +1,17 @@
 <?php
 include("cabecera.php");
 include("logica/clssVenta.php");
+
+if (isset($_GET['id'])) {
+    
+    $id = $_GET['id'];
+
+    // Muestra el ID (para pruebas)
+    echo "El ID recibido es: " . htmlspecialchars($id);
+} else {
+    echo "No se recibió ningún ID.";
+}
+
 ?>
 
 <div

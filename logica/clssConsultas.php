@@ -48,4 +48,22 @@ function listarPostres(): array
 
 }
 
+function listarMovimientos(): array
+{
+    global $conectar;
+    try {
+        $orden = $conectar->prepare(query: "
+            SELECT id, descripcion,ruta_php from movimiento WHERE deleted_at IS NULL order by 1;
+        ");
+        $orden -> execute();
+        $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+    } catch (\Throwable $th) {
+        $datos = array(); 
+    }
+    return $datos;
+
+}
+
 ?>

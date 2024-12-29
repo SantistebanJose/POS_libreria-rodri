@@ -1,4 +1,5 @@
 <?php
+
 session_start(); // Iniciar la sesión, necesario para usar $_SESSION
 
 // Verificar si el usuario ha iniciado sesión
@@ -133,9 +134,33 @@ $correo =  $_SESSION['correo'];
                                 <ul class="nav nav-collapse">
                                     <li>
                                         <a href="venta.php">
+                                            <span class="sub-item">Venta Corte y/o Material</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="venta_simple.php">
+                                            <span class="sub-item">Venta Simple</span>
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="venta.php">
+                                            <span class="sub-item">Impresíon</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="venta.php">
+                                            <span class="sub-item">Ploteo</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="venta.php">
                                             <span class="sub-item">Venta</span>
                                         </a>
                                     </li>
+
                                     <li>
                                         <a href="../demo1/index.html">
                                             <span class="sub-item">Compra</span>
