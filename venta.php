@@ -128,25 +128,26 @@ if (isset($_GET['id'])) {
                 <form>
                     <div class="mb-3 row">
                         <div class="col-md-12">
-                            <div class="card text-start">
+                            <div class="card text-start">   
                                 <div class="card-body text-center">
-                                    <p class="card-text ">Minutos</p>
+                                    <p class="card-text ">Minutos Corte</p>
                                     <div
                                         class="row">
-                                        <div class="col"><a
+                                        <div class="col"><button
                                                 name=""
-                                                id=""
-                                                class="btn btn-primary"
-                                                href="#"
-                                                role="button">-</a>
+                                                id="btn_menos"
+                                                class="btn btn-danger btn-round ms-2"
+                                                type="button"
+                                                role="button">-</button>
                                         </div>
-                                        <div class="col">10</div>
-                                        <div class="col"><a
+                                        <div   id="cantidad" class="col">10</div>
+                                        <div class="col"><button
                                                 name=""
-                                                id=""
-                                                class="btn btn-primary"
-                                                href="#"
-                                                role="button">+</a>
+                                                id="btn_mas"
+                                                type="button"
+                                                class="btn btn-success btn-round ms-2"
+                                          
+                                                role="button">+</button>
                                         </div>
                                     </div>
                                 </div>
@@ -426,6 +427,43 @@ if (isset($_GET['id'])) {
     
 </script>
 
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn_mas = document.getElementById('btn_mas');
+    const btn_menos = document.getElementById('btn_menos');
+    const cantidad = document.getElementById('cantidad');
+
+    
+    cantidad.innerText = 0;
+    btn_menos.disabled = true;
+
+    // Evento para incrementar
+    btn_mas.addEventListener("click", () => {
+        btn_menos.disabled = false;
+        let valorActual = parseInt(cantidad.innerText) || 0; 
+        if (valorActual > 0){
+            cantidad.innerText = valorActual + 1; 
+        }else{
+            cantidad.innerText = 10;
+        }
+    });
+
+    // Evento para decrementar
+    btn_menos.addEventListener("click", () => {
+        let valorActual = parseInt(cantidad.innerText) || 0;
+        if (valorActual > 0) { 
+            cantidad.innerText = valorActual - 1; 
+            if (parseInt(cantidad.innerText) === 0) {
+                btn_menos.disabled = true;
+            }
+        }
+    });
+});
+
+
+</script>
 
 <?php
 include("pie.php");
