@@ -43,16 +43,32 @@ async function iniciarSesion() {
             "password": passLogin
         }
     }).done(async function (text) {
-        var userData = JSON.parse(text);
-        if(userData){
-            if(userData.error){
-                errorPassLog.innerHTML = userData.error;
-                errorUserLog.innerHTML = userData.error;
+        console.log(text);
+        try {
 
-            }else{
-                window.location.href = "index.php"; 
+            var userData = JSON.parse(text);
+            if(userData){
+                if(userData.error){
+                    errorPassLog.innerHTML = userData.error;
+                    errorUserLog.innerHTML = userData.error;
+    
+                }else{
+                    window.location.href = "index.php"; 
+                }
             }
+        } catch(e) {
+            console.log(e);
+            errorPassLog.innerHTML = "Error al iniciar sesión.";
         }
 
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const loginForm = document.getElementById("form-login");
+    loginForm.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            iniciarSesion();
+        }
+    });
+});
