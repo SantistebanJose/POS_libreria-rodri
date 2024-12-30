@@ -65,5 +65,22 @@ function listarMovimientos(): array
     return $datos;
 
 }
+function listarProductosVenta1(): array
+{
+    global $conectar;
+    try {
+        $orden = $conectar->prepare(query: "
+            Select * from view_articulos;
+        ");
+        $orden -> execute();
+        $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+    } catch (\Throwable $th) {
+        $datos = array(); 
+    }
+    return $datos;
+
+}
 
 ?>
