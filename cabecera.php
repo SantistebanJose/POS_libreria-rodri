@@ -3,6 +3,12 @@
 session_start(); // Iniciar la sesión, necesario para usar $_SESSION
 
 // Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['id']) || !isset($_SESSION['rol']) || !isset($_SESSION['nombre']) || !isset($_SESSION['correo'])) {
+    // Si no ha iniciado sesión, redirigir a login.php
+    header("Location: login.php");
+    exit();
+}
+
 $rol =  $_SESSION['rol']; 
 $nombre =  $_SESSION['nombre']; 
 $correo =  $_SESSION['correo']; 
