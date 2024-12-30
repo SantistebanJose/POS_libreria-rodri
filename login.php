@@ -80,7 +80,7 @@ if (isset($_SESSION['id'])) {
         <div class="login-header">
             <h3>Logo</h3>
         </div>
-        <div class="card-body">
+        <div id="form-login" class="card-body">
          
                 <div class="mb-4">
                     <label for="text" class="form-label fs-4">Usuario: </label>

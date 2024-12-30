@@ -15,14 +15,6 @@ if (isset($_GET['id'])) {
     <div class="page-inner">
         <div
             class="card"
-            style="
-            background-color:$ {
-                1: orangered;
-            }
-            border-color:$ {
-                2: darkblue;
-            };
-            
         ">
 
             <div class="card-body">
@@ -128,13 +120,6 @@ if (isset($_GET['id'])) {
                 </div>
                 <div
                     class="card"
-                    style="
-                    background-color:$ {
-                        1: orangered;
-                    }
-                    border-color:$ {
-                        2: darkblue;
-                    }
                 ">
                 </div>
 
