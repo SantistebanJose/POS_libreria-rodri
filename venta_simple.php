@@ -9,6 +9,27 @@ if (isset($_GET['id'])) {
 
 ?>
 
+<style>
+    @media (min-width: 768px) and (max-width: 1500px) {
+        #multi-filter-select_wrapper > div:nth-of-type(3) {
+            display: flex; 
+            flex-direction: column; 
+        }
+        #multi-filter-select_wrapper > div:nth-of-type(3)> div {
+            align-items: center;
+        }
+
+        #multi-filter-select_wrapper > div:nth-of-type(3)> div:last-child {
+            width: 100%;
+        }
+        #multi-filter-select_wrapper > div:nth-of-type(3)> div:last-child > div {
+            width: 100%;
+        }
+        #multi-filter-select_wrapper > div:nth-of-type(3)> div:last-child > div > ul{
+            justify-content: space-between;
+        }
+    }
+</style>
 
 <div
     class="container">
