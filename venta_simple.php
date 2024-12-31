@@ -15,10 +15,6 @@ if (isset($_GET['id'])) {
             display: flex; 
             flex-direction: column; 
         }
-        #multi-filter-select_wrapper > div:nth-of-type(3)> div {
-            align-items: center;
-        }
-
         #multi-filter-select_wrapper > div:nth-of-type(3)> div:last-child {
             width: 100%;
         }
