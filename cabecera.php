@@ -120,7 +120,12 @@ include('logica/clssConsultas.php');
                                 <?php } ?>
                                     <li>
                                         <a href="../demo1/index.html">
-                                            <span class="sub-item">Articulos</span>
+                                            <span class="sub-item">Artículos</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../demo1/index.html">
+                                            <span class="sub-item">Mantenimientos</span>
                                         </a>
                                     </li>
                                   
@@ -158,6 +163,11 @@ include('logica/clssConsultas.php');
                                     <li>
                                         <a href="../demo1/index.html">
                                             <span class="sub-item">Compra</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="../demo1/index.html">
+                                            <span class="sub-item">Pagos</span>
                                         </a>
                                     </li>
                                 </ul>
