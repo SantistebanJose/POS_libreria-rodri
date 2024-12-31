@@ -15,15 +15,7 @@ if (isset($_GET['id'])) {
     <div class="page-inner">
         <div
             class="card"
-            style="
-            background-color:$ {
-                1: orangered;
-            }
-            border-color:$ {
-                2: darkblue;
-            };
-            
-        ">
+        >
 
             <div class="card-body">
                 <h4 class="card-title">Venta Simple De Materiales</h4>
@@ -34,7 +26,7 @@ if (isset($_GET['id'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Articulos</h4>
+                                <h4 class="card-title" id="articulos">Articulos</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -80,7 +72,7 @@ if (isset($_GET['id'])) {
                                                     <th>
                                                         <div class="d-flex align-items-center justify-content-center">
                                                             <button id="rest_<?php echo $datosArticulo["id"] ?>" class="btn btn-danger btn-round me-2">-</button>
-                                                            <span id="cantidad_<?php echo $datosArticulo["id"] ?>" class="mx-2">1</span>
+                                                            <span id="cantidad_<?php echo $datosArticulo["id"] ?>" class="mx-2 text-center" style="width: 20px;">1</span>
                                                             <button id="add_<?php echo $datosArticulo["id"] ?>" class="btn btn-success btn-round ms-2">+</button>
                                                         </div>
                                                         <div class="mt-2 text-center">
@@ -88,8 +80,8 @@ if (isset($_GET['id'])) {
                                                                 name=""
                                                                 id=""
                                                                 class="btn btn-secondary btn-round"
-                                                                href="#"
-                                                                onclick='fn_agregar_articulo_tabla(<?php echo $datosArticuloJSON; ?>)'
+                                                                href=""
+                                                                onclick='fn_agregar_articulo_tabla(event, <?php echo $datosArticuloJSON; ?>)'
                                                                 role="button">Agregar</a>
                                                         </div>
                                                     </th>
@@ -128,14 +120,7 @@ if (isset($_GET['id'])) {
                 </div>
                 <div
                     class="card"
-                    style="
-                    background-color:$ {
-                        1: orangered;
-                    }
-                    border-color:$ {
-                        2: darkblue;
-                    }
-                ">
+                >
                 </div>
                 <hr>
                 <div
@@ -143,7 +128,7 @@ if (isset($_GET['id'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title">Detalle de Venta de Materiales</div>
+                                <div id="detalle-venta-materiales" class="card-title">Detalle de Venta de Materiales</div>
                             </div>
                             <div class="card-body">
                                 <div class="card-sub">
@@ -167,7 +152,10 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
 
-                <div class="card-title">Total S/ <span id="id_subtotal_materiales">xx.xx</span></div>
+                <div class="d-flex justify-content-between">
+                    <div class="card-title">Total S/ <span id="id_subtotal_materiales">00.00</span></div>
+                    <button class="btn btn-success" onclick="fn_concretar_venta()">Concretar venta</button>
+                </div>
 
             </div>
         </div>
@@ -306,6 +294,10 @@ if (isset($_GET['id'])) {
 </script>
 
 <script>
+
+    //Array que almacena los articulos agregados
+    rel_venta_articulo = [];
+
     document.addEventListener('DOMContentLoaded', function() {
 
         const botonesSumar = document.querySelectorAll('[id^="add_"]');
@@ -335,7 +327,8 @@ if (isset($_GET['id'])) {
         });
     });
 
-    function fn_agregar_articulo_tabla(datosArticulo) {
+    function fn_agregar_articulo_tabla(e, datosArticulo) {
+        e.preventDefault();
         console.log(datosArticulo);
         console.log("ID ARTICULO: ", datosArticulo["id"])
         var cantidad = document.getElementById("cantidad_" + datosArticulo["id"]).textContent
@@ -358,7 +351,76 @@ if (isset($_GET['id'])) {
 
         var celdaSubTotal = nuevaFila.insertCell(3);
         celdaSubTotal.textContent = cantidad * parseFloat(datosArticulo["precio_venta"]);
+
+        //Agregamos cantidad al datoArticulo
+        datosArticulo = {
+            ...datosArticulo, 
+            cantidad: parseInt(cantidad),
+            subtotal: parseInt(cantidad)*parseFloat(datosArticulo["precio_venta"])
+        }
+
+        //Guardar datos articulo para enviada posterior a la base de datos
+        rel_venta_articulo.push(datosArticulo);
+
         fn_sumar_subtotal();
+
+        document.getElementById("detalle-venta-materiales").scrollIntoView({behavior:"smooth"});
+    }
+
+
+    function fn_concretar_venta() {
+
+        //Verificamos que se hayan agregado articulos
+        if(rel_venta_articulo.length == 0) {
+            swal({
+                title: "No se han agregado articulos",
+                icon: "info",
+                text: ""
+            })
+            .then(value => {
+                if(value == null) return
+                document.getElementById("articulos").scrollIntoView({
+                    behavior: "smooth"
+                });
+            })
+            return;
+        }
+
+        const venta = {
+            usuarioId: <?php echo $_SESSION["id"]; ?>,
+            movimientoId: <?php echo $id; ?>,
+            clienteId: 0,
+            total: parseFloat(document.getElementById("id_subtotal_materiales").textContent),
+            detalleVenta: rel_venta_articulo
+        }
+
+        swal({
+            title: "Confirmación",
+            text:"¿Estas seguro de proceder con la venta?",
+            icon: "info",
+            buttons:["Cancelar", true]
+        }).then((value) => {
+            if(!value) throw null;
+
+            return fetch("logica/clssVenta.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(venta)
+                });
+        }).then((result) => {
+            return result.json();
+        }).then(json => {
+            return swal("Éxito",json["mensaje"], "success");
+        }).then(value => {
+            window.location.href = "/venta_simple.php?id=5"
+        }).catch(error => {
+            if(!error) {
+                swal.stopLoading();
+                swal.close();
+            }
+        });
     }
 
     function fn_sumar_subtotal() {
