@@ -352,22 +352,44 @@ if (isset($_GET['id'])) {
         console.log("CANTIDAD DE MRD:", cantidad)
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        var nuevaFila = tabla.insertRow();
 
-        var celdaArticulo = nuevaFila.insertCell(0);
-        celdaArticulo.textContent = datosArticulo["articulo"];
+        //Verificar si el articulo ya fue agregado
+        const filas = tabla.getElementsByTagName("tr");
+        let articuloExistente = false;
+        for (let i = 0; i < filas.length; i++) {
+            const celdaArticulo = filas[i].getElementsByTagName("td")[0];
+            if (celdaArticulo && celdaArticulo.textContent === datosArticulo["articulo"]) {
+                // Actualizar cantidad y subtotal
+                const celdaCantidad = filas[i].getElementsByTagName("td")[1];
+                const celdaSubTotal = filas[i].getElementsByTagName("td")[3];
+                const nuevaCantidad = parseInt(celdaCantidad.textContent) + parseInt(cantidad);
+                cantidad = nuevaCantidad;
+                celdaCantidad.textContent = nuevaCantidad;
+                celdaSubTotal.textContent = nuevaCantidad * parseFloat(datosArticulo["precio_venta"]);
+                articuloExistente = true;
+                break;
+            }
+        }
 
-
-        var celdaCantidad = nuevaFila.insertCell(1);
-        celdaCantidad.textContent = cantidad;
-
-
-
-        var celdaPrecio = nuevaFila.insertCell(2);
-        celdaPrecio.textContent = datosArticulo["precio_venta"];
-
-        var celdaSubTotal = nuevaFila.insertCell(3);
-        celdaSubTotal.textContent = cantidad * parseFloat(datosArticulo["precio_venta"]);
+        if(!articuloExistente) {
+            var nuevaFila = tabla.insertRow();
+    
+            var celdaArticulo = nuevaFila.insertCell(0);
+            celdaArticulo.textContent = datosArticulo["articulo"];
+    
+    
+            var celdaCantidad = nuevaFila.insertCell(1);
+            celdaCantidad.textContent = cantidad;
+    
+    
+    
+            var celdaPrecio = nuevaFila.insertCell(2);
+            celdaPrecio.textContent = datosArticulo["precio_venta"];
+    
+            var celdaSubTotal = nuevaFila.insertCell(3);
+            celdaSubTotal.textContent = cantidad * parseFloat(datosArticulo["precio_venta"]);
+        };
+        
 
         //Agregamos cantidad al datoArticulo
         datosArticulo = {
@@ -375,9 +397,16 @@ if (isset($_GET['id'])) {
             cantidad: parseInt(cantidad),
             subtotal: parseInt(cantidad)*parseFloat(datosArticulo["precio_venta"])
         }
+        console.log(datosArticulo);
 
         //Guardar datos articulo para enviada posterior a la base de datos
-        rel_venta_articulo.push(datosArticulo);
+        const articuloIndex = rel_venta_articulo.findIndex(articulo => articulo.id === datosArticulo.id);
+        if(articuloIndex !== -1) {
+            rel_venta_articulo[articuloIndex] = datosArticulo;
+        } else {
+            rel_venta_articulo.push(datosArticulo);
+        }
+        console.log(rel_venta_articulo);
 
         fn_sumar_subtotal();
 
