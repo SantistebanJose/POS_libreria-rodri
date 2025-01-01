@@ -32,6 +32,7 @@ include('logica/clssConsultas.php');
 
     <!-- Fonts and icons -->
     <script src="assets/js/plugin/webfont/webfont.min.js"></script>
+
     <script>
         WebFont.load({
             google: {
@@ -59,6 +60,9 @@ include('logica/clssConsultas.php');
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="assets/css/demo.css" />
+    <link rel="stylesheet" href="assets/css/stylePerzo.css" />
+  
+
 </head>
 
 <body>
