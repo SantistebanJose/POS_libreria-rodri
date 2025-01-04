@@ -460,7 +460,7 @@ if (isset($_GET['id'])) {
         }).then(json => {
             return swal("Éxito",json["mensaje"], "success");
         }).then(value => {
-            window.location.href = "/venta_simple.php?id=5"
+            window.location.href = window.location.href;
         }).catch(error => {
             if(!error) {
                 swal.stopLoading();
