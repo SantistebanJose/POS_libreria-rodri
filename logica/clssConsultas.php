@@ -83,4 +83,36 @@ function listarProductosVenta1(): array
 
 }
 
+function listarVentaReservaCorte(): array
+{
+    global $conectar;
+    try {
+        $orden = $conectar->prepare(query: "
+           SELECT 
+            v.id AS venta_id, 
+            TO_CHAR(v.created_at, 'YYYY-MM-DD') AS fecha, 
+            TO_CHAR(v.created_at, 'HH12:MI:SS AM') AS hora, 
+            CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
+            v.total, 
+            CASE 
+                WHEN v.estado_venta = 'VR' THEN 'VENTA REALIZADA'
+                WHEN v.estado_venta = 'R' THEN 'RESERVA'
+                ELSE 'Estado Desconocido'
+            END AS estado_venta
+            FROM venta AS v
+            INNER JOIN persona AS p ON v.cliente_id = p.id
+            WHERE v.deleted_at IS NULL;
+        ");
+        $orden -> execute();
+        $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+    } catch (\Throwable $th) {
+        $datos = array(); 
+    }
+    return $datos;
+
+}
+
 ?>
+
