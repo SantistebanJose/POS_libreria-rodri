@@ -113,6 +113,23 @@ function listarVentaReservaCorte(): array
     return $datos;
 
 }
+function listarFormaPago(): array
+{
+    global $conectar;
+    try {
+        $orden = $conectar->prepare(query: "
+            SELECT id,nombre FROM forma_pago WHERE deleted_at IS NULL;
+        ");
+        $orden -> execute();
+        $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+    } catch (\Throwable $th) {
+        $datos = array(); 
+    }
+    return $datos;
+
+}
 
 ?>
 
