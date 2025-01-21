@@ -11,17 +11,20 @@ if (isset($_GET['id'])) {
 
 <style>
     @media (min-width: 768px) and (max-width: 1500px) {
-        #multi-filter-select_wrapper > div:nth-of-type(3) {
-            display: flex; 
-            flex-direction: column; 
+        #multi-filter-select_wrapper>div:nth-of-type(3) {
+            display: flex;
+            flex-direction: column;
         }
-        #multi-filter-select_wrapper > div:nth-of-type(3)> div:last-child {
+
+        #multi-filter-select_wrapper>div:nth-of-type(3)>div:last-child {
             width: 100%;
         }
-        #multi-filter-select_wrapper > div:nth-of-type(3)> div:last-child > div {
+
+        #multi-filter-select_wrapper>div:nth-of-type(3)>div:last-child>div {
             width: 100%;
         }
-        #multi-filter-select_wrapper > div:nth-of-type(3)> div:last-child > div > ul{
+
+        #multi-filter-select_wrapper>div:nth-of-type(3)>div:last-child>div>ul {
             justify-content: space-between;
         }
     }
@@ -31,8 +34,7 @@ if (isset($_GET['id'])) {
     class="container">
     <div class="page-inner">
         <div
-            class="card"
-        >
+            class="card">
 
             <div class="card-body">
                 <h4 class="card-title">Venta Simple De Materiales</h4>
@@ -136,8 +138,7 @@ if (isset($_GET['id'])) {
 
                 </div>
                 <div
-                    class="card"
-                >
+                    class="card">
                 </div>
                 <hr>
                 <div
@@ -220,57 +221,80 @@ if (isset($_GET['id'])) {
                                 aria-describedby="helpId"
                                 placeholder="AGREGAR EL NOMBRE DEL CLIENTE" />
                         </div>
-                          <!-- Monto Total -->
-                        <div class="mb-3">
-                            <label for="montoTotal" class="form-label">Monto Total</label>
-                            <div class="input-group">
-                                <span class="input-group-text">S/</span>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="montoTotal"
-                                    placeholder="Monto total de la venta"
-                                    readonly />
+                        <div class="card-body">
+                            <ul class="nav nav-pills nav-secondary  nav-pills-no-bd nav-pills-icons justify-content-center" id="pills-tab-with-icon" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab-icon" data-bs-toggle="pill" href="#pago-directo" role="tab" aria-controls="pago-directo" aria-selected="true">
+                                        Pago Directo
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab-icon" data-bs-toggle="pill" href="#pago-credito" role="tab" aria-controls="pago-credito" aria-selected="false">
+                                        Pago Crédito
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="card-sub">
+                                <div class="text-center">
+                                    Aquí podrás elegir si realizan pagos directo o a crédito.
+                                </div>
                             </div>
-                        </div>
+                            <div class="tab-content mt-2 mb-3" id="pills-with-icon-tabContent">
+                                <div class="tab-pane fade show active" id="pago-directo" role="tabpanel" aria-labelledby="pills-home-tab-icon">
+                                    <div id="panel_forma_pago" class="mb-3">
+                                        <label for="" class="form-label">Forma de Pago</label>
+                                        <select
+                                            class="form-select form-select-md"
+                                            name=""
+                                            id="">
+                                            <?php
+                                            foreach (listarFormaPago() as $datosFormaPago) {
+                                                $datosFormaPagoJSON = json_encode($datosFormaPago);
+                                            ?>
+                                                <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
 
-                        <div class="form-group">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="option" id="option1" value="1">
-                                <label class="form-check-label" for="option1">
-                                    Pago Directo
-                                </label>
+                                            <?php
+                                            }
+                                            ?>
+
+                                        </select>
+                                    </div>
+                                    <!-- Monto Total -->
+                                    <div class="mb-3">
+                                        <label for="montoTotal" class="form-label">Monto Total</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">S/</span>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="montoTotal"
+                                                placeholder="Monto total de la venta"
+                                                readonly />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pago-credito" role="tabpanel" aria-labelledby="pills-profile-tab-icon">
+                                    <!-- Monto Total -->
+                                    <div class="mb-3">
+                                        <label for="montoTotal" class="form-label">Monto A Deuda (S/)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">S/</span>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="montoTotalCredito"
+                                                placeholder="Monto total de la venta que pasará a DEUDA"
+                                                readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="option" id="option2" value="2">
-                                <label class="form-check-label" for="option2">
-                                    Pago al Crédito
-                                </label>
-                            </div>
-                        </div>
-
-
-                        <div id="panel_forma_pago" class="mb-3">
-                            <label for="" class="form-label">Forma de Pago</label>
-                            <select
-                                class="form-select form-select-md"
-                                name=""
-                                id="">
-                                <?php
-                                foreach (listarFormaPago() as $datosFormaPago) {
-                                    $datosFormaPagoJSON = json_encode($datosFormaPago);
-                                ?>
-                                    <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
-
-                                <?php
-                                }
-                                ?>
-
-                            </select>
                         </div>
 
                         <div class="text-center">
-                            <a class="btn btn-success" href="#" role="button">Pagar</a>
+                            <a class="btn btn-success btn-lg" href="#" role="button">Pagar</a>
                         </div>
 
 
@@ -422,7 +446,6 @@ if (isset($_GET['id'])) {
 </script>
 
 <script>
-
     //Array que almacena los articulos agregados
     rel_venta_articulo = [];
 
@@ -482,37 +505,37 @@ if (isset($_GET['id'])) {
             }
         }
 
-        if(!articuloExistente) {
+        if (!articuloExistente) {
             var nuevaFila = tabla.insertRow();
-    
+
             var celdaArticulo = nuevaFila.insertCell(0);
             celdaArticulo.textContent = datosArticulo["articulo"];
-    
-    
+
+
             var celdaCantidad = nuevaFila.insertCell(1);
             celdaCantidad.textContent = cantidad;
-    
-    
-    
+
+
+
             var celdaPrecio = nuevaFila.insertCell(2);
             celdaPrecio.textContent = datosArticulo["precio_venta"];
-    
+
             var celdaSubTotal = nuevaFila.insertCell(3);
             celdaSubTotal.textContent = cantidad * parseFloat(datosArticulo["precio_venta"]);
         };
-        
+
 
         //Agregamos cantidad al datoArticulo
         datosArticulo = {
-            ...datosArticulo, 
+            ...datosArticulo,
             cantidad: parseInt(cantidad),
-            subtotal: parseInt(cantidad)*parseFloat(datosArticulo["precio_venta"])
+            subtotal: parseInt(cantidad) * parseFloat(datosArticulo["precio_venta"])
         }
         console.log(datosArticulo);
 
         //Guardar datos articulo para enviada posterior a la base de datos
         const articuloIndex = rel_venta_articulo.findIndex(articulo => articulo.id === datosArticulo.id);
-        if(articuloIndex !== -1) {
+        if (articuloIndex !== -1) {
             rel_venta_articulo[articuloIndex] = datosArticulo;
         } else {
             rel_venta_articulo.push(datosArticulo);
@@ -521,25 +544,27 @@ if (isset($_GET['id'])) {
 
         fn_sumar_subtotal();
 
-        document.getElementById("detalle-venta-materiales").scrollIntoView({behavior:"smooth"});
+        document.getElementById("detalle-venta-materiales").scrollIntoView({
+            behavior: "smooth"
+        });
     }
 
 
     function fn_concretar_venta() {
 
         //Verificamos que se hayan agregado articulos
-        if(rel_venta_articulo.length == 0) {
+        if (rel_venta_articulo.length == 0) {
             swal({
-                title: "No se han agregado articulos",
-                icon: "info",
-                text: ""
-            })
-            .then(value => {
-                if(value == null) return
-                document.getElementById("articulos").scrollIntoView({
-                    behavior: "smooth"
-                });
-            })
+                    title: "No se han agregado articulos",
+                    icon: "info",
+                    text: ""
+                })
+                .then(value => {
+                    if (value == null) return
+                    document.getElementById("articulos").scrollIntoView({
+                        behavior: "smooth"
+                    });
+                })
             return;
         }
 
@@ -550,9 +575,10 @@ if (isset($_GET['id'])) {
             total: parseFloat(document.getElementById("id_subtotal_materiales").textContent),
             detalleVenta: rel_venta_articulo
         }
-
+        document.getElementById
         const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
         modal.show();
+
 
         /*swal({
             title: "Confirmación",
@@ -599,6 +625,7 @@ if (isset($_GET['id'])) {
         }
         console.log("Subtotal: ", subtotal);
         document.getElementById("id_subtotal_materiales").textContent = subtotal.toFixed(2);
+        document.getElementById("montoTotalCredito").textContent = subtotal.toFixed(2);
     }
 </script>
 
