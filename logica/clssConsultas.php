@@ -93,6 +93,7 @@ function listarVentaReservaCorte(): array
             TO_CHAR(v.created_at, 'YYYY-MM-DD') AS fecha, 
             TO_CHAR(v.created_at, 'HH12:MI:SS AM') AS hora, 
             CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
+            p.id as id_persona,
             v.total, 
             CASE 
                 WHEN v.estado_venta = 'VR' THEN 'VENTA REALIZADA'
