@@ -234,14 +234,15 @@ if (isset($_GET['id'])) {
                                     </a>
                                 </li>
                             </ul>
-                            <div class="card-sub">
-                                <div class="text-center">
-                                    Aquí podrás elegir si realizan pagos directo o a crédito.
-                                </div>
-                            </div>
+
                             <div class="tab-content mt-2 mb-3" id="pills-with-icon-tabContent">
                                 <div class="tab-pane fade show active" id="pago-directo" role="tabpanel" aria-labelledby="pills-home-tab-icon">
                                     <div id="panel_forma_pago" class="mb-3">
+                                        <div class="card-sub">
+                                            <div class="text-center">
+                                                Aquí podrás elegir si realizan pagos Directo.
+                                            </div>
+                                        </div>
                                         <label for="" class="form-label">Forma de Pago</label>
                                         <select
                                             class="form-select form-select-md"
@@ -275,6 +276,11 @@ if (isset($_GET['id'])) {
 
                                 </div>
                                 <div class="tab-pane fade" id="pago-credito" role="tabpanel" aria-labelledby="pills-profile-tab-icon">
+                                    <div class="card-sub">
+                                        <div class="text-center">
+                                            Aquí podrás elegir si realizan pagos al Crédito.
+                                        </div>
+                                    </div>
                                     <!-- Monto Total -->
                                     <div class="mb-3">
                                         <label for="montoTotal" class="form-label">Monto A Deuda (S/)</label>
