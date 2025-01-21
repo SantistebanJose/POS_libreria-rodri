@@ -75,7 +75,7 @@ include('logica/clssConsultas.php');
 
                     <a href="index.php" class="logo">
                         <img
-                            src="assets/img/kaiadmin/logo_light.svg"
+                            src="assets/img/kaiadmin/favicon.png"
                             alt="navbar brand"
                             class="navbar-brand"
                             height="20" />
