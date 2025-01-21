@@ -260,7 +260,14 @@ if (isset($_GET['id'])) {
                 <div
                     class="card border-primary">
                     <div class="card-body">
-                        <h4 class="card-title">Realizar Pago</h4>
+
+                        <div class="card-body text-center">
+                            <h4 class="card-title">Realizar Pago</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <h1 class="card-title">S/ xx.xx</h1>
+                        </div>
+
                         <div class="card-sub">
                             Aquí realiza tus pagos
                         </div>
