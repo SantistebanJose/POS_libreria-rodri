@@ -224,7 +224,7 @@ if (isset($_GET['id'])) {
             </div>
 
             <div class="col-md-3">
-                <button type="button" class="btn btn-success btn-block card card-stats card-round" data-bs-toggle="modal" data-bs-target="#modalRealizarPago">
+                <button id="btnRealizarPago" type="button" class="btn btn-success btn-block card card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_general" class="card-title">Realizar Pago</h5>
                     </div>
@@ -264,14 +264,17 @@ if (isset($_GET['id'])) {
                         <div class="card-body text-center">
                             <h4 class="card-title">Realizar Pago</h4>
                         </div>
-                        <div class="card-body text-center">
+                       <!--<div class="card-body text-center">
                             <h1 class="card-title">S/ xx.xx</h1>
-                        </div>
+                        </div>-->
 
                         <div class="card-sub">
                             Aquí realiza tus pagos
                         </div>
-                        <div><span>ID:#</span> | ID CLIENTE: #</div>
+                        <div>
+                            <span>ID Venta: <span id="idVenta">#</span></span> |
+                            <span>ID Cliente: <span id="idPersona">#</span></span>
+                        </div>
                         <hr>
                         <div class="mb-3">
                             <label for="" class="form-label">Cliente</label>
@@ -279,10 +282,24 @@ if (isset($_GET['id'])) {
                                 type="text"
                                 class="form-control"
                                 name=""
-                                id=""
+                                id="nombreCliente"
                                 aria-describedby="helpId"
                                 placeholder="AGREGAR EL NOMBRE DEL CLIENTE" />
                         </div>
+                          <!-- Monto Total -->
+                        <div class="mb-3">
+                            <label for="montoTotal" class="form-label">Monto Total</label>
+                            <div class="input-group">
+                                <span class="input-group-text">S/</span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="montoTotal"
+                                    placeholder="Monto total de la venta"
+                                    readonly />
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="option" id="option1" value="1">
@@ -601,6 +618,8 @@ if (isset($_GET['id'])) {
     let datosArticuloOriginal = [];
     let datosArticuloNuevos = [];
 
+
+
     function fn_limpiar_modal() {
         const acordeonContainer = document.getElementById('acordeonContainer');
         const globalContainer = document.getElementById('globalContainer');
@@ -627,7 +646,10 @@ if (isset($_GET['id'])) {
             }
         }).done(async function(text) {
             var Data = JSON.parse(text);
+
             datosArticuloOriginal = Data; // Almacena los datos originales
+            llenarDatosModal(datosArticulo['venta_id'], datosArticulo['id_persona'], datosArticulo['cliente']);
+
             console.log(Data);
 
             // Iterar sobre los datos devueltos (Data) y agregar los artículos a la tabla
@@ -1054,7 +1076,26 @@ if (isset($_GET['id'])) {
 </script>
 
 
+<script>
+    document.getElementById("btnRealizarPago").addEventListener("click", function () {
+  
 
+        // Mostrar el modal manualmente
+        const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
+        modal.show();
+
+        const subtotalGeneral = document.getElementById("id_subtotal_general").textContent;
+        document.getElementById("montoTotal").value = subtotalGeneral; // Asignar el monto total
+
+    });
+
+    function llenarDatosModal(idVenta, idPersona, nombreCliente) {
+        // Actualizamos el contenido del modal con los datos proporcionados
+        document.getElementById("idVenta").textContent = idVenta; // Para el ID de la venta
+        document.getElementById("idPersona").textContent = idPersona; // Para el ID del cliente
+        document.getElementById("nombreCliente").value = nombreCliente; // Para el nombre del cliente
+    }
+</script>
 
 <?php
 include("pie.php");

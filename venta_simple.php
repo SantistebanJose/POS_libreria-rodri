@@ -180,6 +180,117 @@ if (isset($_GET['id'])) {
 
 
 </div>
+
+
+<div
+    class="modal fade"
+    id="modalRealizarPago"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true">
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+        role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div
+                    class="card border-primary">
+                    <div class="card-body">
+                        <h4 class="card-title">Realizar Pago</h4>
+                        <div class="card-sub">
+                            Aquí realiza tus pagos
+                        </div>
+                        <div>
+                            <span>ID Venta: <span id="idVenta">#</span></span> |
+                            <span>ID Cliente: <span id="idPersona">#</span></span>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label for="" class="form-label">Cliente</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name=""
+                                id="nombreCliente"
+                                aria-describedby="helpId"
+                                placeholder="AGREGAR EL NOMBRE DEL CLIENTE" />
+                        </div>
+                          <!-- Monto Total -->
+                        <div class="mb-3">
+                            <label for="montoTotal" class="form-label">Monto Total</label>
+                            <div class="input-group">
+                                <span class="input-group-text">S/</span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="montoTotal"
+                                    placeholder="Monto total de la venta"
+                                    readonly />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="option" id="option1" value="1">
+                                <label class="form-check-label" for="option1">
+                                    Pago Directo
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="option" id="option2" value="2">
+                                <label class="form-check-label" for="option2">
+                                    Pago al Crédito
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div id="panel_forma_pago" class="mb-3">
+                            <label for="" class="form-label">Forma de Pago</label>
+                            <select
+                                class="form-select form-select-md"
+                                name=""
+                                id="">
+                                <?php
+                                foreach (listarFormaPago() as $datosFormaPago) {
+                                    $datosFormaPagoJSON = json_encode($datosFormaPago);
+                                ?>
+                                    <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
+
+                                <?php
+                                }
+                                ?>
+
+                            </select>
+                        </div>
+
+                        <div class="text-center">
+                            <a class="btn btn-success" href="#" role="button">Pagar</a>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Salir
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Cargar jQuery desde el CDN -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -440,13 +551,17 @@ if (isset($_GET['id'])) {
             detalleVenta: rel_venta_articulo
         }
 
-        swal({
+        const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
+        modal.show();
+
+        /*swal({
             title: "Confirmación",
             text:"¿Estas seguro de proceder con la venta?",
             icon: "info",
             buttons:["Cancelar", true]
         }).then((value) => {
             if(!value) throw null;
+
 
             return fetch("logica/clssVenta.php", {
                     method: "POST",
@@ -466,7 +581,7 @@ if (isset($_GET['id'])) {
                 swal.stopLoading();
                 swal.close();
             }
-        });
+        }); */
     }
 
     function fn_sumar_subtotal() {
