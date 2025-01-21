@@ -37,9 +37,9 @@ if (isset($_GET['id'])) {
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
+                                                <th>Cliente</th>
                                                 <th>Fecha</th>
                                                 <th>Hora</th>
-                                                <th>Cliente</th>
                                                 <th>Estado</th>
                                                 <th>Accion</th>
                                             </tr>
@@ -62,9 +62,9 @@ if (isset($_GET['id'])) {
                                             ?>
                                                 <tr>
                                                     <td><?php echo $datosReserva["venta_id"] ?></td>
+                                                    <td><?php echo $datosReserva["cliente"] ?></td>
                                                     <td><?php echo $datosReserva["fecha"] ?></td>
                                                     <td><?php echo $datosReserva["hora"] ?></td>
-                                                    <td><?php echo $datosReserva["cliente"] ?></td>
                                                     <td><?php echo $datosReserva["estado_venta"] ?></td>
                                                     <th>
                                     
