@@ -149,28 +149,34 @@ include('logica/clssConsultas.php');
                             </a>
                             <div class="collapse" id="servicios">
                                 <ul class="nav nav-collapse">
-                                <?php foreach(listarMovimientos() as $movimiento): ?>
+
                                     <li>
-                                        <a href="<?php echo htmlspecialchars($movimiento['ruta_php'] . "?id=" . $movimiento['id'], ENT_QUOTES, 'UTF-8'); ?>">
-                                            <span class="sub-item">
-                                                <?php 
-                                                    // Convertir a minúsculas y luego capitalizar la primera letra
-                                                    echo ucfirst(htmlspecialchars(strtolower($movimiento['descripcion'])));
-                                                ?>
-                                            </span>
+                                        <a href="">
+                                            <span class="sub-item">Ploteo</span>
                                         </a>
                                     </li>
-                                <?php endforeach ?>
-
-                                   
-
                                     <li>
-                                        <a href="../demo1/index.html">
+                                        <a href="">
+                                            <span class="sub-item">Imprimir</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <span class="sub-item">Producto de vitrina</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <span class="sub-item">Escaneo</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
                                             <span class="sub-item">Compra</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="../demo1/index.html">
+                                        <a href="">
                                             <span class="sub-item">Pagos</span>
                                         </a>
                                     </li>
@@ -192,7 +198,13 @@ include('logica/clssConsultas.php');
                                 <ul class="nav nav-collapse">
                                     <li>
                                         <a href="venta_reserva_corte.php">
-                                            <span class="sub-item">Venta de materiales y/o corte</span>
+                                            <span class="sub-item">Materiales y/o Corte de materiales</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="venta_corte_material.php">
+                                            <span class="sub-item">Atención de reservas</span>
                                         </a>
                                     </li>
                                    

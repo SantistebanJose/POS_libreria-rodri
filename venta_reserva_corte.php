@@ -306,7 +306,7 @@ if (isset($_GET['id'])) {
                     <div class="card-body">
 
                         <div class="card-body text-center">
-                            <h4 class="card-title">Realizar Pago</h4>
+                            <h4 class="card-title">Realizar Reserva</h4>
                         </div>
                        <!--<div class="card-body text-center">
                             <h1 class="card-title">S/ xx.xx</h1>
