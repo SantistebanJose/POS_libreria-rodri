@@ -1057,9 +1057,9 @@ if (isset($_GET['id'])) {
 
         for (var i = 0; i < filas.length; i++) {
             var celdas = filas[i].getElementsByTagName("td");
-            totalCorte += parseFloat(celdas[2].innerText) || 0;
-            totalArticulos += (parseFloat(celdas[4].innerText) * parseFloat(celdas[5].innerText)) || 0;
-            total += parseFloat(celdas[6].innerText) || 0;
+            totalCorte += parseFloat(celdas[3].innerText) || 0;
+            totalArticulos += (parseFloat(celdas[5].innerText) * parseFloat(celdas[6].innerText)) || 0;
+            total += parseFloat(celdas[7].innerText) || 0;
         }
 
         var lbl_subtotal_cortes = document.getElementById("id_subtotal_cortes");
@@ -1192,6 +1192,8 @@ if (isset($_GET['id'])) {
     // Evento para el botón "Reservar"
     document.getElementById("Reservar").addEventListener("click", function () {
         var idCliente = document.getElementById('idPersona').textContent.trim();
+        var total = document.getElementById("montoTotal").value;
+
         const userId = <?php echo $_SESSION['id']; ?>;
         console.log(idCliente);
         console.log(userId);
@@ -1199,6 +1201,7 @@ if (isset($_GET['id'])) {
         const datos = {
             "usuario_id": userId,  // Puedes cambiar este valor dinámicamente si es necesario
             "cliente_id": idCliente,  // También este valor puede ser dinámico
+            "total": total,
             "articulos": []
         };
 
@@ -1223,21 +1226,24 @@ if (isset($_GET['id'])) {
         // Mostrar los datos en la consola para verificar
         console.log(JSON.stringify(datos));
 
-        // Aquí puedes agregar el código para enviar los datos a un servidor con AJAX, si es necesario
-        /*
         $.ajax({
-            url: 'tu_ruta_a_guardar_datos',
-            method: 'POST',
-            data: { datos: JSON.stringify(datos) },
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(err) {
-                console.log(err);
+            method: "POST",
+            url: "logica/clssVentaCorte.php",
+            data: {
+                "accion": "REGISTRARRESERVA",
+                "data": JSON.stringify(datos)
             }
+        }).done(function (response) {
+            console.log(response);
+            if(response.success){
+                alert("Reserva registrada correctamente.");
+            }
+           
+        }).fail(function (error) {
+            console.error("Error:", error.responseText);
+            alert("Error al registrar la reserva.");
         });
-        */
-    });
+});
 
 
 });

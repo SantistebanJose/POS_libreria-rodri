@@ -179,7 +179,7 @@ if (isset($_GET['id'])) {
                                     <tr>
                                         <th scope="col">ID</th>
                                         <th scope="col">MINUTOS</th>
-                                        <th scope="col">COSTO x MINUTO</th>
+                                        <th scope="col">Tarifa</th>
                                         <th scope="col">Articulo</th>
                                         <th scope="col">Cantidad</th>
                                         <th scope="col">Precio Unitario</th>
