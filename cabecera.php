@@ -198,7 +198,7 @@ include('logica/clssConsultas.php');
                                 <ul class="nav nav-collapse">
                                     <li>
                                         <a href="venta_reserva_corte.php">
-                                            <span class="sub-item">Materiales y/o Corte de materiales</span>
+                                            <span class="sub-item">Materiales / Corte / Ploteo / Impresión / Escaneo</span>
                                         </a>
                                     </li>
 
