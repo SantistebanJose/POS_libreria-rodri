@@ -1,6 +1,7 @@
 <?php
 include("cabecera.php");
 include("logica/clssVenta.php");
+session_start(); // O el nombre de la variable que contiene el ID
 
 
 if (isset($_GET['id'])) {
@@ -18,6 +19,10 @@ if (isset($_GET['id'])) {
     #sugerencias .list-group-item {
         cursor: pointer;
     }
+    #tabla_articulos th:nth-child(1),
+#tabla_articulos td:nth-child(1) {
+    display: none;
+}
 </style>
 
 <div
@@ -226,7 +231,8 @@ if (isset($_GET['id'])) {
                                         <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">MINUTOS</th>
-                                            <th scope="col">COSTO x MINUTO</th>
+                                            <th scope="col">Tarifa</th>
+                                            <th scope="col">Total Corte</th>
                                             <th scope="col">Articulo</th>
                                             <th scope="col">Cantidad</th>
                                             <th scope="col">Precio Unitario</th>
@@ -345,7 +351,7 @@ if (isset($_GET['id'])) {
 
                       
                         <div class="text-center">
-                            <a class="btn btn-success" href="#" role="button">Reservar</a>
+                            <a class="btn btn-success" id="Reservar" role="button">Reservar</a>
                         </div>
 
 
@@ -793,13 +799,14 @@ if (isset($_GET['id'])) {
 
                 nuevaFila.insertCell(0).textContent = corte.id; // ID
                 nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
-                nuevaFila.insertCell(2).textContent = corte.costo; // Costo x Minuto
-                nuevaFila.insertCell(3).textContent = datosArticulo["articulo"]; // Artículo
-                nuevaFila.insertCell(4).textContent = 1; // Cantidad fija por corte
-                nuevaFila.insertCell(5).textContent = datosArticulo["precio_venta"]; // Precio unitario
-                nuevaFila.insertCell(6).textContent = (corte.costo + parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
+                nuevaFila.insertCell(2).textContent = 1.5; // Minutos
+                nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
+                nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
+                nuevaFila.insertCell(5).textContent = 1; // Cantidad fija por corte
+                nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
+                nuevaFila.insertCell(7).textContent = (corte.costo + parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
 
-                let accionCell = nuevaFila.insertCell(7);
+                let accionCell = nuevaFila.insertCell(8);
 
                 let botonEliminar = document.createElement("button");
                 botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
@@ -824,14 +831,15 @@ if (isset($_GET['id'])) {
                     let nuevaFila = tabla.insertRow();
                     nuevaFila.insertCell(0).textContent = corte.id; // ID
                     nuevaFila.insertCell(1).textContent = corte.minutos > 0 ? corte.minutos : '-'; // Minutos
-                    nuevaFila.insertCell(2).textContent = corte.costo > 0 ? corte.costo : '-'; // Costo x Minuto
-                    nuevaFila.insertCell(3).textContent = datosArticulo["articulo"]; // Artículo
-                    nuevaFila.insertCell(4).textContent = 1; // Cantidad
-                    nuevaFila.insertCell(5).textContent = datosArticulo["precio_venta"]; // Precio unitario
+                    nuevaFila.insertCell(2).textContent = 1.5; // Minutos
+                    nuevaFila.insertCell(3).textContent = corte.costo > 0 ? corte.costo : '-'; // Costo x Minuto
+                    nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
+                    nuevaFila.insertCell(5).textContent = 1; // Cantidad
+                    nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
                     let subtotal = (corte.costo > 0 ? corte.costo : 0) + parseFloat(datosArticulo["precio_venta"]);
-                    nuevaFila.insertCell(6).textContent = (subtotal).toFixed(2);; // Subtotal
+                    nuevaFila.insertCell(7).textContent = (subtotal).toFixed(2);; // Subtotal
 
-                    let accionCell = nuevaFila.insertCell(7);
+                    let accionCell = nuevaFila.insertCell(8);
 
                     let botonEliminar = document.createElement("button");
                     botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
@@ -859,14 +867,15 @@ if (isset($_GET['id'])) {
                 nuevaCelda.appendChild(inputElemento);
                 nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
                 nuevaFila.insertCell(1).textContent = '-'; // Minutos
-                nuevaFila.insertCell(2).textContent = '-'; // Costo x Minuto
-                nuevaFila.insertCell(3).textContent = datosArticulo["articulo"]; // Artículo
-               nuevaFila.insertCell(4).textContent = contadorCantidad; // Cantidad
-                nuevaFila.insertCell(5).textContent = datosArticulo["precio_venta"]; // Precio unitario
-                nuevaFila.insertCell(6).textContent = (contadorCantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
+                nuevaFila.insertCell(2).textContent = 1.5; // Minutos
+                nuevaFila.insertCell(3).textContent = '-'; // Costo x Minuto
+                nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
+               nuevaFila.insertCell(5).textContent = contadorCantidad; // Cantidad
+                nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
+                nuevaFila.insertCell(7).textContent = (contadorCantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
                 
 
-                let accionCell = nuevaFila.insertCell(7);
+                let accionCell = nuevaFila.insertCell(8);
                 let botonMas = document.createElement("button");
                 botonMas.classList.add("btn", "btn-success","btn-round","ms-2");
                 botonMas.textContent = "+";
@@ -931,13 +940,14 @@ if (isset($_GET['id'])) {
 
                 nuevaFila.insertCell(0).textContent = corte.id; // ID
                 nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
-                nuevaFila.insertCell(2).textContent = corte.costo; // Costo x Minuto
-                nuevaFila.insertCell(3).textContent = 'Corte'; // Artículo
-                nuevaFila.insertCell(4).textContent = '-'; // Cantidad fija por corte
-                nuevaFila.insertCell(5).textContent = '-'; // Precio unitario
-                nuevaFila.insertCell(6).textContent = (corte.costo).toFixed(2); // Subtotal
+                nuevaFila.insertCell(2).textContent = 1.5; // Minutos
+                nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
+                nuevaFila.insertCell(4).textContent = 'Corte'; // Artículo
+                nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
+                nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
+                nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
 
-                let accionCell = nuevaFila.insertCell(7);
+                let accionCell = nuevaFila.insertCell(8);
 
                 let botonEliminar = document.createElement("button");
                 botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
@@ -964,19 +974,21 @@ if (isset($_GET['id'])) {
 
             nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
             nuevaFila.insertCell(1).textContent = '-'; // Minutos
-            nuevaFila.insertCell(2).textContent = '-'; // Costo x Minuto
-            nuevaFila.insertCell(3).textContent = datosArticulo["articulo"]; // Artículo
-            let cantidad = document.getElementById("cantidad_" + datosArticulo["id"]).textContent || 0;
-            let nuevaCelda = nuevaFila.insertCell(4);
-            let inputElemento = document.createElement('input');
-            inputElemento.type = 'text'; // Tipo de input
-            inputElemento.value = cantidad; // Asignar el valor del contadorCantidad
-            nuevaCelda.appendChild(inputElemento); // Añadir el input a la celda
-            //nuevaFila.insertCell(4).textContent = cantidad; // Cantidad
-            nuevaFila.insertCell(5).textContent = datosArticulo["precio_venta"]; // Precio unitario
-            nuevaFila.insertCell(6).textContent = (cantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
+            nuevaFila.insertCell(2).textContent = '-'; // Minutos
 
-            let accionCell = nuevaFila.insertCell(7);
+            nuevaFila.insertCell(3).textContent = '-'; // Costo x Minuto
+            nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
+            let cantidad = document.getElementById("cantidad_" + datosArticulo["id"]).textContent || 0;
+            // let nuevaCelda = nuevaFila.insertCell(4);
+             //let inputElemento = document.createElement('input');
+             //inputElemento.type = 'text'; // Tipo de input
+            // inputElemento.value = cantidad; // Asignar el valor del contadorCantidad
+            //nuevaCelda.appendChild(inputElemento); // Añadir el input a la celda
+            nuevaFila.insertCell(5).textContent = cantidad; // Cantidad
+            nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
+            nuevaFila.insertCell(7).textContent = (cantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
+
+            let accionCell = nuevaFila.insertCell(8);
             let botonMas = document.createElement("button");
             botonMas.classList.add("btn", "btn-success","btn-round","ms-2");
             botonMas.textContent = "+";
@@ -1173,6 +1185,62 @@ if (isset($_GET['id'])) {
    
 
    
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Evento para el botón "Reservar"
+    document.getElementById("Reservar").addEventListener("click", function () {
+        var idCliente = document.getElementById('idPersona').textContent.trim();
+        const userId = <?php echo $_SESSION['id']; ?>;
+        console.log(idCliente);
+        console.log(userId);
+
+        const datos = {
+            "usuario_id": userId,  // Puedes cambiar este valor dinámicamente si es necesario
+            "cliente_id": idCliente,  // También este valor puede ser dinámico
+            "articulos": []
+        };
+
+        // Obtener todas las filas de la tabla (excepto el encabezado)
+        const rows = document.querySelectorAll("#tabla_articulos tbody tr");
+
+        // Recorrer todas las filas y obtener los datos de cada columna
+        rows.forEach(function(row) {
+            const articulo = {
+                "articulo_id": row.cells[0].textContent,  // El ID del artículo
+                "minutos": row.cells[1].textContent, 
+                "costoxminuto": row.cells[2].textContent, 
+                "precio_unitario": parseFloat(row.cells[6].textContent),  // Precio Unitario
+                "cantidad": parseInt(row.cells[5].textContent),  // Cantidad
+                "sub_total": parseFloat(row.cells[7].textContent)  // Subtotal
+            };
+
+            // Agregar el artículo al array
+            datos.articulos.push(articulo);
+        });
+
+        // Mostrar los datos en la consola para verificar
+        console.log(JSON.stringify(datos));
+
+        // Aquí puedes agregar el código para enviar los datos a un servidor con AJAX, si es necesario
+        /*
+        $.ajax({
+            url: 'tu_ruta_a_guardar_datos',
+            method: 'POST',
+            data: { datos: JSON.stringify(datos) },
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(err) {
+                console.log(err);
+            }
+        });
+        */
+    });
+
+
+});
 </script>
 
 
