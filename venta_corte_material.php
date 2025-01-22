@@ -9,7 +9,13 @@ if (isset($_GET['id'])) {
 
 ?>
 
-
+<style>
+    .nav-item .nav-link:hover {
+    background-color: #495057 !important;  /* Cambia el color de fondo al pasar el mouse */
+    color: #f8f9fa;          /* Cambia el color del texto */
+    cursor: pointer;           /* Muestra un cursor de mano para indicar que es clickeable */
+}
+</style>
 <div
     class="container">
     <div class="page-inner">
@@ -166,10 +172,66 @@ if (isset($_GET['id'])) {
 
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between">
                         <div class="card-title">Detalle Materiales / Corte</div>
+                        <div>
+
+
+                            <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link " id="pills-home-tab-nobd" data-bs-toggle="pill" href="#pills-home-nobd" role="tab" aria-controls="pills-home-nobd" aria-selected="true">Materiales y/o Corte</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab-nobd" data-bs-toggle="pill" href="#pills-profile-nobd" role="tab" aria-controls="pills-profile-nobd" aria-selected="false">Ploteo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Imprimir</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Producto Vitrina</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Escaneo</a>
+                                </li>
+                            </ul>                        
+                        </div>
                     </div>
+                    
+
                     <div class="card-body">
+                    
+                        <div>
+                            <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
+                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
+                                        <div class="table-responsive">
+                                            <table id="tabla_articulos" class="table mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">ID</th>
+                                                        <th scope="col">Articulo</th>
+                                                        <th scope="col">Stock</th>
+                                                        <th scope="col">Precio Unitario</th>
+                                                        <th scope="col">Accion</th> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd">
+                                    <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
+                                    <p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="pills-contact-nobd" role="tabpanel" aria-labelledby="pills-contact-tab-nobd">
+                                    <p>Pityful a rethoric question ran over her cheek, then she continued her way. On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.</p>
+
+                                    <p> But nothing the copy said could convince her and so it didn’t take long until a few insidious Copy Writers ambushed her, made her drunk with Longe and Parole and dragged her into their agency, where they abused her for their</p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-sub">
                             Aquí la venta de los materiales
                         </div>
