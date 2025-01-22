@@ -8,7 +8,17 @@ if (isset($_GET['id'])) {
 }
 
 ?>
+<style>
+    #sugerencias {
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1050; /* Para asegurar que esté sobre otros elementos */
+    }
 
+    #sugerencias .list-group-item {
+        cursor: pointer;
+    }
+</style>
 
 <div
     class="container">
@@ -235,7 +245,7 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_cortes" class="card-title">Total Cortes S/:</h5>
@@ -243,7 +253,7 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>  
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                     <div class="card card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_articulos" class="card-title">Total Artículos S/:</h5>
@@ -251,7 +261,7 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                     <div class="card card-primary card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_general" class="card-title">Total S/:</h5>
@@ -259,10 +269,101 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <button id="btnRealizarReserva" type="button" class="btn btn-success btn-block card card-stats card-round">
+                    <div class="card-body text-center">
+                        <h5 id="label_total_general" class="card-title">Realizar Reserva</h5>
+                    </div>
+                </button>
+            </div>
         </div>
     </div>
 
 
+</div>
+
+
+<!-- Modal Body -->
+<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+<div
+    class="modal fade"
+    id="modalRealizarPago"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true">
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+        role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div
+                    class="card border-primary">
+                    <div class="card-body">
+
+                        <div class="card-body text-center">
+                            <h4 class="card-title">Realizar Pago</h4>
+                        </div>
+                       <!--<div class="card-body text-center">
+                            <h1 class="card-title">S/ xx.xx</h1>
+                        </div>-->
+
+                        <div class="card-sub">
+                            Aquí realiza tus pagos
+                        </div>
+                        <div>
+                            <span>ID Cliente: <span id="idPersona">#</span></span>
+                        </div>
+                        <hr>
+                        <div class="mb-3 position-relative">
+                            <label for="nombreCliente" class="form-label">Cliente</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="nombreCliente"
+                                placeholder="AGREGAR EL NOMBRE DEL CLIENTE O DNI" />
+                            <!-- Contenedor para las sugerencias -->
+                            <div id="sugerencias" class="list-group position-absolute w-100"></div>
+                        </div>
+                          <!-- Monto Total -->
+                        <div class="mb-3">
+                            <label for="montoTotal" class="form-label">Monto Total</label>
+                            <div class="input-group">
+                                <span class="input-group-text">S/</span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="montoTotal"
+                                    placeholder="Monto total de la venta"
+                                    readonly />
+                            </div>
+                        </div>
+
+                      
+                        <div class="text-center">
+                            <a class="btn btn-success" href="#" role="button">Reservar</a>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Salir
+                </button>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -753,11 +854,14 @@ if (isset($_GET['id'])) {
 
             if (contadorCantidad > 0){
                 let nuevaFila = tabla.insertRow();
+
+                // Agregar el input a la celda
+                nuevaCelda.appendChild(inputElemento);
                 nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
                 nuevaFila.insertCell(1).textContent = '-'; // Minutos
                 nuevaFila.insertCell(2).textContent = '-'; // Costo x Minuto
                 nuevaFila.insertCell(3).textContent = datosArticulo["articulo"]; // Artículo
-                nuevaFila.insertCell(4).textContent = contadorCantidad; // Cantidad
+               nuevaFila.insertCell(4).textContent = contadorCantidad; // Cantidad
                 nuevaFila.insertCell(5).textContent = datosArticulo["precio_venta"]; // Precio unitario
                 nuevaFila.insertCell(6).textContent = (contadorCantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
                 
@@ -856,12 +960,19 @@ if (isset($_GET['id'])) {
             // Si no se ingresa tiempo
             let nuevaFila = tabla.insertRow();
 
+            
+
             nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
             nuevaFila.insertCell(1).textContent = '-'; // Minutos
             nuevaFila.insertCell(2).textContent = '-'; // Costo x Minuto
             nuevaFila.insertCell(3).textContent = datosArticulo["articulo"]; // Artículo
             let cantidad = document.getElementById("cantidad_" + datosArticulo["id"]).textContent || 0;
-            nuevaFila.insertCell(4).textContent = cantidad; // Cantidad
+            let nuevaCelda = nuevaFila.insertCell(4);
+            let inputElemento = document.createElement('input');
+            inputElemento.type = 'text'; // Tipo de input
+            inputElemento.value = cantidad; // Asignar el valor del contadorCantidad
+            nuevaCelda.appendChild(inputElemento); // Añadir el input a la celda
+            //nuevaFila.insertCell(4).textContent = cantidad; // Cantidad
             nuevaFila.insertCell(5).textContent = datosArticulo["precio_venta"]; // Precio unitario
             nuevaFila.insertCell(6).textContent = (cantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
 
@@ -969,6 +1080,100 @@ if (isset($_GET['id'])) {
     
 </script>
 
+<script>
+    document.getElementById("btnRealizarReserva").addEventListener("click", function () {
+  
+
+        // Mostrar el modal manualmente
+        const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
+        modal.show();
+
+        const subtotalGeneral = document.getElementById("id_subtotal_general").textContent;
+        document.getElementById("montoTotal").value = subtotalGeneral; // Asignar el monto total
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const nombreCliente = document.getElementById("nombreCliente");
+        const sugerencias = document.getElementById("sugerencias");
+        const persona_id = document.getElementById("idPersona");
+        nombreCliente.addEventListener("input", function () {
+            const query = nombreCliente.value.trim();
+            console.log(query)
+            if (query.length > 0) {
+                // Realiza la solicitud AJAX con jQuery
+                $.ajax({
+                    method: "POST",
+                    url: "logica/clssFiltro.php",
+                    data: {
+                        "accion": "FILTROPERSONA",
+                        "data": query
+                    }
+                }).done(function (response) {
+                    try {
+                        // Parsear la respuesta como JSON
+                        console.log(response)
+                        const resultados = JSON.parse(response);
+
+                        // Limpiar las sugerencias actuales
+                        sugerencias.innerHTML = "";
+
+                        // Verificar si hay resultados
+                        if (resultados.length > 0) {
+                            resultados.forEach(persona => {
+                                // Crear un elemento de lista para cada resultado
+                                const item = document.createElement("div");
+                                item.classList.add("list-group-item");
+                                item.textContent = persona.persona_concatenada;
+
+                                // Acción al seleccionar un resultado
+                                item.addEventListener("click", function () {
+                                    // Establecer el valor del input con el nombre seleccionado
+                                    nombreCliente.value = persona.persona_concatenada;
+                                    persona_id.textContent = persona.id
+ 
+
+                                    // Limpiar las sugerencias
+                                    sugerencias.innerHTML = "";
+                                });
+
+                                // Agregar el elemento a la lista de sugerencias
+                                sugerencias.appendChild(item);
+                            });
+                        } else {
+                            // Mostrar un mensaje si no hay resultados
+                            const noResults = document.createElement("div");
+                            noResults.classList.add("list-group-item", "text-muted");
+                            noResults.textContent = "Sin resultados";
+                            sugerencias.appendChild(noResults);
+                        }
+                    } catch (e) {
+                        console.error("Error al procesar los resultados:", e);
+                        sugerencias.innerHTML = ""; // Limpiar las sugerencias en caso de error
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                    sugerencias.innerHTML = ""; // Limpiar las sugerencias en caso de fallo
+                });
+            } else {
+                // Limpiar las sugerencias si no hay texto
+                sugerencias.innerHTML = "";
+            }
+        });
+
+        // Cerrar las sugerencias si se hace clic fuera del input o sugerencias
+        document.addEventListener("click", function (e) {
+            if (!nombreCliente.contains(e.target) && !sugerencias.contains(e.target)) {
+                sugerencias.innerHTML = "";
+            }
+        });
+    });
+
+
+   
+
+   
+</script>
 
 
 

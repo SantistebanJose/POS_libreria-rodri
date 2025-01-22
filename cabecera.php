@@ -177,6 +177,29 @@ include('logica/clssConsultas.php');
                                 </ul>
                             </div>
                         </li>
+
+                        <li class="nav-item">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#reserva"
+                                class="collapsed"
+                                aria-expanded="false">
+                                <i class="fas fa-calendar-alt"></i>
+                                <p>Reserva</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="reserva">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="venta_reserva_corte.php">
+                                            <span class="sub-item">Venta de materiales y/o corte</span>
+                                        </a>
+                                    </li>
+                                   
+                                  
+                                </ul>
+                            </div>
+                        </li>
     <!-- <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
