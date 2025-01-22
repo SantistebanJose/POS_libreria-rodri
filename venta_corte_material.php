@@ -175,8 +175,6 @@ if (isset($_GET['id'])) {
                     <div class="card-header d-flex justify-content-between">
                         <div class="card-title">Detalle Materiales / Corte</div>
                         <div>
-
-
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link " id="pills-home-tab-nobd" data-bs-toggle="pill" href="#pills-home-nobd" role="tab" aria-controls="pills-home-nobd" aria-selected="true">Materiales y/o Corte</a>
@@ -203,22 +201,65 @@ if (isset($_GET['id'])) {
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
                                 <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
-                                        <div class="table-responsive">
-                                            <table id="tabla_articulos" class="table mt-3">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">ID</th>
-                                                        <th scope="col">Articulo</th>
-                                                        <th scope="col">Stock</th>
-                                                        <th scope="col">Precio Unitario</th>
-                                                        <th scope="col">Accion</th> 
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                <div class="table-responsive">
+                                    <table
+                                        id="multi-filter-select2"
+                                        class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Articulo</th>
+                                                <th>Categoria</th>
+                                                <th>Tipo</th>
+                                                <th>Dimension</th>
+                                                <th>Stock</th>
+                                                <th>Precio de Venta</th>
+                                                <th>Accion</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Articulo</th>
+                                                <th>Categoria</th>
+                                                <th>Tipo</th>
+                                                <th>Dimension</th>
+                                                <th>Stock</th>
+                                                <th>Precio de Venta</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
 
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                            <?php
+                                            foreach (listarProductosVenta1() as $datosArticulo) {
+                                                $datosArticuloJSON = json_encode($datosArticulo);
+
+
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $datosArticulo["articulo"] ?></td>
+                                                    <td><?php echo $datosArticulo["categoria"] ?></td>
+                                                    <td><?php echo $datosArticulo["tipo"] ?></td>
+                                                    <td><?php echo $datosArticulo["dimension"] ?></td>
+                                                    <td><?php echo $datosArticulo["stock"] ?></td>
+                                                    <td><?php echo $datosArticulo["precio_venta"] ?></td>
+                                                    <th>
+                                                       
+                                                        <div class="mt-2 text-center">
+                                                            <a
+                                                                name=""
+                                                                id=""
+                                                                class="btn btn-secondary btn-round"
+
+                                                                onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
+                                                                role="button">Agregar</a>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 </div>
                                 <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd">
                                     <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
@@ -468,6 +509,50 @@ if (isset($_GET['id'])) {
         });
 
         $("#multi-filter-select").DataTable({
+            pageLength: 5,
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            initComplete: function() {
+                this.api()
+                    .columns()
+                    .every(function() {
+                        var column = this;
+                        var select = $('<select class="form-select"><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on("change", function() {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? "^" + val + "$" : "", true, false).draw();
+                            });
+
+                        column.data().unique().sort().each(function(d, j) {
+                            select.append('<option value="' + d + '">' + d + "</option>");
+                        });
+                    });
+            }
+        });
+
+        $("#multi-filter-select2").DataTable({
             pageLength: 5,
             language: {
                 "sProcessing": "Procesando...",
