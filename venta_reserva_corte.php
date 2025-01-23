@@ -769,13 +769,14 @@ if (isset($_GET['id'])) {
         btn_agregar.addEventListener("click", () => {
             const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').textContent) || 0;
             const datosArticulo = {}; // Aquí deberías obtener los datos del artículo (p. ej., desde una variable global o un formulario)
-
+            const tarifa = 1.5
             // Crear el objeto datosCorte
             const datosCorte = [
                 {
-                    id: 1, // Id del corte
+                    id: '#', // Id del corte
                     minutos: cantidadMinutos, // Minutos registrados
-                    costo: cantidadMinutos * 1.5 // Costo por minuto
+                    tarifa: tarifa, // Costo por minuto
+                    consto: cantidadMinutos * tarifa
                 }
             ];
 
@@ -940,7 +941,7 @@ if (isset($_GET['id'])) {
 
                 nuevaFila.insertCell(0).textContent = corte.id; // ID
                 nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
-                nuevaFila.insertCell(2).textContent = 1.5; // Minutos
+                nuevaFila.insertCell(2).textContent = corte.tarifa; // Minutos
                 nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
                 nuevaFila.insertCell(4).textContent = 'Corte'; // Artículo
                 nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
