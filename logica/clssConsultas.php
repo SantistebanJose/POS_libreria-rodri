@@ -83,6 +83,8 @@ function listarProductosVenta1(): array
 
 }
 
+
+
 function listarVentaReservaCorte(): array
 {
     global $conectar;

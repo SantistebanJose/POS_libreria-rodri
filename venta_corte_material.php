@@ -100,34 +100,34 @@ if (isset($_GET['id'])) {
 
 
 
-                <!-- Modal Solo Corte -->
-                <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalSoloCorteLabel">Corte de Minutos</h5>
-                                <button type="button" class="btn_close_solo" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="card-body text-center">
-                                    <p class="card-text">Minutos Corte</p>
-                                    <div class="row">
-                                        <div class="col">
-                                            <button id="btn_menos_solocorte" class="btn btn-danger btn-round ms-2" type="button">-</button>
-                                        </div>
-                                        <div id="cantidad_solocorte" class="col">0</div>
-                                        <div class="col">
-                                            <button id="btn_mas_solocorte" class="btn btn-success btn-round ms-2" type="button">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
-                            </div>
+<!-- Modal Solo Corte -->
+<div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalSoloCorteLabel">Corte de Minutos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body text-center">
+                    <p class="card-text">Minutos Corte</p> 
+                    <div class="row">
+                        <div class="col">
+                            <button id="btn_menos_solocorte" class="btn btn-danger btn-round ms-2" type="button">-</button>
+                        </div>
+                        <div id="cantidad_solocorte" class="col">0</div>
+                        <div class="col">
+                            <button id="btn_mas_solocorte" class="btn btn-success btn-round ms-2" type="button">+</button>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
                 <!-- Modal -->
@@ -343,6 +343,7 @@ if (isset($_GET['id'])) {
                                 <th scope="col">ID</th>
                                 <th scope="col">MINUTOS</th>
                                 <th scope="col">Tarifa</th>
+                                <th scope="col">Total corte</th>
                                 <th scope="col">Articulo</th>
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Precio Unitario</th>
@@ -917,13 +918,15 @@ if (isset($_GET['id'])) {
         btn_agregar.addEventListener("click", () => {
             const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').textContent) || 0;
             const datosArticulo = {}; // Aquí deberías obtener los datos del artículo (p. ej., desde una variable global o un formulario)
-
+            const tarifa = 1.5;
             // Crear el objeto datosCorte
             const datosCorte = [{
-                id: 1, // Id del corte
+                id: '#', // Id del corte
                 minutos: cantidadMinutos, // Minutos registrados
-                costo: cantidadMinutos * 1.5 // Costo por minuto
+                tarifa: tarifa ,// Costo por minuto
+                costo: cantidadMinutos * tarifa
             }];
+            console.log(datosCorte);
 
             // Llamar a la función fn_agregar_articulo_tabla
             fn_solo_corte_tabla(datosCorte);
@@ -936,7 +939,7 @@ if (isset($_GET['id'])) {
         });
     }
 
-    function fn_agregar_articulo_tabla(datosCorte = []) {
+    function fn_solo_corte_tabla(datosCorte) {
 
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
 
@@ -946,13 +949,14 @@ if (isset($_GET['id'])) {
 
             nuevaFila.insertCell(0).textContent = corte.id; // ID
             nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
-            nuevaFila.insertCell(2).textContent = corte.costo; // Costo x Minuto
-            nuevaFila.insertCell(3).textContent = 'Corte'; // Artículo
-            nuevaFila.insertCell(4).textContent = '-'; // Cantidad fija por corte
-            nuevaFila.insertCell(5).textContent = '-'; // Precio unitario
-            nuevaFila.insertCell(6).textContent = (corte.costo).toFixed(2); // Subtotal
+            nuevaFila.insertCell(2).textContent = corte.tarifa; // Costo x Minuto
+            nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
+            nuevaFila.insertCell(4).textContent = 'Corte'; // Artículo
+            nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
+            nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
+            nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
 
-            let accionCell = nuevaFila.insertCell(7);
+            let accionCell = nuevaFila.insertCell(8);
 
             let botonEliminar = document.createElement("button");
             botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
@@ -1023,6 +1027,7 @@ if (isset($_GET['id'])) {
 
     function fn_agregar_articulo_tabla(datosArticulo) {
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        tabla.innerHTML = "";
 
         // Insertamos una nueva fila en la tabla
         let nuevaFila = tabla.insertRow();
@@ -1031,13 +1036,14 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(0).textContent = datosArticulo["articulo_id"]; // ID
         nuevaFila.insertCell(1).textContent = datosArticulo["minutos"] || '-'; // Minutos
         nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
-        nuevaFila.insertCell(3).textContent = datosArticulo["articulo_nombre"]; // Artículo
-        nuevaFila.insertCell(4).textContent = datosArticulo["cantidad"]; // Cantidad
-        nuevaFila.insertCell(5).textContent = datosArticulo["precio_unitario_articulo"]; // Precio unitario
-        nuevaFila.insertCell(6).textContent = parseFloat(datosArticulo["sub_total"]).toFixed(2); // Subtotal
+        nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]  || '-'; // Costo x Minuto
+        nuevaFila.insertCell(4).textContent = datosArticulo["articulo_nombre"]; // Artículo
+        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"]; // Cantidad
+        nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"]; // Precio unitario
+        nuevaFila.insertCell(7).textContent = parseFloat(datosArticulo["sub_total"]).toFixed(2); // Subtotal
 
         // Celda para acciones
-        let accionCell = nuevaFila.insertCell(7);
+        let accionCell = nuevaFila.insertCell(8);
 
         // Si el artículo tiene corte, añadir un botón de tijera
         if (datosArticulo["corte"] === true) {
@@ -1275,13 +1281,14 @@ if (isset($_GET['id'])) {
                 const celdaId = nuevaFila.insertCell(0);
 
                 const celdaMinutos = nuevaFila.insertCell(1);
-                const celdaCosto = nuevaFila.insertCell(2);
+                const celdatarifa = nuevaFila.insertCell(2);
+                const celdaCosto = nuevaFila.insertCell(3);
 
-                const celdaNombre = nuevaFila.insertCell(3);
-                const celdaCantidad = nuevaFila.insertCell(4);
-                const celdaPrecioUnitario = nuevaFila.insertCell(5);
-                const celdaSubtotal = nuevaFila.insertCell(6);
-                const celdaAcciones = nuevaFila.insertCell(7);
+                const celdaNombre = nuevaFila.insertCell(4);
+                const celdaCantidad = nuevaFila.insertCell(5);
+                const celdaPrecioUnitario = nuevaFila.insertCell(6);
+                const celdaSubtotal = nuevaFila.insertCell(7);
+                const celdaAcciones = nuevaFila.insertCell(8);
 
                 // Rellenar las celdas con los datos del artículo
                 celdaId.textContent = datosArticulo['articulo_id'];
@@ -1456,6 +1463,142 @@ if (isset($_GET['id'])) {
         document.getElementById("idVenta").textContent = idVenta; // Para el ID de la venta
         document.getElementById("idPersona").textContent = idPersona; // Para el ID del cliente
         document.getElementById("nombreCliente").value = nombreCliente; // Para el nombre del cliente
+    }
+</script>
+
+<script>
+     function fn_agregar_venta(datosArticulo){
+        
+        if(verificarSiArticuloExiste(datosArticulo['id'])){
+            Swal.fire({
+                icon: 'info',
+                title: '¡Artículo ya registrado!',
+                text: 'Este artículo ya está en la tabla.',
+                confirmButtonText: 'Aceptar'
+            });
+
+        
+        }else{
+            console.log(datosArticulo);
+            fn_agregar_articulo_tabla_nuevo(datosArticulo);
+                
+            
+        }
+
+    }
+
+    function verificarSiArticuloExiste(idArticulo) {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        var filas = tabla.getElementsByTagName("tr");
+
+        for (var i = 0; i < filas.length; i++) {
+            var celdas = filas[i].getElementsByTagName("td");
+            var idFila = celdas[0].textContent; // Suponiendo que el ID está en la primera celda
+
+            if (idFila == idArticulo) {
+                return true; // Si se encuentra una coincidencia, retorna true
+            }
+        }
+        return false; // Si no se encuentra ninguna coincidencia, retorna false
+    }
+
+    function fn_agregar_articulo_tabla_nuevo(datosArticulo,tipoCorte = 'none', datosCorte = []) {
+        
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        
+        let nuevaFila = tabla.insertRow();
+
+
+        nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
+        nuevaFila.insertCell(1).textContent = '-'; // Minutos
+        nuevaFila.insertCell(2).textContent = '-'; // Minutos
+
+        nuevaFila.insertCell(3).textContent = '-'; // Costo x Minuto
+        nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
+        let cantidad = 1;
+        // let nuevaCelda = nuevaFila.insertCell(4);
+            //let inputElemento = document.createElement('input');
+            //inputElemento.type = 'text'; // Tipo de input
+        // inputElemento.value = cantidad; // Asignar el valor del contadorCantidad
+        //nuevaCelda.appendChild(inputElemento); // Añadir el input a la celda
+        nuevaFila.insertCell(5).textContent = cantidad; // Cantidad
+        nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
+        nuevaFila.insertCell(7).textContent = (cantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
+
+        let accionCell = nuevaFila.insertCell(8);
+        if (datosArticulo["corte"] === true) {
+            let botonCorte = document.createElement("button");
+            botonCorte.classList.add("btn", "btn-info", "btn-round", "ms-2");
+
+            let iconoTijera = document.createElement("i");
+            iconoTijera.classList.add("fas", "fa-cut"); // Icono de tijeras de FontAwesome
+
+            // Añadir el ícono al botón
+            botonCorte.appendChild(iconoTijera);
+
+            // Añadir el botón a la celda de acciones
+            accionCell.appendChild(botonCorte);
+            botonCorte.addEventListener("click", () => {
+                fn_modal_corte(datosArticulo);
+            });
+        }
+        let botonMas = document.createElement("button");
+        botonMas.classList.add("btn", "btn-success","btn-round","ms-2");
+        botonMas.textContent = "+";
+        
+        let botonMenos = document.createElement("button");
+        botonMenos.classList.add("btn", "btn-danger","btn-round","ms-2");
+        botonMenos.textContent = "-";
+
+        let botonEliminar = document.createElement("button");
+        botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
+        let iconoBasura = document.createElement("i");
+        iconoBasura.classList.add("fas", "fa-trash"); // Font Awesome icon for trash
+        // Añadir los botones a la celda de acciones
+        botonEliminar.appendChild(iconoBasura);
+        accionCell.appendChild(botonMas);
+        accionCell.appendChild(botonMenos);
+        accionCell.appendChild(botonEliminar);
+
+        // ** Agregar los eventos de los botones: **
+
+        // Función para actualizar el subtotal
+        function actualizarSubtotal(fila) {
+            const cantidad = parseInt(fila.cells[4].textContent) || 0;
+            const precioUnitario = parseFloat(fila.cells[5].textContent) || 0;
+            const subtotalCell = fila.cells[6];
+            subtotalCell.textContent = (cantidad * precioUnitario).toFixed(2);
+            fn_obtener_total(); // Recalcular los totales
+        }
+
+        // Función para manejar el botón de "+"
+        botonMas.addEventListener("click", () => {
+            const fila = botonMas.closest("tr");
+            let cantidadCell = fila.cells[4];
+            let cantidad = parseInt(cantidadCell.textContent) || 0;
+            cantidadCell.textContent = cantidad + 1;
+            actualizarSubtotal(fila);
+        });
+
+        // Función para manejar el botón de "-"
+        botonMenos.addEventListener("click", () => {
+            const fila = botonMenos.closest("tr");
+            let cantidadCell = fila.cells[4];
+            let cantidad = parseInt(cantidadCell.textContent) || 0;
+            if (cantidad > 1) {
+                cantidadCell.textContent = cantidad - 1;
+                actualizarSubtotal(fila);
+            }
+        });
+
+        // Función para manejar el botón de eliminar
+        botonEliminar.addEventListener("click", () => {
+            const fila = botonEliminar.closest("tr");
+            fila.remove(); // Eliminar la fila
+            fn_obtener_total(); // Recalcular los totales después de eliminar
+        });
+        
+        fn_obtener_total();
     }
 </script>
 
