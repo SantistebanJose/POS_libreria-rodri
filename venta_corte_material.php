@@ -18,6 +18,11 @@ if (isset($_GET['id'])) {
         cursor: pointer;
         /* Muestra un cursor de mano para indicar que es clickeable */
     }
+
+    #tabla_articulos th:nth-child(1),
+    #tabla_articulos td:nth-child(1) {
+        display: none;
+    }
 </style>
 <div
     class="container">
