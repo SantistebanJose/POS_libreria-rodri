@@ -1032,7 +1032,7 @@ if (isset($_GET['id'])) {
 
     function fn_agregar_articulo_tabla(datosArticulo) {
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        tabla.innerHTML = "";
+        //tabla.innerHTML = "";
 
         // Insertamos una nueva fila en la tabla
         let nuevaFila = tabla.insertRow();
@@ -1430,9 +1430,9 @@ if (isset($_GET['id'])) {
 
         for (var i = 0; i < filas.length; i++) {
             var celdas = filas[i].getElementsByTagName("td");
-            totalCorte += parseFloat(celdas[2].innerText) || 0;
-            totalArticulos += (parseFloat(celdas[4].innerText) * parseFloat(celdas[5].innerText)) || 0;
-            total += parseFloat(celdas[6].innerText) || 0;
+            totalCorte += parseFloat(celdas[3].innerText) || 0;
+            totalArticulos += (parseFloat(celdas[5].innerText) * parseFloat(celdas[6].innerText)) || 0;
+            total += parseFloat(celdas[7].innerText) || 0;
         }
 
         var lbl_subtotal_cortes = document.getElementById("id_subtotal_cortes");
