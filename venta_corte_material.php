@@ -11,10 +11,13 @@ if (isset($_GET['id'])) {
 
 <style>
     .nav-item .nav-link:hover {
-    background-color: #495057 !important;  /* Cambia el color de fondo al pasar el mouse */
-    color: #f8f9fa;          /* Cambia el color del texto */
-    cursor: pointer;           /* Muestra un cursor de mano para indicar que es clickeable */
-}
+        background-color: #495057 !important;
+        /* Cambia el color de fondo al pasar el mouse */
+        color: #f8f9fa;
+        /* Cambia el color del texto */
+        cursor: pointer;
+        /* Muestra un cursor de mano para indicar que es clickeable */
+    }
 </style>
 <div
     class="container">
@@ -173,7 +176,7 @@ if (isset($_GET['id'])) {
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <div class="card-title">Detalle Materiales / Corte</div>
+                        <div class="card-title">Agrega Más Articulos, Impresiones, Escaneos a la Venta</div>
                         <div>
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                                 <li class="nav-item">
@@ -191,112 +194,166 @@ if (isset($_GET['id'])) {
                                 <li class="nav-item">
                                     <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Escaneo</a>
                                 </li>
-                            </ul>                        
+                            </ul>
                         </div>
                     </div>
-                    
+
 
                     <div class="card-body">
-                    
+
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
                                 <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
-                                <div class="table-responsive">
-                                    <table
-                                        id="multi-filter-select2"
-                                        class="display table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Articulo</th>
-                                                <th>Categoria</th>
-                                                <th>Tipo</th>
-                                                <th>Dimension</th>
-                                                <th>Stock</th>
-                                                <th>Precio de Venta</th>
-                                                <th>Accion</th>
-                                            </tr>
-                                        </thead>
-                                        <tfoot>
-                                            <tr>
-                                                <th>Articulo</th>
-                                                <th>Categoria</th>
-                                                <th>Tipo</th>
-                                                <th>Dimension</th>
-                                                <th>Stock</th>
-                                                <th>Precio de Venta</th>
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
-
-                                            <?php
-                                            foreach (listarProductosVenta1() as $datosArticulo) {
-                                                $datosArticuloJSON = json_encode($datosArticulo);
-
-
-                                            ?>
+                                    <div class="table-responsive">
+                                        <table
+                                            id="multi-filter-select2"
+                                            class="display table table-striped table-hover">
+                                            <thead>
                                                 <tr>
-                                                    <td><?php echo $datosArticulo["articulo"] ?></td>
-                                                    <td><?php echo $datosArticulo["categoria"] ?></td>
-                                                    <td><?php echo $datosArticulo["tipo"] ?></td>
-                                                    <td><?php echo $datosArticulo["dimension"] ?></td>
-                                                    <td><?php echo $datosArticulo["stock"] ?></td>
-                                                    <td><?php echo $datosArticulo["precio_venta"] ?></td>
-                                                    <th>
-                                                       
-                                                        <div class="mt-2 text-center">
-                                                            <a
-                                                                name=""
-                                                                id=""
-                                                                class="btn btn-secondary btn-round"
-
-                                                                onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                                role="button">Agregar</a>
-                                                        </div>
-                                                    </th>
+                                                    <th>Articulo</th>
+                                                    <th>Categoria</th>
+                                                    <th>Tipo</th>
+                                                    <th>Dimension</th>
+                                                    <th>Stock</th>
+                                                    <th>Precio de Venta</th>
+                                                    <th>Accion</th>
                                                 </tr>
-                                            <?php
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Articulo</th>
+                                                    <th>Categoria</th>
+                                                    <th>Tipo</th>
+                                                    <th>Dimension</th>
+                                                    <th>Stock</th>
+                                                    <th>Precio de Venta</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+
+                                                <?php
+                                                foreach (listarProductosVenta1() as $datosArticulo) {
+                                                    $datosArticuloJSON = json_encode($datosArticulo);
+
+
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $datosArticulo["articulo"] ?></td>
+                                                        <td><?php echo $datosArticulo["categoria"] ?></td>
+                                                        <td><?php echo $datosArticulo["tipo"] ?></td>
+                                                        <td><?php echo $datosArticulo["dimension"] ?></td>
+                                                        <td><?php echo $datosArticulo["stock"] ?></td>
+                                                        <td><?php echo $datosArticulo["precio_venta"] ?></td>
+                                                        <th>
+
+                                                            <div class="mt-2 text-center">
+                                                                <a
+                                                                    name=""
+                                                                    id=""
+                                                                    class="btn btn-secondary btn-round"
+
+                                                                    onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
+                                                                    role="button">Agregar</a>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd">
-                                    <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-                                    <p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.
-                                    </p>
+                                    <div class="text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Servicio de Ploteos</h4>
+                                                <div>ID: <span id="id_mov_ploteo">2</span></div>
+                                                <div class="card-sub">
+                                                    Aquí ingresa los ploteos
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Cantidad de Ploteos</p>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <button id="btn_mas" class="btn btn-danger btn-round me-2">-</button>
+                                                    <input id="input_numero" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                                    <button id="id_contador" class="btn btn-success btn-round ms-2">+</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Monto (S/)</p>
+                                                <input type="number" name="" id="" placeholder="Monto (S/)">
+                                            </div>
+                                            <div class="text-center">
+                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="pills-contact-nobd" role="tabpanel" aria-labelledby="pills-contact-tab-nobd">
-                                    <p>Pityful a rethoric question ran over her cheek, then she continued her way. On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.</p>
 
-                                    <p> But nothing the copy said could convince her and so it didn’t take long until a few insidious Copy Writers ambushed her, made her drunk with Longe and Parole and dragged her into their agency, where they abused her for their</p>
+                                    <div class="text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Servicio de Impresiones</h4>
+                                                <div>ID: <span id="id_mov_impresion">3</span></div>
+                                                <div class="card-sub">
+                                                    Aquí ingresa lo que mandaron a Imprimir
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Cantidad de Impresiones</p>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <button id="btn_mas_impresion" class="btn btn-danger btn-round me-2">-</button>
+                                                    <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                                    <button id="id_contador_impresion" class="btn btn-success btn-round ms-2">+</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Monto (S/)</p>
+                                                <input type="number" name="" id="" placeholder="Monto (S/)">
+                                            </div>
+
+                                            <div class="text-center">
+                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
-                        <div class="card-sub">
-                            Aquí la venta de los materiales
-                        </div>
-                        <div class="table-responsive">
-                            <table id="tabla_articulos" class="table mt-3">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">MINUTOS</th>
-                                        <th scope="col">Tarifa</th>
-                                        <th scope="col">Articulo</th>
-                                        <th scope="col">Cantidad</th>
-                                        <th scope="col">Precio Unitario</th>
-                                        <th scope="col">Sub Total (S/)</th>
-                                        <th scope="col">Accion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
 
                     </div>
+                </div>
+            </div>
+        </div>
+        <div
+            class="card border-primary">
+            <div class="card-body">
+                <h4 class="card-title">Detalles de Articulos de Reserva</h4>
+                <div class="table-responsive">
+                    <table id="tabla_articulos" class="table mt-3">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">MINUTOS</th>
+                                <th scope="col">Tarifa</th>
+                                <th scope="col">Articulo</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Precio Unitario</th>
+                                <th scope="col">Sub Total (S/)</th>
+                                <th scope="col">Accion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -367,7 +424,7 @@ if (isset($_GET['id'])) {
                         <div class="card-body text-center">
                             <h4 class="card-title">Realizar Pago</h4>
                         </div>
-                       <!--<div class="card-body text-center">
+                        <!--<div class="card-body text-center">
                             <h1 class="card-title">S/ xx.xx</h1>
                         </div>-->
 
@@ -389,7 +446,7 @@ if (isset($_GET['id'])) {
                                 aria-describedby="helpId"
                                 placeholder="AGREGAR EL NOMBRE DEL CLIENTE" />
                         </div>
-                          <!-- Monto Total -->
+                        <!-- Monto Total -->
                         <div class="mb-3">
                             <label for="montoTotal" class="form-label">Monto Total</label>
                             <div class="input-group">
@@ -402,42 +459,113 @@ if (isset($_GET['id'])) {
                                     readonly />
                             </div>
                         </div>
+                        <div class="card-body">
+                            <ul class="nav nav-pills nav-secondary  nav-pills-no-bd nav-pills-icons justify-content-center" id="pills-tab-with-icon" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab-icon" data-bs-toggle="pill" href="#pago-directo" role="tab" aria-controls="pago-directo" aria-selected="true">
+                                        Pago Directo
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab-icon" data-bs-toggle="pill" href="#pago-credito" role="tab" aria-controls="pago-credito" aria-selected="false">
+                                        Pago Crédito
+                                    </a>
+                                </li>
+                            </ul>
 
-                        <div class="form-group">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="option" id="option1" value="1">
-                                <label class="form-check-label" for="option1">
-                                    Pago Directo
-                                </label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="option" id="option2" value="2">
-                                <label class="form-check-label" for="option2">
-                                    Pago al Crédito
-                                </label>
+                            <div class="tab-content mt-2 mb-3" id="pills-with-icon-tabContent">
+                                <div class="tab-pane fade show active" id="pago-directo" role="tabpanel" aria-labelledby="pills-home-tab-icon">
+                                    <div id="panel_forma_pago" class="mb-3">
+                                        <div class="card-sub">
+                                            <div class="text-center">
+                                                Aquí podrás elegir si realizan pagos Directo.
+                                            </div>
+                                        </div>
+                                        <label for="" class="form-label"><strong>Forma de Pago</strong></label>
+                                        <!-- Botón de agregar más formas de pago -->
+                                        <button id="btnAgregarPago" class="btn btn-secondary btn-round ms-2">+</button>
+
+                                        <div class="d-flex align-items-center">
+                                            <!-- Select de formas de pago -->
+                                            <select class="form-select form-select-md" name="" id="formaPagoSelect">
+                                                <?php
+                                                foreach (listarFormaPago() as $datosFormaPago) {
+                                                    $datosFormaPagoJSON = json_encode($datosFormaPago);
+                                                ?>
+                                                    <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+
+                                            <!-- Caja de texto para monto -->
+                                            <input type="number" class="form-control form-control-md ms-2" placeholder="Monto" min="0" id="montoSelect_0">
+
+
+                                        </div>
+
+                                        <!-- Contenedor para los selects adicionales -->
+                                        <div id="contenedorPagos" class="mt-3"></div>
+
+                                    </div>
+                                    <hr>
+                                    <!-- Monto Total -->
+                                    <div
+                                        class="row justify-content-center align-items-center g-2">
+                                        <div class="col-md-6">
+                                            <label for="" class="form-label"><b>Paga Con</b></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">S/</span>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id=""
+                                                    placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="" class="form-label"><b>Vuelto (S/)</b></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">S/</span>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id=""
+                                                    placeholder="" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+
+                                </div>
+                                <div class="tab-pane fade" id="pago-credito" role="tabpanel" aria-labelledby="pills-profile-tab-icon">
+                                    <div class="card-sub">
+                                        <div class="text-center">
+                                            Aquí podrás elegir si realizan pagos al Crédito.
+                                        </div>
+                                    </div>
+                                    <!-- Monto Total -->
+                                    <div class="mb-3">
+                                        <label for="" class="form-label">Monto Inicial (S/)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">S/</span>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id=""
+                                                placeholder="Agregue un monto dejado a cuenta" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
                         </div>
-
-
-                        <div id="panel_forma_pago" class="mb-3">
-                            <label for="" class="form-label">Forma de Pago</label>
-                            <select
-                                class="form-select form-select-md"
-                                name=""
-                                id="">
-                                <?php
-                                foreach (listarFormaPago() as $datosFormaPago) {
-                                    $datosFormaPagoJSON = json_encode($datosFormaPago);
-                                ?>
-                                    <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
-
-                                <?php
-                                }
-                                ?>
-
-                            </select>
-                        </div>
-
                         <div class="text-center">
                             <a class="btn btn-success" href="#" role="button">Pagar</a>
                         </div>
@@ -640,6 +768,93 @@ if (isset($_GET['id'])) {
         });
     });
 </script>
+<script>
+    function validarNumero(event) {
+        // Eliminar cualquier cosa que no sea un número
+        event.target.value = event.target.value.replace(/[^0-9]/g, '');
+    }
+
+    const btnMas = document.getElementById('btn_mas');
+    const btnContador = document.getElementById('id_contador');
+    const inputNumero = document.getElementById('input_numero');
+
+    const btnMasImpresion = document.getElementById('btn_mas_impresion');
+    const btnContadorImpresion = document.getElementById('id_contador_impresion');
+    const inputNumeroImpresion = document.getElementById('input_numero_impresion');
+
+    btnMas.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumero.value);
+        if (!isNaN(currentValue) && currentValue > 1) {
+            inputNumero.value = currentValue - 1;
+        }
+    });
+
+    btnMasImpresion.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumeroImpresion.value);
+        if (!isNaN(currentValue) && currentValue > 1) {
+            inputNumeroImpresion.value = currentValue - 1;
+        }
+    });
+
+
+    btnContador.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumero.value);
+        if (!isNaN(currentValue)) {
+            inputNumero.value = currentValue + 1;
+        }
+    });
+
+    btnContadorImpresion.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumeroImpresion.value);
+        if (!isNaN(currentValue)) {
+            inputNumeroImpresion.value = currentValue + 1;
+        }
+    });
+</script>
+
+<script>
+    // Variables para manejar los selects y montos adicionales
+    const btnAgregarPago = document.getElementById('btnAgregarPago');
+    const contenedorPagos = document.getElementById('contenedorPagos');
+    let contador = 1; // Para numerar los campos adicionales
+
+    // Evento para agregar más selects con montos
+    btnAgregarPago.addEventListener('click', function() {
+        // Crear un contenedor para el nuevo select y su campo de monto
+        const nuevoContenedor = document.createElement('div');
+        nuevoContenedor.classList.add('d-flex', 'align-items-center', 'mb-2');
+
+        // Crear un nuevo select
+        const nuevoSelect = document.createElement('select');
+        nuevoSelect.classList.add('form-select', 'form-select-md', 'me-2');
+        nuevoSelect.innerHTML = `
+            <?php
+            foreach (listarFormaPago() as $datosFormaPago) {
+                echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
+            }
+            ?>
+        `;
+
+        // Crear una nueva caja de texto para el monto
+        const nuevoInputMonto = document.createElement('input');
+        nuevoInputMonto.type = 'number';
+        nuevoInputMonto.classList.add('form-control', 'form-control-md', 'ms-2');
+        nuevoInputMonto.placeholder = 'Monto';
+        nuevoInputMonto.min = '0';
+        nuevoInputMonto.id = 'montoSelect_' + contador;
+
+        // Agregar el select y el input al contenedor
+        nuevoContenedor.appendChild(nuevoSelect);
+        nuevoContenedor.appendChild(nuevoInputMonto);
+
+        // Agregar el contenedor al contenedor principal
+        contenedorPagos.appendChild(nuevoContenedor);
+
+        // Incrementar el contador para los nuevos inputs
+        contador++;
+    });
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1224,8 +1439,8 @@ if (isset($_GET['id'])) {
 
 
 <script>
-    document.getElementById("btnRealizarPago").addEventListener("click", function () {
-  
+    document.getElementById("btnRealizarPago").addEventListener("click", function() {
+
 
         // Mostrar el modal manualmente
         const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
