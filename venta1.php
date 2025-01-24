@@ -1412,12 +1412,10 @@ if (isset($_GET['id'])) {
             if (ploteoEditando) {
                 // Actualizamos los valores de la fila existente
                 ploteoEditando.cantidad = cantidadPloteos;
-                ploteoEditando.monto = montoPloteo;
-                ploteoEditando.subtotal = cantidadPloteos * montoPloteo;
+                ploteoEditando.subtotal = montoPloteo;
 
                 // Actualizamos la fila de la tabla
                 ploteoEditando.fila.cells[5].textContent = ploteoEditando.cantidad; // Cantidad
-                ploteoEditando.fila.cells[6].textContent = ploteoEditando.monto.toFixed(2); // Monto
                 ploteoEditando.fila.cells[7].textContent = ploteoEditando.subtotal.toFixed(2); // Subtotal
 
                 // Limpiar los campos
@@ -1431,11 +1429,11 @@ if (isset($_GET['id'])) {
             } else {
                 // Si no estamos editando, agregar un nuevo ploteo
                 const datosPloteo = [{
-                    id: '#', // ID del ploteo
+                    id: '0', // ID del ploteo
                     cantidad: cantidadPloteos, // Cantidad de ploteos
-                    monto: montoPloteo, // Monto
-                    subtotal: cantidadPloteos * montoPloteo, // Subtotal
-                    articulo: 'Ploteo',
+                    monto: '-', // Monto
+                    subtotal: montoPloteo, // Subtotal
+                    articulo: 'PLOTEO',
                     idmovimiento: 2,
                 }];
                 fn_ploteo_tabla(datosPloteo);
@@ -1458,7 +1456,7 @@ if (isset($_GET['id'])) {
                 nuevaFila.insertCell(3).textContent = '-'; // Subtotal
                 nuevaFila.insertCell(4).textContent = ploteo.articulo; // Artículo (Ploteo)
                 nuevaFila.insertCell(5).textContent = ploteo.cantidad; // Se puede agregar más detalles si se requiere
-                nuevaFila.insertCell(6).textContent = ploteo.monto.toFixed(2); // Otro dato
+                nuevaFila.insertCell(6).textContent = ploteo.monto; // Otro dato
                 nuevaFila.insertCell(7).textContent = ploteo.subtotal.toFixed(2); // Subtotal (multiplied)
 
                 let accionCell = nuevaFila.insertCell(8);
@@ -1481,7 +1479,7 @@ if (isset($_GET['id'])) {
                 botonEditar.addEventListener("click", () => {
                     // Rellenar los campos con los valores actuales del ploteo
                     document.getElementById("input_cantidad_ploteo").value = ploteo.cantidad;
-                    document.getElementById("monto_ploteo").value = ploteo.monto;
+                    document.getElementById("monto_ploteo").value = ploteo.subtotal;
 
                     // Mostrar el pill de ploteo
                     mostrarPillPloteo();
@@ -1557,12 +1555,10 @@ if (isset($_GET['id'])) {
             if (impresionEditando) {
                 // Actualizamos los valores de la fila existente
                 impresionEditando.cantidad = cantidadImpresiones;
-                impresionEditando.monto = montoImpresion;
-                impresionEditando.subtotal = cantidadImpresiones * montoImpresion;
+                impresionEditando.subtotal = montoImpresion;
 
                 // Actualizamos la fila de la tabla
                 impresionEditando.fila.cells[5].textContent = impresionEditando.cantidad; // Cantidad
-                impresionEditando.fila.cells[6].textContent = impresionEditando.monto.toFixed(2); // Monto
                 impresionEditando.fila.cells[7].textContent = impresionEditando.subtotal.toFixed(2); // Subtotal
 
                 // Limpiar los campos
@@ -1576,11 +1572,11 @@ if (isset($_GET['id'])) {
             } else {
                 // Si no estamos editando, agregar una nueva impresión
                 const datosImpresion = [{
-                    id: '#', // ID de la impresión
+                    id: '0', // ID de la impresión
                     cantidad: cantidadImpresiones, // Cantidad de impresiones
-                    monto: montoImpresion, // Monto
-                    subtotal: cantidadImpresiones * montoImpresion, // Subtotal
-                    articulo: 'Impresión',
+                    monto: '-', // Monto
+                    subtotal: montoImpresion, // Subtotal
+                    articulo: 'IMPRESIÓN',
                     idmovimiento: 3, // ID movimiento para impresión
                 }];
                 fn_impresion_tabla(datosImpresion);
@@ -1603,7 +1599,7 @@ if (isset($_GET['id'])) {
                 nuevaFila.insertCell(3).textContent = '-'; // Subtotal
                 nuevaFila.insertCell(4).textContent = impresion.articulo; // Artículo (Impresión)
                 nuevaFila.insertCell(5).textContent = impresion.cantidad; // Cantidad
-                nuevaFila.insertCell(6).textContent = impresion.monto.toFixed(2); // Monto
+                nuevaFila.insertCell(6).textContent = impresion.monto; // Monto
                 nuevaFila.insertCell(7).textContent = impresion.subtotal.toFixed(2); // Subtotal
 
                 let accionCell = nuevaFila.insertCell(8);
@@ -1626,7 +1622,7 @@ if (isset($_GET['id'])) {
                 botonEditar.addEventListener("click", () => {
                     // Rellenar los campos con los valores actuales de la impresión
                     document.getElementById("input_numero_impresion").value = impresion.cantidad;
-                    document.getElementById("monto_impresion").value = impresion.monto;
+                    document.getElementById("monto_impresion").value = impresion.subtotal;
 
                     // Mostrar el pill de impresión
                     mostrarPillImpresion();
@@ -1675,145 +1671,143 @@ if (isset($_GET['id'])) {
 
 <!--Escaneo-->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    let escaneoEditando = null; // Variable para guardar el escaneo que se está editando
+    document.addEventListener('DOMContentLoaded', function () {
+        let escaneoEditando = null; // Variable para guardar el escaneo que se está editando
 
-    // 1. Manejar Incremento y Decremento de Escaneo
-    document.getElementById("btn_mas_escaneo").addEventListener("click", function () {
-        let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
-        document.getElementById("input_numero_escaneo").value = cantidad + 1;
-    });
-
-    document.getElementById("btn_menos_escaneo").addEventListener("click", function () {
-        let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
-        if (cantidad > 1) {
-            document.getElementById("input_numero_escaneo").value = cantidad - 1;
-        }
-    });
-
-    // 2. Función para añadir Escaneo a la Tabla
-    document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
-        const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
-        const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
-
-        // Si estamos editando, actualizamos la fila
-        if (escaneoEditando) {
-            // Actualizamos los valores de la fila existente
-            escaneoEditando.cantidad = cantidadEscaneos;
-            escaneoEditando.monto = montoEscaneo;
-            escaneoEditando.subtotal = cantidadEscaneos * montoEscaneo;
-
-            // Actualizamos la fila de la tabla
-            escaneoEditando.fila.cells[5].textContent = escaneoEditando.cantidad; // Cantidad
-            escaneoEditando.fila.cells[6].textContent = escaneoEditando.monto.toFixed(2); // Monto
-            escaneoEditando.fila.cells[7].textContent = escaneoEditando.subtotal.toFixed(2); // Subtotal
-
-            // Limpiar los campos
-            document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
-            document.getElementById('monto_escaneo').value = ''; // Reset monto
-
-            // Resetear el botón y quitar la referencia al escaneo editado
-            document.getElementById('btnAgregarescaneo').textContent = 'Añadir a la Venta';
-            escaneoEditando = null; // Reiniciar la referencia
-            mostrarPillEscaneo(); // Resetear el pill
-        } else {
-            // Si no estamos editando, agregar un nuevo escaneo
-            const datosEscaneo = [{
-                id: '#', // ID del escaneo
-                cantidad: cantidadEscaneos, // Cantidad de escaneos
-                monto: montoEscaneo, // Monto
-                subtotal: cantidadEscaneos * montoEscaneo, // Subtotal
-                articulo: 'Escaneo',
-                idmovimiento: 4, // ID movimiento para escaneo
-            }];
-            fn_escaneo_tabla(datosEscaneo);
-            document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
-            document.getElementById('monto_escaneo').value = ''; // Reset monto
-        }
-    });
-
-    // 3. Función para Agregar a la Tabla de Escaneos
-    function fn_escaneo_tabla(datosEscaneo) {
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-
-        datosEscaneo.forEach(escaneo => {
-            let nuevaFila = tabla.insertRow();
-
-            // Agregar celdas para los datos del escaneo
-            nuevaFila.insertCell(0).textContent = escaneo.id; // ID
-            nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Escaneos
-            nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
-            nuevaFila.insertCell(3).textContent = '-'; // Subtotal
-            nuevaFila.insertCell(4).textContent = escaneo.articulo; // Artículo (Escaneo)
-            nuevaFila.insertCell(5).textContent = escaneo.cantidad; // Cantidad
-            nuevaFila.insertCell(6).textContent = escaneo.monto.toFixed(2); // Monto
-            nuevaFila.insertCell(7).textContent = escaneo.subtotal.toFixed(2); // Subtotal
-
-            let accionCell = nuevaFila.insertCell(8);
-            nuevaFila.insertCell(9).textContent = escaneo.idmovimiento; // ID de movimiento
-
-            // 1. Botón de Editar
-            let botonEditar = document.createElement("button");
-            botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
-            botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
-
-            accionCell.appendChild(botonEditar);
-
-            // 2. Botón de Eliminar
-            let botonEliminar = document.createElement("button");
-            botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
-            botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
-
-            accionCell.appendChild(botonEliminar);
-
-            botonEditar.addEventListener("click", () => {
-                // Rellenar los campos con los valores actuales del escaneo
-                document.getElementById("input_numero_escaneo").value = escaneo.cantidad;
-                document.getElementById("monto_escaneo").value = escaneo.monto;
-
-                // Mostrar el pill de escaneo
-                mostrarPillEscaneo();
-
-                // Cambiar el texto del botón de agregar a "Actualizar"
-                const btn_agregar = document.getElementById('btnAgregarescaneo');
-                btn_agregar.textContent = 'Actualizar';
-
-                // Guardar la referencia a la fila del escaneo
-                escaneo.fila = nuevaFila;  // Guardar referencia a la fila
-                escaneoEditando = escaneo;  // Guardar referencia al escaneo que se está editando
-            });
-
-            // Función de eliminar
-            botonEliminar.addEventListener("click", () => {
-                const fila = botonEliminar.closest("tr");
-                fila.remove();
-                fn_obtener_total(); // Recalcular los totales
-            });
+        // 1. Manejar Incremento y Decremento de Escaneo
+        document.getElementById("btn_mas_escaneo").addEventListener("click", function () {
+            let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+            document.getElementById("input_numero_escaneo").value = cantidad + 1;
         });
 
-        fn_obtener_total(); // Recalcular totales
+        document.getElementById("btn_menos_escaneo").addEventListener("click", function () {
+            let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+            if (cantidad > 1) {
+                document.getElementById("input_numero_escaneo").value = cantidad - 1;
+            }
+        });
+
+        // 2. Función para añadir Escaneo a la Tabla
+        document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
+            const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
+            const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
+
+            // Si estamos editando, actualizamos la fila
+            if (escaneoEditando) {
+                // Actualizamos los valores de la fila existente
+                escaneoEditando.cantidad = cantidadEscaneos;
+                escaneoEditando.subtotal = montoEscaneo;
+
+                // Actualizamos la fila de la tabla
+                escaneoEditando.fila.cells[5].textContent = escaneoEditando.cantidad; // Cantidad
+                escaneoEditando.fila.cells[7].textContent = escaneoEditando.subtotal.toFixed(2); // Subtotal
+
+                // Limpiar los campos
+                document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
+                document.getElementById('monto_escaneo').value = ''; // Reset monto
+
+                // Resetear el botón y quitar la referencia al escaneo editado
+                document.getElementById('btnAgregarescaneo').textContent = 'Añadir a la Venta';
+                escaneoEditando = null; // Reiniciar la referencia
+                mostrarPillEscaneo(); // Resetear el pill
+            } else {
+                // Si no estamos editando, agregar un nuevo escaneo
+                const datosEscaneo = [{
+                    id: '0', // ID del escaneo
+                    cantidad: cantidadEscaneos, // Cantidad de escaneos
+                    monto: '-', // Monto
+                    subtotal: montoEscaneo, // Subtotal
+                    articulo: 'ESCANEO',
+                    idmovimiento: 4, // ID movimiento para escaneo
+                }];
+                fn_escaneo_tabla(datosEscaneo);
+                document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
+                document.getElementById('monto_escaneo').value = ''; // Reset monto
+            }
+        });
+
+        // 3. Función para Agregar a la Tabla de Escaneos
+        function fn_escaneo_tabla(datosEscaneo) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosEscaneo.forEach(escaneo => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos del escaneo
+                nuevaFila.insertCell(0).textContent = escaneo.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Escaneos
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = escaneo.articulo; // Artículo (Escaneo)
+                nuevaFila.insertCell(5).textContent = escaneo.cantidad; // Cantidad
+                nuevaFila.insertCell(6).textContent = escaneo.monto; // Monto
+                nuevaFila.insertCell(7).textContent = escaneo.subtotal.toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = escaneo.idmovimiento; // ID de movimiento
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    // Rellenar los campos con los valores actuales del escaneo
+                    document.getElementById("input_numero_escaneo").value = escaneo.cantidad;
+                    document.getElementById("monto_escaneo").value = escaneo.subtotal;
+
+                    // Mostrar el pill de escaneo
+                    mostrarPillEscaneo();
+
+                    // Cambiar el texto del botón de agregar a "Actualizar"
+                    const btn_agregar = document.getElementById('btnAgregarescaneo');
+                    btn_agregar.textContent = 'Actualizar';
+
+                    // Guardar la referencia a la fila del escaneo
+                    escaneo.fila = nuevaFila;  // Guardar referencia a la fila
+                    escaneoEditando = escaneo;  // Guardar referencia al escaneo que se está editando
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
+    });
+
+    function mostrarPillEscaneo() {
+        // Cambiar la clase activa de la pestaña
+        const tabEscaneo = document.getElementById('pills-escaneo-tab-nobd');
+        const tabContentEscaneo = document.getElementById('pills-escaneo-nobd');
+
+        // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
+        const tabs = document.querySelectorAll('.nav-link');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const contents = document.querySelectorAll('.tab-pane');
+        contents.forEach(content => {
+            content.classList.remove('show', 'active');
+        });
+
+        // Activar la pestaña de escaneo
+        tabEscaneo.classList.add('active');
+        tabContentEscaneo.classList.add('show', 'active');
     }
-});
-
-function mostrarPillEscaneo() {
-    // Cambiar la clase activa de la pestaña
-    const tabEscaneo = document.getElementById('pills-escaneo-tab-nobd');
-    const tabContentEscaneo = document.getElementById('pills-escaneo-nobd');
-
-    // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
-    const tabs = document.querySelectorAll('.nav-link');
-    tabs.forEach(tab => {
-        tab.classList.remove('active');
-    });
-    const contents = document.querySelectorAll('.tab-pane');
-    contents.forEach(content => {
-        content.classList.remove('show', 'active');
-    });
-
-    // Activar la pestaña de escaneo
-    tabEscaneo.classList.add('active');
-    tabContentEscaneo.classList.add('show', 'active');
-}
 </script>
 
 
