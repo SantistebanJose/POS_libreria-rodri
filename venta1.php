@@ -1030,87 +1030,134 @@ if (isset($_GET['id'])) {
     }
 
     function fn_corte_global(datosArticulo) {
-        const cantidadGlobal = parseInt(document.getElementById('cantidad_global').innerText) || 0;
+    const cantidadGlobal = parseInt(document.getElementById('cantidad_global').innerText) || 0;
 
-        if (cantidadGlobal > 0) {
-            // Obtener la tabla de artículos
-            const tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-            let filas = Array.from(tabla.rows);
+    if (cantidadGlobal > 0) {
+        // Obtener la tabla de artículos
+        const tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        let filas = Array.from(tabla.rows);
 
-            // Eliminar las filas existentes para ese producto (por articulo_id)
-            for (let i = filas.length - 1; i >= 0; i--) {
-                let fila = filas[i];
-                console.log(datosArticulo['id']);
-                if (fila.cells[0].textContent.trim() === datosArticulo['id'].toString().trim()) {
-                    tabla.deleteRow(i); // Usamos 'i' directamente
-                    console.log("Eliminando fila en índice " + i);
-                }
-            }
+        // Buscar y eliminar la fila específica asociada al `datosArticulo`
+        const filaAEliminar = filas.find(fila =>
+            fila.cells[0].textContent.trim() === datosArticulo['id'].toString().trim() &&
+            fila.cells[4].textContent.trim() === datosArticulo["articulo"].trim()
+        );
 
-            // Crear las nuevas filas basadas en la cantidad de minutos globales (cantidadGlobal)
-            const cantidad = datosArticulo['cantidad']; // Cantidad del producto original
-            const precioUnitario = datosArticulo['precio_venta'] || 0; // Precio unitario del producto
-            const costo = 1.5; // Costo por minuto, puede ser un valor fijo o dinámico según tu sistema
-
-            for (let i = 0; i < cantidad; i++) {
-
-
-                // Calcular el costo total por minuto
-                const totalCosto = costo * cantidadGlobal; // Costo por minuto multiplicado por los minutos
-
-                // Calcular el subtotal: (precio_unitario * cantidad) + (costo * minutos)
-                const subtotal = (precioUnitario * 1) + totalCosto;
-
-
-
-                // Crear la nueva fila y agregarla a la tabla
-                const nuevaFila = tabla.insertRow();
-                // Crear celdas para cada dato
-                const celdaId = nuevaFila.insertCell(0);
-
-                const celdaMinutos = nuevaFila.insertCell(1);
-                const celdatarifa = nuevaFila.insertCell(2);
-                const celdaCosto = nuevaFila.insertCell(3);
-
-                const celdaNombre = nuevaFila.insertCell(4);
-                const celdaCantidad = nuevaFila.insertCell(5);
-                const celdaPrecioUnitario = nuevaFila.insertCell(6);
-                const celdaSubtotal = nuevaFila.insertCell(7);
-                const celdaAcciones = nuevaFila.insertCell(8);
-
-                // Rellenar las celdas con los datos del artículo
-                celdaId.textContent = datosArticulo['id'];
-                celdaNombre.textContent = `${datosArticulo["articulo"]} - Corte ${i+1}`;
-                celdaCantidad.textContent = 1;
-                celdaMinutos.textContent = cantidadGlobal;
-                celdaCosto.textContent = totalCosto.toFixed(2); // Mostrar el costo total
-                celdaPrecioUnitario.textContent = parseFloat(precioUnitario).toFixed(2); // Mostrar el precio unitario
-                celdaSubtotal.textContent = subtotal.toFixed(2); // Mostrar el subtotal
-
-                // Agregar el botón de eliminación
-                let botonEliminar = document.createElement("button");
-                botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
-
-                let iconoBasura = document.createElement("i");
-                iconoBasura.classList.add("fas", "fa-trash"); // Icono de basura
-
-                botonEliminar.appendChild(iconoBasura);
-                celdaAcciones.appendChild(botonEliminar);
-
-                // Función para manejar el botón de eliminar
-                botonEliminar.addEventListener("click", () => {
-                    const fila = botonEliminar.closest("tr");
-                    fila.remove(); // Eliminar la fila
-                    fn_obtener_total(); // Recalcular los totales después de eliminar
-                });
-            }
-
-            // Actualizar el total y mostrarlo
-            fn_obtener_total();
-        } else {
-            alert("Por favor, ingrese un valor mayor a 0 en minutos globales.");
+        if (filaAEliminar) {
+            filaAEliminar.remove();
+            console.log(`Fila específica eliminada: ID=${datosArticulo['id']}, Nombre=${datosArticulo['articulo']}`);
         }
+
+        // Crear nuevas filas basadas en la cantidad global
+        const cantidadOriginal = datosArticulo['cantidad']; // Cantidad original del producto
+        const precioUnitario = datosArticulo['precio_venta'] || 0; // Precio unitario del producto
+        const costo = 1.5; // Costo por minuto, puede ser un valor fijo o dinámico según tu sistema
+
+        for (let i = 0; i < cantidadOriginal; i++) {
+            // Crear una copia del objeto para la nueva fila
+            const datosFilaNueva = { ...datosArticulo };
+
+            // Modificar datos únicos para la nueva fila
+            datosFilaNueva.id = `${datosArticulo['id']}-${i + 1}`;
+            datosFilaNueva.articulo = `${datosArticulo["articulo"]} - Corte ${i + 1}`;
+            datosFilaNueva.cantidad = 1; // Cada nueva fila tendrá cantidad 1
+
+            // Calcular el costo total por minuto
+            const totalCosto = costo * cantidadGlobal; // Costo por minuto multiplicado por los minutos
+
+            // Calcular el subtotal: (precio_unitario * cantidad) + (costo * minutos)
+            const subtotal = (precioUnitario * datosFilaNueva.cantidad) + totalCosto;
+
+            // Crear la nueva fila y agregarla a la tabla
+            const nuevaFila = tabla.insertRow();
+            // Crear celdas para cada dato
+            const celdaId = nuevaFila.insertCell(0);
+            const celdaMinutos = nuevaFila.insertCell(1);
+            const celdatarifa = nuevaFila.insertCell(2);
+            const celdaCosto = nuevaFila.insertCell(3);
+            const celdaNombre = nuevaFila.insertCell(4);
+            const celdaCantidad = nuevaFila.insertCell(5);
+            const celdaPrecioUnitario = nuevaFila.insertCell(6);
+            const celdaSubtotal = nuevaFila.insertCell(7);
+            const celdaAcciones = nuevaFila.insertCell(8);
+
+            // Rellenar las celdas con los datos únicos del artículo
+            celdaId.textContent = datosFilaNueva.id; // ID único para cada fila
+            celdaNombre.textContent = datosFilaNueva.articulo; // Nombre único
+            celdaCantidad.textContent = datosFilaNueva.cantidad; // Cada fila tiene cantidad 1
+            celdaMinutos.textContent = cantidadGlobal;
+            celdaCosto.textContent = totalCosto.toFixed(2); // Mostrar el costo total
+            celdaPrecioUnitario.textContent = parseFloat(precioUnitario).toFixed(2); // Mostrar el precio unitario
+            celdaSubtotal.textContent = subtotal.toFixed(2); // Mostrar el subtotal
+
+            // Agregar el botón de edición
+            let botonEditar = document.createElement("button");
+            botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+            botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+            celdaAcciones.appendChild(botonEditar);
+
+            botonEditar.addEventListener("click", () => {
+                // Mostrar un modal o formulario para editar la fila
+                document.getElementById("nombreArticulo").textContent = datosFilaNueva.articulo;
+                document.getElementById("inputCantidad").value = datosFilaNueva.cantidad;
+                document.getElementById("cantidadCorte").value = cantidadGlobal;
+                document.getElementById("precioCorte").value = costo;
+
+                                
+                const seccionCorte = document.getElementById("seccionCorte");
+                if (datosArticulo["corte"] ) {
+                    document.getElementById("cantidadCorte").value = 
+                    datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+
+                    document.getElementById("precioCorte").value = 
+                        datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
+                    seccionCorte.style.display = "block";
+                } else {
+                    seccionCorte.style.display = "none";
+                }
+
+                // Guardar cambios en la fila
+                document.getElementById("btnConfirmarCantidad").onclick = function () {
+                    const nuevaCantidad = parseInt(document.getElementById("inputCantidad").value);
+                    const nuevosMinutos = parseInt(document.getElementById("cantidadCorte").value);
+                    const nuevoCosto = parseFloat(document.getElementById("precioCorte").value);
+
+                    // Actualizar la fila con los nuevos valores
+                    nuevaFila.cells[5].textContent = nuevaCantidad;
+                    nuevaFila.cells[1].textContent = nuevosMinutos;
+                    nuevaFila.cells[3].textContent = (nuevosMinutos * nuevoCosto).toFixed(2);
+
+                    const nuevoSubtotal = (nuevaCantidad * precioUnitario) + (nuevosMinutos * nuevoCosto);
+                    nuevaFila.cells[7].textContent = nuevoSubtotal.toFixed(2);
+
+                    // Cerrar el modal
+                    $('#modalCantidad').modal('hide');
+                    fn_obtener_total(); // Recalcular totales
+                };
+
+                $('#modalCantidad').modal('show');
+            });
+
+            // Agregar el botón de eliminación
+            const botonEliminar = document.createElement("button");
+            botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2");
+            botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+            celdaAcciones.appendChild(botonEliminar);
+
+            // Función para manejar el botón de eliminar
+            botonEliminar.addEventListener("click", () => {
+                const fila = botonEliminar.closest("tr");
+                fila.remove(); // Eliminar la fila
+                fn_obtener_total(); // Recalcular los totales después de eliminar
+            });
+        }
+
+        // Actualizar el total y mostrarlo
+        fn_obtener_total();
+    } else {
+        alert("Por favor, ingrese un valor mayor a 0 en minutos globales.");
     }
+}
 
 
 
@@ -1189,11 +1236,14 @@ function fn_corte_individual(datosArticulo) {
             botonEditar.addEventListener("click", () => {
                 document.getElementById("nombreArticulo").textContent = datosFilaNueva["articulo"];
                 document.getElementById("inputCantidad").value = datosFilaNueva["cantidad"];
-
+                
                 const seccionCorte = document.getElementById("seccionCorte");
-                if (datosFilaNueva["corte"]) {
-                    document.getElementById("cantidadCorte").value = datosFilaNueva["minutos"] || 0;
-                    document.getElementById("precioCorte").value = datosFilaNueva["costo_por_minuto"] || 1.5;
+                if (datosArticulo["corte"]) {
+                    document.getElementById("cantidadCorte").value = 
+                    datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+
+                    document.getElementById("precioCorte").value = 
+                        datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
                     seccionCorte.style.display = "block";
                 } else {
                     seccionCorte.style.display = "none";
