@@ -800,9 +800,12 @@ if (isset($_GET['id'])) {
 
             // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
             const seccionCorte = document.getElementById("seccionCorte");
-            if (datosArticulo["corte"]) {
-                document.getElementById("cantidadCorte").value = datosArticulo["minutos"] || 0;
-                document.getElementById("precioCorte").value = datosArticulo["costo_por_minuto"] || 1.5;
+            if (datosArticulo["corte"] && datosArticulo["cantidad"] == 1) {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+
+                document.getElementById("precioCorte").value = 
+                    datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
                 seccionCorte.style.display = "block";
             } else {
                 seccionCorte.style.display = "none";
@@ -1111,157 +1114,127 @@ if (isset($_GET['id'])) {
 
 
 
-    // Función para manejar el corte individual (actualización de cantidad)
-    function fn_corte_individual(datosArticulo) {
-        // Obtener la cantidad de cortes individuales
-        const cantidad = datosArticulo['cantidad'];
+ // Función para manejar el corte individual (actualización de cantidad)
+function fn_corte_individual(datosArticulo) {
+    // Obtener la cantidad de cortes individuales
+    const cantidad = datosArticulo['cantidad'];
 
-        // Obtener la tabla de artículos
-        const tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        let filas = Array.from(tabla.rows);
+    // Obtener la tabla de artículos
+    const tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+    let filas = Array.from(tabla.rows);
 
-        // Para cada corte individual, verificar cuántos se agregan
-        for (let i = 1; i <= cantidad; i++) {
-            const cantidadtiempo = parseInt(document.getElementById(`cantidad_${i}`).innerText) || 0;
-            console.log(i, cantidadtiempo)
-            if (cantidadtiempo > 0) {
-                // Reducir la cantidad del artículo original en la tabla
-                filas.forEach(fila => {
-                    // Si el articulo_id en la fila coincide con el articulo_id del artículo original
-                    if (fila.cells[0].textContent.trim() === datosArticulo['id'].toString().trim()) {
-                        const cantidadActual = parseInt(fila.cells[5].textContent) || 0; // Leer la cantidad existente
-                        const nuevaCantidad = cantidadActual - 1; // Restar la cantidad agregada
+    // Para cada corte individual, verificar cuántos se agregan
+    for (let i = 1; i <= cantidad; i++) {
+        const cantidadtiempo = parseInt(document.getElementById(`cantidad_${i}`).innerText) || 0;
 
-                        // Actualizar la cantidad en la tabla
-                        fila.cells[5].textContent = nuevaCantidad > 0 ? nuevaCantidad : 0; // Si la cantidad es menor a 0, dejar 0
+        if (cantidadtiempo > 0) {
+            // Reducir la cantidad del artículo original en la tabla
+            filas.forEach(fila => {
+                if (fila.cells[0].textContent.trim() === datosArticulo['id'].toString().trim()) {
+                    const cantidadActual = parseInt(fila.cells[5].textContent) || 0;
+                    const nuevaCantidad = cantidadActual - 1;
 
-                        // También actualizar el costo total y el subtotal de esa fila
-                        const precioUnitario = parseFloat(fila.cells[6].textContent) || 0;
-                        const subtotal = precioUnitario * nuevaCantidad; // Subtotal del corte
+                    // Actualizar la cantidad en la tabla
+                    fila.cells[5].textContent = nuevaCantidad > 0 ? nuevaCantidad : 0;
 
-                        // Actualizar las celdas de costo y subtotal
-                        fila.cells[7].textContent = subtotal.toFixed(2); // Subtotal
-                        datosArticulo.cantidad = nuevaCantidad;
-                    }
-                });
+                    // Actualizar el subtotal
+                    const precioUnitario = parseFloat(fila.cells[6].textContent) || 0;
+                    const subtotal = precioUnitario * nuevaCantidad;
+                    fila.cells[7].textContent = subtotal.toFixed(2);
 
-                const precioUnitario = datosArticulo['precio_venta'] || 0; // Precio unitario del producto
-                const costo = 1.5; // Costo por minuto, puede ser un valor fijo o dinámico según tu sistema
+                    // Actualizar el dato original
+                    datosArticulo.cantidad = nuevaCantidad;
+                }
+            });
 
-                // Calcular el costo total por minuto
-                const totalCosto = costo * cantidadtiempo; // Costo por minuto multiplicado por los minutos
-                datosArticulo.costo_por_minuto = costo;
-                datosArticulo.minutos = cantidadtiempo;
+            // Crear una copia del objeto para la nueva fila
+            const datosFilaNueva = { ...datosArticulo };
 
-                // Calcular el subtotal: (precio_unitario * cantidad) + (costo * minutos)
-                const subtotal = (precioUnitario * 1) + totalCosto;
+            // Asignar valores específicos para la nueva fila
+            datosFilaNueva.cantidad = 1;
+            datosFilaNueva.minutos = cantidadtiempo;
+            datosFilaNueva.costo_por_minuto = 1.5; // Costo fijo por minuto
+            const totalCosto = datosFilaNueva.costo_por_minuto * cantidadtiempo;
+            const subtotal = (datosFilaNueva['precio_venta'] * datosFilaNueva.cantidad) + totalCosto;
 
-                // Crear la nueva fila y agregarla a la tabla
-                const nuevaFila = tabla.insertRow();
-                // Crear celdas para cada dato
-                const celdaId = nuevaFila.insertCell(0);
+            // Crear la nueva fila en la tabla
+            const nuevaFila = tabla.insertRow();
 
-                const celdaMinutos = nuevaFila.insertCell(1);
-                const celdaCosto = nuevaFila.insertCell(2);
-                const celdaTotalcosto = nuevaFila.insertCell(3);
+            // Crear y llenar celdas
+            const celdaId = nuevaFila.insertCell(0);
+            const celdaMinutos = nuevaFila.insertCell(1);
+            const celdaCosto = nuevaFila.insertCell(2);
+            const celdaTotalcosto = nuevaFila.insertCell(3);
+            const celdaNombre = nuevaFila.insertCell(4);
+            const celdaCantidad = nuevaFila.insertCell(5);
+            const celdaPrecioUnitario = nuevaFila.insertCell(6);
+            const celdaSubtotal = nuevaFila.insertCell(7);
+            const celdaAcciones = nuevaFila.insertCell(8);
 
-                const celdaNombre = nuevaFila.insertCell(4);
-                const celdaCantidad = nuevaFila.insertCell(5);
-                const celdaPrecioUnitario = nuevaFila.insertCell(6);
-                const celdaSubtotal = nuevaFila.insertCell(7);
-                const celdaAcciones = nuevaFila.insertCell(8);
+            celdaId.textContent = datosFilaNueva['id'];
+            celdaNombre.textContent = `${datosFilaNueva["articulo"]} - Corte ${i}`;
+            celdaCantidad.textContent = datosFilaNueva.cantidad;
+            celdaMinutos.textContent = datosFilaNueva.minutos;
+            celdaCosto.textContent = datosFilaNueva.costo_por_minuto.toFixed(2);
+            celdaTotalcosto.textContent = totalCosto.toFixed(2);
+            celdaPrecioUnitario.textContent = parseFloat(datosFilaNueva['precio_venta']).toFixed(2);
+            celdaSubtotal.textContent = subtotal.toFixed(2);
 
-                // Rellenar las celdas con los datos del artículo
-                celdaId.textContent = datosArticulo['id'];
-                celdaNombre.textContent = `${datosArticulo["articulo"]} - Corte ${i+1}`;
-                celdaCantidad.textContent = 1;
-                celdaMinutos.textContent = cantidadtiempo;
-                celdaCosto.textContent = costo; // Mostrar el costo total
-                celdaTotalcosto.textContent = totalCosto.toFixed(2); // Mostrar el costo total
-                celdaPrecioUnitario.textContent = parseFloat(precioUnitario).toFixed(2); // Mostrar el precio unitario
-                celdaSubtotal.textContent = subtotal.toFixed(2); // Mostrar el subtotal
+            // Botón para editar
+            const botonEditar = document.createElement("button");
+            botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+            botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+            celdaAcciones.appendChild(botonEditar);
 
-                let botonEditar = document.createElement("button");
-                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
-                botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+            botonEditar.addEventListener("click", () => {
+                document.getElementById("nombreArticulo").textContent = datosFilaNueva["articulo"];
+                document.getElementById("inputCantidad").value = datosFilaNueva["cantidad"];
 
-                // Agregar el botón de editar a la celda de acciones
-                celdaAcciones   .appendChild(botonEditar);
+                const seccionCorte = document.getElementById("seccionCorte");
+                if (datosFilaNueva["corte"]) {
+                    document.getElementById("cantidadCorte").value = datosFilaNueva["minutos"] || 0;
+                    document.getElementById("precioCorte").value = datosFilaNueva["costo_por_minuto"] || 1.5;
+                    seccionCorte.style.display = "block";
+                } else {
+                    seccionCorte.style.display = "none";
+                }
 
-                // Función para manejar el botón de editar
-                botonEditar.addEventListener("click", () => {
-                    // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
-                    document.getElementById("nombreArticulo").textContent = datosArticulo["articulo"];
-                    document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
-                    
-                    // Mostrar los valores actuales de corte si es que existen
-                    
+                document.getElementById("btnConfirmarCantidad").onclick = function () {
+                    datosFilaNueva["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
+                    datosFilaNueva["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || 0;
+                    datosFilaNueva["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || 1.5;
 
-                    // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
-                    const seccionCorte = document.getElementById("seccionCorte");
-                    if (datosArticulo["corte"]) {
-                        document.getElementById("cantidadCorte").value = datosArticulo["minutos"] || 0;
-                        document.getElementById("precioCorte").value = datosArticulo["costo_por_minuto"] || 1.5;
-                        seccionCorte.style.display = "block";
-                    } else {
-                        seccionCorte.style.display = "none";
-                    }
+                    nuevaFila.cells[5].textContent = datosFilaNueva["cantidad"];
+                    nuevaFila.cells[1].textContent = datosFilaNueva["minutos"];
+                    nuevaFila.cells[2].textContent = datosFilaNueva["costo_por_minuto"].toFixed(2);
 
-                    // Guardar el artículo actual para hacer la modificación posteriormente
-                    document.getElementById("btnConfirmarCantidad").onclick = function() {
-                        // Actualizamos la cantidad, minutos de corte y precio de corte en el objeto datosArticulo
-                        datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
-                        datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
-                        datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
+                    const nuevoSubtotal = (datosFilaNueva["cantidad"] * datosFilaNueva["precio_venta"]) +
+                        (datosFilaNueva["minutos"] * datosFilaNueva["costo_por_minuto"]);
+                    nuevaFila.cells[7].textContent = nuevoSubtotal.toFixed(2);
 
-                        // Actualizamos la celda de cantidad y subtotal en la tabla
-                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
-                        nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
-                        nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
-                        nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+                    $('#modalCantidad').modal('hide');
+                    fn_obtener_total();
+                };
 
-                        
-                        // Recalcular el subtotal considerando el precio de corte y minutos de corte
-                        let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_venta"];
-                        subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
-                        subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;  // Considerar precio de corte
+                $('#modalCantidad').modal('show');
+            });
 
-                        nuevaFila.cells[7].textContent = subtotal.toFixed(2);
+            // Botón para eliminar
+            const botonEliminar = document.createElement("button");
+            botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2");
+            botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+            celdaAcciones.appendChild(botonEliminar);
 
-                        // Cerramos el modal
-                        $('#modalCantidad').modal('hide');
-                        fn_obtener_total(); // Recalcular los totales después de editar
-                    };
-
-                    // Mostrar el modal
-                    $('#modalCantidad').modal('show');
-                });
-
-
-                // Agregar el botón de eliminación
-                let botonEliminar = document.createElement("button");
-                botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
-
-                let iconoBasura = document.createElement("i");
-                iconoBasura.classList.add("fas", "fa-trash"); // Icono de basura
-
-                botonEliminar.appendChild(iconoBasura);
-                celdaAcciones.appendChild(botonEliminar);
-
-                // Función para manejar el botón de eliminar
-                botonEliminar.addEventListener("click", () => {
-                    const fila = botonEliminar.closest("tr");
-                    fila.remove(); // Eliminar la fila
-                    fn_obtener_total(); // Recalcular los totales después de eliminar
-                });
-
-
-            }
+            botonEliminar.addEventListener("click", () => {
+                nuevaFila.remove();
+                fn_obtener_total();
+            });
         }
-
-        // Actualizar el total después de realizar el corte
-        fn_obtener_total();
     }
+
+    // Actualizar el total después de realizar el corte
+    fn_obtener_total();
+}
 
 
 
