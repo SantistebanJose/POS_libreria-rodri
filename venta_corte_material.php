@@ -38,10 +38,6 @@ if (isset($_GET['id'])) {
                     </div>
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-between">
-                                <h4 class="card-title">Artículos</h4>
-                                <button type="button" class="btn btn-success" onclick="agregarCorte()">Solo Corte</button>
-                            </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table
@@ -76,7 +72,7 @@ if (isset($_GET['id'])) {
                                                                 name=""
                                                                 id=""
                                                                 href="#panelDetalles"
-                                                                class="btn btn-secondary btn-round"
+                                                                class="btn btn-success btn-round"
 
                                                                 onclick='fn_consultarVenta(<?php echo $datosReservaJSON; ?>)'
                                                                 role="button">Ver</a>
@@ -178,7 +174,9 @@ if (isset($_GET['id'])) {
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
+
                         <div class="card-title">Agrega Más Articulos, Impresiones, Escaneos a la Venta</div>
+
                         <div>
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                                 <li class="nav-item">
@@ -196,17 +194,19 @@ if (isset($_GET['id'])) {
                                 <li class="nav-item">
                                     <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Escaneo</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="" role="tab" aria-controls="pills-contact-nobd" aria-selected="false" onclick="agregarCorte()">Solo Corte</a>
+                                </li>
                             </ul>
                         </div>
+
                     </div>
 
-
                     <div class="card-body">
-
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
-                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
-                                    <div class="table-responsive">
+                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">    
+                                <div class="table-responsive">
                                         <table
                                             id="multi-filter-select2"
                                             class="display table table-striped table-hover">
