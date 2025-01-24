@@ -20,9 +20,13 @@ if (isset($_GET['id'])) {
         cursor: pointer;
     }
     #tabla_articulos th:nth-child(1),
-#tabla_articulos td:nth-child(1) {
-    display: none;
+#tabla_articulos td:nth-child(1),
+#tabla_articulos th:nth-child(10),
+#tabla_articulos td:nth-child(10) {
+    display: none !important;
 }
+
+    
 </style>
 
 <div
@@ -42,7 +46,7 @@ if (isset($_GET['id'])) {
                         <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <h4 class="card-title">Artículos</h4>
-                            <button type="button" class="btn btn-success" onclick="agregarCorte()" >Solo Corte</button>
+  
                         </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -139,34 +143,53 @@ if (isset($_GET['id'])) {
 
 
 
-<!-- Modal Solo Corte -->
-<div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalSoloCorteLabel">Corte de Minutos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="card-body text-center">
-                    <p class="card-text">Minutos Corte</p> 
-                    <div class="row">
-                        <div class="col">
-                            <button id="btn_menos_solocorte" class="btn btn-danger btn-round ms-2" type="button">-</button>
+                <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div id="cantidad_solocorte" class="col">0</div>
-                        <div class="col">
-                            <button id="btn_mas_solocorte" class="btn btn-success btn-round ms-2" type="button">+</button>
+                        <div class="modal-body">
+                            <div class="col-12 p-4 bg-light rounded">
+                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                            <div class="mb-4">
+                                <!-- Minutos Corte -->
+                                <div class="text-center" style="flex: 1;">
+                                <p class="mb-1">Minutos Corte</p>
+                                <div class="d-flex justify-content-center align-items-center mb-2">
+                                    <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
+                                    <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
+                                    <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                                </div>
+                                </div>
+                                
+                                <!-- Línea divisoria -->
+                                <hr>
+                                
+                                <!-- Precio Corte -->
+                                <div class="text-center" style="flex: 1;">
+                                <p class="mb-1">Precio Corte</p>
+                                <div class="w-100 d-flex justify-content-center mb-1">
+                                    <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                    <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                    <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                    <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
+                        </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
-            </div>
-        </div>
-    </div>
-</div>
+                    </div>
+
 
 <!-- Modal Unificado -->
 <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
@@ -224,6 +247,7 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
+
             <div class="modal-footer">
                 <!-- Botón Confirmar a la izquierda -->
                 <button id="btnConfirmarCantidad" class="btn btn-primary" style="width: 120px;">Confirmar</button>
@@ -278,6 +302,166 @@ if (isset($_GET['id'])) {
             
         </div>
         <hr>
+        <div class="row " >
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+
+                        <div class="card-title">Agrega Más Articulos, Impresiones, Escaneos a la Venta</div>
+
+                        <div>
+                            <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab-nobd" data-bs-toggle="pill" href="#pills-profile-nobd" role="tab" aria-controls="pills-profile-nobd" aria-selected="false">Ploteo</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Imprimir</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Producto Vitrina</a>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" id="btnAbrirModalSolo" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Solo Corte</button>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+                        <div>
+                            <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
+                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">    
+                                <div class="table-responsive">
+                                        <table
+                                            id="multi-filter-select2"
+                                            class="display table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Articulo</th>
+                                                    <th>Categoria</th>
+                                                    <th>Tipo</th>
+                                                    <th>Dimension</th>
+                                                    <th>Stock</th>
+                                                    <th>Precio de Venta</th>
+                                                    <th>Accion</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Articulo</th>
+                                                    <th>Categoria</th>
+                                                    <th>Tipo</th>
+                                                    <th>Dimension</th>
+                                                    <th>Stock</th>
+                                                    <th>Precio de Venta</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+
+                                                <?php
+                                                foreach (listarProductosVenta1() as $datosArticulo) {
+                                                    $datosArticuloJSON = json_encode($datosArticulo);
+
+
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $datosArticulo["articulo"] ?></td>
+                                                        <td><?php echo $datosArticulo["categoria"] ?></td>
+                                                        <td><?php echo $datosArticulo["tipo"] ?></td>
+                                                        <td><?php echo $datosArticulo["dimension"] ?></td>
+                                                        <td><?php echo $datosArticulo["stock"] ?></td>
+                                                        <td><?php echo $datosArticulo["precio_venta"] ?></td>
+                                                        <th>
+
+                                                            <div class="mt-2 text-center">
+                                                                <a
+                                                                    name=""
+                                                                    id=""
+                                                                    class="btn btn-secondary btn-round"
+
+                                                                    onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
+                                                                    role="button">Agregar</a>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd">
+                                    <div class="text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Servicio de Ploteos</h4>
+                                                <div>ID: <span id="id_mov_ploteo">2</span></div>
+                                                <div class="card-sub">
+                                                    Aquí ingresa los ploteos
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Cantidad de Ploteos</p>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <button id="btn_mas" class="btn btn-danger btn-round me-2">-</button>
+                                                    <input id="input_numero" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                                    <button id="id_contador" class="btn btn-success btn-round ms-2">+</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Monto (S/)</p>
+                                                <input type="number" name="" id="" placeholder="Monto (S/)">
+                                            </div>
+                                            <div class="text-center">
+                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-contact-nobd" role="tabpanel" aria-labelledby="pills-contact-tab-nobd">
+
+                                    <div class="text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Servicio de Impresiones</h4>
+                                                <div>ID: <span id="id_mov_impresion">3</span></div>
+                                                <div class="card-sub">
+                                                    Aquí ingresa lo que mandaron a Imprimir
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Cantidad de Impresiones</p>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <button id="btn_mas_impresion" class="btn btn-danger btn-round me-2">-</button>
+                                                    <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                                    <button id="id_contador_impresion" class="btn btn-success btn-round ms-2">+</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Monto (S/)</p>
+                                                <input type="number" name="" id="" placeholder="Monto (S/)">
+                                            </div>
+
+                                            <div class="text-center">
+                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        
                 <div
                     class="row ">
                     
@@ -303,6 +487,8 @@ if (isset($_GET['id'])) {
                                             <th scope="col">Precio Unitario</th>
                                             <th scope="col">Sub Total (S/)</th>
                                             <th scope="col">Accion</th>
+                                            <th scope="col">IDMOVIMIENTO</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -566,33 +752,183 @@ if (isset($_GET['id'])) {
 </script>
 
 <script>
-     document.addEventListener('DOMContentLoaded', function() {
-         // Incremento de minutos
-        document.getElementById('btn_mas_solocorte').addEventListener('click', function() {
-            let cantidad = parseInt(document.getElementById('cantidad_solocorte').textContent);
-            if(cantidad >0){
-                cantidad++;
-                document.getElementById('cantidad_solocorte').textContent = cantidad;
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Registrar eventos para los botones de incremento y decremento (fuera del modal)
+        document.getElementById("btnSumarSoloCorte").addEventListener("click", function() {
+            let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
+            if(cantidad == 0){
+                document.getElementById("cantidad_solocorte").value = 10;
             }else{
-                document.getElementById('cantidad_solocorte').textContent = 10;
-
+                document.getElementById("cantidad_solocorte").value = cantidad + 1;
             }
-            
         });
 
-        // Decremento de minutos
-        document.getElementById('btn_menos_solocorte').addEventListener('click', function() {
-            let cantidad = parseInt(document.getElementById('cantidad_solocorte').textContent);
+        document.getElementById("btnRestarSoloCorte").addEventListener("click", function() {
+            let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
             if (cantidad > 0) {
-                cantidad--;
-                document.getElementById('cantidad_solocorte').textContent = cantidad;
+                document.getElementById("cantidad_solocorte").value = cantidad - 1;
             }
         });
 
-     })
-   
+        // Para los incrementos en el precio
+        document.getElementById("btnIncremento05SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 0.5).toFixed(2);
+        });
 
+        document.getElementById("btnIncremento1SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 1).toFixed(2);
+        });
+
+        document.getElementById("btnIncremento2SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 2).toFixed(2);
+        });
+
+        document.getElementById("btnIncremento5SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 5).toFixed(2);
+        });
+
+        // Abrir el modal y manejar el evento de agregar corte
+        document.getElementById('btnAbrirModalSolo').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevenir el comportamiento por defecto del botón
+            
+            // Mostrar el modal de Solo Corte
+            const modalElement = document.getElementById('modalSoloCorte');
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: 'static', // Evita que se cierre al hacer clic fuera
+                keyboard: false // Evita que se cierre con la tecla 'Esc'
+            });
+
+            // Seleccionar el botón "Agregar"
+            const btn_agregar = document.getElementById('btn_agregar_solocorte');
+
+            // Eliminar cualquier escucha de eventos previa
+            btn_agregar.removeEventListener("click", agregarDatosCorte);
+
+            // Agregar una nueva escucha de eventos para agregar un corte
+            btn_agregar.addEventListener("click", agregarDatosCorte);
+            modal.show(); // Muestra el modal
+        });
+
+        // Función que maneja el evento de agregar datos
+        function agregarDatosCorte() {
+            const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').value) || 0;
+            const tarifa = parseFloat(document.getElementById('precioSoloCorte').value) || 0;
+
+            // Crear el objeto datosCorte
+            const datosCorte = [{
+                id: '#', // Id del corte
+                minutos: cantidadMinutos, // Minutos registrados
+                tarifa: tarifa, // Costo por minuto
+                costo: cantidadMinutos * tarifa,
+                articulo: 'Solo Corte',
+                idmovimiento: 6,
+            }];
+
+            console.log(datosCorte);
+
+            // Llamar a la función fn_solo_corte_tabla para agregar a la tabla
+            fn_solo_corte_tabla(datosCorte);
+
+            // Reiniciar los minutos a 0 en la interfaz
+            document.getElementById('cantidad_solocorte').value = '0';
+            document.getElementById('precioSoloCorte').value = '1.5'; // Valor inicial
+
+            // Ocultar el modal
+            const modalElement = document.getElementById('modalSoloCorte');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+        }
+
+        function fn_solo_corte_tabla(datosCorte) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosCorte.forEach(corte => {
+                let nuevaFila = tabla.insertRow();
+
+                nuevaFila.insertCell(0).textContent = corte.id; // ID
+                nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
+                nuevaFila.insertCell(2).textContent = corte.tarifa; // Costo x Minuto
+                nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
+                nuevaFila.insertCell(4).textContent = corte.articulo; // Artículo
+                nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
+                nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
+                nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+
+                // Agregar el botón de editar a la celda de acciones
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    // Llenamos el modal con los datos del corte
+                    document.getElementById("cantidad_solocorte").value = corte.minutos || 0; // Minutos corte
+                    document.getElementById("precioSoloCorte").value = corte.tarifa || 1.5; // Precio corte
+
+                    // Mostrar el modal
+                    const modalElement = document.getElementById('modalSoloCorte');
+                    const modal = new bootstrap.Modal(modalElement, {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                    modal.show();
+
+                    // El botón de agregar se convierte en "Actualizar" para modificar los valores
+                    const btn_agregar = document.getElementById('btn_agregar_solocorte');
+                    btn_agregar.textContent = 'Actualizar'; // Cambiar texto del botón
+                    btn_agregar.removeEventListener("click", agregarDatosCorte);
+
+                    // Actualizar el corte en la tabla cuando se presiona "Actualizar"
+                    btn_agregar.addEventListener("click", function() {
+                        corte.minutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
+                        corte.tarifa = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
+                        corte.costo = corte.minutos * corte.tarifa; // Recalcular el costo
+
+                        // Actualizar las celdas de la fila con los nuevos valores
+                        nuevaFila.cells[1].textContent = corte.minutos; // Minutos
+                        nuevaFila.cells[2].textContent = corte.tarifa; // Costo x Minuto
+                        nuevaFila.cells[3].textContent = corte.costo.toFixed(2); // Costo total
+
+                        // Recalcular el subtotal
+                        nuevaFila.cells[7].textContent = corte.costo.toFixed(2); // Subtotal
+
+                        // Cerrar el modal
+                        modal.hide();
+                        fn_obtener_total(); // Recalcular los totales después de editar
+                    });
+                });
+
+                // Función para manejar el botón de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove(); // Eliminar la fila
+                    fn_obtener_total(); // Recalcular los totales después de eliminar
+                });
+            });
+
+            fn_obtener_total();
+        }
+
+    });
 </script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -723,6 +1059,7 @@ if (isset($_GET['id'])) {
                     datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
                     datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
                     datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
+                    datosArticulo.id_movimiento = 1;
 
                     modalCantidad.hide();
                     fn_agregar_articulo_tabla(datosArticulo);
@@ -772,6 +1109,7 @@ if (isset($_GET['id'])) {
 
         // Agregar el botón de editar a la celda de acciones
         accionCell.appendChild(botonEditar);
+        nuevaFila.insertCell(9).textContent = datosArticulo["id_movimiento"]; // Precio unitario
 
         // Función para manejar el botón de editar
         botonEditar.addEventListener("click", () => {
@@ -792,6 +1130,8 @@ if (isset($_GET['id'])) {
                     datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
                 seccionCorte.style.display = "block";
             } else {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
                 seccionCorte.style.display = "none";
             }
 
@@ -1029,7 +1369,8 @@ if (isset($_GET['id'])) {
                 "costoxminuto": row.cells[2].textContent, 
                 "precio_unitario": parseFloat(row.cells[6].textContent),  // Precio Unitario
                 "cantidad": parseInt(row.cells[5].textContent),  // Cantidad
-                "sub_total": parseFloat(row.cells[7].textContent)  // Subtotal
+                "sub_total": parseFloat(row.cells[7].textContent), // Subtotal
+                "movimiento_id": parseFloat(row.cells[9].textContent)  // Subtotal
             };
 
             // Agregar el artículo al array
