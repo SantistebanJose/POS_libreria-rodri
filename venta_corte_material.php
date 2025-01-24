@@ -205,8 +205,8 @@ if (isset($_GET['id'])) {
                     <div class="card-body">
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
-                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">    
-                                <div class="table-responsive">
+                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
+                                    <div class="table-responsive">
                                         <table
                                             id="multi-filter-select2"
                                             class="display table table-striped table-hover">
@@ -336,9 +336,9 @@ if (isset($_GET['id'])) {
         </div>
         <div id="panelDetalles" class="card border-primary" style="display:none;">
             <div class="card-body">
-                <h4 class="card-title">Detalles de Articulos de Reserva</h4>
+                <h4 class="card-title">Detalles de Reserva</h4>
                 <div class="card-sub">
-                    Aquí podras el detalle del cliente.
+                    Aquí podras el visualizar datos del cliente.
                 </div>
                 <div class="card">
                     <div class="card-body">
@@ -347,10 +347,16 @@ if (isset($_GET['id'])) {
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <h4 class="card-title" id="idClienteReservaDetalle"></h4>
-                                    <div><strong>Atendido Por: </strong> <span id="idUsuarioReservaDetalle" style="font-size: 12px;"></span> </div>
+                                    <hr>
+                                    <div><strong>Número de Celular:</strong> <span id="idNumCelClienteReserva">942781324</span> </div>
+                                    <div><strong>Correo Cliente:</strong> <span id="idCorreoClienteReserva">frvf2000@gmail.com</span> </div>
+                                    <div><strong>N° de Documento:</strong> <span id="idNumDocClienteReserva">73578005</span> </div>
+
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <div><strong>Atendido Por: </strong> <span id="idUsuarioReservaDetalle" style="font-size: 12px;"></span> </div>
+                                <hr>
                                 <div class="mb-3">
                                     <input
                                         type="date"
@@ -493,6 +499,34 @@ if (isset($_GET['id'])) {
                                 aria-describedby="helpId"
                                 placeholder="AGREGAR EL NOMBRE DEL CLIENTE" readonly />
                         </div>
+                        <div class="row justify-content-center align-items-center g-2">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label"><strong>Número de Telefono</strong></label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name=""
+                                        id="idUpdateNumTelefonoCliente"
+                                        aria-describedby="helpId"
+                                        placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label"><strong>Correo Electronico</strong></label>
+                                    <input
+                                        type="email"
+                                        class="form-control"
+                                        name=""
+                                        id="idUpdateCorreoCliente"
+                                        aria-describedby="helpId"
+                                        placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
                         <!-- Monto Total -->
                         <div
                             class="row justify-content-center align-items-center md-2">
@@ -518,7 +552,7 @@ if (isset($_GET['id'])) {
                                             type="number"
                                             class="form-control"
                                             id="montoTotalFinal"
-                                            placeholder="Monto con algun descuento a clientes" />
+                                            placeholder="Monto con descuento a clientes" />
                                     </div>
                                 </div>
                             </div>
@@ -578,6 +612,7 @@ if (isset($_GET['id'])) {
                                         <hr>
 
                                         <!-- Monto Total -->
+                                        <!--
                                         <div id="panelMontos" class="row justify-content-center align-items-center g-2">
                                             <div class="col-md-4">
                                                 <label for="" class="form-label"><b>Falta Pagar</b></label>
@@ -600,12 +635,13 @@ if (isset($_GET['id'])) {
                                                     <input type="number" class="form-control" name="vuelto" placeholder="" />
                                                 </div>
                                             </div>
-                                            <div class="text-center">
-                                                <a class="btn btn-success" href="#" role="button" onclick="fn_pagar_directo()">Pagar</a>
-                                            </div>
                                             <br>
                                         </div>
+                                        -->
                                     </form>
+                                    <div class="text-center">
+                                        <a class="btn btn-success" href="#" role="button" onclick="fn_pagar_directo()">Pagar</a>
+                                    </div>
                                 </div>
 
                                 <div class="tab-pane fade" id="pago-credito" role="tabpanel" aria-labelledby="pills-profile-tab-icon">
@@ -658,12 +694,8 @@ if (isset($_GET['id'])) {
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button
@@ -1234,8 +1266,23 @@ if (isset($_GET['id'])) {
             var Data = JSON.parse(text);
 
             datosArticuloOriginal = Data; // Almacena los datos originales
-            llenarDatosModal(datosArticulo['venta_id'], datosArticulo['id_persona'], datosArticulo['cliente'], datosArticulo['usuario_id']);
-            llenarDatosPanelCliente(datosArticulo['cliente'], datosArticulo['fecha'], datosArticulo['hora'], datosArticulo['usuario']);
+            llenarDatosModal(
+                datosArticulo['venta_id'],
+                datosArticulo['id_persona'],
+                datosArticulo['cliente'],
+                datosArticulo['usuario_id'],
+                datosArticulo['telefonomovil_cliente'],
+                datosArticulo['email_cliente']
+            );
+            llenarDatosPanelCliente(
+                datosArticulo['cliente'],
+                datosArticulo['fecha'],
+                datosArticulo['hora'],
+                datosArticulo['usuario'],
+                datosArticulo['telefonomovil_cliente'],
+                datosArticulo['email_cliente'],
+                datosArticulo['numero_doc_cliente'],
+            );
 
             console.log(Data);
 
@@ -1680,16 +1727,27 @@ if (isset($_GET['id'])) {
 
     });
 
-    function llenarDatosModal(idVenta, idPersona, nombreCliente, idUsuario) {
+    function llenarDatosModal(idVenta, idPersona, nombreCliente, idUsuario, numeroCelular, email) {
         // Actualizamos el contenido del modal con los datos proporcionados
         document.getElementById("idUsuario").textContent = idUsuario; // Para el ID de la venta
         document.getElementById("idVenta").textContent = idVenta; // Para el ID de la venta
         document.getElementById("idPersona").textContent = idPersona; // Para el ID del cliente
         document.getElementById("nombreCliente").value = nombreCliente; // Para el nombre del cliente
+
+        document.getElementById("idUpdateNumTelefonoCliente").value = numeroCelular;
+        document.getElementById("idUpdateCorreoCliente").value = email;
+
     }
 
-    function llenarDatosPanelCliente(cliente, fechaReserva, horaReserva, usuario) {
+    function llenarDatosPanelCliente(cliente, fechaReserva, horaReserva, usuario, telefonomovil, email, numeroDoc) {
         // Actualizamos el contenido del modal con los datos proporcionados
+        document.getElementById("idClienteReservaDetalle").textContent = cliente;
+
+        document.getElementById("idNumCelClienteReserva").textContent = telefonomovil;
+        document.getElementById("idCorreoClienteReserva").textContent = email;
+        document.getElementById("idNumDocClienteReserva").textContent = numeroDoc;
+
+
         document.getElementById("idClienteReservaDetalle").textContent = cliente;
         document.getElementById("idFechaReservaDetalle").value = fechaReserva;
         document.getElementById("idHoraReservaDetalle").value = horaReserva;
