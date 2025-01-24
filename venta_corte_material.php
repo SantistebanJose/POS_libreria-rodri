@@ -62,8 +62,6 @@ if (isset($_GET['id'])) {
                                             <?php
                                             foreach (listarVentaReservaCorte() as $datosReserva) {
                                                 $datosReservaJSON = json_encode($datosReserva);
-
-
                                             ?>
                                                 <tr>
                                                     <td><?php echo $datosReserva["venta_id"] ?></td>
@@ -77,6 +75,7 @@ if (isset($_GET['id'])) {
                                                             <a
                                                                 name=""
                                                                 id=""
+                                                                href="#panelDetalles"
                                                                 class="btn btn-secondary btn-round"
 
                                                                 onclick='fn_consultarVenta(<?php echo $datosReservaJSON; ?>)'
@@ -175,9 +174,7 @@ if (isset($_GET['id'])) {
 
         </div>
         <hr>
-        <div
-            class="row ">
-
+        <div class="row " id="panelAdicionarMas" style="display:none;">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
@@ -337,67 +334,107 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
         </div>
-        <div
-            class="card border-primary">
+        <div id="panelDetalles" class="card border-primary" style="display:none;">
             <div class="card-body">
                 <h4 class="card-title">Detalles de Articulos de Reserva</h4>
-                <div class="table-responsive">
-                    <table id="tabla_articulos" class="table mt-3">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">MINUTOS</th>
-                                <th scope="col">Tarifa</th>
-                                <th scope="col">Total corte</th>
-                                <th scope="col">Articulo</th>
-                                <th scope="col">Cantidad</th>
-                                <th scope="col">Precio Unitario</th>
-                                <th scope="col">Sub Total (S/)</th>
-                                <th scope="col">Accion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <div class="card-sub">
+                    Aquí podras el detalle del cliente.
+                </div>
+                <div class="card">
+                    <div class="card-body">
 
-                        </tbody>
-                    </table>
+                        <div class="row justify-content-center align-items-center md-2">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <h4 class="card-title" id="idClienteReservaDetalle"></h4>
+                                    <div><strong>Atendido Por: </strong> <span id="idUsuarioReservaDetalle" style="font-size: 12px;"></span> </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        name=""
+                                        id="idFechaReservaDetalle"
+                                        aria-describedby="helpId"
+                                        readonly />
+                                </div>
+                                <div class="mb-3">
+                                    <input
+                                        type="text"
+                                        class="form-control text-center"
+                                        name=""
+                                        id="idHoraReservaDetalle"
+                                        aria-describedby="helpId"
+                                        readonly />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card text-start">
+                    <div class="card-body">
+                        <h4 class="card-title">Detalle de Venta</h4>
+                        <div class="table-responsive">
+                            <table id="tabla_articulos" class="table table-sm mt-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">MINUTOS</th>
+                                        <th scope="col">Tarifa</th>
+                                        <th scope="col">Total corte</th>
+                                        <th scope="col">Articulo</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Precio Unitario</th>
+                                        <th scope="col">Sub Total (S/)</th>
+                                        <th scope="col">Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card card-stats card-round">
+                            <div class="card-body text-center">
+                                <h5 id="label_total_cortes" class="card-title">Cortes (S/)</h5>
+                                <span id="id_subtotal_cortes" style="font-size: 1.3rem;" aria-labelledby="label_total_cortes">xx.xx</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-stats card-round">
+                            <div class="card-body text-center">
+                                <h5 id="label_total_articulos" class="card-title">Artículos (S/)</h5>
+                                <span id="id_subtotal_articulos" style="font-size: 1.3rem;" aria-labelledby="label_total_articulos">xx.xx</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card card-primary card-stats card-round">
+                            <div class="card-body text-center">
+                                <h5 id="label_total_general" class="card-title">Total Venta (S/)</h5>
+                                <span id="id_subtotal_general" style="font-size: 1.3rem;" aria-labelledby="label_total_general">xx.xx</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <button id="btnRealizarPago" type="button" class="btn btn-success" style="width: 80%;">
+                            Realizar Pago
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body text-center">
-                        <h5 id="label_total_cortes" class="card-title">Total en Cortes (S/)</h5>
-                        <span id="id_subtotal_cortes" style="font-size: 1.3rem;" aria-labelledby="label_total_cortes">xx.xx</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-stats card-round">
-                    <div class="card-body text-center">
-                        <h5 id="label_total_articulos" class="card-title">Total de Artículos (S/)</h5>
-                        <span id="id_subtotal_articulos" style="font-size: 1.3rem;" aria-labelledby="label_total_articulos">xx.xx</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-primary card-stats card-round">
-                    <div class="card-body text-center">
-                        <h5 id="label_total_general" class="card-title">Total (S/)</h5>
-                        <span id="id_subtotal_general" style="font-size: 1.3rem;" aria-labelledby="label_total_general">xx.xx</span>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-3">
-                <button id="btnRealizarPago" type="button" class="btn btn-success btn-block card card-stats card-round">
-                    <div class="card-body text-center">
-                        <h5 id="label_total_general" class="card-title">Realizar Pago</h5>
-                    </div>
-                </button>
-            </div>
 
-        </div>
     </div>
 
 
@@ -428,7 +465,8 @@ if (isset($_GET['id'])) {
                     <div class="card-body">
 
                         <div class="card-body text-center">
-                            <h4 class="card-title fs-1 fw-bold">Realizar Pago de S/ <span id="idMontoVentaTitulo">#</span> </h4> 
+                            <h4 class="card-title fs-1 fw-bold">Realizar Pago </h4>
+                            <h1 class="card-title fw-bold" style="font-size: 3rem;"> S/ <span id="idMontoVentaTitulo">#</span></h1>
                         </div>
                         <!--<div class="card-body text-center">
                             <h1 class="card-title">S/ xx.xx</h1>
@@ -453,7 +491,7 @@ if (isset($_GET['id'])) {
                                 name=""
                                 id="nombreCliente"
                                 aria-describedby="helpId"
-                                placeholder="AGREGAR EL NOMBRE DEL CLIENTE" />
+                                placeholder="AGREGAR EL NOMBRE DEL CLIENTE" readonly />
                         </div>
                         <!-- Monto Total -->
                         <div
@@ -477,7 +515,7 @@ if (isset($_GET['id'])) {
                                     <div class="input-group">
                                         <span class="input-group-text">S/</span>
                                         <input
-                                            type="text"
+                                            type="number"
                                             class="form-control"
                                             id="montoTotalFinal"
                                             placeholder="Monto con algun descuento a clientes" />
@@ -579,7 +617,7 @@ if (isset($_GET['id'])) {
 
                                     <div class="card-sub">
                                         <div class="text-center">
-                                            Si un cliente te deja algo de la venta, registralo :)
+                                            Si un cliente te deja algo de la venta, registralo :), Si no, deja en blanco y darle click al boton Realizar Pago o Credito
                                         </div>
                                     </div>
 
@@ -1000,7 +1038,7 @@ if (isset($_GET['id'])) {
             }
 
             if (dato.name.startsWith('monto')) {
-                monto = dato.value; 
+                monto = dato.value;
             }
             if (formaPago && monto) {
                 js_detalle_pago.push({
@@ -1014,8 +1052,8 @@ if (isset($_GET['id'])) {
 
         console.log("js_detalle_pago final: ", js_detalle_pago);
 
-        console.log("js_venta",js_venta);
-        console.log("js_pago",js_for_pago);
+        console.log("js_venta", js_venta);
+        console.log("js_pago", js_for_pago);
 
     }
 
@@ -1175,6 +1213,16 @@ if (isset($_GET['id'])) {
 
 
     function fn_consultarVenta(datosArticulo) {
+        // Limpiar Tabla
+        var tabla = document.getElementById("tabla_articulos");
+        var tbody = tabla.getElementsByTagName("tbody")[0];
+        tbody.innerHTML = '';
+        /////////////////////////////////////////////////////
+        var panelDetalle = document.getElementById("panelDetalles");
+        var panelAgregar = document.getElementById("panelAdicionarMas");
+        panelDetalle.style.display = "block";
+        panelAgregar.style.display = "block";
+        ///////////////////// ///////////////////// ///////////////////// /////////////////////
         $.ajax({
             method: "POST",
             url: "logica/clssVentaCorte.php",
@@ -1187,6 +1235,7 @@ if (isset($_GET['id'])) {
 
             datosArticuloOriginal = Data; // Almacena los datos originales
             llenarDatosModal(datosArticulo['venta_id'], datosArticulo['id_persona'], datosArticulo['cliente'], datosArticulo['usuario_id']);
+            llenarDatosPanelCliente(datosArticulo['cliente'], datosArticulo['fecha'], datosArticulo['hora'], datosArticulo['usuario']);
 
             console.log(Data);
 
@@ -1637,6 +1686,14 @@ if (isset($_GET['id'])) {
         document.getElementById("idVenta").textContent = idVenta; // Para el ID de la venta
         document.getElementById("idPersona").textContent = idPersona; // Para el ID del cliente
         document.getElementById("nombreCliente").value = nombreCliente; // Para el nombre del cliente
+    }
+
+    function llenarDatosPanelCliente(cliente, fechaReserva, horaReserva, usuario) {
+        // Actualizamos el contenido del modal con los datos proporcionados
+        document.getElementById("idClienteReservaDetalle").textContent = cliente;
+        document.getElementById("idFechaReservaDetalle").value = fechaReserva;
+        document.getElementById("idHoraReservaDetalle").value = horaReserva;
+        document.getElementById("idUsuarioReservaDetalle").textContent = usuario;
     }
 </script>
 
