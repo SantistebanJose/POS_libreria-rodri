@@ -105,34 +105,34 @@ if (isset($_GET['id'])) {
 
 
 
-<!-- Modal Solo Corte -->
-<div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalSoloCorteLabel">Corte de Minutos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="card-body text-center">
-                    <p class="card-text">Minutos Corte</p> 
-                    <div class="row">
-                        <div class="col">
-                            <button id="btn_menos_solocorte" class="btn btn-danger btn-round ms-2" type="button">-</button>
-                        </div>
-                        <div id="cantidad_solocorte" class="col">0</div>
-                        <div class="col">
-                            <button id="btn_mas_solocorte" class="btn btn-success btn-round ms-2" type="button">+</button>
+                <!-- Modal Solo Corte -->
+                <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalSoloCorteLabel">Corte de Minutos</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card-body text-center">
+                                    <p class="card-text">Minutos Corte</p>
+                                    <div class="row">
+                                        <div class="col">
+                                            <button id="btn_menos_solocorte" class="btn btn-danger btn-round ms-2" type="button">-</button>
+                                        </div>
+                                        <div id="cantidad_solocorte" class="col">0</div>
+                                        <div class="col">
+                                            <button id="btn_mas_solocorte" class="btn btn-success btn-round ms-2" type="button">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
                 <!-- Modal -->
@@ -428,7 +428,7 @@ if (isset($_GET['id'])) {
                     <div class="card-body">
 
                         <div class="card-body text-center">
-                            <h4 class="card-title">Realizar Pago</h4>
+                            <h4 class="card-title fs-1 fw-bold">Realizar Pago de S/ <span id="idMontoVentaTitulo">#</span> </h4> 
                         </div>
                         <!--<div class="card-body text-center">
                             <h1 class="card-title">S/ xx.xx</h1>
@@ -439,11 +439,14 @@ if (isset($_GET['id'])) {
                         </div>
                         <div>
                             <span>ID Venta: <span id="idVenta">#</span></span> |
-                            <span>ID Cliente: <span id="idPersona">#</span></span>
+                            <span>ID Cliente: <span id="idPersona">#</span></span> |
+                            <span>ID Usuario Reserva: <span id="idUsuario">#</span>
+                                <br>
+                                <span><strong>Atendiendo la Transacción:</strong> <span id="idAtencionFinal"><?php echo $id_usuario_s . "-" . $nombre . ", " . $ape_usuario ?></span></span>
                         </div>
                         <hr>
                         <div class="mb-3">
-                            <label for="" class="form-label">Cliente</label>
+                            <label for="" class="form-label"><strong>Cliente</strong></label>
                             <input
                                 type="text"
                                 class="form-control"
@@ -453,18 +456,38 @@ if (isset($_GET['id'])) {
                                 placeholder="AGREGAR EL NOMBRE DEL CLIENTE" />
                         </div>
                         <!-- Monto Total -->
-                        <div class="mb-3">
-                            <label for="montoTotal" class="form-label">Monto Total</label>
-                            <div class="input-group">
-                                <span class="input-group-text">S/</span>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="montoTotal"
-                                    placeholder="Monto total de la venta"
-                                    readonly />
+                        <div
+                            class="row justify-content-center align-items-center md-2">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="montoTotal" class="form-label"><strong>Monto Original de Venta</strong> </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">S/</span>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="montoTotal"
+                                            readonly />
+                                    </div>
+                                </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="montoVentaFinal" class="form-label">Monto Final de Venta</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">S/</span>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="montoTotalFinal"
+                                            placeholder="Monto con algun descuento a clientes" />
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+
+
                         <div class="card-body">
                             <ul class="nav nav-pills nav-secondary  nav-pills-no-bd nav-pills-icons justify-content-center" id="pills-tab-with-icon" role="tablist">
                                 <li class="nav-item">
@@ -481,100 +504,123 @@ if (isset($_GET['id'])) {
 
                             <div class="tab-content mt-2 mb-3" id="pills-with-icon-tabContent">
                                 <div class="tab-pane fade show active" id="pago-directo" role="tabpanel" aria-labelledby="pills-home-tab-icon">
-                                    <div id="panel_forma_pago" class="mb-3">
-                                        <div class="card-sub">
+                                    <form id="form-pago-directo">
+                                        <div id="panel_forma_pago" class="mb-3">
+                                            <div class="card-sub">
+                                                <div class="text-center">
+                                                    Aquí podrás elegir si realizan pagos Directo.
+                                                </div>
+                                            </div>
+
+                                            <label for="" class="form-label"><strong>Forma de Pago</strong></label>
+                                            <!-- Botón de agregar más formas de pago -->
+                                            <button id="btnAgregarPago" class="btn btn-secondary btn-round ms-2" type="button">+</button>
+
+                                            <div class="d-flex align-items-center">
+                                                <!-- Select de formas de pago -->
+                                                <select class="form-select form-select-md" name="formaPago" id="formaPagoSelect">
+                                                    <?php
+                                                    foreach (listarFormaPago() as $datosFormaPago) {
+                                                        $datosFormaPagoJSON = json_encode($datosFormaPago);
+                                                    ?>
+                                                        <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+
+                                                <!-- Caja de texto para monto -->
+                                                <input type="number" class="form-control form-control-md ms-2" placeholder="Monto" min="0" name="monto" id="montoSelect_0">
+                                            </div>
+
+                                            <!-- Contenedor para los selects adicionales -->
+                                            <div id="contenedorPagos" class="mt-3"></div>
+                                        </div>
+
+                                        <hr>
+
+                                        <!-- Monto Total -->
+                                        <div id="panelMontos" class="row justify-content-center align-items-center g-2">
+                                            <div class="col-md-4">
+                                                <label for="" class="form-label"><b>Falta Pagar</b></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">S/</span>
+                                                    <input type="number" class="form-control" name="faltaPagar" placeholder="" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="" class="form-label"><b>Paga Con</b></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">S/</span>
+                                                    <input type="number" class="form-control" name="pagaCon" placeholder="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="" class="form-label"><b>Vuelto (S/)</b></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">S/</span>
+                                                    <input type="number" class="form-control" name="vuelto" placeholder="" />
+                                                </div>
+                                            </div>
                                             <div class="text-center">
-                                                Aquí podrás elegir si realizan pagos Directo.
+                                                <a class="btn btn-success" href="#" role="button" onclick="fn_pagar_directo()">Pagar</a>
                                             </div>
+                                            <br>
                                         </div>
-                                        <label for="" class="form-label"><strong>Forma de Pago</strong></label>
-                                        <!-- Botón de agregar más formas de pago -->
-                                        <button id="btnAgregarPago" class="btn btn-secondary btn-round ms-2">+</button>
-
-                                        <div class="d-flex align-items-center">
-                                            <!-- Select de formas de pago -->
-                                            <select class="form-select form-select-md" name="" id="formaPagoSelect">
-                                                <?php
-                                                foreach (listarFormaPago() as $datosFormaPago) {
-                                                    $datosFormaPagoJSON = json_encode($datosFormaPago);
-                                                ?>
-                                                    <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-
-                                            <!-- Caja de texto para monto -->
-                                            <input type="number" class="form-control form-control-md ms-2" placeholder="Monto" min="0" id="montoSelect_0">
-
-
-                                        </div>
-
-                                        <!-- Contenedor para los selects adicionales -->
-                                        <div id="contenedorPagos" class="mt-3"></div>
-
-                                    </div>
-                                    <hr>
-                                    <!-- Monto Total -->
-                                    <div
-                                        class="row justify-content-center align-items-center g-2">
-                                        <div class="col-md-6">
-                                            <label for="" class="form-label"><b>Paga Con</b></label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">S/</span>
-                                                <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    id=""
-                                                    placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="" class="form-label"><b>Vuelto (S/)</b></label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">S/</span>
-                                                <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    id=""
-                                                    placeholder="" />
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-
-
-
-
-
+                                    </form>
                                 </div>
+
                                 <div class="tab-pane fade" id="pago-credito" role="tabpanel" aria-labelledby="pills-profile-tab-icon">
                                     <div class="card-sub">
                                         <div class="text-center">
                                             Aquí podrás elegir si realizan pagos al Crédito.
                                         </div>
                                     </div>
-                                    <!-- Monto Total -->
-                                    <div class="mb-3">
-                                        <label for="" class="form-label">Monto Inicial (S/)</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">S/</span>
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                id=""
-                                                placeholder="Agregue un monto dejado a cuenta" />
+
+                                    <div class="card-sub">
+                                        <div class="text-center">
+                                            Si un cliente te deja algo de la venta, registralo :)
                                         </div>
                                     </div>
 
-                                </div>
 
+
+                                    <!-- Formulario para el pago a crédito -->
+                                    <form id="form-pago-credito">
+                                        <!-- Monto Total -->
+                                        <label for="" class="form-label"><strong>Forma de Pago</strong></label>
+
+                                        <!-- Botón de agregar más formas de pago -->
+                                        <button id="btnAgregarPagoCredito" class="btn btn-secondary btn-round ms-2" type="button">+</button>
+
+                                        <!-- Primer campo de pago -->
+                                        <div class="d-flex align-items-center" id="pagoCredito_0">
+                                            <!-- Select de formas de pago -->
+                                            <select class="form-select form-select-md" name="formaPagoCredito[]" id="formaPagoCreditoSelect_0">
+                                                <?php
+                                                foreach (listarFormaPago() as $datosFormaPago) {
+                                                    echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+
+                                            <!-- Caja de texto para monto -->
+                                            <input type="number" class="form-control form-control-md ms-2" placeholder="Monto" min="0" name="montoCredito[]" id="montoSelectCredito_0">
+                                        </div>
+
+                                        <!-- Contenedor para los selects adicionales -->
+                                        <div id="contenedorPagosCredito" class="mt-3"></div>
+
+                                        <br>
+                                        <!-- Botón para realizar el pago -->
+                                        <div class="text-center">
+                                            <a class="btn btn-secondary" href="#" role="button" onclick="fn_pagar_credito()">Realizar Pago a Credito</a>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        <div class="text-center">
-                            <a class="btn btn-success" href="#" role="button">Pagar</a>
-                        </div>
+
 
 
                     </div>
@@ -774,6 +820,8 @@ if (isset($_GET['id'])) {
         });
     });
 </script>
+
+<!--FRANCO -->
 <script>
     function validarNumero(event) {
         // Eliminar cualquier cosa que no sea un número
@@ -817,7 +865,7 @@ if (isset($_GET['id'])) {
         }
     });
 </script>
-
+<!--FRANCO -->
 <script>
     // Variables para manejar los selects y montos adicionales
     const btnAgregarPago = document.getElementById('btnAgregarPago');
@@ -833,13 +881,12 @@ if (isset($_GET['id'])) {
         // Crear un nuevo select
         const nuevoSelect = document.createElement('select');
         nuevoSelect.classList.add('form-select', 'form-select-md', 'me-2');
-        nuevoSelect.innerHTML = `
-            <?php
-            foreach (listarFormaPago() as $datosFormaPago) {
-                echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
-            }
-            ?>
-        `;
+        nuevoSelect.name = 'formaPago_' + contador; // Agregar nombre dinámico
+        nuevoSelect.innerHTML = `<?php
+                                    foreach (listarFormaPago() as $datosFormaPago) {
+                                        echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
+                                    }
+                                    ?>`;
 
         // Crear una nueva caja de texto para el monto
         const nuevoInputMonto = document.createElement('input');
@@ -847,6 +894,7 @@ if (isset($_GET['id'])) {
         nuevoInputMonto.classList.add('form-control', 'form-control-md', 'ms-2');
         nuevoInputMonto.placeholder = 'Monto';
         nuevoInputMonto.min = '0';
+        nuevoInputMonto.name = 'monto_' + contador; // Agregar nombre dinámico
         nuevoInputMonto.id = 'montoSelect_' + contador;
 
         // Agregar el select y el input al contenedor
@@ -859,8 +907,127 @@ if (isset($_GET['id'])) {
         // Incrementar el contador para los nuevos inputs
         contador++;
     });
-</script>
+    // Variables para manejar los selects y montos adicionales de pago a crédito
+    const btnAgregarPagoCredito = document.getElementById('btnAgregarPagoCredito');
+    const contenedorPagosCredito = document.getElementById('contenedorPagosCredito');
+    let contadorCredito = 1; // Para numerar los campos adicionales de pago a crédito
 
+    // Evento para agregar más selects con montos de pago a crédito
+    btnAgregarPagoCredito.addEventListener('click', function() {
+        // Crear un contenedor para el nuevo select y su campo de monto
+        const nuevoContenedorCredito = document.createElement('div');
+        nuevoContenedorCredito.classList.add('d-flex', 'align-items-center', 'mb-2');
+        nuevoContenedorCredito.id = 'pagoCredito_' + contadorCredito; // ID único para cada contenedor
+
+        // Crear un nuevo select para el pago a crédito
+        const nuevoSelectCredito = document.createElement('select');
+        nuevoSelectCredito.classList.add('form-select', 'form-select-md', 'me-2');
+        nuevoSelectCredito.name = 'formaPagoCredito[]'; // Nombre único para el array
+        nuevoSelectCredito.id = 'formaPagoCreditoSelect_' + contadorCredito; // ID único para el select
+        nuevoSelectCredito.innerHTML = `<?php
+                                        foreach (listarFormaPago() as $datosFormaPago) {
+                                            echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
+                                        }
+                                        ?>`;
+
+        // Crear una nueva caja de texto para el monto de pago a crédito
+        const nuevoInputMontoCredito = document.createElement('input');
+        nuevoInputMontoCredito.type = 'number';
+        nuevoInputMontoCredito.classList.add('form-control', 'form-control-md', 'ms-2');
+        nuevoInputMontoCredito.placeholder = 'Monto';
+        nuevoInputMontoCredito.min = '0';
+        nuevoInputMontoCredito.name = 'montoCredito[]'; // Nombre único para el array
+        nuevoInputMontoCredito.id = 'montoSelectCredito_' + contadorCredito; // ID único para el campo de monto
+
+        // Agregar el select y el input al contenedor
+        nuevoContenedorCredito.appendChild(nuevoSelectCredito);
+        nuevoContenedorCredito.appendChild(nuevoInputMontoCredito);
+
+        // Agregar el contenedor al contenedor principal
+        contenedorPagosCredito.appendChild(nuevoContenedorCredito);
+
+        // Incrementar el contador para los nuevos inputs
+        contadorCredito++;
+    });
+</script>
+<!-- FRANCO -->
+<script>
+    function fn_pagar_directo() {
+        var datosSerializados = $('#form-pago-directo').serializeArray();
+
+        console.log(datosSerializados); // Ver los datos serializados como un array de objetos
+
+        //////////////////////////////////////////////////////
+
+        var idVenta = document.getElementById('idVenta').textContent;
+        var idPersona = document.getElementById('idPersona').textContent;
+        var idUsuario = document.getElementById('idUsuario').textContent;
+        var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
+        ////
+
+        var montoOriginal = parseFloat(document.getElementById('montoTotal').value);
+        var montoFinal = parseFloat(document.getElementById('montoTotalFinal').value);
+
+        if (isNaN(montoFinal)) {
+            montoFinal = montoOriginal;
+        };
+
+
+        var js_venta = {
+            "estado_pago": "P", // pagado
+            "estado_venta": "VR", // venta realizada
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "atencion_final_usuario": idAtencionFinal
+        };
+        var js_for_pago = {
+            "venta_id": idVenta,
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "comentario": ""
+        };
+        ///////////////////////////////////////////////////////
+
+        var js_detalle_pago = [];
+
+        var formaPago = null;
+        var monto = null;
+        for (var i = 0; i < datosSerializados.length; i++) {
+            var dato = datosSerializados[i];
+
+            if (dato.name.startsWith('formaPago')) {
+                formaPago = dato.value;
+            }
+
+            if (dato.name.startsWith('monto')) {
+                monto = dato.value; 
+            }
+            if (formaPago && monto) {
+                js_detalle_pago.push({
+                    "id_forma_pago": formaPago,
+                    "monto_forma_pago": monto
+                });
+                formaPago = null;
+                monto = null;
+            }
+        }
+
+        console.log("js_detalle_pago final: ", js_detalle_pago);
+
+        console.log("js_venta",js_venta);
+        console.log("js_pago",js_for_pago);
+
+    }
+
+    function fn_pagar_credito() {
+        var datosSerializados = $('#form-pago-credito').serializeArray();
+        console.log(datosSerializados); // Ver los datos serializados como un array de objetos
+
+        // Si quieres convertirlo en una cadena de formato nombre=valor&nombre2=valor2...
+        var datosCadena = $.param(datosSerializados);
+        console.log(datosCadena); // Ver la cadena de parámetros serializados
+    }
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -928,7 +1095,7 @@ if (isset($_GET['id'])) {
             const datosCorte = [{
                 id: '#', // Id del corte
                 minutos: cantidadMinutos, // Minutos registrados
-                tarifa: tarifa ,// Costo por minuto
+                tarifa: tarifa, // Costo por minuto
                 costo: cantidadMinutos * tarifa
             }];
             console.log(datosCorte);
@@ -1019,7 +1186,7 @@ if (isset($_GET['id'])) {
             var Data = JSON.parse(text);
 
             datosArticuloOriginal = Data; // Almacena los datos originales
-            llenarDatosModal(datosArticulo['venta_id'], datosArticulo['id_persona'], datosArticulo['cliente']);
+            llenarDatosModal(datosArticulo['venta_id'], datosArticulo['id_persona'], datosArticulo['cliente'], datosArticulo['usuario_id']);
 
             console.log(Data);
 
@@ -1041,7 +1208,7 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(0).textContent = datosArticulo["articulo_id"]; // ID
         nuevaFila.insertCell(1).textContent = datosArticulo["minutos"] || '-'; // Minutos
         nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
-        nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]  || '-'; // Costo x Minuto
+        nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"] || '-'; // Costo x Minuto
         nuevaFila.insertCell(4).textContent = datosArticulo["articulo_nombre"]; // Artículo
         nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"]; // Cantidad
         nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"]; // Precio unitario
@@ -1460,11 +1627,13 @@ if (isset($_GET['id'])) {
 
         const subtotalGeneral = document.getElementById("id_subtotal_general").textContent;
         document.getElementById("montoTotal").value = subtotalGeneral; // Asignar el monto total
+        document.getElementById("idMontoVentaTitulo").textContent = subtotalGeneral;
 
     });
 
-    function llenarDatosModal(idVenta, idPersona, nombreCliente) {
+    function llenarDatosModal(idVenta, idPersona, nombreCliente, idUsuario) {
         // Actualizamos el contenido del modal con los datos proporcionados
+        document.getElementById("idUsuario").textContent = idUsuario; // Para el ID de la venta
         document.getElementById("idVenta").textContent = idVenta; // Para el ID de la venta
         document.getElementById("idPersona").textContent = idPersona; // Para el ID del cliente
         document.getElementById("nombreCliente").value = nombreCliente; // Para el nombre del cliente
@@ -1472,9 +1641,9 @@ if (isset($_GET['id'])) {
 </script>
 
 <script>
-     function fn_agregar_venta(datosArticulo){
-        
-        if(verificarSiArticuloExiste(datosArticulo['id'])){
+    function fn_agregar_venta(datosArticulo) {
+
+        if (verificarSiArticuloExiste(datosArticulo['id'])) {
             Swal.fire({
                 icon: 'info',
                 title: '¡Artículo ya registrado!',
@@ -1482,12 +1651,12 @@ if (isset($_GET['id'])) {
                 confirmButtonText: 'Aceptar'
             });
 
-        
-        }else{
+
+        } else {
             console.log(datosArticulo);
             fn_agregar_articulo_tabla_nuevo(datosArticulo);
-                
-            
+
+
         }
 
     }
@@ -1507,10 +1676,10 @@ if (isset($_GET['id'])) {
         return false; // Si no se encuentra ninguna coincidencia, retorna false
     }
 
-    function fn_agregar_articulo_tabla_nuevo(datosArticulo,tipoCorte = 'none', datosCorte = []) {
-        
+    function fn_agregar_articulo_tabla_nuevo(datosArticulo, tipoCorte = 'none', datosCorte = []) {
+
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        
+
         let nuevaFila = tabla.insertRow();
 
 
@@ -1522,8 +1691,8 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
         let cantidad = 1;
         // let nuevaCelda = nuevaFila.insertCell(4);
-            //let inputElemento = document.createElement('input');
-            //inputElemento.type = 'text'; // Tipo de input
+        //let inputElemento = document.createElement('input');
+        //inputElemento.type = 'text'; // Tipo de input
         // inputElemento.value = cantidad; // Asignar el valor del contadorCantidad
         //nuevaCelda.appendChild(inputElemento); // Añadir el input a la celda
         nuevaFila.insertCell(5).textContent = cantidad; // Cantidad
@@ -1548,11 +1717,11 @@ if (isset($_GET['id'])) {
             });
         }
         let botonMas = document.createElement("button");
-        botonMas.classList.add("btn", "btn-success","btn-round","ms-2");
+        botonMas.classList.add("btn", "btn-success", "btn-round", "ms-2");
         botonMas.textContent = "+";
-        
+
         let botonMenos = document.createElement("button");
-        botonMenos.classList.add("btn", "btn-danger","btn-round","ms-2");
+        botonMenos.classList.add("btn", "btn-danger", "btn-round", "ms-2");
         botonMenos.textContent = "-";
 
         let botonEliminar = document.createElement("button");
@@ -1602,7 +1771,7 @@ if (isset($_GET['id'])) {
             fila.remove(); // Eliminar la fila
             fn_obtener_total(); // Recalcular los totales después de eliminar
         });
-        
+
         fn_obtener_total();
     }
 </script>

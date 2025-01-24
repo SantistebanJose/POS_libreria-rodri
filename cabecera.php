@@ -8,7 +8,8 @@ if (!isset($_SESSION['id']) ) {
     header("Location: login.php");
     exit();
 }
-
+$ape_usuario = $_SESSION['ape'];
+$id_usuario_s =$_SESSION['id']; 
 $rol =  $_SESSION['rol']; 
 $nombre =  $_SESSION['nombre']; 
 $correo =  $_SESSION['correo']; 

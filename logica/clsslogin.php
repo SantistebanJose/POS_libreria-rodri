@@ -24,7 +24,7 @@ function login($user, $pass){
     global $conectar;
 
     try{
-        $orden = $conectar ->prepare("select u.id,u.username,u.rol, p.nombres,p.email from usuario as u inner join persona as p on u.persona_id = p.id where u.deleted_at IS null AND username=:user AND password=:pass;");
+        $orden = $conectar ->prepare("select u.id,u.username,u.rol, p.nombres,p.apellidos,p.email from usuario as u inner join persona as p on u.persona_id = p.id where u.deleted_at IS null AND username=:user AND password=:pass;");
         $orden->bindParam(":user", $user);
         $orden->bindParam(":pass", $pass);
         $orden->execute();
@@ -37,6 +37,7 @@ function login($user, $pass){
             $_SESSION['usuario'] = $lista["username"];
             $_SESSION['rol'] = $lista["rol"];
             $_SESSION['nombre'] = $lista["nombres"];
+            $_SESSION['ape'] = $lista["apellidos"];
             $_SESSION['correo'] = $lista["email"];
 
             echo json_encode($lista);
