@@ -81,8 +81,8 @@ function registrar_reserva($datos = array())
 
         // Insertar en la tabla rel_venta_articulo y descontar stock
         foreach ($datos['articulos'] as $articulo) {
-            $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto, precio_unitario_articulo, cantidad, sub_total) 
-                                         VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto, :precio_unitario, :cantidad, :sub_total);");
+            $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto, precio_unitario_articulo, cantidad, sub_total,movimiento_id) 
+                                         VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto, :precio_unitario, :cantidad, :sub_total, :movimiento_id);");
             $orden->bindParam(":venta_id", $venta_id);
             $orden->bindParam(":articulo_id", $articulo['articulo_id']);
 
@@ -96,6 +96,7 @@ function registrar_reserva($datos = array())
             $orden->bindParam(":precio_unitario", $articulo['precio_unitario']);
             $orden->bindParam(":cantidad", $articulo['cantidad']);
             $orden->bindParam(":sub_total", $articulo['sub_total']);
+            $orden->bindParam(":movimiento_id", $articulo['movimiento_id']);
             $orden->execute();
             $orden->closeCursor();
 

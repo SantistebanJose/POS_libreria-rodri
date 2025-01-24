@@ -20,9 +20,13 @@ if (isset($_GET['id'])) {
         cursor: pointer;
     }
     #tabla_articulos th:nth-child(1),
-#tabla_articulos td:nth-child(1) {
-    display: none;
+#tabla_articulos td:nth-child(1),
+#tabla_articulos th:nth-child(10),
+#tabla_articulos td:nth-child(10) {
+    display: none !important;
 }
+
+    
 </style>
 
 <div
@@ -303,6 +307,8 @@ if (isset($_GET['id'])) {
                                             <th scope="col">Precio Unitario</th>
                                             <th scope="col">Sub Total (S/)</th>
                                             <th scope="col">Accion</th>
+                                            <th scope="col">IDMOVIMIENTO</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -723,6 +729,7 @@ if (isset($_GET['id'])) {
                     datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
                     datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
                     datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
+                    datosArticulo.id_movimiento = 1;
 
                     modalCantidad.hide();
                     fn_agregar_articulo_tabla(datosArticulo);
@@ -772,6 +779,7 @@ if (isset($_GET['id'])) {
 
         // Agregar el botón de editar a la celda de acciones
         accionCell.appendChild(botonEditar);
+        nuevaFila.insertCell(9).textContent = datosArticulo["id_movimiento"]; // Precio unitario
 
         // Función para manejar el botón de editar
         botonEditar.addEventListener("click", () => {
@@ -1029,7 +1037,8 @@ if (isset($_GET['id'])) {
                 "costoxminuto": row.cells[2].textContent, 
                 "precio_unitario": parseFloat(row.cells[6].textContent),  // Precio Unitario
                 "cantidad": parseInt(row.cells[5].textContent),  // Cantidad
-                "sub_total": parseFloat(row.cells[7].textContent)  // Subtotal
+                "sub_total": parseFloat(row.cells[7].textContent), // Subtotal
+                "movimiento_id": parseFloat(row.cells[9].textContent)  // Subtotal
             };
 
             // Agregar el artículo al array
