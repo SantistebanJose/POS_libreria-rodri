@@ -168,35 +168,74 @@ if (isset($_GET['id'])) {
     </div>
 </div>
 
-<!-- Modal para ingresar cantidad -->
-<div class="modal fade" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadLabel" aria-hidden="true">
+<!-- Modal Unificado -->
+<div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header ">
-                <h5 class="modal-title" id="modalCantidadLabel">Ingresar Cantidad</h5>
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Sección para mostrar el nombre del artículo -->
-                <div class="mb-4 text-center">
-                    <h6 id="nombreArticulo" class="fw-bold text-black">Nombre del artículo</h6>
-                </div>
+                <div class="container-fluid">
+                    <!-- Sección de cantidad -->
+                    <div class="row mb-3">
+                        <div class="col-12 p-3 bg-light rounded">
+                            <h6 id="nombreArticulo" class="fw-bold text-center mb-3">Nombre del artículo</h6>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button id="btnRestarCantidad" class="btn btn-danger btn-round" >-</button>
+                                <input id="inputCantidad" type="number" class="form-control text-center mx-2 " value="1" style="width: 80px; font-size: 1.2rem;" />
+                                <button id="btnSumarCantidad" class="btn btn-success btn-round" >+</button>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Controles de cantidad -->
-                <div class="d-flex align-items-center justify-content-center mb-4">
-                    <button id="btnRestar" class="btn btn-danger btn-round me-3">-</button>
-                    <input id="inputCantidad" type="number" class="form-control text-center border border-secondary" 
-                           value="1" style="width: 100px; font-size: 1.2rem;" />
-                    <button id="btnSumar" class="btn btn-success btn-round ms-3">+</button>
+                    <!-- Sección de corte (solo visible si cantidad = 1) -->
+                    <div id="seccionCorte" class="row mb-3" style="display: none;">
+                        <div class="col-12 p-4 bg-light rounded">
+                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                            <div class="mb-4">
+                                <div class="text-center" style="flex: 1;">
+                                    <p class="mb-1">Minutos Corte</p>
+                                    <div class="d-flex justify-content-center align-items-center mb-2">
+                                        <button id="btnRestarCorte" class="btn btn-danger btn-round" >-</button>
+                                        <input id="cantidadCorte" type="number" class="form-control text-center mx-2 " value="0" style="width: 80px; font-size: 1.2rem;" />
+                                        <button id="btnSumarCorte" class="btn btn-success btn-round" >+</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Línea divisoria -->
+                                <hr>
+                                
+                                <div class="text-center" style="flex: 1;">
+                                    <p class="mb-1">Precio Corte</p>
+                                    <div class="w-100 d-flex justify-content-center mb-1">
+                                        <input id="precioCorte" type="number" class="form-control text-center mx-2 " value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                        <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                        <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                        <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <!-- Botón confirmar -->
-                <button id="btnConfirmarCantidad" class="btn btn-primary">Confirmar</button>
+                <!-- Botón Confirmar a la izquierda -->
+                <button id="btnConfirmarCantidad" class="btn btn-primary" style="width: 120px;">Confirmar</button>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
+
 
 
 <!-- Modal -->
@@ -593,43 +632,107 @@ if (isset($_GET['id'])) {
                     confirmButtonText: 'Aceptar'
                 });
             } else {
-                // Mostrar el modal para seleccionar cantidad
                 const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
-                
-                // Configurar el nombre del artículo en el modal
+
+                // Configurar el nombre del artículo
                 const nombreArticulo = document.getElementById('nombreArticulo');
                 nombreArticulo.textContent = `Artículo: ${datosArticulo.articulo || "Sin nombre"}`;
-                
-                modalCantidad.show();
 
-                // Configurar botones para modificar la cantidad
+                // Resetear valores del modal
                 const inputCantidad = document.getElementById('inputCantidad');
-                inputCantidad.value = 1; // Reiniciar el valor por defecto
-                document.getElementById('btnRestar').onclick = () => {
+                const seccionCorte = document.getElementById('seccionCorte');
+                const cantidadCorte = document.getElementById('cantidadCorte');
+                const precioCorte = document.getElementById('precioCorte');
+
+                inputCantidad.value = 1; // Cantidad por defecto
+                cantidadCorte.value = 0; // Resetear minutos corte
+                precioCorte.value = 0; // Precio por defecto
+
+                // Mostrar u ocultar la sección de corte según datosArticulo.corte
+                if (datosArticulo.corte) {
+                    precioCorte.value = 1.5;
+                    seccionCorte.style.display = 'block';
+                } else {
+                    seccionCorte.style.display = 'none';
+                }
+
+                // Configurar botones de cantidad
+                document.getElementById('btnRestarCantidad').onclick = () => {
                     let cantidad = parseInt(inputCantidad.value, 10);
+                    
+                    // Restar si la cantidad es mayor a 1
                     if (cantidad > 1) {
-                        inputCantidad.value = cantidad - 1;
+                        inputCantidad.value = cantidad - 1;  // Restar cantidad
+                    }
+
+                    // Verificar si la cantidad es 1 y el artículo tiene corte
+                    if (inputCantidad.value == 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';  // Mostrar sección de corte
+                        
+                    } else if (inputCantidad.value > 1) {
+                        // Ocultar sección de corte si la cantidad es mayor a 1
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
                     }
                 };
-                document.getElementById('btnSumar').onclick = () => {
+
+                document.getElementById('btnSumarCantidad').onclick = () => {
                     let cantidad = parseInt(inputCantidad.value, 10);
                     inputCantidad.value = cantidad + 1;
+                    if (cantidad + 1 === 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';
+                    } else {
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
+                    }
+                };
+
+                // Configurar botones de corte
+                document.getElementById('btnRestarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if (corte > 0) cantidadCorte.value = corte - 1; // Cambié textContent por value
+                };
+
+                document.getElementById('btnSumarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if(corte == 0){
+                        cantidadCorte.value = 10; // Cambié textContent por value
+                    } else {
+                        cantidadCorte.value = corte + 1; // Cambié textContent por value
+                    }
+                };
+
+                // Botones para modificar precio
+                document.getElementById('btnIncremento05').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
+                };
+                document.getElementById('btnIncremento1').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
+                };
+                document.getElementById('btnIncremento2').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
+                };
+                document.getElementById('btnIncremento5').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
                 };
 
                 // Confirmar cantidad y agregar a la tabla
                 document.getElementById('btnConfirmarCantidad').onclick = () => {
-                    const cantidadSeleccionada = parseInt(inputCantidad.value, 10);
-                    datosArticulo.cantidad = cantidadSeleccionada;
+                    datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
+                    datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
+                    datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
 
                     modalCantidad.hide();
-
-                    
-                    console.log(datosArticulo);
                     fn_agregar_articulo_tabla(datosArticulo);
-                
                 };
+
+                // Mostrar el modal
+                modalCantidad.show();
             }
         }
+
 
 
 
@@ -639,7 +742,7 @@ if (isset($_GET['id'])) {
 
         // Insertamos una nueva fila en la tabla
         let nuevaFila = tabla.insertRow();
-
+        console.log(datosArticulo);
         // Colocamos los valores de las celdas
         nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
         nuevaFila.insertCell(1).textContent = datosArticulo["minutos"] || '-'; // Minutos
@@ -661,7 +764,7 @@ if (isset($_GET['id'])) {
         // Celda para acciones
         let accionCell = nuevaFila.insertCell(8);
          // 3. Botón de Corte (si aplica)
-        if (datosArticulo["corte"] === true) {
+        if (datosArticulo["corte"] === true && datosArticulo["costo_por_minuto"] ==='-' && datosArticulo["minutos"] ==='-' ) {
             let botonCorte = document.createElement("button");
             botonCorte.classList.add("btn", "btn-info", "btn-round", "ms-2", "px-3", "py-2");
 
@@ -688,19 +791,42 @@ if (isset($_GET['id'])) {
 
         // Función para manejar el botón de editar
         botonEditar.addEventListener("click", () => {
-            // Abrir el modal con la cantidad actual y el nombre del artículo
+            // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
             document.getElementById("nombreArticulo").textContent = datosArticulo["articulo"];
             document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
             
+            // Mostrar los valores actuales de corte si es que existen
+            
+
+            // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
+            const seccionCorte = document.getElementById("seccionCorte");
+            if (datosArticulo["corte"]) {
+                document.getElementById("cantidadCorte").value = datosArticulo["minutos"] || 0;
+                document.getElementById("precioCorte").value = datosArticulo["costo_por_minuto"] || 1.5;
+                seccionCorte.style.display = "block";
+            } else {
+                seccionCorte.style.display = "none";
+            }
+
             // Guardar el artículo actual para hacer la modificación posteriormente
             document.getElementById("btnConfirmarCantidad").onclick = function() {
-                // Actualizamos la cantidad en la tabla
+                // Actualizamos la cantidad, minutos de corte y precio de corte en el objeto datosArticulo
                 datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
+                datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
+                datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
 
-                // Actualizamos la celda de cantidad y subtotal
+                // Actualizamos la celda de cantidad y subtotal en la tabla
                 nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
+                nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
+                nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
+                nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+
+                
+                // Recalcular el subtotal considerando el precio de corte y minutos de corte
                 let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_venta"];
                 subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+                subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;  // Considerar precio de corte
+
                 nuevaFila.cells[7].textContent = subtotal.toFixed(2);
 
                 // Cerramos el modal
@@ -711,7 +837,6 @@ if (isset($_GET['id'])) {
             // Mostrar el modal
             $('#modalCantidad').modal('show');
         });
-
         // 2. Botón de Eliminar
         let botonEliminar = document.createElement("button");
         botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
@@ -1016,6 +1141,7 @@ if (isset($_GET['id'])) {
 
                         // Actualizar las celdas de costo y subtotal
                         fila.cells[7].textContent = subtotal.toFixed(2); // Subtotal
+                        datosArticulo.cantidad = nuevaCantidad;
                     }
                 });
 
@@ -1052,6 +1178,63 @@ if (isset($_GET['id'])) {
                 celdaTotalcosto.textContent = totalCosto.toFixed(2); // Mostrar el costo total
                 celdaPrecioUnitario.textContent = parseFloat(precioUnitario).toFixed(2); // Mostrar el precio unitario
                 celdaSubtotal.textContent = subtotal.toFixed(2); // Mostrar el subtotal
+
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+
+                // Agregar el botón de editar a la celda de acciones
+                celdaAcciones   .appendChild(botonEditar);
+
+                // Función para manejar el botón de editar
+                botonEditar.addEventListener("click", () => {
+                    // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
+                    document.getElementById("nombreArticulo").textContent = datosArticulo["articulo"];
+                    document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
+                    
+                    // Mostrar los valores actuales de corte si es que existen
+                    
+
+                    // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
+                    const seccionCorte = document.getElementById("seccionCorte");
+                    if (datosArticulo["corte"]) {
+                        document.getElementById("cantidadCorte").value = datosArticulo["minutos"] || 0;
+                        document.getElementById("precioCorte").value = datosArticulo["costo_por_minuto"] || 1.5;
+                        seccionCorte.style.display = "block";
+                    } else {
+                        seccionCorte.style.display = "none";
+                    }
+
+                    // Guardar el artículo actual para hacer la modificación posteriormente
+                    document.getElementById("btnConfirmarCantidad").onclick = function() {
+                        // Actualizamos la cantidad, minutos de corte y precio de corte en el objeto datosArticulo
+                        datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
+                        datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
+                        datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
+
+                        // Actualizamos la celda de cantidad y subtotal en la tabla
+                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
+                        nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
+                        nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
+                        nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+
+                        
+                        // Recalcular el subtotal considerando el precio de corte y minutos de corte
+                        let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_venta"];
+                        subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+                        subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;  // Considerar precio de corte
+
+                        nuevaFila.cells[7].textContent = subtotal.toFixed(2);
+
+                        // Cerramos el modal
+                        $('#modalCantidad').modal('hide');
+                        fn_obtener_total(); // Recalcular los totales después de editar
+                    };
+
+                    // Mostrar el modal
+                    $('#modalCantidad').modal('show');
+                });
+
 
                 // Agregar el botón de eliminación
                 let botonEliminar = document.createElement("button");
