@@ -318,7 +318,7 @@ if (isset($_GET['id'])) {
                                     <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Imprimir</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Producto Vitrina</a>
+                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Escaneo</a>
                                 </li>
                                 <li class="nav-item">
                                     <button class="nav-link" id="btnAbrirModalSolo" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Solo Corte</button>
@@ -795,7 +795,18 @@ if (isset($_GET['id'])) {
         // Abrir el modal y manejar el evento de agregar corte
         document.getElementById('btnAbrirModalSolo').addEventListener('click', function(event) {
             event.preventDefault();  // Prevenir el comportamiento por defecto del botón
-            
+            let navLinks = document.querySelectorAll(".nav-link");
+
+            // Remover la clase 'active' de todas las pestañas
+            navLinks.forEach(function(link) {
+                link.classList.remove("active");
+            });
+
+            // Desactivar todos los panes (contenido de las pestañas)
+            let tabPanes = document.querySelectorAll(".tab-pane");
+            tabPanes.forEach(function(pane) {
+                pane.classList.remove("show", "active");
+            });
             // Mostrar el modal de Solo Corte
             const modalElement = document.getElementById('modalSoloCorte');
             const modal = new bootstrap.Modal(modalElement, {
