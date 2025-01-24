@@ -1150,6 +1150,8 @@ if (isset($_GET['id'])) {
 
                 // Calcular el costo total por minuto
                 const totalCosto = costo * cantidadtiempo; // Costo por minuto multiplicado por los minutos
+                datosArticulo.costo_por_minuto = costo;
+                datosArticulo.minutos = cantidadtiempo;
 
                 // Calcular el subtotal: (precio_unitario * cantidad) + (costo * minutos)
                 const subtotal = (precioUnitario * 1) + totalCosto;
