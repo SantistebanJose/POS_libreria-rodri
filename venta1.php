@@ -1,7 +1,6 @@
 <?php
 include("cabecera.php");
 include("logica/clssVenta.php");
-session_start(); // O el nombre de la variable que contiene el ID
 
 
 if (isset($_GET['id'])) {
@@ -318,7 +317,7 @@ if (isset($_GET['id'])) {
                                     <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Imprimir</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Escaneo</a>
+                                    <a class="nav-link" id="pills-escaneo-tab-nobd" data-bs-toggle="pill" href="#pills-escaneo-nobd" role="tab" aria-controls="pills-escaneo-nobd" aria-selected="false">Escaneo</a>
                                 </li>
                                 <li class="nav-item">
                                     <button class="nav-link" id="btnAbrirModalSolo" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Solo Corte</button>
@@ -331,67 +330,6 @@ if (isset($_GET['id'])) {
                     <div class="card-body">
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
-                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">    
-                                <div class="table-responsive">
-                                        <table
-                                            id="multi-filter-select2"
-                                            class="display table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Articulo</th>
-                                                    <th>Categoria</th>
-                                                    <th>Tipo</th>
-                                                    <th>Dimension</th>
-                                                    <th>Stock</th>
-                                                    <th>Precio de Venta</th>
-                                                    <th>Accion</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>Articulo</th>
-                                                    <th>Categoria</th>
-                                                    <th>Tipo</th>
-                                                    <th>Dimension</th>
-                                                    <th>Stock</th>
-                                                    <th>Precio de Venta</th>
-                                                </tr>
-                                            </tfoot>
-                                            <tbody>
-
-                                                <?php
-                                                foreach (listarProductosVenta1() as $datosArticulo) {
-                                                    $datosArticuloJSON = json_encode($datosArticulo);
-
-
-                                                ?>
-                                                    <tr>
-                                                        <td><?php echo $datosArticulo["articulo"] ?></td>
-                                                        <td><?php echo $datosArticulo["categoria"] ?></td>
-                                                        <td><?php echo $datosArticulo["tipo"] ?></td>
-                                                        <td><?php echo $datosArticulo["dimension"] ?></td>
-                                                        <td><?php echo $datosArticulo["stock"] ?></td>
-                                                        <td><?php echo $datosArticulo["precio_venta"] ?></td>
-                                                        <th>
-
-                                                            <div class="mt-2 text-center">
-                                                                <a
-                                                                    name=""
-                                                                    id=""
-                                                                    class="btn btn-secondary btn-round"
-
-                                                                    onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                                    role="button">Agregar</a>
-                                                            </div>
-                                                        </th>
-                                                    </tr>
-                                                <?php
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
                                 <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd">
                                     <div class="text-center">
                                         <div class="card">
@@ -405,17 +343,17 @@ if (isset($_GET['id'])) {
                                             <div class="card-body">
                                                 <p class="card-text">Cantidad de Ploteos</p>
                                                 <div class="d-flex align-items-center justify-content-center">
-                                                    <button id="btn_mas" class="btn btn-danger btn-round me-2">-</button>
-                                                    <input id="input_numero" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                                    <button id="id_contador" class="btn btn-success btn-round ms-2">+</button>
+                                                    <button id="btn_menos_ploteo" class="btn btn-danger btn-round me-2">-</button>
+                                                    <input id="input_cantidad_ploteo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                                    <button id="btn_mas_ploteo" class="btn btn-success btn-round ms-2">+</button>
                                                 </div>
                                             </div>
                                             <div class="card-body">
                                                 <p class="card-text">Monto (S/)</p>
-                                                <input type="number" name="" id="" placeholder="Monto (S/)">
+                                                <input type="number" name="" id="monto_ploteo" placeholder="Monto (S/)">
                                             </div>
                                             <div class="text-center">
-                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
+                                                <button class="btn btn-secondary" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
                                             </div>
                                             <br>
                                         </div>
@@ -427,7 +365,7 @@ if (isset($_GET['id'])) {
                                         <div class="card">
                                             <div class="card-body">
                                                 <h4 class="card-title">Servicio de Impresiones</h4>
-                                                <div>ID: <span id="id_mov_impresion">3</span></div>
+                                               <div>ID: <span id="id_mov_impresion">3</span></div>
                                                 <div class="card-sub">
                                                     Aquí ingresa lo que mandaron a Imprimir
                                                 </div>
@@ -435,18 +373,50 @@ if (isset($_GET['id'])) {
                                             <div class="card-body">
                                                 <p class="card-text">Cantidad de Impresiones</p>
                                                 <div class="d-flex align-items-center justify-content-center">
-                                                    <button id="btn_mas_impresion" class="btn btn-danger btn-round me-2">-</button>
+                                                    <button id="btn_menos_impresion" class="btn btn-danger btn-round me-2">-</button>
                                                     <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                                    <button id="id_contador_impresion" class="btn btn-success btn-round ms-2">+</button>
+                                                    <button id="btn_mas_impresion" class="btn btn-success btn-round ms-2">+</button>
                                                 </div>
                                             </div>
                                             <div class="card-body">
                                                 <p class="card-text">Monto (S/)</p>
-                                                <input type="number" name="" id="" placeholder="Monto (S/)">
+                                                <input type="number" name="" id="monto_impresion" placeholder="Monto (S/)">
                                             </div>
 
                                             <div class="text-center">
-                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
+                                                <button class="btn btn-secondary" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pills-escaneo-nobd" role="tabpanel" aria-labelledby="pills-escaneo-tab-nobd">
+
+                                    <div class="text-center">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Servicio de Escaneo</h4>
+                                               <div>ID: <span id="id_mov_escaneo">4</span></div>
+                                                <div class="card-sub">
+                                                    Aquí ingresa lo que mandaron a Escanear
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Cantidad de Escaneo</p>
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <button id="btn_menos_escaneo" class="btn btn-danger btn-round me-2">-</button>
+                                                    <input id="input_numero_escaneo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                                    <button id="btn_mas_escaneo" class="btn btn-success btn-round ms-2">+</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">Monto (S/)</p>
+                                                <input type="number" name="" id="monto_escaneo" placeholder="Monto (S/)">
+                                            </div>
+
+                                            <div class="text-center">
+                                                <button class="btn btn-secondary" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
                                             </div>
                                             <br>
                                         </div>
@@ -1255,7 +1225,7 @@ if (isset($_GET['id'])) {
     }
     
 </script>
-
+<!--Tabla-->
 <script>
     document.getElementById("btnRealizarReserva").addEventListener("click", function () {
   
@@ -1351,6 +1321,7 @@ if (isset($_GET['id'])) {
    
 </script>
 
+<!--Reserva-->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
     // Evento para el botón "Reservar"
@@ -1414,6 +1385,436 @@ if (isset($_GET['id'])) {
     });
 </script>
 
+<!--Ploteo-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
+
+        // 1. Manejar Incremento y Decremento de Ploteos
+        document.getElementById("btn_mas_ploteo").addEventListener("click", function () {
+            let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
+            document.getElementById("input_cantidad_ploteo").value = cantidad + 1;
+        });
+
+        document.getElementById("btn_menos_ploteo").addEventListener("click", function () {
+            let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
+            if (cantidad > 1) {
+                document.getElementById("input_cantidad_ploteo").value = cantidad - 1;
+            }
+        });
+
+        // 2. Función para añadir Ploteo a la Tabla
+        document.getElementById('btnAgregarPloteo').addEventListener('click', function () {
+            const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
+            const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
+
+            // Si estamos editando, actualizamos la fila
+            if (ploteoEditando) {
+                // Actualizamos los valores de la fila existente
+                ploteoEditando.cantidad = cantidadPloteos;
+                ploteoEditando.monto = montoPloteo;
+                ploteoEditando.subtotal = cantidadPloteos * montoPloteo;
+
+                // Actualizamos la fila de la tabla
+                ploteoEditando.fila.cells[5].textContent = ploteoEditando.cantidad; // Cantidad
+                ploteoEditando.fila.cells[6].textContent = ploteoEditando.monto.toFixed(2); // Monto
+                ploteoEditando.fila.cells[7].textContent = ploteoEditando.subtotal.toFixed(2); // Subtotal
+
+                // Limpiar los campos
+                document.getElementById('input_cantidad_ploteo').value = 0;
+                document.getElementById('monto_ploteo').value = '';
+
+                // Resetear el botón y quitar la referencia al ploteo editado
+                document.getElementById('btnAgregarPloteo').textContent = 'Añadir a la Venta';
+                ploteoEditando = null; // Reiniciar la referencia
+                mostrarPillPloteo(); // Resetear el pill
+            } else {
+                // Si no estamos editando, agregar un nuevo ploteo
+                const datosPloteo = [{
+                    id: '#', // ID del ploteo
+                    cantidad: cantidadPloteos, // Cantidad de ploteos
+                    monto: montoPloteo, // Monto
+                    subtotal: cantidadPloteos * montoPloteo, // Subtotal
+                    articulo: 'Ploteo',
+                    idmovimiento: 2,
+                }];
+                fn_ploteo_tabla(datosPloteo);
+                document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
+                document.getElementById('monto_ploteo').value = ''; // Reset monto
+            }
+        });
+
+        // 3. Función para Agregar a la Tabla de Ploteos
+        function fn_ploteo_tabla(datosPloteo) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosPloteo.forEach(ploteo => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos de ploteo
+                nuevaFila.insertCell(0).textContent = ploteo.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Ploteos
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = ploteo.articulo; // Artículo (Ploteo)
+                nuevaFila.insertCell(5).textContent = ploteo.cantidad; // Se puede agregar más detalles si se requiere
+                nuevaFila.insertCell(6).textContent = ploteo.monto.toFixed(2); // Otro dato
+                nuevaFila.insertCell(7).textContent = ploteo.subtotal.toFixed(2); // Subtotal (multiplied)
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = ploteo.idmovimiento; // Subtotal (multiplied)
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    // Rellenar los campos con los valores actuales del ploteo
+                    document.getElementById("input_cantidad_ploteo").value = ploteo.cantidad;
+                    document.getElementById("monto_ploteo").value = ploteo.monto;
+
+                    // Mostrar el pill de ploteo
+                    mostrarPillPloteo();
+
+                    // Cambiar el texto del botón de agregar a "Actualizar"
+                    const btn_agregar = document.getElementById('btnAgregarPloteo');
+                    btn_agregar.textContent = 'Actualizar';
+
+                    // Guardar la referencia a la fila del ploteo
+                    ploteo.fila = nuevaFila;  // Guardar referencia a la fila
+                    ploteoEditando = ploteo;  // Guardar referencia al ploteo que se está editando
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
+    });
+
+    function mostrarPillPloteo() {
+        // Cambiar la clase activa de la pestaña
+        const tabPloteo = document.getElementById('pills-profile-tab-nobd');
+        const tabContentPloteo = document.getElementById('pills-profile-nobd');
+
+        // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
+        const tabs = document.querySelectorAll('.nav-link');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const contents = document.querySelectorAll('.tab-pane');
+        contents.forEach(content => {
+            content.classList.remove('show', 'active');
+        });
+
+        // Activar la pestaña de ploteo
+        tabPloteo.classList.add('active');
+        tabContentPloteo.classList.add('show', 'active');
+    }
+
+
+</script>
+
+<!--Impresion-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let impresionEditando = null; // Variable para guardar la impresión que se está editando
+
+        // 1. Manejar Incremento y Decremento de Impresiones
+        document.getElementById("btn_mas_impresion").addEventListener("click", function () {
+            let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
+            document.getElementById("input_numero_impresion").value = cantidad + 1;
+        });
+
+        document.getElementById("btn_menos_impresion").addEventListener("click", function () {
+            let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
+            if (cantidad > 1) {
+                document.getElementById("input_numero_impresion").value = cantidad - 1;
+            }
+        });
+
+        // 2. Función para añadir Impresión a la Tabla
+        document.getElementById('btnAgregarImpresion').addEventListener('click', function () {
+            const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
+            const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
+
+            // Si estamos editando, actualizamos la fila
+            if (impresionEditando) {
+                // Actualizamos los valores de la fila existente
+                impresionEditando.cantidad = cantidadImpresiones;
+                impresionEditando.monto = montoImpresion;
+                impresionEditando.subtotal = cantidadImpresiones * montoImpresion;
+
+                // Actualizamos la fila de la tabla
+                impresionEditando.fila.cells[5].textContent = impresionEditando.cantidad; // Cantidad
+                impresionEditando.fila.cells[6].textContent = impresionEditando.monto.toFixed(2); // Monto
+                impresionEditando.fila.cells[7].textContent = impresionEditando.subtotal.toFixed(2); // Subtotal
+
+                // Limpiar los campos
+                document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
+                document.getElementById('monto_impresion').value = ''; // Reset monto
+
+                // Resetear el botón y quitar la referencia a la impresión editada
+                document.getElementById('btnAgregarImpresion').textContent = 'Añadir a la Venta';
+                impresionEditando = null; // Reiniciar la referencia
+                mostrarPillImpresion(); // Resetear el pill
+            } else {
+                // Si no estamos editando, agregar una nueva impresión
+                const datosImpresion = [{
+                    id: '#', // ID de la impresión
+                    cantidad: cantidadImpresiones, // Cantidad de impresiones
+                    monto: montoImpresion, // Monto
+                    subtotal: cantidadImpresiones * montoImpresion, // Subtotal
+                    articulo: 'Impresión',
+                    idmovimiento: 3, // ID movimiento para impresión
+                }];
+                fn_impresion_tabla(datosImpresion);
+                document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
+                document.getElementById('monto_impresion').value = ''; // Reset monto
+            }
+        });
+
+        // 3. Función para Agregar a la Tabla de Impresiones
+        function fn_impresion_tabla(datosImpresion) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosImpresion.forEach(impresion => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos de la impresión
+                nuevaFila.insertCell(0).textContent = impresion.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Impresiones
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = impresion.articulo; // Artículo (Impresión)
+                nuevaFila.insertCell(5).textContent = impresion.cantidad; // Cantidad
+                nuevaFila.insertCell(6).textContent = impresion.monto.toFixed(2); // Monto
+                nuevaFila.insertCell(7).textContent = impresion.subtotal.toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = impresion.idmovimiento; // ID de movimiento
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    // Rellenar los campos con los valores actuales de la impresión
+                    document.getElementById("input_numero_impresion").value = impresion.cantidad;
+                    document.getElementById("monto_impresion").value = impresion.monto;
+
+                    // Mostrar el pill de impresión
+                    mostrarPillImpresion();
+
+                    // Cambiar el texto del botón de agregar a "Actualizar"
+                    const btn_agregar = document.getElementById('btnAgregarImpresion');
+                    btn_agregar.textContent = 'Actualizar';
+
+                    // Guardar la referencia a la fila de la impresión
+                    impresion.fila = nuevaFila;  // Guardar referencia a la fila
+                    impresionEditando = impresion;  // Guardar referencia a la impresión que se está editando
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
+    });
+
+    function mostrarPillImpresion() {
+        // Cambiar la clase activa de la pestaña
+        const tabImpresion = document.getElementById('pills-contact-tab-nobd');
+        const tabContentImpresion = document.getElementById('pills-contact-nobd');
+
+        // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
+        const tabs = document.querySelectorAll('.nav-link');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const contents = document.querySelectorAll('.tab-pane');
+        contents.forEach(content => {
+            content.classList.remove('show', 'active');
+        });
+
+        // Activar la pestaña de impresión
+        tabImpresion.classList.add('active');
+        tabContentImpresion.classList.add('show', 'active');
+    }
+</script>
+
+<!--Escaneo-->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let escaneoEditando = null; // Variable para guardar el escaneo que se está editando
+
+    // 1. Manejar Incremento y Decremento de Escaneo
+    document.getElementById("btn_mas_escaneo").addEventListener("click", function () {
+        let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+        document.getElementById("input_numero_escaneo").value = cantidad + 1;
+    });
+
+    document.getElementById("btn_menos_escaneo").addEventListener("click", function () {
+        let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+        if (cantidad > 1) {
+            document.getElementById("input_numero_escaneo").value = cantidad - 1;
+        }
+    });
+
+    // 2. Función para añadir Escaneo a la Tabla
+    document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
+        const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
+        const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
+
+        // Si estamos editando, actualizamos la fila
+        if (escaneoEditando) {
+            // Actualizamos los valores de la fila existente
+            escaneoEditando.cantidad = cantidadEscaneos;
+            escaneoEditando.monto = montoEscaneo;
+            escaneoEditando.subtotal = cantidadEscaneos * montoEscaneo;
+
+            // Actualizamos la fila de la tabla
+            escaneoEditando.fila.cells[5].textContent = escaneoEditando.cantidad; // Cantidad
+            escaneoEditando.fila.cells[6].textContent = escaneoEditando.monto.toFixed(2); // Monto
+            escaneoEditando.fila.cells[7].textContent = escaneoEditando.subtotal.toFixed(2); // Subtotal
+
+            // Limpiar los campos
+            document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
+            document.getElementById('monto_escaneo').value = ''; // Reset monto
+
+            // Resetear el botón y quitar la referencia al escaneo editado
+            document.getElementById('btnAgregarescaneo').textContent = 'Añadir a la Venta';
+            escaneoEditando = null; // Reiniciar la referencia
+            mostrarPillEscaneo(); // Resetear el pill
+        } else {
+            // Si no estamos editando, agregar un nuevo escaneo
+            const datosEscaneo = [{
+                id: '#', // ID del escaneo
+                cantidad: cantidadEscaneos, // Cantidad de escaneos
+                monto: montoEscaneo, // Monto
+                subtotal: cantidadEscaneos * montoEscaneo, // Subtotal
+                articulo: 'Escaneo',
+                idmovimiento: 4, // ID movimiento para escaneo
+            }];
+            fn_escaneo_tabla(datosEscaneo);
+            document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
+            document.getElementById('monto_escaneo').value = ''; // Reset monto
+        }
+    });
+
+    // 3. Función para Agregar a la Tabla de Escaneos
+    function fn_escaneo_tabla(datosEscaneo) {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+        datosEscaneo.forEach(escaneo => {
+            let nuevaFila = tabla.insertRow();
+
+            // Agregar celdas para los datos del escaneo
+            nuevaFila.insertCell(0).textContent = escaneo.id; // ID
+            nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Escaneos
+            nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+            nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+            nuevaFila.insertCell(4).textContent = escaneo.articulo; // Artículo (Escaneo)
+            nuevaFila.insertCell(5).textContent = escaneo.cantidad; // Cantidad
+            nuevaFila.insertCell(6).textContent = escaneo.monto.toFixed(2); // Monto
+            nuevaFila.insertCell(7).textContent = escaneo.subtotal.toFixed(2); // Subtotal
+
+            let accionCell = nuevaFila.insertCell(8);
+            nuevaFila.insertCell(9).textContent = escaneo.idmovimiento; // ID de movimiento
+
+            // 1. Botón de Editar
+            let botonEditar = document.createElement("button");
+            botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+            botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+            accionCell.appendChild(botonEditar);
+
+            // 2. Botón de Eliminar
+            let botonEliminar = document.createElement("button");
+            botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+            botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+            accionCell.appendChild(botonEliminar);
+
+            botonEditar.addEventListener("click", () => {
+                // Rellenar los campos con los valores actuales del escaneo
+                document.getElementById("input_numero_escaneo").value = escaneo.cantidad;
+                document.getElementById("monto_escaneo").value = escaneo.monto;
+
+                // Mostrar el pill de escaneo
+                mostrarPillEscaneo();
+
+                // Cambiar el texto del botón de agregar a "Actualizar"
+                const btn_agregar = document.getElementById('btnAgregarescaneo');
+                btn_agregar.textContent = 'Actualizar';
+
+                // Guardar la referencia a la fila del escaneo
+                escaneo.fila = nuevaFila;  // Guardar referencia a la fila
+                escaneoEditando = escaneo;  // Guardar referencia al escaneo que se está editando
+            });
+
+            // Función de eliminar
+            botonEliminar.addEventListener("click", () => {
+                const fila = botonEliminar.closest("tr");
+                fila.remove();
+                fn_obtener_total(); // Recalcular los totales
+            });
+        });
+
+        fn_obtener_total(); // Recalcular totales
+    }
+});
+
+function mostrarPillEscaneo() {
+    // Cambiar la clase activa de la pestaña
+    const tabEscaneo = document.getElementById('pills-escaneo-tab-nobd');
+    const tabContentEscaneo = document.getElementById('pills-escaneo-nobd');
+
+    // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
+    const tabs = document.querySelectorAll('.nav-link');
+    tabs.forEach(tab => {
+        tab.classList.remove('active');
+    });
+    const contents = document.querySelectorAll('.tab-pane');
+    contents.forEach(content => {
+        content.classList.remove('show', 'active');
+    });
+
+    // Activar la pestaña de escaneo
+    tabEscaneo.classList.add('active');
+    tabContentEscaneo.classList.add('show', 'active');
+}
+</script>
 
 
 <?php
