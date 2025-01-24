@@ -19,15 +19,15 @@ function listarInsumosCompra(): array
             JOIN unidad AS u ON u.id=ins.unidad_id
             ORDER BY c.fecha ASC
         ");
-        
+
         $orden->execute();
         $lista = $orden->fetchAll(PDO::FETCH_ASSOC);
         $orden->closeCursor();
     } catch (PDOException $e) {
-        
-        $lista = array(); 
+
+        $lista = array();
     }
-    
+
     return $lista;
 }
 function listarPostres(): array
@@ -37,15 +37,13 @@ function listarPostres(): array
         $orden = $conectar->prepare(query: "
             SELECT id,nombre,descripcion FROM postre WHERE deleted_at IS NULL;
         ");
-        $orden -> execute();
+        $orden->execute();
         $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
         $orden->closeCursor();
-
     } catch (\Throwable $th) {
-        $datos = array(); 
+        $datos = array();
     }
     return $datos;
-
 }
 
 function listarMovimientos(): array
@@ -55,15 +53,13 @@ function listarMovimientos(): array
         $orden = $conectar->prepare(query: "
             SELECT id, descripcion,ruta_php from movimiento WHERE deleted_at IS NULL order by 1;
         ");
-        $orden -> execute();
+        $orden->execute();
         $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
         $orden->closeCursor();
-
     } catch (\Throwable $th) {
-        $datos = array(); 
+        $datos = array();
     }
     return $datos;
-
 }
 function listarProductosVenta1(): array
 {
@@ -72,15 +68,13 @@ function listarProductosVenta1(): array
         $orden = $conectar->prepare(query: "
             Select * from view_articulos;
         ");
-        $orden -> execute();
+        $orden->execute();
         $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
         $orden->closeCursor();
-
     } catch (\Throwable $th) {
-        $datos = array(); 
+        $datos = array();
     }
     return $datos;
-
 }
 
 
@@ -90,11 +84,12 @@ function listarVentaReservaCorte(): array
     global $conectar;
     try {
         $orden = $conectar->prepare(query: "
-           SELECT 
+            SELECT 
             v.id AS venta_id, 
             TO_CHAR(v.created_at, 'YYYY-MM-DD') AS fecha, 
             TO_CHAR(v.created_at, 'HH12:MI:SS AM') AS hora, 
             CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
+            CONCAT(us.id,'-',usua.nombres, ', ', usua.apellidos) AS usuario, 
             p.id as id_persona,
             v.usuario_id,
             v.total, 
@@ -104,18 +99,18 @@ function listarVentaReservaCorte(): array
                 ELSE 'Estado Desconocido'
             END AS estado_venta
             FROM venta AS v
+            INNER JOIN usuario AS us ON v.usuario_id = us.id
+            INNER JOIN persona AS usua ON us.persona_id = usua.id
             INNER JOIN persona AS p ON v.cliente_id = p.id
             WHERE v.deleted_at IS NULL;
         ");
-        $orden -> execute();
+        $orden->execute();
         $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
         $orden->closeCursor();
-
     } catch (\Throwable $th) {
-        $datos = array(); 
+        $datos = array();
     }
     return $datos;
-
 }
 function listarFormaPago(): array
 {
@@ -124,16 +119,11 @@ function listarFormaPago(): array
         $orden = $conectar->prepare(query: "
             SELECT id,nombre FROM forma_pago WHERE deleted_at IS NULL;
         ");
-        $orden -> execute();
+        $orden->execute();
         $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
         $orden->closeCursor();
-
     } catch (\Throwable $th) {
-        $datos = array(); 
+        $datos = array();
     }
     return $datos;
-
 }
-
-?>
-
