@@ -1072,20 +1072,7 @@ if (isset($_GET['id'])) {
         };
 
 
-        var js_venta = {
-            "venta_id": idVenta,
-            "atencion_final_usuario": idAtencionFinal,
-            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
-            "monto_original": montoOriginal,
-            "monto_venta_final": montoFinal
-        };
 
-        var js_for_pago = {
-            "venta_id": idVenta,
-            "monto_original": montoOriginal,
-            "monto_venta_final": montoFinal,
-            "comentario": ""
-        };
         ///////////////////////////////////////////////////////
 
         var js_detalle_pago = [];
@@ -1101,11 +1088,12 @@ if (isset($_GET['id'])) {
             }
 
             if (dato.name.startsWith('monto')) {
-                monto = parseFloat(dato.value); 
+                monto = parseFloat(dato.value);
                 acumMontos = acumMontos + monto;
             }
             if (formaPago && monto) {
                 js_detalle_pago.push({
+                    "venta_id": idVenta,
                     "id_forma_pago": formaPago,
                     "monto_forma_pago": monto
                 });
@@ -1113,7 +1101,21 @@ if (isset($_GET['id'])) {
                 monto = null;
             }
         };
+        var js_venta = {
+            "venta_id": idVenta,
+            "atencion_final_usuario": idAtencionFinal,
+            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "js_detalle_pagos": js_detalle_pago
+        };
 
+        var js_for_pago = {
+            "venta_id": idVenta,
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "comentario": ""
+        };
         //monto_forma_pago
         if (js_detalle_pago.length === 0) {
             swal("Ups!, Falta Agregar los monto de acuerdo a forma de Pago", "Agrega los montos :)", {
@@ -1135,7 +1137,7 @@ if (isset($_GET['id'])) {
                 },
             });
 
-        }else if (acumMontos < montoFinal) {
+        } else if (acumMontos < montoFinal) {
             swal("Ups!, Los montos ingresados son MENORES al Monto final de la venta", "Agrega correctamente los montos :)", {
                 icon: "error",
                 buttons: {
@@ -1151,8 +1153,6 @@ if (isset($_GET['id'])) {
 
             console.log("js_detalle_pago final: ", js_detalle_pago);
 
-            console.log("js_venta", js_venta);
-            console.log("js_pago", js_for_pago);
             $.ajax({
                 url: 'logica/clssInsertPA.php',
                 type: 'POST',
@@ -1174,7 +1174,7 @@ if (isset($_GET['id'])) {
                                 buttons: false,
                                 timer: 1500
                             }).then(() => {
-                                location.reload();
+                                //location.reload();
                             });;
                         } else {
                             swal("Error", result.mensaje, {
@@ -1188,7 +1188,6 @@ if (isset($_GET['id'])) {
                         }
                     } catch (e) {
                         console.log("Error al parsear el JSON: ", e);
-                        // Mostrar un mensaje de error si no se puede parsear el JSON
                         swal("Error", "No se pudo procesar la respuesta del servidor.", {
                             icon: "error",
                             buttons: {
@@ -1211,37 +1210,138 @@ if (isset($_GET['id'])) {
                     });
                 }
             });
-
-
-            /**
-             * 
-            swal({
-                title: "Pagado con Exito!",
-                text: "Transaccion Realizada!",
-                icon: "success",
-                buttons: false,
-                timer: 1500
-            }).then(() => {
-
-
-                //location.reload(); 
-            });
-             */
-
-
         }
-
-
-
     }
 
     function fn_pagar_credito() {
-        var datosSerializados = $('#form-pago-credito').serializeArray();
-        console.log(datosSerializados); // Ver los datos serializados como un array de objetos
 
-        // Si quieres convertirlo en una cadena de formato nombre=valor&nombre2=valor2...
-        var datosCadena = $.param(datosSerializados);
-        console.log(datosCadena); // Ver la cadena de parámetros serializados
+
+        //////////////////////////////////////////////////////
+        var numTelefonoUpdate = document.getElementById('idUpdateNumTelefonoCliente').value;
+        //////////////////////////////////////////////////////////////////////////
+        var idVenta = document.getElementById('idVenta').textContent;
+        var idPersona = document.getElementById('idPersona').textContent;
+        var idUsuario = document.getElementById('idUsuario').textContent;
+        var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
+        var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
+        ////
+
+        var montoOriginal = parseFloat(document.getElementById('montoTotal').value);
+        var montoFinal = parseFloat(document.getElementById('montoTotalFinal').value);
+
+        if (isNaN(montoFinal)) {
+            montoFinal = montoOriginal;
+        };
+
+        var datosSerializadosCredito = $('#form-pago-credito').serializeArray();
+        console.log(datosSerializadosCredito);
+
+        var js_detalle_deuda = [];
+
+        var formaPagoCredito = null;
+        var montoCredito = null;
+        var acumMontos = 0;
+        for (var i = 0; i < datosSerializadosCredito.length; i++) {
+            var dato = datosSerializadosCredito[i];
+
+            if (dato.name.startsWith('formaPagoCredito[]')) {
+                formaPagoCredito = dato.value;
+            }
+
+            if (dato.name.startsWith('montoCredito[]')) {
+                montoCredito = parseFloat(dato.value);
+                acumMontos = acumMontos + montoCredito;
+            }
+            if (formaPagoCredito && montoCredito) {
+                js_detalle_deuda.push({
+                    "venta_id": idVenta,
+                    "id_forma_pago": formaPagoCredito,
+                    "monto_forma_pago": montoCredito
+                });
+                formaPagoCredito = null;
+                montoCredito = null;
+            }
+        };
+        if (isNaN(acumMontos)) {
+            acumMontos = 0;
+        }
+        if (js_detalle_deuda.length === 0) {
+            js_detalle_deuda = null;
+        }
+
+        var js_venta = {
+            "venta_id": idVenta,
+            "atencion_final_usuario": idAtencionFinal,
+            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "monto_inicial": acumMontos,
+            "js_detalle_deuda": js_detalle_deuda
+        };
+        console.log(js_venta);
+        $.ajax({
+            url: 'logica/clssInsertPA.php',
+            type: 'POST',
+            data: {
+                accion: 'FINALIZARVENTACREDITO',
+                jsDatosVenta: JSON.stringify(js_venta)
+            },
+            success: function(response) {
+
+                console.log("Respuesta del servidor: ", response);
+
+                try {
+                    var result = JSON.parse(response);
+                    if (result.estado === true) {
+                        swal({
+                            title: "Pagado con Exito!",
+                            text: result.mensaje,
+                            icon: "success",
+                            buttons: false,
+                            timer: 1500
+                        }).then(() => {
+                            //location.reload();
+                        });;
+                    } else {
+                        swal("Error", result.mensaje, {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                } catch (e) {
+                    console.log("Error al parsear el JSON: ", e);
+                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Error: " + error);
+                swal("Error", "Hubo un problema con la solicitud.", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+        });
+         
+
+
+
+
+
     }
 </script>
 
