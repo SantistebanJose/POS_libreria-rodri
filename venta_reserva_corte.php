@@ -1,8 +1,6 @@
 <?php
 include("cabecera.php");
 include("logica/clssVenta.php");
-session_start(); // O el nombre de la variable que contiene el ID
-
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];

@@ -29,7 +29,6 @@ function listarMovimientos2(): array {
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     insertarVenta();
 }
-
 function insertarVenta() {
     global $conectar;
 
