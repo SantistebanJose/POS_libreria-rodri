@@ -213,6 +213,64 @@ include('logica/clssConsultas.php');
                                 </ul>
                             </div>
                         </li>
+
+                        <li class="nav-item">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#pago"
+                                class="collapsed"
+                                aria-expanded="false">
+                                <i class="fas fa-credit-card"></i>
+                                <p>Pago</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="pago">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="venta_reserva_corte.php">
+                                            <span class="sub-item">Listado de Pagos</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="venta_corte_material.php">
+                                            <span class="sub-item">Atención de reservas</span>
+                                        </a>
+                                    </li>
+                                   
+                                  
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#deuda"
+                                class="collapsed"
+                                aria-expanded="false">
+                                <i class="fas fa-portrait"></i>
+                                <p>Deudas</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="deuda">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="venta_reserva_corte.php">
+                                            <span class="sub-item">Listado de Deudas</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="venta_corte_material.php">
+                                            <span class="sub-item">Atención de reservas</span>
+                                        </a>
+                                    </li>
+                                   
+                                  
+                                </ul>
+                            </div>
+                        </li>
     <!-- <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
