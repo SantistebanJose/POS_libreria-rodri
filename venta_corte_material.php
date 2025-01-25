@@ -15,11 +15,12 @@ if (isset($_GET['id'])) {
         cursor: pointer;
         /* Muestra un cursor de mano para indicar que es clickeable */
     }
-
     #tabla_articulos th:nth-child(1),
-    #tabla_articulos td:nth-child(1) {
-        display: none;
-    }
+#tabla_articulos td:nth-child(1),
+#tabla_articulos th:nth-child(10),
+#tabla_articulos td:nth-child(10) {
+    display: none !important;
+}
 </style>
 <div
     class="container">
@@ -99,32 +100,51 @@ if (isset($_GET['id'])) {
 
                 <!-- Modal Solo Corte -->
                 <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalSoloCorteLabel">Corte de Minutos</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="card-body text-center">
-                                    <p class="card-text">Minutos Corte</p>
-                                    <div class="row">
-                                        <div class="col">
-                                            <button id="btn_menos_solocorte" class="btn btn-danger btn-round ms-2" type="button">-</button>
-                                        </div>
-                                        <div id="cantidad_solocorte" class="col">0</div>
-                                        <div class="col">
-                                            <button id="btn_mas_solocorte" class="btn btn-success btn-round ms-2" type="button">+</button>
-                                        </div>
-                                    </div>
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-12 p-4 bg-light rounded">
+                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                            <div class="mb-4">
+                                <!-- Minutos Corte -->
+                                <div class="text-center" style="flex: 1;">
+                                <p class="mb-1">Minutos Corte</p>
+                                <div class="d-flex justify-content-center align-items-center mb-2">
+                                    <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
+                                    <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
+                                    <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                                </div>
+                                </div>
+                                
+                                <!-- Línea divisoria -->
+                                <hr>
+                                
+                                <!-- Precio Corte -->
+                                <div class="text-center" style="flex: 1;">
+                                <p class="mb-1">Precio Corte</p>
+                                <div class="w-100 d-flex justify-content-center mb-1">
+                                    <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                    <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                    <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                    <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
                             </div>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
+                        </div>
+                        </div>
                     </div>
-                </div>
+                    </div>
 
 
                 <!-- Modal -->
@@ -180,19 +200,16 @@ if (isset($_GET['id'])) {
                                     <a class="nav-link " id="pills-home-tab-nobd" data-bs-toggle="pill" href="#pills-home-nobd" role="tab" aria-controls="pills-home-nobd" aria-selected="true">Materiales y/o Corte</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-profile-tab-nobd" data-bs-toggle="pill" href="#pills-profile-nobd" role="tab" aria-controls="pills-profile-nobd" aria-selected="false">Ploteo</a>
+                                    <button class="nav-link" id="btnAbrirModalPloteo" >Ploteo</button>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Imprimir</a>
+                                    <button class="nav-link" id="btnAbrirModalImprimir">Imprimir</button>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Producto Vitrina</a>
+                                    <button class="nav-link" id="btnAbrirModalEscaneo">Escaneo</button>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Escaneo</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="" role="tab" aria-controls="pills-contact-nobd" aria-selected="false" onclick="agregarCorte()">Solo Corte</a>
+                                    <button class="nav-link" id="btnAbrirModalSolo" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Solo Corte</button>
                                 </li>
                             </ul>
                         </div>
@@ -201,110 +218,7 @@ if (isset($_GET['id'])) {
 
 
                     <div class="card-body">
-                        <!-- Button trigger modal -->
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalId">
-                            Launch
-                        </button>
-
-                        <!-- Modal -->
-                        <div
-                            class="modal fade"
-                            id="modalId"
-                            tabindex="-1"
-                            role="dialog"
-                            aria-labelledby="modalTitleId"
-                            aria-hidden="true">
-                            <div
-                                class="modal-dialog modal-sm modal-fullscreen"
-                                role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalTitleId">
-                                            Modal title
-                                        </h5>
-                                        <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="table-responsive">
-                                            <table
-                                                id="multi-filter-select2"
-                                                class="display table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Articulo</th>
-                                                        <th>Categoria</th>
-                                                        <th>Tipo</th>
-                                                        <th>Dimension</th>
-                                                        <th>Stock</th>
-                                                        <th>Precio de Venta</th>
-                                                        <th>Accion</th>
-                                                    </tr>
-                                                </thead>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>Articulo</th>
-                                                        <th>Categoria</th>
-                                                        <th>Tipo</th>
-                                                        <th>Dimension</th>
-                                                        <th>Stock</th>
-                                                        <th>Precio de Venta</th>
-                                                    </tr>
-                                                </tfoot>
-                                                <tbody>
-
-                                                    <?php
-                                                    foreach (listarProductosVenta1() as $datosArticulo) {
-                                                        $datosArticuloJSON = json_encode($datosArticulo);
-
-
-                                                    ?>
-                                                        <tr>
-                                                            <td><?php echo $datosArticulo["articulo"] ?></td>
-                                                            <td><?php echo $datosArticulo["categoria"] ?></td>
-                                                            <td><?php echo $datosArticulo["tipo"] ?></td>
-                                                            <td><?php echo $datosArticulo["dimension"] ?></td>
-                                                            <td><?php echo $datosArticulo["stock"] ?></td>
-                                                            <td><?php echo $datosArticulo["precio_venta"] ?></td>
-                                                            <th>
-
-                                                                <div class="mt-2 text-center">
-                                                                    <a
-                                                                        name=""
-                                                                        id=""
-                                                                        class="btn btn-secondary btn-round"
-
-                                                                        onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                                        role="button">Agregar</a>
-                                                                </div>
-                                                            </th>
-                                                        </tr>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button
-                                            type="button"
-                                            class="btn btn-secondary"
-                                            data-bs-dismiss="modal">
-                                            Close
-                                        </button>
-                                        <button type="button" class="btn btn-primary">Save</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
 
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
@@ -369,67 +283,7 @@ if (isset($_GET['id'])) {
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd">
-                                    <div class="text-center">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h4 class="card-title">Servicio de Ploteos</h4>
-                                                <div>ID: <span id="id_mov_ploteo">2</span></div>
-                                                <div class="card-sub">
-                                                    Aquí ingresa los ploteos
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Cantidad de Ploteos</p>
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    <button id="btn_mas" class="btn btn-danger btn-round me-2">-</button>
-                                                    <input id="input_numero" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                                    <button id="id_contador" class="btn btn-success btn-round ms-2">+</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Monto (S/)</p>
-                                                <input type="number" name="" id="" placeholder="Monto (S/)">
-                                            </div>
-                                            <div class="text-center">
-                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="pills-contact-nobd" role="tabpanel" aria-labelledby="pills-contact-tab-nobd">
-
-                                    <div class="text-center">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h4 class="card-title">Servicio de Impresiones</h4>
-                                                <div>ID: <span id="id_mov_impresion">3</span></div>
-                                                <div class="card-sub">
-                                                    Aquí ingresa lo que mandaron a Imprimir
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Cantidad de Impresiones</p>
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    <button id="btn_mas_impresion" class="btn btn-danger btn-round me-2">-</button>
-                                                    <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                                    <button id="id_contador_impresion" class="btn btn-success btn-round ms-2">+</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Monto (S/)</p>
-                                                <input type="number" name="" id="" placeholder="Monto (S/)">
-                                            </div>
-
-                                            <div class="text-center">
-                                                <a class="btn btn-secondary" href="#" role="button">Añadir a la Venta</a>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-
-                                </div>
+                               
                             </div>
                         </div>
 
@@ -505,6 +359,7 @@ if (isset($_GET['id'])) {
                                         <th scope="col">Precio Unitario</th>
                                         <th scope="col">Sub Total (S/)</th>
                                         <th scope="col">Accion</th>
+                                        <th scope="col">IDMOVIMIENTO</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -554,8 +409,88 @@ if (isset($_GET['id'])) {
 
 
 </div>
-<!-- Modal trigger button -->
+<!-- Modal Unificado -->
+<div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <!-- Sección de cantidad -->
+                    <div class="row mb-3">
+                        <div class="col-12 p-3 bg-light rounded">
+                            <h6 id="nombreArticulo" class="fw-bold text-center mb-3">Nombre del artículo</h6>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button id="btnRestarCantidad" class="btn btn-danger btn-round" >-</button>
+                                <input id="inputCantidad" type="number" class="form-control text-center mx-2 " value="1" style="width: 80px; font-size: 1.2rem;" />
+                                <button id="btnSumarCantidad" class="btn btn-success btn-round" >+</button>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Sección de corte (solo visible si cantidad = 1) -->
+                    <div id="seccionCorte" class="row mb-3" style="display: none;">
+                        <div class="col-12 p-4 bg-light rounded">
+                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                            <div class="mb-4">
+                                <div class="text-center" style="flex: 1;">
+                                    <p class="mb-1">Minutos Corte</p>
+                                    <div class="d-flex justify-content-center align-items-center mb-2">
+                                        <button id="btnRestarCorte" class="btn btn-danger btn-round" >-</button>
+                                        <input id="cantidadCorte" type="number" class="form-control text-center mx-2 " value="0" style="width: 80px; font-size: 1.2rem;" />
+                                        <button id="btnSumarCorte" class="btn btn-success btn-round" >+</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Línea divisoria -->
+                                <hr>
+                                
+                                <div class="text-center" style="flex: 1;">
+                                    <p class="mb-1">Precio Corte</p>
+                                    <div class="w-100 d-flex justify-content-center mb-1">
+                                        <input id="precioCorte" type="number" class="form-control text-center mx-2 " value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                        <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                        <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                        <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <!-- Botón Confirmar a la izquierda -->
+                <button id="btnConfirmarCantidad" class="btn btn-primary" style="width: 120px;">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal trigger button -->
+<!-- Modal  -->
+<div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalGenericoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalGenericoLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalContent">
+        <!-- Contenido dinámico se cargará aquí -->
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- Modal Body -->
 <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
@@ -1154,7 +1089,6 @@ if (isset($_GET['id'])) {
     });
 </script>
 
-
 <!-- FRANCO -->
 <script>
     function fn_pagar_directo() {
@@ -1453,129 +1387,514 @@ if (isset($_GET['id'])) {
     }
 </script>
 
+<!-- SOLO CORTE -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Incremento de minutos
-        document.getElementById('btn_mas_solocorte').addEventListener('click', function() {
-            let cantidad = parseInt(document.getElementById('cantidad_solocorte').textContent);
-            if (cantidad > 0) {
-                cantidad++;
-                document.getElementById('cantidad_solocorte').textContent = cantidad;
-            } else {
-                document.getElementById('cantidad_solocorte').textContent = 10;
 
-            }
-
-        });
-
-        // Decremento de minutos
-        document.getElementById('btn_menos_solocorte').addEventListener('click', function() {
-            let cantidad = parseInt(document.getElementById('cantidad_solocorte').textContent);
-            if (cantidad > 0) {
-                cantidad--;
-                document.getElementById('cantidad_solocorte').textContent = cantidad;
+        // Registrar eventos para los botones de incremento y decremento (fuera del modal)
+        document.getElementById("btnSumarSoloCorte").addEventListener("click", function() {
+            let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
+            if(cantidad == 0){
+                document.getElementById("cantidad_solocorte").value = 10;
+            }else{
+                document.getElementById("cantidad_solocorte").value = cantidad + 1;
             }
         });
-        document.getElementById('btn_no').addEventListener('click', function() {
-            var modal = bootstrap.Modal.getInstance(document.getElementById('miModal'));
-            modal.hide(); // Cierra el modal manualmente
 
-            // Limpiar después de cerrar
-            fn_limpiar_modal();
+        document.getElementById("btnRestarSoloCorte").addEventListener("click", function() {
+            let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
+            if (cantidad > 0) {
+                document.getElementById("cantidad_solocorte").value = cantidad - 1;
+            }
         });
 
-        // Evento para el botón "X"
-        document.querySelector('.btn_close').addEventListener('click', function() {
-            var modal = bootstrap.Modal.getInstance(document.getElementById('miModal'));
-            modal.hide(); // Cierra el modal manualmente
-
-            // Limpiar después de cerrar
-            fn_limpiar_modal();
+        // Para los incrementos en el precio
+        document.getElementById("btnIncremento05SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 0.5).toFixed(2);
         });
 
-        // Limpiar el modal cuando se cierra con el evento hidden.bs.modal
-        $('#miModal').on('hidden.bs.modal', function() {
-            fn_limpiar_modal(); // Limpiar el modal cuando se cierra
+        document.getElementById("btnIncremento1SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 1).toFixed(2);
         });
 
-
-    })
-
-    function agregarCorte() {
-        const modalElement = document.getElementById('modalSoloCorte');
-        const modal = new bootstrap.Modal(modalElement, {
-            backdrop: 'static', // Evita que se cierre al hacer clic fuera
-            keyboard: false // Evita que se cierre con la tecla 'Esc'
+        document.getElementById("btnIncremento2SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 2).toFixed(2);
         });
-        modal.show(); // Muestra el modal
 
-        // Evento para cuando se hace clic en el botón "Agregar"
-        const btn_agregar = document.getElementById('btn_agregar_solocorte');
-        btn_agregar.addEventListener("click", () => {
-            const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').textContent) || 0;
-            const datosArticulo = {}; // Aquí deberías obtener los datos del artículo (p. ej., desde una variable global o un formulario)
-            const tarifa = 1.5;
+        document.getElementById("btnIncremento5SoloCorte").addEventListener("click", function() {
+            let precio = parseFloat(document.getElementById("precioSoloCorte").value);
+            document.getElementById("precioSoloCorte").value = (precio + 5).toFixed(2);
+        });
+
+        // Abrir el modal y manejar el evento de agregar corte
+        document.getElementById('btnAbrirModalSolo').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevenir el comportamiento por defecto del botón
+            let navLinks = document.querySelectorAll(".nav-link");
+
+            // Remover la clase 'active' de todas las pestañas
+            navLinks.forEach(function(link) {
+                link.classList.remove("active");
+            });
+
+            // Desactivar todos los panes (contenido de las pestañas)
+            let tabPanes = document.querySelectorAll(".tab-pane");
+            tabPanes.forEach(function(pane) {
+                pane.classList.remove("show", "active");
+            });
+            // Mostrar el modal de Solo Corte
+            const modalElement = document.getElementById('modalSoloCorte');
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: 'static', // Evita que se cierre al hacer clic fuera
+                keyboard: false // Evita que se cierre con la tecla 'Esc'
+            });
+
+            // Seleccionar el botón "Agregar"
+            const btn_agregar = document.getElementById('btn_agregar_solocorte');
+
+            // Eliminar cualquier escucha de eventos previa
+            btn_agregar.removeEventListener("click", agregarDatosCorte);
+
+            // Agregar una nueva escucha de eventos para agregar un corte
+            btn_agregar.addEventListener("click", agregarDatosCorte);
+            modal.show(); // Muestra el modal
+        });
+
+        // Función que maneja el evento de agregar datos
+        function agregarDatosCorte() {
+            const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').value) || 0;
+            const tarifa = parseFloat(document.getElementById('precioSoloCorte').value) || 0;
+
             // Crear el objeto datosCorte
             const datosCorte = [{
-                id: '#', // Id del corte
+                id: '0', // Id del corte
                 minutos: cantidadMinutos, // Minutos registrados
                 tarifa: tarifa, // Costo por minuto
-                costo: cantidadMinutos * tarifa
+                costo: cantidadMinutos * tarifa,
+                articulo: 'SOLO CORTE',
+                idmovimiento: 6,
             }];
+
             console.log(datosCorte);
 
-            // Llamar a la función fn_agregar_articulo_tabla
+            // Llamar a la función fn_solo_corte_tabla para agregar a la tabla
             fn_solo_corte_tabla(datosCorte);
 
             // Reiniciar los minutos a 0 en la interfaz
-            document.getElementById('cantidad_solocorte').textContent = 0;
+            document.getElementById('cantidad_solocorte').value = '0';
+            document.getElementById('precioSoloCorte').value = '1.5'; // Valor inicial
 
             // Ocultar el modal
+            const modalElement = document.getElementById('modalSoloCorte');
+            const modal = bootstrap.Modal.getInstance(modalElement);
             modal.hide();
-        });
-    }
+        }
 
-    function fn_solo_corte_tabla(datosCorte) {
+        function fn_solo_corte_tabla(datosCorte) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
 
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+            datosCorte.forEach(corte => {
+                let nuevaFila = tabla.insertRow();
 
+                nuevaFila.insertCell(0).textContent = corte.id; // ID
+                nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
+                nuevaFila.insertCell(2).textContent = corte.tarifa; // Costo x Minuto
+                nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
+                nuevaFila.insertCell(4).textContent = corte.articulo; // Artículo
+                nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
+                nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
+                nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
 
-        datosCorte.forEach(corte => {
-            let nuevaFila = tabla.insertRow();
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = corte.idmovimiento; // Subtotal
 
-            nuevaFila.insertCell(0).textContent = corte.id; // ID
-            nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
-            nuevaFila.insertCell(2).textContent = corte.tarifa; // Costo x Minuto
-            nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
-            nuevaFila.insertCell(4).textContent = 'Corte'; // Artículo
-            nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
-            nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
-            nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
 
-            let accionCell = nuevaFila.insertCell(8);
+                // Agregar el botón de editar a la celda de acciones
+                accionCell.appendChild(botonEditar);
 
-            let botonEliminar = document.createElement("button");
-            botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
-            let iconoBasura = document.createElement("i");
-            iconoBasura.classList.add("fas", "fa-trash"); // Font Awesome icon for trash
-            // Añadir los botones a la celda de acciones
-            botonEliminar.appendChild(iconoBasura);
-            accionCell.appendChild(botonEliminar);
-            // Función para manejar el botón de eliminar
-            botonEliminar.addEventListener("click", () => {
-                const fila = botonEliminar.closest("tr");
-                fila.remove(); // Eliminar la fila
-                fn_obtener_total(); // Recalcular los totales después de eliminar
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    // Llenamos el modal con los datos del corte
+                    document.getElementById("cantidad_solocorte").value = corte.minutos || 0; // Minutos corte
+                    document.getElementById("precioSoloCorte").value = corte.tarifa || 1.5; // Precio corte
+
+                    // Mostrar el modal
+                    const modalElement = document.getElementById('modalSoloCorte');
+                    const modal = new bootstrap.Modal(modalElement, {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                    modal.show();
+
+                    // El botón de agregar se convierte en "Actualizar" para modificar los valores
+                    const btn_agregar = document.getElementById('btn_agregar_solocorte');
+                    btn_agregar.textContent = 'Actualizar'; // Cambiar texto del botón
+                    btn_agregar.removeEventListener("click", agregarDatosCorte);
+
+                    // Actualizar el corte en la tabla cuando se presiona "Actualizar"
+                    btn_agregar.addEventListener("click", function() {
+                        corte.minutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
+                        corte.tarifa = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
+                        corte.costo = corte.minutos * corte.tarifa; // Recalcular el costo
+
+                        // Actualizar las celdas de la fila con los nuevos valores
+                        nuevaFila.cells[1].textContent = corte.minutos; // Minutos
+                        nuevaFila.cells[2].textContent = corte.tarifa; // Costo x Minuto
+                        nuevaFila.cells[3].textContent = corte.costo.toFixed(2); // Costo total
+
+                        // Recalcular el subtotal
+                        nuevaFila.cells[7].textContent = corte.costo.toFixed(2); // Subtotal
+
+                        // Cerrar el modal
+                        modal.hide();
+                        fn_obtener_total(); // Recalcular los totales después de editar
+                    });
+                });
+
+                // Función para manejar el botón de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove(); // Eliminar la fila
+                    fn_obtener_total(); // Recalcular los totales después de eliminar
+                });
             });
 
-        });
+            fn_obtener_total();
+        }
 
-
-
-        fn_obtener_total();
-    }
+    });
 </script>
 
+<!--Agregar desde tabla Modal-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+            const botonesSumar = document.querySelectorAll('[id^="add_"]');
+            const botonesRestar = document.querySelectorAll('[id^="rest_"]');
+
+            botonesSumar.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    const id = boton.id.split('_')[1];
+                    const spanCantidad = document.getElementById(`cantidad_${id}`);
+                    let cantidad = parseInt(spanCantidad.textContent);
+                    cantidad++;
+                    spanCantidad.textContent = cantidad;
+                });
+            });
+
+
+            botonesRestar.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    const id = boton.id.split('_')[1];
+                    const spanCantidad = document.getElementById(`cantidad_${id}`);
+                    let cantidad = parseInt(spanCantidad.textContent);
+                    if (cantidad > 1) {
+                        cantidad--;
+                        spanCantidad.textContent = cantidad;
+                    }
+                });
+            });
+        });
+
+        function fn_agregar_venta(datosArticulo) {
+            //if (verificarSiArticuloExiste(datosArticulo['id'])) {
+               // Swal.fire({
+                //    icon: 'info',
+                  //  title: '¡Artículo ya registrado!',
+                    //text: 'Este artículo ya está en la tabla.',
+                    //confirmButtonText: 'Aceptar'
+                //});
+            //} else {
+                const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
+
+                // Configurar el nombre del artículo
+                const nombreArticulo = document.getElementById('nombreArticulo');
+                nombreArticulo.textContent = `Artículo: ${datosArticulo.articulo || "Sin nombre"}`;
+
+                // Resetear valores del modal
+                const inputCantidad = document.getElementById('inputCantidad');
+                const seccionCorte = document.getElementById('seccionCorte');
+                const cantidadCorte = document.getElementById('cantidadCorte');
+                const precioCorte = document.getElementById('precioCorte');
+
+                inputCantidad.value = 1; // Cantidad por defecto
+                cantidadCorte.value = 0; // Resetear minutos corte
+                precioCorte.value = 0; // Precio por defecto
+
+                // Mostrar u ocultar la sección de corte según datosArticulo.corte
+                if (datosArticulo.corte) {
+                    precioCorte.value = 1.5;
+                    seccionCorte.style.display = 'block';
+                } else {
+                    seccionCorte.style.display = 'none';
+                }
+
+                // Configurar botones de cantidad
+                document.getElementById('btnRestarCantidad').onclick = () => {
+                    let cantidad = parseInt(inputCantidad.value, 10);
+                    
+                    // Restar si la cantidad es mayor a 1
+                    if (cantidad > 1) {
+                        inputCantidad.value = cantidad - 1;  // Restar cantidad
+                    }
+
+                    // Verificar si la cantidad es 1 y el artículo tiene corte
+                    if (inputCantidad.value == 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';  // Mostrar sección de corte
+                        
+                    } else if (inputCantidad.value > 1) {
+                        // Ocultar sección de corte si la cantidad es mayor a 1
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
+                    }
+                };
+
+                document.getElementById('btnSumarCantidad').onclick = () => {
+                    let cantidad = parseInt(inputCantidad.value, 10);
+                    inputCantidad.value = cantidad + 1;
+                    if (cantidad + 1 === 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';
+                    } else {
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
+                    }
+                };
+
+                // Configurar botones de corte
+                document.getElementById('btnRestarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if (corte > 0) cantidadCorte.value = corte - 1; // Cambié textContent por value
+                };
+
+                document.getElementById('btnSumarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if(corte == 0){
+                        cantidadCorte.value = 10; // Cambié textContent por value
+                    } else {
+                        cantidadCorte.value = corte + 1; // Cambié textContent por value
+                    }
+                };
+
+                // Botones para modificar precio
+                document.getElementById('btnIncremento05').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
+                };
+                document.getElementById('btnIncremento1').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
+                };
+                document.getElementById('btnIncremento2').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
+                };
+                document.getElementById('btnIncremento5').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
+                };
+
+                // Confirmar cantidad y agregar a la tabla
+                document.getElementById('btnConfirmarCantidad').onclick = () => {
+                    datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
+                    datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
+                    datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
+                    datosArticulo.id_movimiento = 1;
+
+                    modalCantidad.hide();
+                    fn_agregar_articulo_tabla_Modal(datosArticulo);
+                };
+
+                // Mostrar el modal
+                modalCantidad.show();
+            }
+        //}
+
+
+
+
+
+    function fn_agregar_articulo_tabla_Modal(datosArticulo) {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+        // Insertamos una nueva fila en la tabla
+        let nuevaFila = tabla.insertRow();
+        console.log(datosArticulo);
+        // Colocamos los valores de las celdas
+        nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
+        nuevaFila.insertCell(1).textContent = datosArticulo["minutos"] || '-'; // Minutos
+        nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
+        nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"] || '-'; // Costo x Minuto
+        nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
+        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"]; // Cantidad
+        nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
+
+        let totalCorte = (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+        // Cálculo base del subtotal: cantidad * precio de venta
+        let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_venta"];
+
+        // Sumar el "total corte" al subtotal si existe
+        subtotal += totalCorte;
+
+        // Asignamos el subtotal a la celda 7
+        nuevaFila.insertCell(7).textContent = subtotal.toFixed(2); // Subtotal con 2 decimales
+        // Celda para acciones
+        let accionCell = nuevaFila.insertCell(8);
+        // 3. Botón de Corte (si aplica)
+        
+        // 1. Botón de Editar
+        let botonEditar = document.createElement("button");
+        botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+        botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+
+        // Agregar el botón de editar a la celda de acciones
+        accionCell.appendChild(botonEditar);
+        nuevaFila.insertCell(9).textContent = datosArticulo["id_movimiento"]; // Precio unitario
+
+        // Función para manejar el botón de editar
+        botonEditar.addEventListener("click", () => {
+            // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
+            document.getElementById("nombreArticulo").textContent = datosArticulo["articulo"];
+            document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
+            
+            // Mostrar los valores actuales de corte si es que existen
+            
+
+            // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
+            const seccionCorte = document.getElementById("seccionCorte");
+            if (datosArticulo["corte"] && datosArticulo["cantidad"] == 1) {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+
+                document.getElementById("precioCorte").value = 
+                    datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
+                seccionCorte.style.display = "block";
+            } else {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+                seccionCorte.style.display = "none";
+            }
+
+            // Guardar el artículo actual para hacer la modificación posteriormente
+            document.getElementById("btnConfirmarCantidad").onclick = function() {
+                // Actualizamos la cantidad, minutos de corte y precio de corte en el objeto datosArticulo
+                datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
+                datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
+                datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
+
+                // Actualizamos la celda de cantidad y subtotal en la tabla
+                nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
+                nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
+                nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
+                nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+
+                
+                // Recalcular el subtotal considerando el precio de corte y minutos de corte
+                let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_venta"];
+                subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+                subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;  // Considerar precio de corte
+
+                nuevaFila.cells[7].textContent = subtotal.toFixed(2);
+
+                // Cerramos el modal
+                $('#modalCantidad').modal('hide');
+                fn_obtener_total(); // Recalcular los totales después de editar
+            };
+
+            // Mostrar el modal
+            $('#modalCantidad').modal('show');
+        });
+        // 2. Botón de Eliminar
+        let botonEliminar = document.createElement("button");
+        botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+        botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
+
+        accionCell.appendChild(botonEliminar);
+
+        // Función para manejar el botón de eliminar
+        botonEliminar.addEventListener("click", () => {
+            const fila = botonEliminar.closest("tr");
+            fila.remove(); // Eliminar la fila
+            fn_obtener_total(); // Recalcular los totales después de eliminar
+        });
+
+       
+
+        // Llamamos la función para recalcular los totales si es necesario
+        fn_obtener_total();
+    }
+
+
+
+    function fn_limpiar_modal() {
+        const acordeonContainer = document.getElementById('acordeonContainer');
+        const globalContainer = document.getElementById('globalContainer');
+
+        // Limpiar los contenedores donde se muestran los cortes y cantidades
+        acordeonContainer.innerHTML = "";
+        globalContainer.innerHTML = "";
+
+
+    }
+
+
+    
+
+
+    function fn_obtener_total () {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        var filas = tabla.getElementsByTagName("tr");
+        var totalCorte = 0;
+        var totalArticulos = 0;
+        var total = 0;
+
+        for (var i = 0; i < filas.length; i++) {
+            var celdas = filas[i].getElementsByTagName("td");
+            totalCorte += parseFloat(celdas[3].innerText) || 0;
+            totalArticulos += (parseFloat(celdas[5].innerText) * parseFloat(celdas[6].innerText)) || 0;
+            total += parseFloat(celdas[7].innerText) || 0;
+        }
+
+        var lbl_subtotal_cortes = document.getElementById("id_subtotal_cortes");
+        var lbl_subtotal_articulos= document.getElementById("id_subtotal_articulos");
+        var lbl_subtotal_general = document.getElementById("id_subtotal_general");
+
+        lbl_subtotal_cortes.innerText = totalCorte.toFixed(2);
+        lbl_subtotal_articulos.innerText = totalArticulos.toFixed(2);
+        lbl_subtotal_general.innerText = total.toFixed(2);
+
+
+   
+
+    }
+
+    function verificarSiArticuloExiste(idArticulo) {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        var filas = tabla.getElementsByTagName("tr");
+
+        for (var i = 0; i < filas.length; i++) {
+            var celdas = filas[i].getElementsByTagName("td");
+            var idFila = celdas[0].textContent; // Suponiendo que el ID está en la primera celda
+
+            if (idFila == idArticulo) {
+                return true; // Si se encuentra una coincidencia, retorna true
+            }
+        }
+        return false; // Si no se encuentra ninguna coincidencia, retorna false
+    }
+    
+</script>
+
+<!--Cargar Datos tabla-->
 <script>
     let datosArticuloOriginal = [];
     let datosArticuloNuevos = [];
@@ -1595,7 +1914,7 @@ if (isset($_GET['id'])) {
     // Función para limpiar el modal
 
 
-    // Evento para el botón "Cancelar"
+
 
 
     function fn_consultarVenta(datosArticulo) {
@@ -1667,34 +1986,137 @@ if (isset($_GET['id'])) {
 
         // Celda para acciones
         let accionCell = nuevaFila.insertCell(8);
+        nuevaFila.insertCell(9).textContent = datosArticulo["movimiento_id"]; // Subtotal
 
-        // Si el artículo tiene corte, añadir un botón de tijera
-        if (datosArticulo["corte"] === true) {
-            let botonCorte = document.createElement("button");
-            botonCorte.classList.add("btn", "btn-info", "btn-round", "ms-2");
+        let botonEditar = document.createElement("button");
+        botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+        botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
 
-            let iconoTijera = document.createElement("i");
-            iconoTijera.classList.add("fas", "fa-cut"); // Icono de tijeras de FontAwesome
+        // Agregar el botón de editar a la celda de acciones
+        accionCell.appendChild(botonEditar);
 
-            // Añadir el ícono al botón
-            botonCorte.appendChild(iconoTijera);
+        botonEditar.addEventListener("click", () => {
+            // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
+            document.getElementById("nombreArticulo").textContent = datosArticulo["articulo_nombre"];
+            document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
+            
+            // Mostrar los valores actuales de corte si es que existen
+            document.getElementById('btnRestarCantidad').onclick = () => {
+                    let cantidad = parseInt(inputCantidad.value, 10);
+                    
+                    // Restar si la cantidad es mayor a 1
+                    if (cantidad > 1) {
+                        inputCantidad.value = cantidad - 1;  // Restar cantidad
+                    }
 
-            // Añadir el botón a la celda de acciones
-            accionCell.appendChild(botonCorte);
-            botonCorte.addEventListener("click", () => {
-                fn_modal_corte(datosArticulo);
-            });
-        }
+                    // Verificar si la cantidad es 1 y el artículo tiene corte
+                    if (inputCantidad.value == 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';  // Mostrar sección de corte
+                        
+                    } else if (inputCantidad.value > 1) {
+                        // Ocultar sección de corte si la cantidad es mayor a 1
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
+                    }
+                };
 
-        // Agregar un botón de eliminar si es necesario
+                document.getElementById('btnSumarCantidad').onclick = () => {
+                    let cantidad = parseInt(inputCantidad.value, 10);
+                    inputCantidad.value = cantidad + 1;
+                    if (cantidad + 1 === 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';
+                    } else {
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
+                    }
+                };
+
+                // Configurar botones de corte
+                document.getElementById('btnRestarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if (corte > 0) cantidadCorte.value = corte - 1; // Cambié textContent por value
+                };
+
+                document.getElementById('btnSumarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if(corte == 0){
+                        cantidadCorte.value = 10; // Cambié textContent por value
+                    } else {
+                        cantidadCorte.value = corte + 1; // Cambié textContent por value
+                    }
+                };
+
+                // Botones para modificar precio
+                document.getElementById('btnIncremento05').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
+                };
+                document.getElementById('btnIncremento1').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
+                };
+                document.getElementById('btnIncremento2').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
+                };
+                document.getElementById('btnIncremento5').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
+                };
+
+
+            // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
+            const seccionCorte = document.getElementById("seccionCorte");
+            if (datosArticulo["corte"] && datosArticulo["cantidad"] == 1) {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+
+                document.getElementById("precioCorte").value = 
+                    datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
+                seccionCorte.style.display = "block";
+            } else {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+                document.getElementById("precioCorte").value = 
+                datosArticulo["costo_por_minuto"] === '-' ? 0 : (datosArticulo["costo_por_minuto"] || 0);
+                seccionCorte.style.display = "none";
+            }
+
+            // Guardar el artículo actual para hacer la modificación posteriormente
+            document.getElementById("btnConfirmarCantidad").onclick = function() {
+                // Actualizamos la cantidad, minutos de corte y precio de corte en el objeto datosArticulo
+                datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
+                datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
+                datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
+
+                // Actualizamos la celda de cantidad y subtotal en la tabla
+                nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
+                nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
+                nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
+                nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+
+                
+                // Recalcular el subtotal considerando el precio de corte y minutos de corte
+                let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_unitario_articulo"];
+                subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+                subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;  // Considerar precio de corte
+
+                nuevaFila.cells[7].textContent = subtotal.toFixed(2);
+
+                // Cerramos el modal
+                $('#modalCantidad').modal('hide');
+                fn_obtener_total(); // Recalcular los totales después de editar
+            };
+
+            // Mostrar el modal
+            $('#modalCantidad').modal('show');
+        });
+
         let botonEliminar = document.createElement("button");
-        botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
+        botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+        botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
 
-        let iconoBasura = document.createElement("i");
-        iconoBasura.classList.add("fas", "fa-trash"); // Icono de basura
-
-        botonEliminar.appendChild(iconoBasura);
         accionCell.appendChild(botonEliminar);
+
+        
 
         // Función para manejar el botón de eliminar
         botonEliminar.addEventListener("click", () => {
@@ -1706,366 +2128,613 @@ if (isset($_GET['id'])) {
         // Llamamos la función para recalcular los totales si es necesario
         fn_obtener_total();
     }
-
-    function fn_modal_corte(datosArticulo) {
-        const modal = new bootstrap.Modal(document.getElementById('miModal'), {
-            backdrop: 'static', // Evita que se cierre al hacer clic fuera
-            keyboard: false // Evita que se cierre con la tecla 'Esc'
-        });
-
-        fn_limpiar_modal();
-        modal.show();
-        console.log("datos", datosArticulo);
-        const btnSi = document.getElementById('btn_si');
-
-        // Crear una copia del botón para eliminar los eventos registrados anteriormente
-        const nuevoBtnSi = btnSi.cloneNode(true);
-
-        // Reemplazar el botón antiguo por el nuevo
-        btnSi.parentNode.replaceChild(nuevoBtnSi, btnSi);
+</script>
 
 
-        // Obtener cantidad de productos
-        let cantidad = datosArticulo['cantidad'];
-
-        // Obtener contenedores
-        const acordeonContainer = document.getElementById('acordeonContainer');
-        const globalContainer = document.getElementById('globalContainer');
-
-        // Limpiar contenido anterior
-        acordeonContainer.innerHTML = "";
-        globalContainer.innerHTML = "";
-
-        // Mostrar acordeones solo si hay más de 1 producto
-        if (cantidad > 1) {
-            for (let i = 1; i <= cantidad; i++) {
-                const acordeon = `
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading${i}">
-                                <button class="accordion-button collapsed" type="button" 
-                                        data-bs-toggle="collapse" data-bs-target="#collapse${i}" 
-                                        aria-expanded="false" aria-controls="collapse${i}">
-                                    ${datosArticulo["articulo_nombre"]} - Corte ${i}
-                                </button>
-                            </h2>
-                            <div id="collapse${i}" class="accordion-collapse collapse" 
-                                aria-labelledby="heading${i}" data-bs-parent="#acordeonContainer">
-                                <div class="accordion-body text-center">
-                                    <p class="card-text">Minutos/Corte</p>
-                                    <div class="row">
-                                        <div class="col">
-                                            <button id="btn_menos_${i}" class="btn btn-danger btn-round ms-2" type="button">-</button>
-                                        </div>
-                                        <div id="cantidad_${i}" class="col">0</div>
-                                        <div class="col">
-                                            <button id="btn_mas_${i}" class="btn btn-success btn-round ms-2" type="button">+</button>
-                                        </div>
-                                    </div>
-                                </div>
+<!--Ploteo-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
+        document.getElementById('btnAbrirModalPloteo').addEventListener('click', function () {
+            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Ploteo';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Ploteo</h4>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Ploteo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button id="btn_menos_ploteo" class="btn btn-danger btn-round me-2">-</button>
+                                <input id="input_cantidad_ploteo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                <button id="btn_mas_ploteo" class="btn btn-success btn-round ms-2">+</button>
                             </div>
-                        </div>`;
-                acordeonContainer.innerHTML += acordeon;
-            }
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_ploteo" class="form-control" placeholder="Monto (S/)">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            `;
 
-
-            document.querySelectorAll('.accordion-button').forEach(button => {
-                button.classList.add('collapsed'); // Asegura que esté colapsado
-                button.setAttribute('aria-expanded', 'false'); // Marca como cerrado
+            // 1. Manejar Incremento y Decremento de Ploteos
+            document.getElementById("btn_mas_ploteo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
+                document.getElementById("input_cantidad_ploteo").value = cantidad + 1;
             });
 
-            // Eventos dinámicos para cada acordeón
-            for (let i = 1; i <= cantidad; i++) {
-                const btnMas = document.getElementById(`btn_mas_${i}`);
-                const btnMenos = document.getElementById(`btn_menos_${i}`);
-                const cantidadElemento = document.getElementById(`cantidad_${i}`);
-                btnMenos.disabled = true;
-
-                btnMas.addEventListener("click", () => {
-                    btnMenos.disabled = false;
-                    let valorActual = parseInt(cantidadElemento.innerText) || 0;
-                    if (valorActual > 0) {
-                        cantidadElemento.innerText = valorActual + 1;
-                    } else {
-                        cantidadElemento.innerText = 10;
-                    }
-                });
-
-                btnMenos.addEventListener("click", () => {
-                    let valorActual = parseInt(cantidadElemento.innerText) || 0;
-                    if (valorActual > 0) {
-                        cantidadElemento.innerText = valorActual - 1;
-                    }
-                    btnMenos.disabled = valorActual === 1;
-
-
-                });
-            }
-        }
-
-        // Sección global (siempre visible)
-        const globalSection = `
-                <div class="card-body text-center">
-                    <p class="card-text">Minutos/Corte Todos</p>
-                    <div class="row">
-                        <div class="col">
-                            <button id="btn_menos_global" class="btn btn-danger btn-round ms-2" type="button">-</button>
-                        </div>
-                        <div id="cantidad_global" class="col">0</div>
-                        <div class="col">
-                            <button id="btn_mas_global" class="btn btn-success btn-round ms-2" type="button">+</button>
-                        </div>
-                    </div>
-                </div>`;
-        globalContainer.innerHTML = globalSection;
-
-        // Eventos para botones globales
-        const btnMasGlobal = document.getElementById('btn_mas_global');
-        const btnMenosGlobal = document.getElementById('btn_menos_global');
-        const cantidadGlobal = document.getElementById('cantidad_global');
-        btnMenosGlobal.disabled = true;
-
-        btnMasGlobal.addEventListener("click", () => {
-            btnMenosGlobal.disabled = false
-            let valorActual = parseInt(cantidadGlobal.innerText) || 0;
-            if (valorActual > 0) {
-                cantidadGlobal.innerText = valorActual + 1;
-            } else {
-                cantidadGlobal.innerText = 10;
-            }
-
-        });
-
-        btnMenosGlobal.addEventListener("click", () => {
-            let valorActual = parseInt(cantidadGlobal.innerText) || 0;
-            if (valorActual > 0) {
-                cantidadGlobal.innerText = valorActual - 1;
-            }
-            btnMenosGlobal.disabled = valorActual === 1;
-        });
-
-        document.getElementById('btn_si').addEventListener("click", () => {
-            // Obtener cantidad global
-            const cantidadGlobal = parseInt(document.getElementById('cantidad_global').innerText) || 0;
-
-            // Verificar si se está aplicando corte global
-            if (cantidadGlobal > 0) {
-                // Realizar corte global
-
-                fn_corte_global(datosArticulo);
-            } else {
-                // Realizar corte individual
-                fn_corte_individual(datosArticulo);
-            }
-
-            modal.hide(); // Cierra el modal después de la operación
-        });
-
-    }
-
-
-
-    function fn_corte_global(datosArticulo) {
-        const cantidadGlobal = parseInt(document.getElementById('cantidad_global').innerText) || 0;
-
-        if (cantidadGlobal > 0) {
-            // Obtener la tabla de artículos
-            const tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-            let filas = Array.from(tabla.rows);
-
-            // Eliminar las filas existentes para ese producto (por articulo_id)
-            for (let i = filas.length - 1; i >= 0; i--) {
-                let fila = filas[i];
-                console.log(datosArticulo['articulo_id']);
-                if (fila.cells[0].textContent.trim() === datosArticulo['articulo_id'].toString().trim()) {
-                    tabla.deleteRow(i); // Usamos 'i' directamente
-                    console.log("Eliminando fila en índice " + i);
+            document.getElementById("btn_menos_ploteo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
+                if (cantidad > 1) {
+                    document.getElementById("input_cantidad_ploteo").value = cantidad - 1;
                 }
-            }
+            });
 
-            // Crear las nuevas filas basadas en la cantidad de minutos globales (cantidadGlobal)
-            const cantidad = datosArticulo['cantidad']; // Cantidad del producto original
-            const precioUnitario = datosArticulo['precio_unitario_articulo'] || 0; // Precio unitario del producto
-            const costo = 1.5; // Costo por minuto, puede ser un valor fijo o dinámico según tu sistema
-
-            for (let i = 0; i < cantidad; i++) {
+            // Funcionalidad para Añadir Escaneo a la Tabla
+            document.getElementById('btnAgregarPloteo').addEventListener('click', function () {
+                const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
+                const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
 
 
-                // Calcular el costo total por minuto
-                const totalCosto = costo * cantidadGlobal; // Costo por minuto multiplicado por los minutos
+                // Si no estamos editando, agregar un nuevo ploteo
+                const datosPloteo = [{
+                    id: '0', // ID del ploteo
+                    cantidad: cantidadPloteos, // Cantidad de ploteos
+                    monto: '-', // Monto
+                    subtotal: montoPloteo, // Subtotal
+                    articulo: 'PLOTEO',
+                    idmovimiento: 2,
+                }];
+                fn_ploteo_tabla(datosPloteo);
+                document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
+                document.getElementById('monto_ploteo').value = ''; // Reset monto
+                    // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+            });
 
-                // Calcular el subtotal: (precio_unitario * cantidad) + (costo * minutos)
-                const subtotal = (precioUnitario * 1) + totalCosto;
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+            modal.show();
+        });
+       
 
+    
 
+        // 3. Función para Agregar a la Tabla de Ploteos
+        function fn_ploteo_tabla(datosPloteo) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
 
-                // Crear la nueva fila y agregarla a la tabla
-                const nuevaFila = tabla.insertRow();
-                // Crear celdas para cada dato
-                const celdaId = nuevaFila.insertCell(0);
+            datosPloteo.forEach(ploteo => {
+                let nuevaFila = tabla.insertRow();
 
-                const celdaMinutos = nuevaFila.insertCell(1);
-                const celdatarifa = nuevaFila.insertCell(2);
-                const celdaCosto = nuevaFila.insertCell(3);
+                // Agregar celdas para los datos de ploteo
+                nuevaFila.insertCell(0).textContent = ploteo.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Ploteos
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = ploteo.articulo; // Artículo (Ploteo)
+                nuevaFila.insertCell(5).textContent = ploteo.cantidad; // Se puede agregar más detalles si se requiere
+                nuevaFila.insertCell(6).textContent = ploteo.monto; // Otro dato
+                nuevaFila.insertCell(7).textContent = ploteo.subtotal.toFixed(2); // Subtotal (multiplied)
 
-                const celdaNombre = nuevaFila.insertCell(4);
-                const celdaCantidad = nuevaFila.insertCell(5);
-                const celdaPrecioUnitario = nuevaFila.insertCell(6);
-                const celdaSubtotal = nuevaFila.insertCell(7);
-                const celdaAcciones = nuevaFila.insertCell(8);
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = ploteo.idmovimiento; // Subtotal (multiplied)
 
-                // Rellenar las celdas con los datos del artículo
-                celdaId.textContent = datosArticulo['articulo_id'];
-                celdaNombre.textContent = `${datosArticulo["articulo_nombre"]} - Corte ${i}`;
-                celdaCantidad.textContent = 1;
-                celdaMinutos.textContent = cantidadGlobal;
-                celdaCosto.textContent = totalCosto.toFixed(2); // Mostrar el costo total
-                celdaPrecioUnitario.textContent = parseFloat(precioUnitario).toFixed(2); // Mostrar el precio unitario
-                celdaSubtotal.textContent = subtotal.toFixed(2); // Mostrar el subtotal
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
 
-                // Agregar el botón de eliminación
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
                 let botonEliminar = document.createElement("button");
-                botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
 
-                let iconoBasura = document.createElement("i");
-                iconoBasura.classList.add("fas", "fa-trash"); // Icono de basura
+                accionCell.appendChild(botonEliminar);
 
-                botonEliminar.appendChild(iconoBasura);
-                celdaAcciones.appendChild(botonEliminar);
+                botonEditar.addEventListener("click", () => {
 
-                // Función para manejar el botón de eliminar
+                    document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Ploteo</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${ploteo.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Ploteo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${ploteo.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_ploteoEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_ploteoeditar" class="form-control" value="${ploteo.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+
+                    document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
+                        if (cantidad > 1) document.getElementById('input_cantidad_ploteoEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_ploteoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
+                        document.getElementById('input_cantidad_ploteoEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
+                    
+                    // Rellenar los campos con los valores actuales del ploteo
+                    document.getElementById("input_cantidad_ploteoEditar").value = ploteo.cantidad;
+                    document.getElementById("monto_ploteoeditar").value = ploteo.subtotal;
+
+
+                    // Guardar la referencia a la fila del ploteo
+                    ploteo.fila = nuevaFila;  // Guardar referencia a la fila
+                    ploteoEditando = ploteo;  // Guardar referencia al ploteo que se está editando
+
+
+                    document.getElementById('btnAgregarploteoEditar').addEventListener('click', function () {
+                        const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
+                        const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
+                        // Actualizamos los valores de la fila existente
+                        ploteoEditando.cantidad = cantidadPloteos;
+                        ploteoEditando.subtotal = montoPloteo;
+
+                        // Actualizamos la fila de la tabla
+                        ploteoEditando.fila.cells[5].textContent = ploteoEditando.cantidad; // Cantidad
+                        ploteoEditando.fila.cells[7].textContent = ploteoEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_cantidad_ploteoEditar').value = 0;
+                        document.getElementById('monto_ploteoeditar').value = 0;
+
+                        // Resetear el botón y quitar la referencia al ploteo editado
+                        ploteoEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+
+                });
+
+                // Función de eliminar
                 botonEliminar.addEventListener("click", () => {
                     const fila = botonEliminar.closest("tr");
-                    fila.remove(); // Eliminar la fila
-                    fn_obtener_total(); // Recalcular los totales después de eliminar
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
                 });
-            }
+            });
 
-            // Actualizar el total y mostrarlo
-            fn_obtener_total();
-        } else {
-            alert("Por favor, ingrese un valor mayor a 0 en minutos globales.");
+            fn_obtener_total(); // Recalcular totales
         }
-    }
-
-
-
-    // Función para manejar el corte individual (actualización de cantidad)
-    function fn_corte_individual(datosArticulo) {
-        // Obtener la cantidad de cortes individuales
-        const cantidad = datosArticulo['cantidad'];
-
-        // Obtener la tabla de artículos
-        const tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        let filas = Array.from(tabla.rows);
-
-        // Para cada corte individual, verificar cuántos se agregan
-        for (let i = 1; i <= cantidad; i++) {
-            const cantidadtiempo = parseInt(document.getElementById(`cantidad_${i}`).innerText) || 0;
-            console.log(i, cantidadtiempo)
-            if (cantidadtiempo > 0) {
-                // Reducir la cantidad del artículo original en la tabla
-                filas.forEach(fila => {
-                    // Si el articulo_id en la fila coincide con el articulo_id del artículo original
-                    if (fila.cells[0].textContent.trim() === datosArticulo['articulo_id'].toString().trim()) {
-                        const cantidadActual = parseInt(fila.cells[4].textContent) || 0; // Leer la cantidad existente
-                        const nuevaCantidad = cantidadActual - 1; // Restar la cantidad agregada
-
-                        // Actualizar la cantidad en la tabla
-                        fila.cells[4].textContent = nuevaCantidad > 0 ? nuevaCantidad : 0; // Si la cantidad es menor a 0, dejar 0
-
-                        // También actualizar el costo total y el subtotal de esa fila
-                        const precioUnitario = parseFloat(fila.cells[5].textContent) || 0;
-                        const subtotal = precioUnitario * nuevaCantidad; // Subtotal del corte
-
-                        // Actualizar las celdas de costo y subtotal
-                        fila.cells[6].textContent = subtotal.toFixed(2); // Subtotal
-                    }
-                });
-
-                const precioUnitario = datosArticulo['precio_unitario_articulo'] || 0; // Precio unitario del producto
-                const costo = 1.5; // Costo por minuto, puede ser un valor fijo o dinámico según tu sistema
-
-                // Calcular el costo total por minuto
-                const totalCosto = costo * cantidadtiempo; // Costo por minuto multiplicado por los minutos
-
-                // Calcular el subtotal: (precio_unitario * cantidad) + (costo * minutos)
-                const subtotal = (precioUnitario * 1) + totalCosto;
-
-                // Crear la nueva fila y agregarla a la tabla
-                const nuevaFila = tabla.insertRow();
-                // Crear celdas para cada dato
-                const celdaId = nuevaFila.insertCell(0);
-
-                const celdaMinutos = nuevaFila.insertCell(1);
-                const celdaCosto = nuevaFila.insertCell(2);
-
-                const celdaNombre = nuevaFila.insertCell(3);
-                const celdaCantidad = nuevaFila.insertCell(4);
-                const celdaPrecioUnitario = nuevaFila.insertCell(5);
-                const celdaSubtotal = nuevaFila.insertCell(6);
-                const celdaAcciones = nuevaFila.insertCell(7);
-
-                // Rellenar las celdas con los datos del artículo
-                celdaId.textContent = datosArticulo['articulo_id'];
-                celdaNombre.textContent = `${datosArticulo["articulo_nombre"]} - Corte ${i}`;
-                celdaCantidad.textContent = 1;
-                celdaMinutos.textContent = cantidadtiempo;
-                celdaCosto.textContent = totalCosto.toFixed(2); // Mostrar el costo total
-                celdaPrecioUnitario.textContent = parseFloat(precioUnitario).toFixed(2); // Mostrar el precio unitario
-                celdaSubtotal.textContent = subtotal.toFixed(2); // Mostrar el subtotal
-
-                // Agregar el botón de eliminación
-                let botonEliminar = document.createElement("button");
-                botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
-
-                let iconoBasura = document.createElement("i");
-                iconoBasura.classList.add("fas", "fa-trash"); // Icono de basura
-
-                botonEliminar.appendChild(iconoBasura);
-                celdaAcciones.appendChild(botonEliminar);
-
-                // Función para manejar el botón de eliminar
-                botonEliminar.addEventListener("click", () => {
-                    const fila = botonEliminar.closest("tr");
-                    fila.remove(); // Eliminar la fila
-                    fn_obtener_total(); // Recalcular los totales después de eliminar
-                });
-
-
-            }
-        }
-
-        // Actualizar el total después de realizar el corte
-        fn_obtener_total();
-    }
-
-    function fn_obtener_total() {
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        var filas = tabla.getElementsByTagName("tr");
-        var totalCorte = 0;
-        var totalArticulos = 0;
-        var total = 0;
-
-        for (var i = 0; i < filas.length; i++) {
-            var celdas = filas[i].getElementsByTagName("td");
-            totalCorte += parseFloat(celdas[3].innerText) || 0;
-            totalArticulos += (parseFloat(celdas[5].innerText) * parseFloat(celdas[6].innerText)) || 0;
-            total += parseFloat(celdas[7].innerText) || 0;
-        }
-
-        var lbl_subtotal_cortes = document.getElementById("id_subtotal_cortes");
-        var lbl_subtotal_articulos = document.getElementById("id_subtotal_articulos");
-        var lbl_subtotal_general = document.getElementById("id_subtotal_general");
-
-        lbl_subtotal_cortes.innerText = totalCorte.toFixed(2);
-        lbl_subtotal_articulos.innerText = totalArticulos.toFixed(2);
-        lbl_subtotal_general.innerText = total.toFixed(2);
+    });
 
 
 
 
-    }
 </script>
+
+<!--Impresion-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let impresionEditando = null; // Variable para guardar la impresión que se está editando
+
+        document.getElementById('btnAbrirModalImprimir').addEventListener('click', function () {
+            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Impresión';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Impresión</h4>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad a Imprimir</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button id="btn_menos_impresion" class="btn btn-danger btn-round me-2">-</button>
+                                <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                <button id="btn_mas_impresion" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_impresion" class="form-control" placeholder="Monto (S/)">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            `;
+
+            // 1. Manejar Incremento y Decremento de Impresiones
+            document.getElementById("btn_mas_impresion").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
+                document.getElementById("input_numero_impresion").value = cantidad + 1;
+            });
+
+            document.getElementById("btn_menos_impresion").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
+                if (cantidad > 1) {
+                    document.getElementById("input_numero_impresion").value = cantidad - 1;
+                }
+            });
+
+            // Funcionalidad para Añadir Escaneo a la Tabla
+            document.getElementById('btnAgregarImpresion').addEventListener('click', function () {
+                const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
+                const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
+                // Si no estamos editando, agregar una nueva impresión
+                const datosImpresion = [{
+                    id: '0', // ID de la impresión
+                    cantidad: cantidadImpresiones, // Cantidad de impresiones
+                    monto: '-', // Monto
+                    subtotal: montoImpresion, // Subtotal
+                    articulo: 'IMPRESIÓN',
+                    idmovimiento: 3, // ID movimiento para impresión
+                }];
+                fn_impresion_tabla(datosImpresion);
+                document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
+                document.getElementById('monto_impresion').value = ''; // Reset monto
+
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+            });
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+            modal.show();
+        });
+
+        // 3. Función para Agregar a la Tabla de Impresiones
+        function fn_impresion_tabla(datosImpresion) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosImpresion.forEach(impresion => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos de la impresión
+                nuevaFila.insertCell(0).textContent = impresion.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Impresiones
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = impresion.articulo; // Artículo (Impresión)
+                nuevaFila.insertCell(5).textContent = impresion.cantidad; // Cantidad
+                nuevaFila.insertCell(6).textContent = impresion.monto; // Monto
+                nuevaFila.insertCell(7).textContent = impresion.subtotal.toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = impresion.idmovimiento; // ID de movimiento
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {             
+                    document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Impresión</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${impresion.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad a Imprimir</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_numero_impresionEditar" class="text-center" type="text" value="${impresion.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_impresionEditar" class="form-control" value="${impresion.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+
+                    document.getElementById('btn_menos_impresionEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+                        if (cantidad > 1) document.getElementById('input_numero_impresionEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_impresionEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+                        document.getElementById('input_numero_impresionEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
+                    // Rellenar los campos con los valores actuales de la impresión
+                    document.getElementById("input_numero_impresionEditar").value = impresion.cantidad;
+                    document.getElementById("monto_impresionEditar").value = impresion.subtotal;
+
+                    // Guardar la referencia a la fila de la impresión
+                    impresion.fila = nuevaFila;  // Guardar referencia a la fila
+                    impresionEditando = impresion;  // Guardar referencia a la impresión que se está editando
+
+                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', function () {
+                        const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
+                        const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
+
+                        // Actualizamos los valores de la fila existente
+                        impresionEditando.cantidad = cantidadImpresion;
+                        impresionEditando.subtotal = montoImpresion;
+
+                        // Actualizamos la fila de la tabla
+                        impresionEditando.fila.cells[5].textContent = impresionEditando.cantidad; // Cantidad
+                        impresionEditando.fila.cells[7].textContent = impresionEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_numero_impresionEditar').value = 1; // Reset cantidad
+                        document.getElementById('monto_impresionEditar').value = 0; // Reset monto
+
+                        impresionEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
+    });
+
+    
+</script>
+
+<!--Escaneo-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let escaneoEditando = null; // Variable para guardar el escaneo que se está editando
+
+         // Abrir modal con el contenido específico para Escaneo
+         document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function () {
+            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Escaneo';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Escaneo</h4>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Escaneo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button id="btn_menos_escaneo" class="btn btn-danger btn-round me-2">-</button>
+                                <input id="input_numero_escaneo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                <button id="btn_mas_escaneo" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_escaneo" class="form-control" placeholder="Monto (S/)">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            `;
+
+            // Funcionalidades de Incremento y Decremento
+            document.getElementById("btn_mas_escaneo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+                document.getElementById("input_numero_escaneo").value = cantidad + 1;
+            });
+
+            document.getElementById("btn_menos_escaneo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+                if (cantidad > 1) {
+                    document.getElementById("input_numero_escaneo").value = cantidad - 1;
+                }
+            });
+
+            // Funcionalidad para Añadir Escaneo a la Tabla
+            document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
+                const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
+                const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
+
+                const datosEscaneo = [{
+                    id: '0', // ID del escaneo
+                    cantidad: cantidadEscaneos,
+                    monto: '-', // Monto unitario
+                    subtotal: montoEscaneo,
+                    articulo: 'ESCANEO',
+                    idmovimiento: 4, // ID movimiento
+                }];
+
+                fn_escaneo_tabla(datosEscaneo);
+
+                // Reset campos
+                document.getElementById('input_numero_escaneo').value = 1;
+                document.getElementById('monto_escaneo').value = '';
+
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+            });
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+            modal.show();
+        });
+
+        
+        // 3. Función para Agregar a la Tabla de Escaneos
+        function fn_escaneo_tabla(datosEscaneo) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosEscaneo.forEach(escaneo => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos del escaneo
+                nuevaFila.insertCell(0).textContent = escaneo.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Escaneos
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = escaneo.articulo; // Artículo (Escaneo)
+                nuevaFila.insertCell(5).textContent = escaneo.cantidad; // Cantidad
+                nuevaFila.insertCell(6).textContent = escaneo.monto; // Monto
+                nuevaFila.insertCell(7).textContent = escaneo.subtotal.toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = escaneo.idmovimiento; // ID de movimiento
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    
+                    document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Escaneo</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${escaneo.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Escaneo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_escaneoEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_numero_escaneoEditar" class="text-center" type="text" value="${escaneo.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_escaneoEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_escaneoEditar" class="form-control" value="${escaneo.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+                    document.getElementById('btn_menos_escaneoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
+                        if (cantidad > 1) document.getElementById('input_numero_escaneoEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_escaneoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
+                        document.getElementById('input_numero_escaneoEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
+                    // Rellenar los campos con los valores actuales del escaneo
+                    document.getElementById("input_numero_escaneoEditar").value = escaneo.cantidad;
+                    document.getElementById("monto_escaneoEditar").value = escaneo.subtotal;
+
+               
+
+
+                    // Guardar la referencia a la fila del escaneo
+                    escaneo.fila = nuevaFila;  // Guardar referencia a la fila
+                    escaneoEditando = escaneo;  // Guardar referencia al escaneo que se está editando
+                    
+                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', function () {
+                        const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
+                        const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
+
+                        // Actualizamos los valores de la fila existente
+                        escaneoEditando.cantidad = cantidadEscaneos;
+                        escaneoEditando.subtotal = montoEscaneo;
+
+                        // Actualizamos la fila de la tabla
+                        escaneoEditando.fila.cells[5].textContent = escaneoEditando.cantidad; // Cantidad
+                        escaneoEditando.fila.cells[7].textContent = escaneoEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_numero_escaneoEditar').value = 1; // Reset cantidad
+                        document.getElementById('monto_escaneoEditar').value = 0; // Reset monto
+
+                        escaneoEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
+    });
+
+
+</script>
+
+
+
+
 
 
 <script>
@@ -2112,141 +2781,6 @@ if (isset($_GET['id'])) {
     }
 </script>
 
-<script>
-    function fn_agregar_venta(datosArticulo) {
-
-        if (verificarSiArticuloExiste(datosArticulo['id'])) {
-            Swal.fire({
-                icon: 'info',
-                title: '¡Artículo ya registrado!',
-                text: 'Este artículo ya está en la tabla.',
-                confirmButtonText: 'Aceptar'
-            });
-
-
-        } else {
-            console.log(datosArticulo);
-            fn_agregar_articulo_tabla_nuevo(datosArticulo);
-
-
-        }
-
-    }
-
-    function verificarSiArticuloExiste(idArticulo) {
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        var filas = tabla.getElementsByTagName("tr");
-
-        for (var i = 0; i < filas.length; i++) {
-            var celdas = filas[i].getElementsByTagName("td");
-            var idFila = celdas[0].textContent; // Suponiendo que el ID está en la primera celda
-
-            if (idFila == idArticulo) {
-                return true; // Si se encuentra una coincidencia, retorna true
-            }
-        }
-        return false; // Si no se encuentra ninguna coincidencia, retorna false
-    }
-
-    function fn_agregar_articulo_tabla_nuevo(datosArticulo, tipoCorte = 'none', datosCorte = []) {
-
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-
-        let nuevaFila = tabla.insertRow();
-
-
-        nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
-        nuevaFila.insertCell(1).textContent = '-'; // Minutos
-        nuevaFila.insertCell(2).textContent = '-'; // Minutos
-
-        nuevaFila.insertCell(3).textContent = '-'; // Costo x Minuto
-        nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
-        let cantidad = 1;
-        // let nuevaCelda = nuevaFila.insertCell(4);
-        //let inputElemento = document.createElement('input');
-        //inputElemento.type = 'text'; // Tipo de input
-        // inputElemento.value = cantidad; // Asignar el valor del contadorCantidad
-        //nuevaCelda.appendChild(inputElemento); // Añadir el input a la celda
-        nuevaFila.insertCell(5).textContent = cantidad; // Cantidad
-        nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
-        nuevaFila.insertCell(7).textContent = (cantidad * parseFloat(datosArticulo["precio_venta"])).toFixed(2); // Subtotal
-
-        let accionCell = nuevaFila.insertCell(8);
-        if (datosArticulo["corte"] === true) {
-            let botonCorte = document.createElement("button");
-            botonCorte.classList.add("btn", "btn-info", "btn-round", "ms-2");
-
-            let iconoTijera = document.createElement("i");
-            iconoTijera.classList.add("fas", "fa-cut"); // Icono de tijeras de FontAwesome
-
-            // Añadir el ícono al botón
-            botonCorte.appendChild(iconoTijera);
-
-            // Añadir el botón a la celda de acciones
-            accionCell.appendChild(botonCorte);
-            botonCorte.addEventListener("click", () => {
-                fn_modal_corte(datosArticulo);
-            });
-        }
-        let botonMas = document.createElement("button");
-        botonMas.classList.add("btn", "btn-success", "btn-round", "ms-2");
-        botonMas.textContent = "+";
-
-        let botonMenos = document.createElement("button");
-        botonMenos.classList.add("btn", "btn-danger", "btn-round", "ms-2");
-        botonMenos.textContent = "-";
-
-        let botonEliminar = document.createElement("button");
-        botonEliminar.classList.add("btn", "btn-warning", "btn-round", "ms-2");
-        let iconoBasura = document.createElement("i");
-        iconoBasura.classList.add("fas", "fa-trash"); // Font Awesome icon for trash
-        // Añadir los botones a la celda de acciones
-        botonEliminar.appendChild(iconoBasura);
-        accionCell.appendChild(botonMas);
-        accionCell.appendChild(botonMenos);
-        accionCell.appendChild(botonEliminar);
-
-        // ** Agregar los eventos de los botones: **
-
-        // Función para actualizar el subtotal
-        function actualizarSubtotal(fila) {
-            const cantidad = parseInt(fila.cells[4].textContent) || 0;
-            const precioUnitario = parseFloat(fila.cells[5].textContent) || 0;
-            const subtotalCell = fila.cells[6];
-            subtotalCell.textContent = (cantidad * precioUnitario).toFixed(2);
-            fn_obtener_total(); // Recalcular los totales
-        }
-
-        // Función para manejar el botón de "+"
-        botonMas.addEventListener("click", () => {
-            const fila = botonMas.closest("tr");
-            let cantidadCell = fila.cells[4];
-            let cantidad = parseInt(cantidadCell.textContent) || 0;
-            cantidadCell.textContent = cantidad + 1;
-            actualizarSubtotal(fila);
-        });
-
-        // Función para manejar el botón de "-"
-        botonMenos.addEventListener("click", () => {
-            const fila = botonMenos.closest("tr");
-            let cantidadCell = fila.cells[4];
-            let cantidad = parseInt(cantidadCell.textContent) || 0;
-            if (cantidad > 1) {
-                cantidadCell.textContent = cantidad - 1;
-                actualizarSubtotal(fila);
-            }
-        });
-
-        // Función para manejar el botón de eliminar
-        botonEliminar.addEventListener("click", () => {
-            const fila = botonEliminar.closest("tr");
-            fila.remove(); // Eliminar la fila
-            fn_obtener_total(); // Recalcular los totales después de eliminar
-        });
-
-        fn_obtener_total();
-    }
-</script>
 
 <?php
 include("pie.php");

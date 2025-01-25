@@ -143,7 +143,7 @@ if (isset($_GET['id'])) {
 
 
                 <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
@@ -311,13 +311,13 @@ if (isset($_GET['id'])) {
                         <div>
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-profile-tab-nobd" data-bs-toggle="pill" href="#pills-profile-nobd" role="tab" aria-controls="pills-profile-nobd" aria-selected="false">Ploteo</a>
+                                    <button class="nav-link" id="btnAbrirModalPloteo" >Ploteo</button>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Imprimir</a>
+                                    <button class="nav-link" id="btnAbrirModalImprimir" >Imprimir</button>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-escaneo-tab-nobd" data-bs-toggle="pill" href="#pills-escaneo-nobd" role="tab" aria-controls="pills-escaneo-nobd" aria-selected="false">Escaneo</a>
+                                    <button class="nav-link" id="btnAbrirModalEscaneo" >Escaneo</button>
                                 </li>
                                 <li class="nav-item">
                                     <button class="nav-link" id="btnAbrirModalSolo" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Solo Corte</button>
@@ -328,103 +328,7 @@ if (isset($_GET['id'])) {
                     </div>
 
                     <div class="card-body">
-                        <div>
-                            <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
-                                <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd">
-                                    <div class="text-center">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h4 class="card-title">Servicio de Ploteos</h4>
-                                                <div>ID: <span id="id_mov_ploteo">2</span></div>
-                                                <div class="card-sub">
-                                                    Aquí ingresa los ploteos
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Cantidad de Ploteos</p>
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    <button id="btn_menos_ploteo" class="btn btn-danger btn-round me-2">-</button>
-                                                    <input id="input_cantidad_ploteo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                                    <button id="btn_mas_ploteo" class="btn btn-success btn-round ms-2">+</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Monto (S/)</p>
-                                                <input type="number" name="" id="monto_ploteo" placeholder="Monto (S/)">
-                                            </div>
-                                            <div class="text-center">
-                                                <button class="btn btn-secondary" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="pills-contact-nobd" role="tabpanel" aria-labelledby="pills-contact-tab-nobd">
 
-                                    <div class="text-center">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h4 class="card-title">Servicio de Impresiones</h4>
-                                               <div>ID: <span id="id_mov_impresion">3</span></div>
-                                                <div class="card-sub">
-                                                    Aquí ingresa lo que mandaron a Imprimir
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Cantidad de Impresiones</p>
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    <button id="btn_menos_impresion" class="btn btn-danger btn-round me-2">-</button>
-                                                    <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                                    <button id="btn_mas_impresion" class="btn btn-success btn-round ms-2">+</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Monto (S/)</p>
-                                                <input type="number" name="" id="monto_impresion" placeholder="Monto (S/)">
-                                            </div>
-
-                                            <div class="text-center">
-                                                <button class="btn btn-secondary" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="tab-pane fade" id="pills-escaneo-nobd" role="tabpanel" aria-labelledby="pills-escaneo-tab-nobd">
-
-                                    <div class="text-center">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h4 class="card-title">Servicio de Escaneo</h4>
-                                               <div>ID: <span id="id_mov_escaneo">4</span></div>
-                                                <div class="card-sub">
-                                                    Aquí ingresa lo que mandaron a Escanear
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Cantidad de Escaneo</p>
-                                                <div class="d-flex align-items-center justify-content-center">
-                                                    <button id="btn_menos_escaneo" class="btn btn-danger btn-round me-2">-</button>
-                                                    <input id="input_numero_escaneo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                                    <button id="btn_mas_escaneo" class="btn btn-success btn-round ms-2">+</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">Monto (S/)</p>
-                                                <input type="number" name="" id="monto_escaneo" placeholder="Monto (S/)">
-                                            </div>
-
-                                            <div class="text-center">
-                                                <button class="btn btn-secondary" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
-                                            </div>
-                                            <br>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
 
                     </div>
                 </div>
@@ -504,7 +408,7 @@ if (isset($_GET['id'])) {
                 </button>
             </div>
         </div>
-    </div>
+        </div>
 
 
 </div>
@@ -1097,7 +1001,7 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(7).textContent = subtotal.toFixed(2); // Subtotal con 2 decimales
         // Celda para acciones
         let accionCell = nuevaFila.insertCell(8);
-         // 3. Botón de Corte (si aplica)
+        // 3. Botón de Corte (si aplica)
         
         // 1. Botón de Editar
         let botonEditar = document.createElement("button");
@@ -1405,40 +1309,79 @@ if (isset($_GET['id'])) {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
+        document.getElementById('btnAbrirModalPloteo').addEventListener('click', function () {
+            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Ploteo';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Ploteo</h4>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Ploteo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button id="btn_menos_ploteo" class="btn btn-danger btn-round me-2">-</button>
+                                <input id="input_cantidad_ploteo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                <button id="btn_mas_ploteo" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_ploteo" class="form-control" placeholder="Monto (S/)">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            `;
 
-        // 1. Manejar Incremento y Decremento de Ploteos
-        document.getElementById("btn_mas_ploteo").addEventListener("click", function () {
-            let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
-            document.getElementById("input_cantidad_ploteo").value = cantidad + 1;
+            // 1. Manejar Incremento y Decremento de Ploteos
+            document.getElementById("btn_mas_ploteo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
+                document.getElementById("input_cantidad_ploteo").value = cantidad + 1;
+            });
+
+            document.getElementById("btn_menos_ploteo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
+                if (cantidad > 1) {
+                    document.getElementById("input_cantidad_ploteo").value = cantidad - 1;
+                }
+            });
+
+            // Funcionalidad para Añadir Escaneo a la Tabla
+            document.getElementById('btnAgregarPloteo').addEventListener('click', function () {
+                const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
+                const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
+
+
+                // Si no estamos editando, agregar un nuevo ploteo
+                const datosPloteo = [{
+                    id: '0', // ID del ploteo
+                    cantidad: cantidadPloteos, // Cantidad de ploteos
+                    monto: '-', // Monto
+                    subtotal: montoPloteo, // Subtotal
+                    articulo: 'PLOTEO',
+                    idmovimiento: 2,
+                }];
+                fn_ploteo_tabla(datosPloteo);
+                document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
+                document.getElementById('monto_ploteo').value = ''; // Reset monto
+                    // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+            });
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+            modal.show();
         });
+       
 
-        document.getElementById("btn_menos_ploteo").addEventListener("click", function () {
-            let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
-            if (cantidad > 1) {
-                document.getElementById("input_cantidad_ploteo").value = cantidad - 1;
-            }
-        });
-
-        // 2. Función para añadir Ploteo a la Tabla
-        document.getElementById('btnAgregarPloteo').addEventListener('click', function () {
-            const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
-            const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
-
-
-            // Si no estamos editando, agregar un nuevo ploteo
-            const datosPloteo = [{
-                id: '0', // ID del ploteo
-                cantidad: cantidadPloteos, // Cantidad de ploteos
-                monto: '-', // Monto
-                subtotal: montoPloteo, // Subtotal
-                articulo: 'PLOTEO',
-                idmovimiento: 2,
-            }];
-            fn_ploteo_tabla(datosPloteo);
-            document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
-            document.getElementById('monto_ploteo').value = ''; // Reset monto
-        
-        });
+    
 
         // 3. Función para Agregar a la Tabla de Ploteos
         function fn_ploteo_tabla(datosPloteo) {
@@ -1480,12 +1423,12 @@ if (isset($_GET['id'])) {
                     document.getElementById('modalContent').innerHTML = `
                         <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Servicio de Escaneo</h4>
+                            <h4 class="card-title">Servicio de Ploteo</h4>
                             <div>ID: <span id="id_mov_escaneoEditar">${ploteo.idmovimiento}</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">Cantidad de Escaneo</p>
+                            <p class="card-text">Cantidad de Ploteo</p>
                             <div class="d-flex align-items-center justify-content-center">
                             <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
                             <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${ploteo.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
@@ -1501,6 +1444,7 @@ if (isset($_GET['id'])) {
                         </div>
                         </div>
                     `;
+
                     document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
                         let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
                         if (cantidad > 1) document.getElementById('input_cantidad_ploteoEditar').value = cantidad - 1;
@@ -1537,11 +1481,10 @@ if (isset($_GET['id'])) {
                         ploteoEditando.fila.cells[7].textContent = ploteoEditando.subtotal.toFixed(2); // Subtotal
 
                         // Limpiar los campos
-                        document.getElementById('input_cantidad_ploteo').value = 0;
-                        document.getElementById('monto_ploteo').value = '';
+                        document.getElementById('input_cantidad_ploteoEditar').value = 0;
+                        document.getElementById('monto_ploteoeditar').value = 0;
 
                         // Resetear el botón y quitar la referencia al ploteo editado
-                        document.getElementById('btnAgregarPloteo').textContent = 'Añadir a la Venta';
                         ploteoEditando = null; // Reiniciar la referencia
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
@@ -1571,36 +1514,74 @@ if (isset($_GET['id'])) {
     document.addEventListener('DOMContentLoaded', function () {
         let impresionEditando = null; // Variable para guardar la impresión que se está editando
 
-        // 1. Manejar Incremento y Decremento de Impresiones
-        document.getElementById("btn_mas_impresion").addEventListener("click", function () {
-            let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
-            document.getElementById("input_numero_impresion").value = cantidad + 1;
-        });
+        document.getElementById('btnAbrirModalImprimir').addEventListener('click', function () {
+            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Impresión';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Impresión</h4>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad a Imprimir</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button id="btn_menos_impresion" class="btn btn-danger btn-round me-2">-</button>
+                                <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                <button id="btn_mas_impresion" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_impresion" class="form-control" placeholder="Monto (S/)">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            `;
 
-        document.getElementById("btn_menos_impresion").addEventListener("click", function () {
-            let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
-            if (cantidad > 1) {
-                document.getElementById("input_numero_impresion").value = cantidad - 1;
-            }
-        });
+            // 1. Manejar Incremento y Decremento de Impresiones
+            document.getElementById("btn_mas_impresion").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
+                document.getElementById("input_numero_impresion").value = cantidad + 1;
+            });
 
-        // 2. Función para añadir Impresión a la Tabla
-        document.getElementById('btnAgregarImpresion').addEventListener('click', function () {
-            const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
-            const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
-            // Si no estamos editando, agregar una nueva impresión
-            const datosImpresion = [{
-                id: '0', // ID de la impresión
-                cantidad: cantidadImpresiones, // Cantidad de impresiones
-                monto: '-', // Monto
-                subtotal: montoImpresion, // Subtotal
-                articulo: 'IMPRESIÓN',
-                idmovimiento: 3, // ID movimiento para impresión
-            }];
-            fn_impresion_tabla(datosImpresion);
-            document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
-            document.getElementById('monto_impresion').value = ''; // Reset monto
-            
+            document.getElementById("btn_menos_impresion").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
+                if (cantidad > 1) {
+                    document.getElementById("input_numero_impresion").value = cantidad - 1;
+                }
+            });
+
+            // Funcionalidad para Añadir Escaneo a la Tabla
+            document.getElementById('btnAgregarImpresion').addEventListener('click', function () {
+                const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
+                const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
+                // Si no estamos editando, agregar una nueva impresión
+                const datosImpresion = [{
+                    id: '0', // ID de la impresión
+                    cantidad: cantidadImpresiones, // Cantidad de impresiones
+                    monto: '-', // Monto
+                    subtotal: montoImpresion, // Subtotal
+                    articulo: 'IMPRESIÓN',
+                    idmovimiento: 3, // ID movimiento para impresión
+                }];
+                fn_impresion_tabla(datosImpresion);
+                document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
+                document.getElementById('monto_impresion').value = ''; // Reset monto
+
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+            });
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+            modal.show();
         });
 
         // 3. Función para Agregar a la Tabla de Impresiones
@@ -1647,7 +1628,7 @@ if (isset($_GET['id'])) {
                             <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">Cantidad de Escaneo</p>
+                            <p class="card-text">Cantidad a Imprimir</p>
                             <div class="d-flex align-items-center justify-content-center">
                             <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
                             <input id="input_numero_impresionEditar" class="text-center" type="text" value="${impresion.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
@@ -1663,6 +1644,7 @@ if (isset($_GET['id'])) {
                         </div>
                         </div>
                     `;
+
                     document.getElementById('btn_menos_impresionEditar').addEventListener('click', () => {
                         let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
                         if (cantidad > 1) document.getElementById('input_numero_impresionEditar').value = cantidad - 1;
@@ -1727,35 +1709,78 @@ if (isset($_GET['id'])) {
     document.addEventListener('DOMContentLoaded', function () {
         let escaneoEditando = null; // Variable para guardar el escaneo que se está editando
 
-        // 1. Manejar Incremento y Decremento de Escaneo
-        document.getElementById("btn_mas_escaneo").addEventListener("click", function () {
-            let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
-            document.getElementById("input_numero_escaneo").value = cantidad + 1;
-        });
+         // Abrir modal con el contenido específico para Escaneo
+         document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function () {
+            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Escaneo';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Escaneo</h4>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Escaneo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button id="btn_menos_escaneo" class="btn btn-danger btn-round me-2">-</button>
+                                <input id="input_numero_escaneo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
+                                <button id="btn_mas_escaneo" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_escaneo" class="form-control" placeholder="Monto (S/)">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            `;
 
-        document.getElementById("btn_menos_escaneo").addEventListener("click", function () {
-            let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
-            if (cantidad > 1) {
-                document.getElementById("input_numero_escaneo").value = cantidad - 1;
-            }
-        });
+            // Funcionalidades de Incremento y Decremento
+            document.getElementById("btn_mas_escaneo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+                document.getElementById("input_numero_escaneo").value = cantidad + 1;
+            });
 
-        // 2. Función para añadir Escaneo a la Tabla
-        document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
-            const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
-            const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
-            // Si no estamos editando, agregar un nuevo escaneo
-            const datosEscaneo = [{
-                id: '0', // ID del escaneo
-                cantidad: cantidadEscaneos, // Cantidad de escaneos
-                monto: '-', // Monto
-                subtotal: montoEscaneo, // Subtotal
-                articulo: 'ESCANEO',
-                idmovimiento: 4, // ID movimiento para escaneo
-            }];
-            fn_escaneo_tabla(datosEscaneo);
-            document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
-            document.getElementById('monto_escaneo').value = ''; // Reset monto
+            document.getElementById("btn_menos_escaneo").addEventListener("click", function () {
+                let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
+                if (cantidad > 1) {
+                    document.getElementById("input_numero_escaneo").value = cantidad - 1;
+                }
+            });
+
+            // Funcionalidad para Añadir Escaneo a la Tabla
+            document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
+                const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
+                const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
+
+                const datosEscaneo = [{
+                    id: '0', // ID del escaneo
+                    cantidad: cantidadEscaneos,
+                    monto: '-', // Monto unitario
+                    subtotal: montoEscaneo,
+                    articulo: 'ESCANEO',
+                    idmovimiento: 4, // ID movimiento
+                }];
+
+                fn_escaneo_tabla(datosEscaneo);
+
+                // Reset campos
+                document.getElementById('input_numero_escaneo').value = 1;
+                document.getElementById('monto_escaneo').value = '';
+
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+            });
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+            modal.show();
         });
 
         
