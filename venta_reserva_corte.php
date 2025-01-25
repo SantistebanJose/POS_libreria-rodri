@@ -509,6 +509,21 @@ if (isset($_GET['id'])) {
 
 </div>
 
+<!-- Modal  -->
+<div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalGenericoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalGenericoLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalContent">
+        <!-- Contenido dinámico se cargará aquí -->
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- Modal Body -->
 <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
@@ -1409,38 +1424,20 @@ if (isset($_GET['id'])) {
             const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
             const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
 
-            // Si estamos editando, actualizamos la fila
-            if (ploteoEditando) {
-                // Actualizamos los valores de la fila existente
-                ploteoEditando.cantidad = cantidadPloteos;
-                ploteoEditando.subtotal = montoPloteo;
 
-                // Actualizamos la fila de la tabla
-                ploteoEditando.fila.cells[5].textContent = ploteoEditando.cantidad; // Cantidad
-                ploteoEditando.fila.cells[7].textContent = ploteoEditando.subtotal.toFixed(2); // Subtotal
-
-                // Limpiar los campos
-                document.getElementById('input_cantidad_ploteo').value = 0;
-                document.getElementById('monto_ploteo').value = '';
-
-                // Resetear el botón y quitar la referencia al ploteo editado
-                document.getElementById('btnAgregarPloteo').textContent = 'Añadir a la Venta';
-                ploteoEditando = null; // Reiniciar la referencia
-                mostrarPillPloteo(); // Resetear el pill
-            } else {
-                // Si no estamos editando, agregar un nuevo ploteo
-                const datosPloteo = [{
-                    id: '0', // ID del ploteo
-                    cantidad: cantidadPloteos, // Cantidad de ploteos
-                    monto: '-', // Monto
-                    subtotal: montoPloteo, // Subtotal
-                    articulo: 'PLOTEO',
-                    idmovimiento: 2,
-                }];
-                fn_ploteo_tabla(datosPloteo);
-                document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
-                document.getElementById('monto_ploteo').value = ''; // Reset monto
-            }
+            // Si no estamos editando, agregar un nuevo ploteo
+            const datosPloteo = [{
+                id: '0', // ID del ploteo
+                cantidad: cantidadPloteos, // Cantidad de ploteos
+                monto: '-', // Monto
+                subtotal: montoPloteo, // Subtotal
+                articulo: 'PLOTEO',
+                idmovimiento: 2,
+            }];
+            fn_ploteo_tabla(datosPloteo);
+            document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
+            document.getElementById('monto_ploteo').value = ''; // Reset monto
+        
         });
 
         // 3. Función para Agregar a la Tabla de Ploteos
@@ -1478,20 +1475,78 @@ if (isset($_GET['id'])) {
                 accionCell.appendChild(botonEliminar);
 
                 botonEditar.addEventListener("click", () => {
+
+                    document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Escaneo</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${ploteo.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Escaneo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${ploteo.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_ploteoEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_ploteoeditar" class="form-control" value="${ploteo.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+                    document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
+                        if (cantidad > 1) document.getElementById('input_cantidad_ploteoEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_ploteoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
+                        document.getElementById('input_cantidad_ploteoEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
+                    
                     // Rellenar los campos con los valores actuales del ploteo
-                    document.getElementById("input_cantidad_ploteo").value = ploteo.cantidad;
-                    document.getElementById("monto_ploteo").value = ploteo.subtotal;
+                    document.getElementById("input_cantidad_ploteoEditar").value = ploteo.cantidad;
+                    document.getElementById("monto_ploteoeditar").value = ploteo.subtotal;
 
-                    // Mostrar el pill de ploteo
-                    mostrarPillPloteo();
-
-                    // Cambiar el texto del botón de agregar a "Actualizar"
-                    const btn_agregar = document.getElementById('btnAgregarPloteo');
-                    btn_agregar.textContent = 'Actualizar';
 
                     // Guardar la referencia a la fila del ploteo
                     ploteo.fila = nuevaFila;  // Guardar referencia a la fila
                     ploteoEditando = ploteo;  // Guardar referencia al ploteo que se está editando
+
+
+                    document.getElementById('btnAgregarploteoEditar').addEventListener('click', function () {
+                        const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
+                        const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
+                        // Actualizamos los valores de la fila existente
+                        ploteoEditando.cantidad = cantidadPloteos;
+                        ploteoEditando.subtotal = montoPloteo;
+
+                        // Actualizamos la fila de la tabla
+                        ploteoEditando.fila.cells[5].textContent = ploteoEditando.cantidad; // Cantidad
+                        ploteoEditando.fila.cells[7].textContent = ploteoEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_cantidad_ploteo').value = 0;
+                        document.getElementById('monto_ploteo').value = '';
+
+                        // Resetear el botón y quitar la referencia al ploteo editado
+                        document.getElementById('btnAgregarPloteo').textContent = 'Añadir a la Venta';
+                        ploteoEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+
                 });
 
                 // Función de eliminar
@@ -1506,25 +1561,7 @@ if (isset($_GET['id'])) {
         }
     });
 
-    function mostrarPillPloteo() {
-        // Cambiar la clase activa de la pestaña
-        const tabPloteo = document.getElementById('pills-profile-tab-nobd');
-        const tabContentPloteo = document.getElementById('pills-profile-nobd');
 
-        // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
-        const tabs = document.querySelectorAll('.nav-link');
-        tabs.forEach(tab => {
-            tab.classList.remove('active');
-        });
-        const contents = document.querySelectorAll('.tab-pane');
-        contents.forEach(content => {
-            content.classList.remove('show', 'active');
-        });
-
-        // Activar la pestaña de ploteo
-        tabPloteo.classList.add('active');
-        tabContentPloteo.classList.add('show', 'active');
-    }
 
 
 </script>
@@ -1551,39 +1588,19 @@ if (isset($_GET['id'])) {
         document.getElementById('btnAgregarImpresion').addEventListener('click', function () {
             const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
             const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
-
-            // Si estamos editando, actualizamos la fila
-            if (impresionEditando) {
-                // Actualizamos los valores de la fila existente
-                impresionEditando.cantidad = cantidadImpresiones;
-                impresionEditando.subtotal = montoImpresion;
-
-                // Actualizamos la fila de la tabla
-                impresionEditando.fila.cells[5].textContent = impresionEditando.cantidad; // Cantidad
-                impresionEditando.fila.cells[7].textContent = impresionEditando.subtotal.toFixed(2); // Subtotal
-
-                // Limpiar los campos
-                document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
-                document.getElementById('monto_impresion').value = ''; // Reset monto
-
-                // Resetear el botón y quitar la referencia a la impresión editada
-                document.getElementById('btnAgregarImpresion').textContent = 'Añadir a la Venta';
-                impresionEditando = null; // Reiniciar la referencia
-                mostrarPillImpresion(); // Resetear el pill
-            } else {
-                // Si no estamos editando, agregar una nueva impresión
-                const datosImpresion = [{
-                    id: '0', // ID de la impresión
-                    cantidad: cantidadImpresiones, // Cantidad de impresiones
-                    monto: '-', // Monto
-                    subtotal: montoImpresion, // Subtotal
-                    articulo: 'IMPRESIÓN',
-                    idmovimiento: 3, // ID movimiento para impresión
-                }];
-                fn_impresion_tabla(datosImpresion);
-                document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
-                document.getElementById('monto_impresion').value = ''; // Reset monto
-            }
+            // Si no estamos editando, agregar una nueva impresión
+            const datosImpresion = [{
+                id: '0', // ID de la impresión
+                cantidad: cantidadImpresiones, // Cantidad de impresiones
+                monto: '-', // Monto
+                subtotal: montoImpresion, // Subtotal
+                articulo: 'IMPRESIÓN',
+                idmovimiento: 3, // ID movimiento para impresión
+            }];
+            fn_impresion_tabla(datosImpresion);
+            document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
+            document.getElementById('monto_impresion').value = ''; // Reset monto
+            
         });
 
         // 3. Función para Agregar a la Tabla de Impresiones
@@ -1620,21 +1637,74 @@ if (isset($_GET['id'])) {
 
                 accionCell.appendChild(botonEliminar);
 
-                botonEditar.addEventListener("click", () => {
+                botonEditar.addEventListener("click", () => {             
+                    document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Impresión</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${impresion.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Escaneo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_numero_impresionEditar" class="text-center" type="text" value="${impresion.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_impresionEditar" class="form-control" value="${impresion.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+                    document.getElementById('btn_menos_impresionEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+                        if (cantidad > 1) document.getElementById('input_numero_impresionEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_impresionEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+                        document.getElementById('input_numero_impresionEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
                     // Rellenar los campos con los valores actuales de la impresión
-                    document.getElementById("input_numero_impresion").value = impresion.cantidad;
-                    document.getElementById("monto_impresion").value = impresion.subtotal;
-
-                    // Mostrar el pill de impresión
-                    mostrarPillImpresion();
-
-                    // Cambiar el texto del botón de agregar a "Actualizar"
-                    const btn_agregar = document.getElementById('btnAgregarImpresion');
-                    btn_agregar.textContent = 'Actualizar';
+                    document.getElementById("input_numero_impresionEditar").value = impresion.cantidad;
+                    document.getElementById("monto_impresionEditar").value = impresion.subtotal;
 
                     // Guardar la referencia a la fila de la impresión
                     impresion.fila = nuevaFila;  // Guardar referencia a la fila
                     impresionEditando = impresion;  // Guardar referencia a la impresión que se está editando
+
+                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', function () {
+                        const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
+                        const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
+
+                        // Actualizamos los valores de la fila existente
+                        impresionEditando.cantidad = cantidadImpresion;
+                        impresionEditando.subtotal = montoImpresion;
+
+                        // Actualizamos la fila de la tabla
+                        impresionEditando.fila.cells[5].textContent = impresionEditando.cantidad; // Cantidad
+                        impresionEditando.fila.cells[7].textContent = impresionEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_numero_impresionEditar').value = 1; // Reset cantidad
+                        document.getElementById('monto_impresionEditar').value = 0; // Reset monto
+
+                        impresionEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+
                 });
 
                 // Función de eliminar
@@ -1649,25 +1719,7 @@ if (isset($_GET['id'])) {
         }
     });
 
-    function mostrarPillImpresion() {
-        // Cambiar la clase activa de la pestaña
-        const tabImpresion = document.getElementById('pills-contact-tab-nobd');
-        const tabContentImpresion = document.getElementById('pills-contact-nobd');
-
-        // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
-        const tabs = document.querySelectorAll('.nav-link');
-        tabs.forEach(tab => {
-            tab.classList.remove('active');
-        });
-        const contents = document.querySelectorAll('.tab-pane');
-        contents.forEach(content => {
-            content.classList.remove('show', 'active');
-        });
-
-        // Activar la pestaña de impresión
-        tabImpresion.classList.add('active');
-        tabContentImpresion.classList.add('show', 'active');
-    }
+    
 </script>
 
 <!--Escaneo-->
@@ -1692,41 +1744,21 @@ if (isset($_GET['id'])) {
         document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
             const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
             const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
-
-            // Si estamos editando, actualizamos la fila
-            if (escaneoEditando) {
-                // Actualizamos los valores de la fila existente
-                escaneoEditando.cantidad = cantidadEscaneos;
-                escaneoEditando.subtotal = montoEscaneo;
-
-                // Actualizamos la fila de la tabla
-                escaneoEditando.fila.cells[5].textContent = escaneoEditando.cantidad; // Cantidad
-                escaneoEditando.fila.cells[7].textContent = escaneoEditando.subtotal.toFixed(2); // Subtotal
-
-                // Limpiar los campos
-                document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
-                document.getElementById('monto_escaneo').value = ''; // Reset monto
-
-                // Resetear el botón y quitar la referencia al escaneo editado
-                document.getElementById('btnAgregarescaneo').textContent = 'Añadir a la Venta';
-                escaneoEditando = null; // Reiniciar la referencia
-                mostrarPillEscaneo(); // Resetear el pill
-            } else {
-                // Si no estamos editando, agregar un nuevo escaneo
-                const datosEscaneo = [{
-                    id: '0', // ID del escaneo
-                    cantidad: cantidadEscaneos, // Cantidad de escaneos
-                    monto: '-', // Monto
-                    subtotal: montoEscaneo, // Subtotal
-                    articulo: 'ESCANEO',
-                    idmovimiento: 4, // ID movimiento para escaneo
-                }];
-                fn_escaneo_tabla(datosEscaneo);
-                document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
-                document.getElementById('monto_escaneo').value = ''; // Reset monto
-            }
+            // Si no estamos editando, agregar un nuevo escaneo
+            const datosEscaneo = [{
+                id: '0', // ID del escaneo
+                cantidad: cantidadEscaneos, // Cantidad de escaneos
+                monto: '-', // Monto
+                subtotal: montoEscaneo, // Subtotal
+                articulo: 'ESCANEO',
+                idmovimiento: 4, // ID movimiento para escaneo
+            }];
+            fn_escaneo_tabla(datosEscaneo);
+            document.getElementById('input_numero_escaneo').value = 1; // Reset cantidad
+            document.getElementById('monto_escaneo').value = ''; // Reset monto
         });
 
+        
         // 3. Función para Agregar a la Tabla de Escaneos
         function fn_escaneo_tabla(datosEscaneo) {
             var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
@@ -1762,20 +1794,76 @@ if (isset($_GET['id'])) {
                 accionCell.appendChild(botonEliminar);
 
                 botonEditar.addEventListener("click", () => {
+                    
+                    document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Escaneo</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${escaneo.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Escaneo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_escaneoEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_numero_escaneoEditar" class="text-center" type="text" value="${escaneo.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_escaneoEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_escaneoEditar" class="form-control" value="${escaneo.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+                    document.getElementById('btn_menos_escaneoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
+                        if (cantidad > 1) document.getElementById('input_numero_escaneoEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_escaneoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
+                        document.getElementById('input_numero_escaneoEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
                     // Rellenar los campos con los valores actuales del escaneo
-                    document.getElementById("input_numero_escaneo").value = escaneo.cantidad;
-                    document.getElementById("monto_escaneo").value = escaneo.subtotal;
+                    document.getElementById("input_numero_escaneoEditar").value = escaneo.cantidad;
+                    document.getElementById("monto_escaneoEditar").value = escaneo.subtotal;
 
-                    // Mostrar el pill de escaneo
-                    mostrarPillEscaneo();
+               
 
-                    // Cambiar el texto del botón de agregar a "Actualizar"
-                    const btn_agregar = document.getElementById('btnAgregarescaneo');
-                    btn_agregar.textContent = 'Actualizar';
 
                     // Guardar la referencia a la fila del escaneo
                     escaneo.fila = nuevaFila;  // Guardar referencia a la fila
                     escaneoEditando = escaneo;  // Guardar referencia al escaneo que se está editando
+                    
+                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', function () {
+                        const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
+                        const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
+
+                        // Actualizamos los valores de la fila existente
+                        escaneoEditando.cantidad = cantidadEscaneos;
+                        escaneoEditando.subtotal = montoEscaneo;
+
+                        // Actualizamos la fila de la tabla
+                        escaneoEditando.fila.cells[5].textContent = escaneoEditando.cantidad; // Cantidad
+                        escaneoEditando.fila.cells[7].textContent = escaneoEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_numero_escaneoEditar').value = 1; // Reset cantidad
+                        document.getElementById('monto_escaneoEditar').value = 0; // Reset monto
+
+                        escaneoEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
                 });
 
                 // Función de eliminar
@@ -1790,25 +1878,7 @@ if (isset($_GET['id'])) {
         }
     });
 
-    function mostrarPillEscaneo() {
-        // Cambiar la clase activa de la pestaña
-        const tabEscaneo = document.getElementById('pills-escaneo-tab-nobd');
-        const tabContentEscaneo = document.getElementById('pills-escaneo-nobd');
 
-        // Asegúrate de remover la clase 'active' de otros 'pill' si hay otros activados
-        const tabs = document.querySelectorAll('.nav-link');
-        tabs.forEach(tab => {
-            tab.classList.remove('active');
-        });
-        const contents = document.querySelectorAll('.tab-pane');
-        contents.forEach(content => {
-            content.classList.remove('show', 'active');
-        });
-
-        // Activar la pestaña de escaneo
-        tabEscaneo.classList.add('active');
-        tabContentEscaneo.classList.add('show', 'active');
-    }
 </script>
 
 
