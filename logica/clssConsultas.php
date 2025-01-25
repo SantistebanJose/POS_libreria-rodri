@@ -102,7 +102,7 @@ function listarVentaReservaCorte(): array
                 ELSE 'Estado Desconocido'
             END AS estado_venta
             FROM venta AS v
-            INNER JOIN usuario AS us ON v.usuario_id = us.id
+            INNER JOIN usuario AS us ON v.usuario_id = us.id AND v.estado_venta <> 'VR'
             INNER JOIN persona AS usua ON us.persona_id = usua.id
             INNER JOIN persona AS p ON v.cliente_id = p.id
             WHERE v.deleted_at IS NULL;

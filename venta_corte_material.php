@@ -1,12 +1,9 @@
 <?php
 include("cabecera.php");
 include("logica/clssVenta.php");
-
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 }
-
-
 ?>
 
 <style>
@@ -336,46 +333,50 @@ if (isset($_GET['id'])) {
         </div>
         <div id="panelDetalles" class="card border-primary" style="display:none;">
             <div class="card-body">
-                <h4 class="card-title">Detalles de Reserva</h4>
-                <div class="card-sub">
-                    Aquí podras el visualizar datos del cliente.
-                </div>
                 <div class="card">
                     <div class="card-body">
-
                         <div class="row justify-content-center align-items-center md-2">
+                            <h4 class="card-title">Reserva</h4>
+
+                            <div class="card-sub">
+                                Aquí podras el visualizar datos del cliente y de quien realizó la reserva
+                            </div>
                             <div class="col-md-6">
-                                <div class="mb-3">
-                                    <h4 class="card-title" id="idClienteReservaDetalle"></h4>
+                                <div class="card-body">
+                                    CLIENTE
+                                    <div class="card-title" id="idClienteReservaDetalle"></div>
                                     <hr>
                                     <div><strong>Número de Celular:</strong> <span id="idNumCelClienteReserva">942781324</span> </div>
                                     <div><strong>Correo Cliente:</strong> <span id="idCorreoClienteReserva">frvf2000@gmail.com</span> </div>
                                     <div><strong>N° de Documento:</strong> <span id="idNumDocClienteReserva">73578005</span> </div>
-
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div><strong>Atendido Por: </strong> <span id="idUsuarioReservaDetalle" style="font-size: 12px;"></span> </div>
-                                <hr>
-                                <div class="mb-3">
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        name=""
-                                        id="idFechaReservaDetalle"
-                                        aria-describedby="helpId"
-                                        readonly />
-                                </div>
-                                <div class="mb-3">
-                                    <input
-                                        type="text"
-                                        class="form-control text-center"
-                                        name=""
-                                        id="idHoraReservaDetalle"
-                                        aria-describedby="helpId"
-                                        readonly />
 
+                            <div class="col-md-6" style="border-left: 0.5px solid #6e6e6e; padding-left: 10px;">
+                                <div class="card-body">
+                                    ATENDIDO POR
+                                    <h4 class="card-title" id="idUsuarioReservaDetalle"></h4>
+                                    <div class="mb-3">
+                                        <input
+                                            type="date"
+                                            class="form-control form-control-sm text-center"
+                                            name=""
+                                            id="idFechaReservaDetalle"
+                                            aria-describedby="helpId"
+                                            readonly />
+                                    </div>
+                                    <div class="mb-3">
+                                        <input
+                                            type="text"
+                                            class="form-control form-control-sm text-center"
+                                            name=""
+                                            id="idHoraReservaDetalle"
+                                            aria-describedby="helpId"
+                                            readonly />
+
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -653,7 +654,10 @@ if (isset($_GET['id'])) {
 
                                     <div class="card-sub">
                                         <div class="text-center">
-                                            Si un cliente te deja algo de la venta, registralo :), Si no, deja en blanco y darle click al boton Realizar Pago o Credito
+
+                                            Si un cliente te deja pagado algo de la venta, <strong>REGISTRALO</strong>.
+                                            <br>
+                                            Si no, deja en blanco y darle click al boton Realizar <br><strong>Pago a Credito</strong>
                                         </div>
                                     </div>
 
@@ -967,9 +971,19 @@ if (isset($_GET['id'])) {
         nuevoInputMonto.name = 'monto_' + contador; // Agregar nombre dinámico
         nuevoInputMonto.id = 'montoSelect_' + contador;
 
-        // Agregar el select y el input al contenedor
+        // Crear un botón de eliminación pequeño
+        const btnEliminar = document.createElement('button');
+        btnEliminar.type = 'button';
+        btnEliminar.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2'); // Clase btn-sm para hacerlo más pequeño
+        btnEliminar.textContent = '-'; // Texto del botón
+        btnEliminar.addEventListener('click', function() {
+            contenedorPagos.removeChild(nuevoContenedor); // Eliminar el contenedor
+        });
+
+        // Agregar el select, el input y el botón de eliminación al contenedor
         nuevoContenedor.appendChild(nuevoSelect);
         nuevoContenedor.appendChild(nuevoInputMonto);
+        nuevoContenedor.appendChild(btnEliminar);
 
         // Agregar el contenedor al contenedor principal
         contenedorPagos.appendChild(nuevoContenedor);
@@ -977,6 +991,7 @@ if (isset($_GET['id'])) {
         // Incrementar el contador para los nuevos inputs
         contador++;
     });
+
     // Variables para manejar los selects y montos adicionales de pago a crédito
     const btnAgregarPagoCredito = document.getElementById('btnAgregarPagoCredito');
     const contenedorPagosCredito = document.getElementById('contenedorPagosCredito');
@@ -1009,9 +1024,19 @@ if (isset($_GET['id'])) {
         nuevoInputMontoCredito.name = 'montoCredito[]'; // Nombre único para el array
         nuevoInputMontoCredito.id = 'montoSelectCredito_' + contadorCredito; // ID único para el campo de monto
 
-        // Agregar el select y el input al contenedor
+        // Crear un botón de eliminación pequeño
+        const btnEliminarCredito = document.createElement('button');
+        btnEliminarCredito.type = 'button';
+        btnEliminarCredito.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2'); // Clase btn-sm para hacerlo más pequeño
+        btnEliminarCredito.textContent = '-'; // Texto del botón
+        btnEliminarCredito.addEventListener('click', function() {
+            contenedorPagosCredito.removeChild(nuevoContenedorCredito); // Eliminar el contenedor
+        });
+
+        // Agregar el select, el input y el botón de eliminación al contenedor
         nuevoContenedorCredito.appendChild(nuevoSelectCredito);
         nuevoContenedorCredito.appendChild(nuevoInputMontoCredito);
+        nuevoContenedorCredito.appendChild(btnEliminarCredito);
 
         // Agregar el contenedor al contenedor principal
         contenedorPagosCredito.appendChild(nuevoContenedorCredito);
@@ -1020,6 +1045,8 @@ if (isset($_GET['id'])) {
         contadorCredito++;
     });
 </script>
+
+
 <!-- FRANCO -->
 <script>
     function fn_pagar_directo() {
@@ -1028,11 +1055,13 @@ if (isset($_GET['id'])) {
         console.log(datosSerializados); // Ver los datos serializados como un array de objetos
 
         //////////////////////////////////////////////////////
-
+        var numTelefonoUpdate = document.getElementById('idUpdateNumTelefonoCliente').value;
+        //////////////////////////////////////////////////////////////////////////
         var idVenta = document.getElementById('idVenta').textContent;
         var idPersona = document.getElementById('idPersona').textContent;
         var idUsuario = document.getElementById('idUsuario').textContent;
         var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
+        var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
         ////
 
         var montoOriginal = parseFloat(document.getElementById('montoTotal').value);
@@ -1044,12 +1073,13 @@ if (isset($_GET['id'])) {
 
 
         var js_venta = {
-            "estado_pago": "P", // pagado
-            "estado_venta": "VR", // venta realizada
+            "venta_id": idVenta,
+            "atencion_final_usuario": idAtencionFinal,
+            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
             "monto_original": montoOriginal,
-            "monto_venta_final": montoFinal,
-            "atencion_final_usuario": idAtencionFinal
+            "monto_venta_final": montoFinal
         };
+
         var js_for_pago = {
             "venta_id": idVenta,
             "monto_original": montoOriginal,
@@ -1062,6 +1092,7 @@ if (isset($_GET['id'])) {
 
         var formaPago = null;
         var monto = null;
+        var acumMontos = 0;
         for (var i = 0; i < datosSerializados.length; i++) {
             var dato = datosSerializados[i];
 
@@ -1070,7 +1101,8 @@ if (isset($_GET['id'])) {
             }
 
             if (dato.name.startsWith('monto')) {
-                monto = dato.value;
+                monto = parseFloat(dato.value); 
+                acumMontos = acumMontos + monto;
             }
             if (formaPago && monto) {
                 js_detalle_pago.push({
@@ -1080,12 +1112,126 @@ if (isset($_GET['id'])) {
                 formaPago = null;
                 monto = null;
             }
+        };
+
+        //monto_forma_pago
+        if (js_detalle_pago.length === 0) {
+            swal("Ups!, Falta Agregar los monto de acuerdo a forma de Pago", "Agrega los montos :)", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+            console.log("Falta Agregar los Metodos de Pago");
+        } else if (acumMontos > montoFinal) {
+            swal("Ups!, Los montos ingresados son MAYORES al Monto final de la venta", "Agrega correctamente los montos :)", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+
+        }else if (acumMontos < montoFinal) {
+            swal("Ups!, Los montos ingresados son MENORES al Monto final de la venta", "Agrega correctamente los montos :)", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+
+        } else {
+            console.log("js_detalle_pago", js_detalle_pago);
+            console.log("CELULAR UPDATE", numTelefonoUpdate);
+
+            console.log("js_detalle_pago final: ", js_detalle_pago);
+
+            console.log("js_venta", js_venta);
+            console.log("js_pago", js_for_pago);
+            $.ajax({
+                url: 'logica/clssInsertPA.php',
+                type: 'POST',
+                data: {
+                    accion: 'FINALIZARVENTA',
+                    jsDatosVenta: JSON.stringify(js_venta)
+                },
+                success: function(response) {
+
+                    console.log("Respuesta del servidor: ", response);
+
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.estado === true) {
+                            swal({
+                                title: "Pagado con Exito!",
+                                text: result.mensaje,
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });;
+                        } else {
+                            swal("Error", result.mensaje, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log("Error al parsear el JSON: ", e);
+                        // Mostrar un mensaje de error si no se puede parsear el JSON
+                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    swal("Error", "Hubo un problema con la solicitud.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            });
+
+
+            /**
+             * 
+            swal({
+                title: "Pagado con Exito!",
+                text: "Transaccion Realizada!",
+                icon: "success",
+                buttons: false,
+                timer: 1500
+            }).then(() => {
+
+
+                //location.reload(); 
+            });
+             */
+
+
         }
 
-        console.log("js_detalle_pago final: ", js_detalle_pago);
 
-        console.log("js_venta", js_venta);
-        console.log("js_pago", js_for_pago);
 
     }
 
