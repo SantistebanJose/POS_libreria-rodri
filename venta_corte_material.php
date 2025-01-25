@@ -199,7 +199,113 @@ if (isset($_GET['id'])) {
 
                     </div>
 
+
                     <div class="card-body">
+                        <!-- Button trigger modal -->
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-lg"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalId">
+                            Launch
+                        </button>
+
+                        <!-- Modal -->
+                        <div
+                            class="modal fade"
+                            id="modalId"
+                            tabindex="-1"
+                            role="dialog"
+                            aria-labelledby="modalTitleId"
+                            aria-hidden="true">
+                            <div
+                                class="modal-dialog modal-sm modal-fullscreen"
+                                role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            Modal title
+                                        </h5>
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive">
+                                            <table
+                                                id="multi-filter-select2"
+                                                class="display table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Articulo</th>
+                                                        <th>Categoria</th>
+                                                        <th>Tipo</th>
+                                                        <th>Dimension</th>
+                                                        <th>Stock</th>
+                                                        <th>Precio de Venta</th>
+                                                        <th>Accion</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Articulo</th>
+                                                        <th>Categoria</th>
+                                                        <th>Tipo</th>
+                                                        <th>Dimension</th>
+                                                        <th>Stock</th>
+                                                        <th>Precio de Venta</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+
+                                                    <?php
+                                                    foreach (listarProductosVenta1() as $datosArticulo) {
+                                                        $datosArticuloJSON = json_encode($datosArticulo);
+
+
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $datosArticulo["articulo"] ?></td>
+                                                            <td><?php echo $datosArticulo["categoria"] ?></td>
+                                                            <td><?php echo $datosArticulo["tipo"] ?></td>
+                                                            <td><?php echo $datosArticulo["dimension"] ?></td>
+                                                            <td><?php echo $datosArticulo["stock"] ?></td>
+                                                            <td><?php echo $datosArticulo["precio_venta"] ?></td>
+                                                            <th>
+
+                                                                <div class="mt-2 text-center">
+                                                                    <a
+                                                                        name=""
+                                                                        id=""
+                                                                        class="btn btn-secondary btn-round"
+
+                                                                        onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
+                                                                        role="button">Agregar</a>
+                                                                </div>
+                                                            </th>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                        <button type="button" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
                                 <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
@@ -356,6 +462,8 @@ if (isset($_GET['id'])) {
                                 <div class="card-body">
                                     ATENDIDO POR
                                     <h4 class="card-title" id="idUsuarioReservaDetalle"></h4>
+                                    <div>ID VENTA: <span id="idVentaReserva"></span></div>
+                                    <hr>
                                     <div class="mb-3">
                                         <input
                                             type="date"
@@ -1336,7 +1444,7 @@ if (isset($_GET['id'])) {
                 });
             }
         });
-         
+
 
 
 
@@ -1521,6 +1629,7 @@ if (isset($_GET['id'])) {
                 datosArticulo['email_cliente']
             );
             llenarDatosPanelCliente(
+                datosArticulo['venta_id'],
                 datosArticulo['cliente'],
                 datosArticulo['fecha'],
                 datosArticulo['hora'],
@@ -1985,8 +2094,10 @@ if (isset($_GET['id'])) {
 
     }
 
-    function llenarDatosPanelCliente(cliente, fechaReserva, horaReserva, usuario, telefonomovil, email, numeroDoc) {
+    function llenarDatosPanelCliente(idVenta,cliente, fechaReserva, horaReserva, usuario, telefonomovil, email, numeroDoc) {
         // Actualizamos el contenido del modal con los datos proporcionados
+        document.getElementById("idVentaReserva").textContent = idVenta;
+
         document.getElementById("idClienteReservaDetalle").textContent = cliente;
 
         document.getElementById("idNumCelClienteReserva").textContent = telefonomovil;
