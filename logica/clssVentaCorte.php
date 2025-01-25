@@ -84,8 +84,13 @@ function registrar_reserva($datos = array())
             $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto, precio_unitario_articulo, cantidad, sub_total,movimiento_id) 
                                          VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto, :precio_unitario, :cantidad, :sub_total, :movimiento_id);");
             $orden->bindParam(":venta_id", $venta_id);
-            $orden->bindParam(":articulo_id", $articulo['articulo_id']);
 
+            $articuloId = ($articulo['articulo_id'] === 0 || (int)$articulo['articulo_id'] === 0) 
+                ? null 
+                : (int)$articulo['articulo_id'];
+
+            // Asociar el parámetro con el valor validado
+            $orden->bindParam(":articulo_id", $articuloId, is_null($articuloId) ? PDO::PARAM_NULL : PDO::PARAM_INT);
             // Convertir valores "-" a NULL
             $minutos = ($articulo['minutos'] === '-' || $articulo['minutos'] === null) ? null : intval($articulo['minutos']);
             $costo_por_minuto = ($articulo['costoxminuto'] === '-' || $articulo['costoxminuto'] === null) ? null : floatval($articulo['costoxminuto']);
@@ -93,7 +98,8 @@ function registrar_reserva($datos = array())
             // Manejar parámetros con tipos correctos
             $orden->bindValue(":minutos", $minutos, $minutos === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
             $orden->bindValue(":costo_por_minuto", $costo_por_minuto, $costo_por_minuto === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
-            $orden->bindParam(":precio_unitario", $articulo['precio_unitario']);
+            $precioUnitario = $articulo['precio_unitario'] === '-' ? null : $articulo['precio_unitario'];
+            $orden->bindParam(":precio_unitario", $precioUnitario, PDO::PARAM_STR);
             $orden->bindParam(":cantidad", $articulo['cantidad']);
             $orden->bindParam(":sub_total", $articulo['sub_total']);
             $orden->bindParam(":movimiento_id", $articulo['movimiento_id']);
