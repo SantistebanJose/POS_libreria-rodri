@@ -1174,7 +1174,7 @@ if (isset($_GET['id'])) {
                                 buttons: false,
                                 timer: 1500
                             }).then(() => {
-                                //location.reload();
+                                location.reload();
                             });;
                         } else {
                             swal("Error", result.mensaje, {
@@ -1300,7 +1300,7 @@ if (isset($_GET['id'])) {
                             buttons: false,
                             timer: 1500
                         }).then(() => {
-                            //location.reload();
+                            location.reload();
                         });;
                     } else {
                         swal("Error", result.mensaje, {
