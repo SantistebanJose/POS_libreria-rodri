@@ -802,11 +802,11 @@ if (isset($_GET['id'])) {
 
             // Crear el objeto datosCorte
             const datosCorte = [{
-                id: '#', // Id del corte
+                id: '0', // Id del corte
                 minutos: cantidadMinutos, // Minutos registrados
                 tarifa: tarifa, // Costo por minuto
                 costo: cantidadMinutos * tarifa,
-                articulo: 'Solo Corte',
+                articulo: 'SOLO CORTE',
                 idmovimiento: 6,
             }];
 
@@ -841,6 +841,7 @@ if (isset($_GET['id'])) {
                 nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
 
                 let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = corte.idmovimiento; // Subtotal
 
                 // 1. Botón de Editar
                 let botonEditar = document.createElement("button");
@@ -1361,7 +1362,6 @@ if (isset($_GET['id'])) {
 
         // Mostrar los datos en la consola para verificar
         console.log(JSON.stringify(datos));
-
         $.ajax({
             method: "POST",
             url: "logica/clssVentaCorte.php",
@@ -1379,6 +1379,7 @@ if (isset($_GET['id'])) {
             console.error("Error:", error.responseText);
             alert("Error al registrar la reserva.");
         });
+        
     });
 
 
