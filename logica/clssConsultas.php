@@ -111,20 +111,21 @@ function listarFormaPago(): array
 function fnListForVentasDiarias(): array
 {
     $query = "
-        SELECT 
+            SELECT 
+            v.fecha_fin_transaccion,
             v.id AS venta_id, 
             CASE 
-                WHEN EXTRACT(DOW FROM v.created_at) = 0 THEN UPPER('Domingo')
-                WHEN EXTRACT(DOW FROM v.created_at) = 1 THEN UPPER('Lunes')
-                WHEN EXTRACT(DOW FROM v.created_at) = 2 THEN UPPER('Martes')
-                WHEN EXTRACT(DOW FROM v.created_at) = 3 THEN UPPER('Miércoles')
-                WHEN EXTRACT(DOW FROM v.created_at) = 4 THEN UPPER('Jueves')
-                WHEN EXTRACT(DOW FROM v.created_at) = 5 THEN UPPER('Viernes')
-                WHEN EXTRACT(DOW FROM v.created_at) = 6 THEN UPPER('Sábado')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 2 THEN UPPER('Martes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 3 THEN UPPER('Miércoles')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 4 THEN UPPER('Jueves')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 5 THEN UPPER('Viernes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 6 THEN UPPER('Sábado')
             END AS dia_nombre,
             CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
-            TO_CHAR(v.created_at, 'YYYY-MM-DD') AS fecha, 
-            TO_CHAR(v.created_at, 'HH12:MI:SS AM') AS hora, 
+            TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD') AS fecha, 
+            TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM') AS hora, 
             
             p.telefonomovil AS telefonomovil_cliente,
             p.email AS email_cliente, 
@@ -138,16 +139,18 @@ function fnListForVentasDiarias(): array
             CASE 
                 WHEN v.estado_pago = 'P' THEN 'PAGADO'
                 WHEN v.estado_pago = 'C' THEN 'CREDITO'
-            END AS estado_final_venta,
-            v.estado_final
+            END AS estado_pago,
+            v.estado_final,
+            du.acumulado AS acumulado_deuda
         FROM venta AS v
+        LEFT JOIN deuda AS du ON v.id=du.id_venta 
         INNER JOIN usuario AS us ON v.usuario_id = us.id  
         INNER JOIN persona AS usua ON us.persona_id = usua.id
         INNER JOIN persona AS p ON v.cliente_id = p.id
         WHERE v.estado_venta = 'VR' 
         AND v.deleted_at IS NULL
-        AND v.created_at::DATE = CURRENT_DATE
-        ORDER BY v.id;
+        AND v.fecha_fin_transaccion::DATE = CURRENT_DATE
+        ORDER BY v.id desc;
     ";
     return executeQuery($query);
 }
@@ -156,20 +159,21 @@ function fnListForVentasDiarias(): array
 function fnListForVentasSemanales(): array
 {
     $query = "
-        SELECT 
+            SELECT 
+            v.fecha_fin_transaccion,
             v.id AS venta_id, 
             CASE 
-                WHEN EXTRACT(DOW FROM v.created_at) = 0 THEN UPPER('Domingo')
-                WHEN EXTRACT(DOW FROM v.created_at) = 1 THEN UPPER('Lunes')
-                WHEN EXTRACT(DOW FROM v.created_at) = 2 THEN UPPER('Martes')
-                WHEN EXTRACT(DOW FROM v.created_at) = 3 THEN UPPER('Miércoles')
-                WHEN EXTRACT(DOW FROM v.created_at) = 4 THEN UPPER('Jueves')
-                WHEN EXTRACT(DOW FROM v.created_at) = 5 THEN UPPER('Viernes')
-                WHEN EXTRACT(DOW FROM v.created_at) = 6 THEN UPPER('Sábado')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 2 THEN UPPER('Martes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 3 THEN UPPER('Miércoles')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 4 THEN UPPER('Jueves')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 5 THEN UPPER('Viernes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 6 THEN UPPER('Sábado')
             END AS dia_nombre,
             CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
-            TO_CHAR(v.created_at, 'YYYY-MM-DD') AS fecha, 
-            TO_CHAR(v.created_at, 'HH12:MI:SS AM') AS hora, 
+            TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD') AS fecha, 
+            TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM') AS hora, 
             
             p.telefonomovil AS telefonomovil_cliente,
             p.email AS email_cliente, 
@@ -192,9 +196,9 @@ function fnListForVentasSemanales(): array
         INNER JOIN persona AS p ON v.cliente_id = p.id
         WHERE v.estado_venta = 'VR' 
         AND v.deleted_at IS NULL
-        AND v.created_at >= date_trunc('week', CURRENT_DATE)
-        AND v.created_at < CURRENT_DATE + INTERVAL '1 day'
-        ORDER BY v.id;
+        AND v.fecha_fin_transaccion >= date_trunc('week', CURRENT_DATE)
+        AND v.fecha_fin_transaccion < CURRENT_DATE + INTERVAL '1 day'
+        ORDER BY v.fecha_fin_transaccion;
     ";
     return executeQuery($query);
 }

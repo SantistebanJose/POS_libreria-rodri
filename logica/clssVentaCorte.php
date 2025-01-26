@@ -66,7 +66,8 @@ function consultarDetalleReserva($venta_id)
         JOIN movimiento as m ON rva.movimiento_id=m.id
         LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
         LEFT  JOIN dimension AS dim ON ar.dimension_id = dim.id
-        WHERE rva.venta_id = :id;");
+        WHERE rva.venta_id = :id
+        order by rva.id;");
         $orden->bindParam(":id", $venta_id);
         $orden->execute();
 
