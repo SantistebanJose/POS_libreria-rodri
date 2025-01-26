@@ -1281,24 +1281,7 @@ if (isset($_GET['id'])) {
 
         // Mostrar los datos en la consola para verificar
         console.log(JSON.stringify(datos));
-        $.ajax({
-            method: "POST",
-            url: "logica/clssVentaCorte.php",
-            data: {
-                "accion": "REGISTRARRESERVA",
-                "data": JSON.stringify(datos)
-            }
-        }).done(function (response) {
-            console.log(response);
-            if(response.success){
-                alert("Reserva registrada correctamente.");
-            }
-           
-        }).fail(function (error) {
-            console.error("Error:", error.responseText);
-            alert("Error al registrar la reserva.");
-        });
-        
+       
     });
 
 

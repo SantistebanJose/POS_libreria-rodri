@@ -170,9 +170,16 @@ function fn_adicionar_articulo($datos = array())
 
         // Preparar la consulta para insertar el artículo
         $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto,precio_unitario_articulo , cantidad, sub_total,movimiento_id) 
-                                     VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto,:precio_unitario, :cantidad, :sub_total, 1);");
+                                     VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto,:precio_unitario, :cantidad, :sub_total, :movimiento_id);");
         $orden->bindParam(":venta_id", $datos['venta_id']);
-        $orden->bindParam(":articulo_id", $datos['articulo_id']);
+        
+        $articuloId = ($datos['articulo_id'] === 0 || (int)$datos['articulo_id'] === 0) 
+        ? null 
+        : (int)$datos['articulo_id'];
+
+    // Asociar el parámetro con el valor validado
+        $orden->bindParam(":articulo_id", $articuloId, is_null($articuloId) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        
         $orden->bindParam(":cantidad", $datos['cantidad']);
         
         // Convertir valores "-" a NULL
@@ -184,8 +191,10 @@ function fn_adicionar_articulo($datos = array())
         $orden->bindValue(":minutos", $minutos, $minutos === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
         $orden->bindValue(":costo_por_minuto", $costo_por_minuto, $costo_por_minuto === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
         $orden->bindParam(":sub_total", $datos['sub_total']);
+        $orden->bindParam(":movimiento_id", $datos['movimiento_id']);
 
         $orden->execute();
+        $id_rel_articulo = $conectar->lastInsertId();
         $orden->closeCursor();
 
         // Actualizar el stock del artículo
@@ -208,12 +217,117 @@ function fn_adicionar_articulo($datos = array())
         // Confirmar la transacción si todo salió bien
         $conectar->commit();
 
-        echo json_encode(["success" => true, "venta_id" => $datos['venta_id']]);
+        echo json_encode(["success" => true, "id_rel_articulo" => $id_rel_articulo]);
 
     } catch (\Throwable $th) {
         // Si hay un error, hacer rollback de la transacción
         $conectar->rollBack();
         error_log("Error en insertar articulo: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+
+function fn_eliminar_articulo($id_rel_articulo) {
+    global $conectar;
+    try {
+        // Iniciar la transacción
+        $conectar->beginTransaction();
+
+        // Obtener el sub_total y la cantidad del artículo
+        $orden = $conectar->prepare("SELECT sub_total, cantidad, articulo_id FROM rel_venta_articulo WHERE id = :id_rel_articulo");
+        $orden->bindParam(":id_rel_articulo", $id_rel_articulo, PDO::PARAM_INT);
+        $orden->execute();
+
+        $articulo = $orden->fetch(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+        if (!$articulo) {
+            throw new Exception("No se encontró el artículo con el ID: $id_rel_articulo");
+        }
+
+        $sub_total = $articulo['sub_total'];
+        $cantidad = $articulo['cantidad'];
+        $articulo_id = $articulo['articulo_id'];
+
+        // Eliminar el artículo de la tabla rel_venta_articulo
+        $orden = $conectar->prepare("DELETE FROM rel_venta_articulo WHERE id = :id_rel_articulo");
+        $orden->bindParam(":id_rel_articulo", $id_rel_articulo, PDO::PARAM_INT);
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Actualizar el stock del artículo
+        $orden = $conectar->prepare("UPDATE articulo SET stock = stock + :cantidad WHERE id = :articulo_id");
+        $orden->bindParam(":cantidad", $cantidad, PDO::PARAM_INT);
+        $orden->bindParam(":articulo_id", $articulo_id, PDO::PARAM_INT);
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Actualizar el total de la venta (restando el sub_total eliminado)
+        $orden = $conectar->prepare("UPDATE venta SET total = total - :sub_total WHERE id = :venta_id");
+        $orden->bindParam(":sub_total", $sub_total, PDO::PARAM_STR);
+        // Necesitas saber el id de la venta, supongo que puedes pasarlo desde algún lado.
+        $orden->bindParam(":venta_id", $articulo['venta_id'], PDO::PARAM_INT);
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Confirmar la transacción si todo salió bien
+        $conectar->commit();
+
+        echo json_encode(["success" => true, "message" => "Artículo eliminado exitosamente."]);
+
+    } catch (\Throwable $th) {
+        // Si hay un error, hacer rollback de la transacción
+        $conectar->rollBack();
+        error_log("Error al eliminar artículo: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+
+function fn_eliminar_movimiento($id_rel_articulo) {
+    global $conectar;
+    try {
+        // Iniciar la transacción
+        $conectar->beginTransaction();
+
+        // Obtener el sub_total del movimiento a eliminar
+        $orden = $conectar->prepare("SELECT sub_total, venta_id FROM rel_venta_articulo WHERE id = :id_rel_articulo");
+        $orden->bindParam(":id_rel_articulo", $id_rel_articulo, PDO::PARAM_INT);
+        $orden->execute();
+
+        $movimiento = $orden->fetch(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+        if (!$movimiento) {
+            throw new Exception("No se encontró el movimiento con el ID: $id_rel_articulo");
+        }
+
+        $sub_total = $movimiento['sub_total'];
+        $venta_id = $movimiento['venta_id'];
+
+        // Eliminar el movimiento de la tabla rel_venta_articulo
+        $orden = $conectar->prepare("DELETE FROM rel_venta_articulo WHERE id = :id_rel_articulo");
+        $orden->bindParam(":id_rel_articulo", $id_rel_articulo, PDO::PARAM_INT);
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Actualizar el total de la venta (restando el sub_total del movimiento eliminado)
+        $orden = $conectar->prepare("UPDATE venta SET total = total - :sub_total WHERE id = :venta_id");
+        $orden->bindParam(":sub_total", $sub_total, PDO::PARAM_STR);
+        $orden->bindParam(":venta_id", $venta_id, PDO::PARAM_INT);
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Confirmar la transacción si todo salió bien
+        $conectar->commit();
+
+        echo json_encode(["success" => true, "message" => "Movimiento eliminado exitosamente."]);
+
+    } catch (\Throwable $th) {
+        // Si hay un error, hacer rollback de la transacción
+        $conectar->rollBack();
+        error_log("Error al eliminar movimiento: " . $th->getMessage());
         echo json_encode(["error" => true, "message" => $th->getMessage()]);
     }
 }
