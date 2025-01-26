@@ -1764,7 +1764,7 @@ if (isset($_GET['id'])) {
                     monto: '-', // Monto unitario
                     subtotal: montoEscaneo,
                     articulo: 'ESCANEO',
-                    idmovimiento: 4, // ID movimiento
+                    idmovimiento: 5, // ID movimiento
                 }];
 
                 fn_escaneo_tabla(datosEscaneo);

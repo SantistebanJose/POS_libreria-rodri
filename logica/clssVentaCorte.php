@@ -18,7 +18,13 @@ function controladorVentaCorte($accion)
             $data = json_decode($_POST["data"], true); // Decodificar JSON
             registrar_reserva($data);
             break;
-        case 'CAMBIARCONTRASEÑA':
+        case 'INSERTMOVIMIENTO':
+            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            fn_insert_movimiento($data);
+            break;
+        case 'ADICIONARARTICULO':
+            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            fn_adicionar_articulo($data);
             break;
     }
 }
@@ -120,6 +126,94 @@ function registrar_reserva($datos = array())
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en registrar_reserva: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+
+function fn_insert_movimiento($datos = array())
+{
+    global $conectar;
+    try {
+        // Preparar la consulta
+        $orden = $conectar->prepare("SELECT fn_insert_pis_for_movimientos(:venta_id, :movimiento_id, :cantidad, :sub_total) AS respuesta;");
+        $orden->bindParam(":venta_id", $datos['venta_id']);
+        $orden->bindParam(":movimiento_id", $datos['movimiento_id']);
+        $orden->bindParam(":cantidad", $datos['cantidad']);
+        $orden->bindParam(":sub_total", $datos['sub_total']);
+        
+        $orden->execute();
+        
+        $resultado = $orden->fetch(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+        
+        $respuesta = json_decode($resultado['respuesta'], true);
+
+        if ($respuesta['estado'] === true) {
+            echo json_encode(["success" => true, "mensaje" => $respuesta['mensaje']]);
+        } else {
+            echo json_encode(["success" => false, "mensaje" => $respuesta['mensaje']]);
+        }
+    } catch (\Throwable $th) {
+        $conectar->rollBack();
+        error_log("Error en insertar movimiento: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+function fn_adicionar_articulo($datos = array())
+{
+    global $conectar;
+    try {
+        // Iniciar la transacción
+        $conectar->beginTransaction();
+
+        // Preparar la consulta para insertar el artículo
+        $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto,precio_unitario_articulo , cantidad, sub_total,movimiento_id) 
+                                     VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto,:precio_unitario, :cantidad, :sub_total, 1);");
+        $orden->bindParam(":venta_id", $datos['venta_id']);
+        $orden->bindParam(":articulo_id", $datos['articulo_id']);
+        $orden->bindParam(":cantidad", $datos['cantidad']);
+        
+        // Convertir valores "-" a NULL
+        $minutos = ($datos['minutos'] === '-' || $datos['minutos'] === null) ? null : intval($datos['minutos']);
+        $costo_por_minuto = ($datos['costoxminuto'] === '-' || $datos['costoxminuto'] === null) ? null : floatval($datos['costoxminuto']);
+        $precioUnitario = $datos['precio_unitario'] === '-' ? null : $datos['precio_unitario'];
+        
+        $orden->bindParam(":precio_unitario", $precioUnitario, PDO::PARAM_STR);
+        $orden->bindValue(":minutos", $minutos, $minutos === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $orden->bindValue(":costo_por_minuto", $costo_por_minuto, $costo_por_minuto === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden->bindParam(":sub_total", $datos['sub_total']);
+
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Actualizar el stock del artículo
+        $orden = $conectar->prepare("UPDATE articulo 
+                                     SET stock = stock - :cantidad 
+                                     WHERE id = :articulo_id;");
+        $orden->bindParam(":cantidad", $datos['cantidad']);
+        $orden->bindParam(":articulo_id", $datos['articulo_id']);
+        $orden->execute();
+        $orden->closeCursor();
+
+        $orden = $conectar->prepare("UPDATE venta 
+                                    SET total = total + :sub_total 
+                                    WHERE id = :venta_id;");
+        $orden->bindParam(":sub_total", $datos['sub_total']);
+        $orden->bindParam(":venta_id", $datos['venta_id']);
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Confirmar la transacción si todo salió bien
+        $conectar->commit();
+
+        echo json_encode(["success" => true, "venta_id" => $datos['venta_id']]);
+
+    } catch (\Throwable $th) {
+        // Si hay un error, hacer rollback de la transacción
+        $conectar->rollBack();
+        error_log("Error en insertar articulo: " . $th->getMessage());
         echo json_encode(["error" => true, "message" => $th->getMessage()]);
     }
 }
