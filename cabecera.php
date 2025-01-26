@@ -3,16 +3,16 @@
 session_start(); // Iniciar la sesión, necesario para usar $_SESSION
 
 // Verificar si el usuario ha iniciado sesión
-if (!isset($_SESSION['id']) ) {
+if (!isset($_SESSION['id'])) {
     // Si no ha iniciado sesión, redirigir a login.php
     header("Location: login.php");
     exit();
 }
 $ape_usuario = $_SESSION['ape'];
-$id_usuario_s =$_SESSION['id']; 
-$rol =  $_SESSION['rol']; 
-$nombre =  $_SESSION['nombre']; 
-$correo =  $_SESSION['correo']; 
+$id_usuario_s = $_SESSION['id'];
+$rol =  $_SESSION['rol'];
+$nombre =  $_SESSION['nombre'];
+$correo =  $_SESSION['correo'];
 include('logica/clssConsultas.php');
 ?>
 <!DOCTYPE html>
@@ -22,7 +22,7 @@ include('logica/clssConsultas.php');
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>VYSAM</title>
     <meta charset="UTF-8">
-    
+
     <meta
         content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
         name="viewport" />
@@ -62,7 +62,7 @@ include('logica/clssConsultas.php');
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="assets/css/demo.css" />
     <link rel="stylesheet" href="assets/css/stylePerzo.css" />
-  
+
 
 </head>
 
@@ -111,18 +111,18 @@ include('logica/clssConsultas.php');
                             </a>
                             <div class="collapse" id="dashboard">
                                 <ul class="nav nav-collapse">
-                                <?php if ($rol === '1') { ?>
-                                    <li>
-                                        <a href="../demo1/index.html">
-                                            <span class="sub-item">Usuarios</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="../demo1/index.html">
-                                            <span class="sub-item">Personas</span>
-                                        </a>
-                                    </li>
-                                <?php } ?>
+                                    <?php if ($rol === '1') { ?>
+                                        <li>
+                                            <a href="../demo1/index.html">
+                                                <span class="sub-item">Usuarios</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="../demo1/index.html">
+                                                <span class="sub-item">Personas</span>
+                                            </a>
+                                        </li>
+                                    <?php } ?>
                                     <li>
                                         <a href="../demo1/index.html">
                                             <span class="sub-item">Artículos</span>
@@ -133,7 +133,7 @@ include('logica/clssConsultas.php');
                                             <span class="sub-item">Mantenimientos</span>
                                         </a>
                                     </li>
-                                  
+
                                 </ul>
                             </div>
                         </li>
@@ -208,12 +208,39 @@ include('logica/clssConsultas.php');
                                             <span class="sub-item">Atención de reservas</span>
                                         </a>
                                     </li>
-                                   
-                                  
+
+
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#venta"
+                                class="collapsed"
+                                aria-expanded="false">
+                                <i class="fas fa-store"></i>
+                                <p>Venta</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="venta">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="#">
+                                            <span class="sub-item">Punto de Venta Rapida</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="listadoVenta.php">
+                                            <span class="sub-item">Listado de Ventas</span>
+                                        </a>
+                                    </li>
 
+
+
+                                </ul>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a
                                 data-bs-toggle="collapse"
@@ -237,8 +264,8 @@ include('logica/clssConsultas.php');
                                             <span class="sub-item">Atención de reservas</span>
                                         </a>
                                     </li>
-                                   
-                                  
+
+
                                 </ul>
                             </div>
                         </li>
@@ -266,12 +293,12 @@ include('logica/clssConsultas.php');
                                             <span class="sub-item">Atención de reservas</span>
                                         </a>
                                     </li>
-                                   
-                                  
+
+
                                 </ul>
                             </div>
                         </li>
-    <!-- <li class="nav-section">
+                        <!-- <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
                             </span>
@@ -556,7 +583,7 @@ include('logica/clssConsultas.php');
                         </nav>
 
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-                           <!-- 
+                            <!-- 
                             <li
                                 class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a
@@ -825,7 +852,7 @@ include('logica/clssConsultas.php');
                                     </div>
                                     <span class="profile-username">
                                         <span class="op-7">Hola,</span>
-                                        <span class="fw-bold"><?php echo $nombre ? $nombre :'Error'; ?></span>
+                                        <span class="fw-bold"><?php echo $nombre ? $nombre : 'Error'; ?></span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -841,14 +868,14 @@ include('logica/clssConsultas.php');
                                                 <div class="u-text">
                                                     <h4><?php echo $nombre; ?></h4>
                                                     <p class="text-muted"><?php echo $correo ? $correo : 'Sin correo'; ?></p>
-                                                    
+
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">Mi Perfil</a>
-                                            
+
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="logica/logout.php">Salir</a>
                                         </li>
