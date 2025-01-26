@@ -1437,12 +1437,6 @@ if (isset($_GET['id'])) {
         // Abrir el modal y manejar el evento de agregar corte
         document.getElementById('btnAbrirModalSolo').addEventListener('click', function(event) {
             event.preventDefault();  // Prevenir el comportamiento por defecto del botón
-            // Seleccionar el botón "Agregar"
-            const btn_agregar = document.getElementById('btn_agregar_solocorte');
-
-            // Eliminar cualquier escucha de eventos previa
-            btn_agregar.removeEventListener("click", agregarDatosCorte);
-            
             let navLinks = document.querySelectorAll(".nav-link");
 
             // Remover la clase 'active' de todas las pestañas
@@ -1462,9 +1456,11 @@ if (isset($_GET['id'])) {
                 keyboard: false // Evita que se cierre con la tecla 'Esc'
             });
 
-            document.getElementById('cantidad_solocorte').value = '0';
-            document.getElementById('precioSoloCorte').value = '1.5';
+            // Seleccionar el botón "Agregar"
+            const btn_agregar = document.getElementById('btn_agregar_solocorte');
 
+            // Eliminar cualquier escucha de eventos previa
+            btn_agregar.removeEventListener("click", agregarDatosCorte);
 
             // Agregar una nueva escucha de eventos para agregar un corte
             btn_agregar.addEventListener("click", agregarDatosCorte);
@@ -1472,498 +1468,87 @@ if (isset($_GET['id'])) {
         });
 
         // Función que maneja el evento de agregar datos
-        
-
-        
-
-    });
-
-    async function agregarDatosCorte() {
-        var cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').value) || 0;
-        const tarifa = parseFloat(document.getElementById('precioSoloCorte').value) || 0;
-        // Crear el objeto datosCorte
-        const datosCorte = [{
-            id: '0', // Id del corte
-            minutos: cantidadMinutos, // Minutos registrados
-            costo_por_minuto: tarifa, // Costo por minuto
-            costo: cantidadMinutos * tarifa,
-            articulo: 'CORTE MATERIAL',
-            id_movimiento: 6,
-            precio_venta: null,
-            cantidad: null,
-        }];
-
-        const corte = datosCorte[0];
-        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-        try {
-            // Espera a que fn_insert_movimiento se complete
-            const response = await fn_adicionar_articulo(venta_id_lbl, corte);
-            console.log("Movimiento insertado con éxito:", response);
-
-            // Si tiene éxito, continúa con el resto del proceso                
-            document.getElementById('cantidad_solocorte').value = '0';
-            document.getElementById('precioSoloCorte').value = '1.5'; // Valor inicial
-
-            // Ocultar el modal
-            const modalElement = document.getElementById('modalSoloCorte');
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            modal.hide();
-
-
-            fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-
-        } catch (error) {
-            // Manejar el error
-            console.error("Error al insertar movimiento:", error.message);
-            alert("Error al procesar el movimiento: " + error.message);
-        }
-       
-           
-
-           
-    }
-
-</script>
-<!--Cargar Datos tabla-->
-<script>
-    let datosDeVenta = [];
-    let datosArticuloNuevos = [];
-
-    function fn_limpiar_modal() {
-        const acordeonContainer = document.getElementById('acordeonContainer');
-        const globalContainer = document.getElementById('globalContainer');
-
-        // Limpiar los contenedores donde se muestran los cortes y cantidades
-        acordeonContainer.innerHTML = "";
-        globalContainer.innerHTML = "";
-
-
-    }
-
-    function fn_consultarVenta(datosArticulo) {
-        // Limpiar Tabla
-        var tabla = document.getElementById("tabla_articulos");
-        var tbody = tabla.getElementsByTagName("tbody")[0];
-        tbody.innerHTML = '';
-        /////////////////////////////////////////////////////
-        var panelDetalle = document.getElementById("panelDetalles");
-        var panelAgregar = document.getElementById("panelAdicionarMas");
-        panelDetalle.style.display = "block";
-        panelAgregar.style.display = "block";
-
-        const venta_id = Array.isArray(datosArticulo) ? datosArticulo[0].venta_id : datosArticulo.venta_id;
-
-        console.log("Venta ID procesado:", venta_id);
-        ///////////////////// ///////////////////// ///////////////////// /////////////////////
-        $.ajax({
-            method: "POST",
-            url: "logica/clssVentaCorte.php",
-            data: {
-                "accion": "CONSULTARRESERVA",
-                "venta_id": venta_id,
-            }
-        }).done(async function(text) {
-            var Data = JSON.parse(text);
-
-             // Almacena los datos originales
-            console.log("datos venta",datosDeVenta)
-            if(Array.isArray(datosArticulo) && datosArticulo.length > 0){
-                llenarDatosModal(
-                    datosDeVenta['venta_id'],
-                    datosDeVenta['id_persona'],
-                    datosDeVenta['cliente'],
-                    datosDeVenta['usuario_id'],
-                    datosDeVenta['telefonomovil_cliente'],
-                    datosDeVenta['email_cliente']
-                );
-
-                llenarDatosPanelCliente(
-                    datosDeVenta['venta_id'],
-                    datosDeVenta['cliente'],
-                    datosDeVenta['fecha'],
-                    datosDeVenta['hora'],
-                    datosDeVenta['usuario'],
-                    datosDeVenta['telefonomovil_cliente'],
-                    datosDeVenta['email_cliente'],
-                    datosDeVenta['numero_doc_cliente']
-                );
-            }else{
-                datosDeVenta = datosArticulo;
-                llenarDatosModal(
-                    datosArticulo['venta_id'],
-                    datosArticulo['id_persona'],
-                    datosArticulo['cliente'],
-                    datosArticulo['usuario_id'],
-                    datosArticulo['telefonomovil_cliente'],
-                    datosArticulo['email_cliente']
-                );
-                llenarDatosPanelCliente(
-                    datosArticulo['venta_id'],
-                    datosArticulo['cliente'],
-                    datosArticulo['fecha'],
-                    datosArticulo['hora'],
-                    datosArticulo['usuario'],
-                    datosArticulo['telefonomovil_cliente'],
-                    datosArticulo['email_cliente'],
-                    datosArticulo['numero_doc_cliente'],
-                );
-            }
-            
-            
-
-            console.log(Data);
-
-            // Iterar sobre los datos devueltos (Data) y agregar los artículos a la tabla
-            Data.forEach(item => {
-                fn_agregar_articulo_tabla(item);
-            });
-        });
-    }
-
-    function fn_agregar_articulo_tabla(datosArticulo) {
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        //tabla.innerHTML = "";
-
-        // Insertamos una nueva fila en la tabla
-        let nuevaFila = tabla.insertRow();
-
-        // Colocamos los valores de las celdas
-        nuevaFila.insertCell(0).textContent = datosArticulo["articulo_id"]; // ID
-        nuevaFila.insertCell(1).textContent = datosArticulo["minutos"] || '-'; // Minutos
-        nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
-        nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"] || '-'; // Costo x Minuto
-        nuevaFila.insertCell(4).textContent = datosArticulo["articulo_nombre"]; // Artículo
-        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"] || '-'; // Cantidad
-        nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"] || '-';; // Precio unitario
-        nuevaFila.insertCell(7).textContent = parseFloat(datosArticulo["sub_total"]).toFixed(2); // Subtotal
-
-        // Celda para acciones
-        let accionCell = nuevaFila.insertCell(8);
-        nuevaFila.insertCell(9).textContent = datosArticulo["movimiento_id"]; // Subtotal
-        nuevaFila.insertCell(10).textContent = datosArticulo["rel_venta_articulo_id"]; // Precio unitario
-
-        let botonEditar = document.createElement("button");
-        botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
-        botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
-
-        // Agregar el botón de editar a la celda de acciones
-        accionCell.appendChild(botonEditar);
-        
-        switch (datosArticulo["movimiento_id"]) {
-            case 1:
-                botonEditar.addEventListener("click", () => {
-                    // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
-                    document.getElementById("nombreArticulo").textContent = datosArticulo["articulo_nombre"];
-                    document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
-                    
-                    // Mostrar los valores actuales de corte si es que existen
-                    document.getElementById('btnRestarCantidad').onclick = () => {
-                            let cantidad = parseInt(inputCantidad.value, 10);
-                            
-                            // Restar si la cantidad es mayor a 1
-                            if (cantidad > 1) {
-                                inputCantidad.value = cantidad - 1;  // Restar cantidad
-                            }
-
-                            // Verificar si la cantidad es 1 y el artículo tiene corte
-                            if (inputCantidad.value == 1 && datosArticulo.corte) {
-                                precioCorte.value = 1.5;
-                                seccionCorte.style.display = 'block';  // Mostrar sección de corte
-                                
-                            } else if (inputCantidad.value > 1) {
-                                // Ocultar sección de corte si la cantidad es mayor a 1
-                                precioCorte.value = 0;
-                                seccionCorte.style.display = 'none';
-                            }
-                        };
-
-                        document.getElementById('btnSumarCantidad').onclick = () => {
-                            let cantidad = parseInt(inputCantidad.value, 10);
-                            inputCantidad.value = cantidad + 1;
-                            if (cantidad + 1 === 1 && datosArticulo.corte) {
-                                precioCorte.value = 1.5;
-                                seccionCorte.style.display = 'block';
-                            } else {
-                                precioCorte.value = 0;
-                                seccionCorte.style.display = 'none';
-                            }
-                        };
-
-                        // Configurar botones de corte
-                        document.getElementById('btnRestarCorte').onclick = () => {
-                            let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
-                            if (corte > 0) cantidadCorte.value = corte - 1; // Cambié textContent por value
-                        };
-
-                        document.getElementById('btnSumarCorte').onclick = () => {
-                            let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
-                            if(corte == 0){
-                                cantidadCorte.value = 10; // Cambié textContent por value
-                            } else {
-                                cantidadCorte.value = corte + 1; // Cambié textContent por value
-                            }
-                        };
-
-                        // Botones para modificar precio
-                        document.getElementById('btnIncremento05').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
-                        };
-                        document.getElementById('btnIncremento1').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
-                        };
-                        document.getElementById('btnIncremento2').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
-                        };
-                        document.getElementById('btnIncremento5').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
-                        };
-
-
-                        // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
-                        const seccionCorte = document.getElementById("seccionCorte");
-                        if (datosArticulo["corte"] && datosArticulo["cantidad"] == 1) {
-                            document.getElementById("cantidadCorte").value = 
-                            datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
-
-                            document.getElementById("precioCorte").value = 
-                                datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
-                            seccionCorte.style.display = "block";
-                        } else {
-                            document.getElementById("cantidadCorte").value = 
-                            datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
-                            document.getElementById("precioCorte").value = 
-                            datosArticulo["costo_por_minuto"] === '-' ? 0 : (datosArticulo["costo_por_minuto"] || 0);
-                            seccionCorte.style.display = "none";
-                        }
-
-                        // Guardar el artículo actual para hacer la modificación posteriormente
-                        document.getElementById("btnConfirmarCantidad").addEventListener('click', function() {
-                            // Lógica para actualizar cantidad y precios
-                            datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
-                            datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
-                            datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
-
-                            // Actualizamos la celda de cantidad y subtotal en la tabla
-                            nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
-                            nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
-                            nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
-                            nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
-
-                            // Recalcular el subtotal considerando el precio de corte y minutos de corte
-                            let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_unitario_articulo"];
-                            subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
-                            subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;
-
-                            nuevaFila.cells[7].textContent = subtotal.toFixed(2);
-
-                            // Cerramos el modal
-                            $('#modalCantidad').modal('hide');
-                            fn_obtener_total(); // Recalcular los totales después de editar
-                        });
-
-                        // Mostrar el modal
-                        $('#modalCantidad').modal('show');
-                });
-
-                break;
-            case 2:
-                botonEditar.addEventListener("click", () => {
-                    document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
-                    document.getElementById('modalContent').innerHTML = `
-                        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Ploteo</h4>
-                            <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad de Ploteo</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                            <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
-                            <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                            <button id="btn_mas_ploteoEditar" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_ploteoeditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
-                        </div>
-                        </div>
-                    `;
-
-                    document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
-                        if (cantidad > 1) document.getElementById('input_cantidad_ploteoEditar').value = cantidad - 1;
-                    });
-
-                    document.getElementById('btn_mas_ploteoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
-                        document.getElementById('input_cantidad_ploteoEditar').value = cantidad + 1;
-                    });
-
-                    // Mostrar el modal
-                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-                    modal.show();
-
-                    document.getElementById('btnAgregarploteoEditar').addEventListener('click', function () {
-                        const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
-                        const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
-                        datosArticulo["cantidad"] = cantidadPloteos;
-                        datosArticulo["sub_total"] =  montoPloteo.toFixed(2);
-                        // Actualizamos la fila de la tabla
-                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"]; // Cantidad
-                        nuevaFila.cells[7].textContent = datosArticulo["sub_total"]; // Subtotal
-
-                        // Limpiar los campos
-                        document.getElementById('input_cantidad_ploteoEditar').value = 1;
-                        document.getElementById('monto_ploteoeditar').value = 0;
-
-                        // Resetear el botón y quitar la referencia al ploteo editado
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                        if (modal) modal.hide(); // Cierra el modal si existe
-                        fn_obtener_total();
-                    });
-
-                });
-
-                break;
-            case 3:
-                botonEditar.addEventListener("click", () => {             
-                    document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
-                    document.getElementById('modalContent').innerHTML = `
-                        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Impresión</h4>
-                            <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad a Imprimir</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                            <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
-                            <input id="input_numero_impresionEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                            <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_impresionEditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
-                        </div>
-                        </div>
-                    `;
-
-                    document.getElementById('btn_menos_impresionEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
-                        if (cantidad > 1) document.getElementById('input_numero_impresionEditar').value = cantidad - 1;
-                    });
-
-                    document.getElementById('btn_mas_impresionEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
-                        document.getElementById('input_numero_impresionEditar').value = cantidad + 1;
-                    });
-
-                    // Mostrar el modal
-                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-                    modal.show();
-
-                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', function () {
-                        const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
-                        const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
-
-                        datosArticulo["cantidad"] = cantidadImpresion;
-                        datosArticulo["sub_total"] =  montoImpresion.toFixed(2);
-
-                        // Actualizamos la fila de la tabla
-                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"]; // Cantidad
-                        nuevaFila.cells[7].textContent = datosArticulo["sub_total"]; // Subtotal
-
-                        // Limpiar los campos
-                        document.getElementById('input_numero_impresionEditar').value = 1; // Reset cantidad
-                        document.getElementById('monto_impresionEditar').value = 0; // Reset monto
-
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                        if (modal) modal.hide(); // Cierra el modal si existe
-                        fn_obtener_total();
-                    });
-
-                });
-                break;
-            case 5:
-                botonEditar.addEventListener("click", () => {
-                    
-                    document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
-                    document.getElementById('modalContent').innerHTML = `
-                        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Escaneo</h4>
-                            <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad de Escaneo</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                            <button id="btn_menos_escaneoEditar" class="btn btn-danger btn-round me-2">-</button>
-                            <input id="input_numero_escaneoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                            <button id="btn_mas_escaneoEditar" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_escaneoEditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
-                        </div>
-                        </div>
-                    `;
-                    document.getElementById('btn_menos_escaneoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
-                        if (cantidad > 1) document.getElementById('input_numero_escaneoEditar').value = cantidad - 1;
-                    });
-
-                    document.getElementById('btn_mas_escaneoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
-                        document.getElementById('input_numero_escaneoEditar').value = cantidad + 1;
-                    });
-
-                    // Mostrar el modal
-                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-                    modal.show();
-   
-                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', function () {
-                        const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
-                        const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
-
-                        datosArticulo["cantidad"] = cantidadEscaneos;
-                        datosArticulo["sub_total"] =  montoEscaneo.toFixed(2);
-
-                        // Actualizamos la fila de la tabla
-                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"]; // Cantidad
-                        nuevaFila.cells[7].textContent = datosArticulo["sub_total"]; // Subtotal
-
-                        // Limpiar los campos
-                        document.getElementById('input_numero_escaneoEditar').value = 1; // Reset cantidad
-                        document.getElementById('monto_escaneoEditar').value = 0; // Reset monto
-
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                        if (modal) modal.hide(); // Cierra el modal si existe
-                        fn_obtener_total();
-                    });
-                });
+        async function agregarDatosCorte() {
+            const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').value) || 0;
+            const tarifa = parseFloat(document.getElementById('precioSoloCorte').value) || 0;
+
+            // Crear el objeto datosCorte
+            const datosCorte = [{
+                id: '0', // Id del corte
+                minutos: cantidadMinutos, // Minutos registrados
+                costo_por_minuto: tarifa, // Costo por minuto
+                costo: cantidadMinutos * tarifa,
+                articulo: 'CORTE MATERIAL',
+                id_movimiento: 6,
+                precio_venta: null,
+                cantidad: null,
+            }];
+
+            const corte = datosCorte[0];
+            let venta_id = document.getElementById('idVentaReserva').textContent;
+
+            try {
+                // Espera a que fn_insert_movimiento se complete
+                const response = await fn_adicionar_articulo(venta_id, corte);
+                console.log("Movimiento insertado con éxito:", response);
+
+                // Si tiene éxito, continúa con el resto del proceso
+                fn_solo_corte_tabla(datosCorte);
                 
-                break;
-            case 6:
+                document.getElementById('cantidad_solocorte').value = '0';
+                document.getElementById('precioSoloCorte').value = '1.5'; // Valor inicial
+
+                // Ocultar el modal
+                const modalElement = document.getElementById('modalSoloCorte');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+            } catch (error) {
+                // Manejar el error
+                console.error("Error al insertar movimiento:", error.message);
+                alert("Error al procesar el movimiento: " + error.message);
+            }
+
+           
+        }
+
+        function fn_solo_corte_tabla(datosCorte) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosCorte.forEach(corte => {
+                let nuevaFila = tabla.insertRow();
+
+                nuevaFila.insertCell(0).textContent = corte.id; // ID
+                nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
+                nuevaFila.insertCell(2).textContent = corte.costo_por_minuto; // Costo x Minuto
+                nuevaFila.insertCell(3).textContent = (corte.costo).toFixed(2); // Costo x Minuto
+                nuevaFila.insertCell(4).textContent = corte.articulo; // Artículo
+                nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
+                nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
+                nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = corte.id_movimiento; // Subtotal
+                nuevaFila.insertCell(10).textContent = corte.id_rel_articulo;
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+
+                // Agregar el botón de editar a la celda de acciones
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
+
+                accionCell.appendChild(botonEliminar);
+
                 botonEditar.addEventListener("click", () => {
                     // Llenamos el modal con los datos del corte
-                    document.getElementById("cantidad_solocorte").value = datosArticulo["minutos"] || 0; // Minutos corte
-                    document.getElementById("precioSoloCorte").value = datosArticulo["costo_por_minuto"] || 1.5; // Precio corte
+                    document.getElementById("cantidad_solocorte").value = corte.minutos || 0; // Minutos corte
+                    document.getElementById("precioSoloCorte").value = corte.tarifa || 1.5; // Precio corte
 
                     // Mostrar el modal
                     const modalElement = document.getElementById('modalSoloCorte');
@@ -1976,68 +1561,41 @@ if (isset($_GET['id'])) {
 
                     // El botón de agregar se convierte en "Actualizar" para modificar los valores
                     const btn_agregar = document.getElementById('btn_agregar_solocorte');
-                    const nuevoBtn = btn_agregar.cloneNode(true); // Clona el botón
-                    btn_agregar.parentNode.replaceChild(nuevoBtn, btn_agregar);
-                    nuevoBtn.textContent = 'Actualizar'; // Cambiar texto del botón
-
-                    // Eliminar el evento original del botón de "Agregar"
-                    nuevoBtn.removeEventListener("click", agregarDatosCorte);
+                    btn_agregar.textContent = 'Actualizar'; // Cambiar texto del botón
+                    btn_agregar.removeEventListener("click", agregarDatosCorte);
 
                     // Actualizar el corte en la tabla cuando se presiona "Actualizar"
-                    nuevoBtn.addEventListener("click", function() {
-                        datosArticulo["minutos"] = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
-                        datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
+                    btn_agregar.addEventListener("click", function() {
+                        corte.minutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
+                        corte.tarifa = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
+                        corte.costo = corte.minutos * corte.tarifa; // Recalcular el costo
 
                         // Actualizar las celdas de la fila con los nuevos valores
-                        nuevaFila.cells[1].textContent = datosArticulo["minutos"]; // Minutos
-                        nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"]; // Costo x Minuto
-                        nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"]; // Costo total
+                        nuevaFila.cells[1].textContent = corte.minutos; // Minutos
+                        nuevaFila.cells[2].textContent = corte.tarifa; // Costo x Minuto
+                        nuevaFila.cells[3].textContent = corte.costo.toFixed(2); // Costo total
 
                         // Recalcular el subtotal
-                        nuevaFila.cells[7].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"]; // Subtotal
+                        nuevaFila.cells[7].textContent = corte.costo.toFixed(2); // Subtotal
 
-                        // Limpiar los valores del formulario
-                        
                         // Cerrar el modal
                         modal.hide();
                         fn_obtener_total(); // Recalcular los totales después de editar
-
-                        // Volver a colocar el botón "Agregar" y restaurar el evento de agregar
-                        nuevoBtn.textContent = 'Agregar';
-                        nuevoBtn.addEventListener("click", agregarDatosCorte);
                     });
                 });
-                break;
-            default:
-                break;
+
+                // Función para manejar el botón de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove(); // Eliminar la fila
+                    fn_obtener_total(); // Recalcular los totales después de eliminar
+                });
+            });
+
+            fn_obtener_total();
         }
 
-        
-        let botonEliminar = document.createElement("button");
-        botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
-        botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
-
-        accionCell.appendChild(botonEliminar);
-
-        
-
-        // Función para manejar el botón de eliminar
-        botonEliminar.addEventListener("click",async  () => {
-            let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-            if(datosArticulo["movimiento_id"] == 1){
-                const response = await fn_eliminar_articulo(datosArticulo["rel_venta_articulo_id"]);
-            }else{
-                const response = await fn_eliminar_movimiento(datosArticulo["rel_venta_articulo_id"]);
-            }
-
-            fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-
-        });
-
-        // Llamamos la función para recalcular los totales si es necesario
-        fn_obtener_total();
-    }
+    });
 </script>
 
 <!--Agregar desde tabla Modal-->
@@ -2166,31 +1724,148 @@ if (isset($_GET['id'])) {
                 };
 
                 // Confirmar cantidad y agregar a la tabla
-                document.getElementById('btnConfirmarCantidad').addEventListener('click', async () => {
+                document.getElementById('btnConfirmarCantidad').onclick = async () => {
                     try {
-                        // Lógica para confirmar cantidad
                         datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
                         datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
                         datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
                         datosArticulo.id_movimiento = 1;
 
-                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+                        let venta_id = document.getElementById('idVentaReserva').textContent;
 
-                        const response = await fn_adicionar_articulo(venta_id_lbl, datosArticulo);
+                        const response = await fn_adicionar_articulo(venta_id, datosArticulo);
                         console.log("Movimiento insertado con éxito:", response);
-
+                        
                         modalCantidad.hide();
-                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-                    } catch (error) {
+                        fn_agregar_articulo_tabla_Modal(datosArticulo);
+                        
+                    }catch (error) {
+                        // Manejo de errores
                         console.error("Error al confirmar cantidad:", error);
                         alert("Ocurrió un error al agregar el artículo.");
                     }
-                });
+                    
+                };
 
                 // Mostrar el modal
                 modalCantidad.show();
             }
         //}
+
+
+
+
+
+    function fn_agregar_articulo_tabla_Modal(datosArticulo) {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+        // Insertamos una nueva fila en la tabla
+        let nuevaFila = tabla.insertRow();
+        console.log(datosArticulo);
+        // Colocamos los valores de las celdas
+        nuevaFila.insertCell(0).textContent = datosArticulo["id"]; // ID
+        nuevaFila.insertCell(1).textContent = datosArticulo["minutos"] || '-'; // Minutos
+        nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
+        nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"] || '-'; // Costo x Minuto
+        nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
+        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"] || '-'; // Cantidad
+        nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
+
+        let totalCorte = (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+        // Cálculo base del subtotal: cantidad * precio de venta
+        let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_venta"];
+
+        // Sumar el "total corte" al subtotal si existe
+        subtotal += totalCorte;
+
+        // Asignamos el subtotal a la celda 7
+        nuevaFila.insertCell(7).textContent = subtotal.toFixed(2); // Subtotal con 2 decimales
+        // Celda para acciones
+        let accionCell = nuevaFila.insertCell(8);
+        // 3. Botón de Corte (si aplica)
+        
+        // 1. Botón de Editar
+        let botonEditar = document.createElement("button");
+        botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+        botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+
+        // Agregar el botón de editar a la celda de acciones
+        accionCell.appendChild(botonEditar);
+        nuevaFila.insertCell(9).textContent = datosArticulo["id_movimiento"]; // Precio unitario
+        nuevaFila.insertCell(10).textContent = datosArticulo["id_rel_articulo"]; // Precio unitario
+
+        // Función para manejar el botón de editar
+        botonEditar.addEventListener("click", () => {
+            // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
+            document.getElementById("nombreArticulo").textContent = datosArticulo["articulo"];
+            document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
+            
+            // Mostrar los valores actuales de corte si es que existen
+            
+
+            // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
+            const seccionCorte = document.getElementById("seccionCorte");
+            if (datosArticulo["corte"] && datosArticulo["cantidad"] == 1) {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+
+                document.getElementById("precioCorte").value = 
+                    datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
+                seccionCorte.style.display = "block";
+            } else {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+                seccionCorte.style.display = "none";
+            }
+
+            // Guardar el artículo actual para hacer la modificación posteriormente
+            document.getElementById("btnConfirmarCantidad").onclick = function() {
+                // Actualizamos la cantidad, minutos de corte y precio de corte en el objeto datosArticulo
+                datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
+                datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
+                datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
+
+                // Actualizamos la celda de cantidad y subtotal en la tabla
+                nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
+                nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
+                nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
+                nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+
+                
+                // Recalcular el subtotal considerando el precio de corte y minutos de corte
+                let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_venta"];
+                subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+                subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;  // Considerar precio de corte
+
+                nuevaFila.cells[7].textContent = subtotal.toFixed(2);
+
+                // Cerramos el modal
+                $('#modalCantidad').modal('hide');
+                fn_obtener_total(); // Recalcular los totales después de editar
+            };
+
+            // Mostrar el modal
+            $('#modalCantidad').modal('show');
+        });
+        // 2. Botón de Eliminar
+        let botonEliminar = document.createElement("button");
+        botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+        botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
+
+        accionCell.appendChild(botonEliminar);
+
+        // Función para manejar el botón de eliminar
+        botonEliminar.addEventListener("click", () => {
+            const fila = botonEliminar.closest("tr");
+            fila.remove(); // Eliminar la fila
+            fn_obtener_total(); // Recalcular los totales después de eliminar
+        });
+
+       
+
+        // Llamamos la función para recalcular los totales si es necesario
+        fn_obtener_total();
+    }
 
 
 
@@ -2253,6 +1928,242 @@ if (isset($_GET['id'])) {
     
 </script>
 
+<!--Cargar Datos tabla-->
+<script>
+    let datosArticuloOriginal = [];
+    let datosArticuloNuevos = [];
+
+
+
+    function fn_limpiar_modal() {
+        const acordeonContainer = document.getElementById('acordeonContainer');
+        const globalContainer = document.getElementById('globalContainer');
+
+        // Limpiar los contenedores donde se muestran los cortes y cantidades
+        acordeonContainer.innerHTML = "";
+        globalContainer.innerHTML = "";
+
+
+    }
+    // Función para limpiar el modal
+
+
+
+
+
+    function fn_consultarVenta(datosArticulo) {
+        // Limpiar Tabla
+        var tabla = document.getElementById("tabla_articulos");
+        var tbody = tabla.getElementsByTagName("tbody")[0];
+        tbody.innerHTML = '';
+        /////////////////////////////////////////////////////
+        var panelDetalle = document.getElementById("panelDetalles");
+        var panelAgregar = document.getElementById("panelAdicionarMas");
+        panelDetalle.style.display = "block";
+        panelAgregar.style.display = "block";
+        ///////////////////// ///////////////////// ///////////////////// /////////////////////
+        $.ajax({
+            method: "POST",
+            url: "logica/clssVentaCorte.php",
+            data: {
+                "accion": "CONSULTARRESERVA",
+                "venta_id": datosArticulo['venta_id'],
+            }
+        }).done(async function(text) {
+            var Data = JSON.parse(text);
+
+            datosArticuloOriginal = Data; // Almacena los datos originales
+            llenarDatosModal(
+                datosArticulo['venta_id'],
+                datosArticulo['id_persona'],
+                datosArticulo['cliente'],
+                datosArticulo['usuario_id'],
+                datosArticulo['telefonomovil_cliente'],
+                datosArticulo['email_cliente']
+            );
+            llenarDatosPanelCliente(
+                datosArticulo['venta_id'],
+                datosArticulo['cliente'],
+                datosArticulo['fecha'],
+                datosArticulo['hora'],
+                datosArticulo['usuario'],
+                datosArticulo['telefonomovil_cliente'],
+                datosArticulo['email_cliente'],
+                datosArticulo['numero_doc_cliente'],
+            );
+
+            console.log(Data);
+
+            // Iterar sobre los datos devueltos (Data) y agregar los artículos a la tabla
+            Data.forEach(item => {
+                fn_agregar_articulo_tabla(item);
+            });
+        });
+    }
+
+    function fn_agregar_articulo_tabla(datosArticulo) {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        //tabla.innerHTML = "";
+
+        // Insertamos una nueva fila en la tabla
+        let nuevaFila = tabla.insertRow();
+
+        // Colocamos los valores de las celdas
+        nuevaFila.insertCell(0).textContent = datosArticulo["articulo_id"]; // ID
+        nuevaFila.insertCell(1).textContent = datosArticulo["minutos"] || '-'; // Minutos
+        nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
+        nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"] || '-'; // Costo x Minuto
+        nuevaFila.insertCell(4).textContent = datosArticulo["articulo_nombre"]; // Artículo
+        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"] || '-'; // Cantidad
+        nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"] || '-';; // Precio unitario
+        nuevaFila.insertCell(7).textContent = parseFloat(datosArticulo["sub_total"]).toFixed(2); // Subtotal
+
+        // Celda para acciones
+        let accionCell = nuevaFila.insertCell(8);
+        nuevaFila.insertCell(9).textContent = datosArticulo["movimiento_id"]; // Subtotal
+        nuevaFila.insertCell(10).textContent = datosArticulo["rel_venta_articulo_id"]; // Precio unitario
+
+        let botonEditar = document.createElement("button");
+        botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+        botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+
+        // Agregar el botón de editar a la celda de acciones
+        accionCell.appendChild(botonEditar);
+
+        botonEditar.addEventListener("click", () => {
+            // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
+            document.getElementById("nombreArticulo").textContent = datosArticulo["articulo_nombre"];
+            document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
+            
+            // Mostrar los valores actuales de corte si es que existen
+            document.getElementById('btnRestarCantidad').onclick = () => {
+                    let cantidad = parseInt(inputCantidad.value, 10);
+                    
+                    // Restar si la cantidad es mayor a 1
+                    if (cantidad > 1) {
+                        inputCantidad.value = cantidad - 1;  // Restar cantidad
+                    }
+
+                    // Verificar si la cantidad es 1 y el artículo tiene corte
+                    if (inputCantidad.value == 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';  // Mostrar sección de corte
+                        
+                    } else if (inputCantidad.value > 1) {
+                        // Ocultar sección de corte si la cantidad es mayor a 1
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
+                    }
+                };
+
+                document.getElementById('btnSumarCantidad').onclick = () => {
+                    let cantidad = parseInt(inputCantidad.value, 10);
+                    inputCantidad.value = cantidad + 1;
+                    if (cantidad + 1 === 1 && datosArticulo.corte) {
+                        precioCorte.value = 1.5;
+                        seccionCorte.style.display = 'block';
+                    } else {
+                        precioCorte.value = 0;
+                        seccionCorte.style.display = 'none';
+                    }
+                };
+
+                // Configurar botones de corte
+                document.getElementById('btnRestarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if (corte > 0) cantidadCorte.value = corte - 1; // Cambié textContent por value
+                };
+
+                document.getElementById('btnSumarCorte').onclick = () => {
+                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
+                    if(corte == 0){
+                        cantidadCorte.value = 10; // Cambié textContent por value
+                    } else {
+                        cantidadCorte.value = corte + 1; // Cambié textContent por value
+                    }
+                };
+
+                // Botones para modificar precio
+                document.getElementById('btnIncremento05').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
+                };
+                document.getElementById('btnIncremento1').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
+                };
+                document.getElementById('btnIncremento2').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
+                };
+                document.getElementById('btnIncremento5').onclick = () => {
+                    precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
+                };
+
+
+            // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
+            const seccionCorte = document.getElementById("seccionCorte");
+            if (datosArticulo["corte"] && datosArticulo["cantidad"] == 1) {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+
+                document.getElementById("precioCorte").value = 
+                    datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
+                seccionCorte.style.display = "block";
+            } else {
+                document.getElementById("cantidadCorte").value = 
+                datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
+                document.getElementById("precioCorte").value = 
+                datosArticulo["costo_por_minuto"] === '-' ? 0 : (datosArticulo["costo_por_minuto"] || 0);
+                seccionCorte.style.display = "none";
+            }
+
+            // Guardar el artículo actual para hacer la modificación posteriormente
+            document.getElementById("btnConfirmarCantidad").onclick = function() {
+                // Actualizamos la cantidad, minutos de corte y precio de corte en el objeto datosArticulo
+                datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
+                datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
+                datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
+
+                // Actualizamos la celda de cantidad y subtotal en la tabla
+                nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
+                nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
+                nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
+                nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+
+                
+                // Recalcular el subtotal considerando el precio de corte y minutos de corte
+                let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_unitario_articulo"];
+                subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+                subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;  // Considerar precio de corte
+
+                nuevaFila.cells[7].textContent = subtotal.toFixed(2);
+
+                // Cerramos el modal
+                $('#modalCantidad').modal('hide');
+                fn_obtener_total(); // Recalcular los totales después de editar
+            };
+
+            // Mostrar el modal
+            $('#modalCantidad').modal('show');
+        });
+
+        let botonEliminar = document.createElement("button");
+        botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+        botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
+
+        accionCell.appendChild(botonEliminar);
+
+        
+
+        // Función para manejar el botón de eliminar
+        botonEliminar.addEventListener("click", () => {
+            const fila = botonEliminar.closest("tr");
+            fila.remove(); // Eliminar la fila
+            fn_obtener_total(); // Recalcular los totales después de eliminar
+        });
+
+        // Llamamos la función para recalcular los totales si es necesario
+        fn_obtener_total();
+    }
+</script>
 
 <!--Ploteo-->
 <script>
@@ -2265,7 +2176,7 @@ if (isset($_GET['id'])) {
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Servicio de Ploteo</h4>
-                            <div>ID: <span id="id_mov_escaneo">2</span></div>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
                             <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
                         </div>
                         <div class="card-body">
@@ -2318,21 +2229,20 @@ if (isset($_GET['id'])) {
                 }];
 
                 const ploteo = datosPloteo[0];
-                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+                let venta_id = document.getElementById('idVentaReserva').textContent;
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, ploteo.idmovimiento, ploteo.cantidad, ploteo.subtotal);
+                    const response = await fn_insert_movimiento(venta_id, ploteo.idmovimiento, ploteo.cantidad, ploteo.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
+                    fn_ploteo_tabla(datosPloteo);
                     document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
                     document.getElementById('monto_ploteo').value = ''; // Reset monto
                         // Cerrar modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                     if (modal) modal.hide();
-                    fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-
                 } catch (error) {
                     // Manejar el error
                     console.error("Error al insertar movimiento:", error.message);
@@ -2350,7 +2260,126 @@ if (isset($_GET['id'])) {
 
     
 
-       
+        // 3. Función para Agregar a la Tabla de Ploteos
+        function fn_ploteo_tabla(datosPloteo) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosPloteo.forEach(ploteo => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos de ploteo
+                nuevaFila.insertCell(0).textContent = ploteo.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Ploteos
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = ploteo.articulo; // Artículo (Ploteo)
+                nuevaFila.insertCell(5).textContent = ploteo.cantidad; // Se puede agregar más detalles si se requiere
+                nuevaFila.insertCell(6).textContent = ploteo.monto; // Otro dato
+                nuevaFila.insertCell(7).textContent = ploteo.subtotal.toFixed(2); // Subtotal (multiplied)
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = ploteo.idmovimiento; // Subtotal (multiplied)
+                nuevaFila.insertCell(10).textContent = ploteo.id_rel_articulo;
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+
+                    document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Ploteo</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${ploteo.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Ploteo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${ploteo.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_ploteoEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_ploteoeditar" class="form-control" value="${ploteo.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+
+                    document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
+                        if (cantidad > 1) document.getElementById('input_cantidad_ploteoEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_ploteoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
+                        document.getElementById('input_cantidad_ploteoEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
+                    
+                    // Rellenar los campos con los valores actuales del ploteo
+                    document.getElementById("input_cantidad_ploteoEditar").value = ploteo.cantidad;
+                    document.getElementById("monto_ploteoeditar").value = ploteo.subtotal;
+
+
+                    // Guardar la referencia a la fila del ploteo
+                    ploteo.fila = nuevaFila;  // Guardar referencia a la fila
+                    ploteoEditando = ploteo;  // Guardar referencia al ploteo que se está editando
+
+
+                    document.getElementById('btnAgregarploteoEditar').addEventListener('click', function () {
+                        const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
+                        const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
+                        // Actualizamos los valores de la fila existente
+                        ploteoEditando.cantidad = cantidadPloteos;
+                        ploteoEditando.subtotal = montoPloteo;
+
+                        // Actualizamos la fila de la tabla
+                        ploteoEditando.fila.cells[5].textContent = ploteoEditando.cantidad; // Cantidad
+                        ploteoEditando.fila.cells[7].textContent = ploteoEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_cantidad_ploteoEditar').value = 0;
+                        document.getElementById('monto_ploteoeditar').value = 0;
+
+                        // Resetear el botón y quitar la referencia al ploteo editado
+                        ploteoEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
     });
 
 
@@ -2370,7 +2399,7 @@ if (isset($_GET['id'])) {
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Servicio de Impresión</h4>
-                            <div>ID: <span id="id_mov_escaneo">3</span></div>
+                            <div>ID: <span id="id_mov_escaneo">4</span></div>
                             <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
                         </div>
                         <div class="card-body">
@@ -2422,14 +2451,15 @@ if (isset($_GET['id'])) {
 
 
                 const impresion = datosImpresion[0];
-                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+                let venta_id = document.getElementById('idVentaReserva').textContent;
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, impresion.idmovimiento, impresion.cantidad, impresion.subtotal);
+                    const response = await fn_insert_movimiento(venta_id, impresion.idmovimiento, impresion.cantidad, impresion.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
+                    fn_impresion_tabla(datosImpresion);
 
                     document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
                     document.getElementById('monto_impresion').value = ''; // Reset monto
@@ -2437,8 +2467,6 @@ if (isset($_GET['id'])) {
                     // Cerrar modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                     if (modal) modal.hide();
-                    fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-
                 } catch (error) {
                     // Manejar el error
                     console.error("Error al insertar movimiento:", error.message);
@@ -2455,8 +2483,124 @@ if (isset($_GET['id'])) {
         });
 
         // 3. Función para Agregar a la Tabla de Impresiones
-        
+        function fn_impresion_tabla(datosImpresion) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosImpresion.forEach(impresion => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos de la impresión
+                nuevaFila.insertCell(0).textContent = impresion.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Impresiones
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = impresion.articulo; // Artículo (Impresión)
+                nuevaFila.insertCell(5).textContent = impresion.cantidad; // Cantidad
+                nuevaFila.insertCell(6).textContent = impresion.monto; // Monto
+                nuevaFila.insertCell(7).textContent = impresion.subtotal.toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = impresion.idmovimiento; // ID de movimiento
+                nuevaFila.insertCell(10).textContent = impresion.id_rel_articulo;
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {             
+                    document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Impresión</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${impresion.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad a Imprimir</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_numero_impresionEditar" class="text-center" type="text" value="${impresion.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_impresionEditar" class="form-control" value="${impresion.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+
+                    document.getElementById('btn_menos_impresionEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+                        if (cantidad > 1) document.getElementById('input_numero_impresionEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_impresionEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+                        document.getElementById('input_numero_impresionEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
+                    // Rellenar los campos con los valores actuales de la impresión
+                    document.getElementById("input_numero_impresionEditar").value = impresion.cantidad;
+                    document.getElementById("monto_impresionEditar").value = impresion.subtotal;
+
+                    // Guardar la referencia a la fila de la impresión
+                    impresion.fila = nuevaFila;  // Guardar referencia a la fila
+                    impresionEditando = impresion;  // Guardar referencia a la impresión que se está editando
+
+                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', function () {
+                        const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
+                        const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
+
+                        // Actualizamos los valores de la fila existente
+                        impresionEditando.cantidad = cantidadImpresion;
+                        impresionEditando.subtotal = montoImpresion;
+
+                        // Actualizamos la fila de la tabla
+                        impresionEditando.fila.cells[5].textContent = impresionEditando.cantidad; // Cantidad
+                        impresionEditando.fila.cells[7].textContent = impresionEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_numero_impresionEditar').value = 1; // Reset cantidad
+                        document.getElementById('monto_impresionEditar').value = 0; // Reset monto
+
+                        impresionEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
     });
+
+    
 </script>
 
 <!--Escaneo-->
@@ -2522,22 +2666,21 @@ if (isset($_GET['id'])) {
                     idmovimiento: 5, // ID movimiento
                 }];
                 const movimiento = datosEscaneo[0];
-                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+                let venta_id = document.getElementById('idVentaReserva').textContent;
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, movimiento.idmovimiento, movimiento.cantidad, movimiento.subtotal);
+                    const response = await fn_insert_movimiento(venta_id, movimiento.idmovimiento, movimiento.cantidad, movimiento.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
+                    fn_escaneo_tabla(datosEscaneo);
 
                     document.getElementById('input_numero_escaneo').value = 1;
                     document.getElementById('monto_escaneo').value = '';
 
                     const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                     if (modal) modal.hide();
-                    fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-
                 } catch (error) {
                     // Manejar el error
                     console.error("Error al insertar movimiento:", error.message);
@@ -2552,8 +2695,124 @@ if (isset($_GET['id'])) {
         });
 
         
+        // 3. Función para Agregar a la Tabla de Escaneos
+        function fn_escaneo_tabla(datosEscaneo) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
 
-       
+            datosEscaneo.forEach(escaneo => {
+                let nuevaFila = tabla.insertRow();
+
+                // Agregar celdas para los datos del escaneo
+                nuevaFila.insertCell(0).textContent = escaneo.id; // ID
+                nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Escaneos
+                nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+                nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+                nuevaFila.insertCell(4).textContent = escaneo.articulo; // Artículo (Escaneo)
+                nuevaFila.insertCell(5).textContent = escaneo.cantidad; // Cantidad
+                nuevaFila.insertCell(6).textContent = escaneo.monto; // Monto
+                nuevaFila.insertCell(7).textContent = escaneo.subtotal.toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = escaneo.idmovimiento; // ID de movimiento
+                nuevaFila.insertCell(10).textContent = escaneo.id_rel_articulo;
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    
+                    document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
+                    document.getElementById('modalContent').innerHTML = `
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de Escaneo</h4>
+                            <div>ID: <span id="id_mov_escaneoEditar">${escaneo.idmovimiento}</span></div>
+                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de Escaneo</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <button id="btn_menos_escaneoEditar" class="btn btn-danger btn-round me-2">-</button>
+                            <input id="input_numero_escaneoEditar" class="text-center" type="text" value="${escaneo.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                            <button id="btn_mas_escaneoEditar" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_escaneoEditar" class="form-control" value="${escaneo.subtotal}">
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
+                        </div>
+                        </div>
+                    `;
+                    document.getElementById('btn_menos_escaneoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
+                        if (cantidad > 1) document.getElementById('input_numero_escaneoEditar').value = cantidad - 1;
+                    });
+
+                    document.getElementById('btn_mas_escaneoEditar').addEventListener('click', () => {
+                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
+                        document.getElementById('input_numero_escaneoEditar').value = cantidad + 1;
+                    });
+
+                    // Mostrar el modal
+                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                    modal.show();
+                    // Rellenar los campos con los valores actuales del escaneo
+                    document.getElementById("input_numero_escaneoEditar").value = escaneo.cantidad;
+                    document.getElementById("monto_escaneoEditar").value = escaneo.subtotal;
+
+               
+
+
+                    // Guardar la referencia a la fila del escaneo
+                    escaneo.fila = nuevaFila;  // Guardar referencia a la fila
+                    escaneoEditando = escaneo;  // Guardar referencia al escaneo que se está editando
+                    
+                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', function () {
+                        const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
+                        const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
+
+                        // Actualizamos los valores de la fila existente
+                        escaneoEditando.cantidad = cantidadEscaneos;
+                        escaneoEditando.subtotal = montoEscaneo;
+
+                        // Actualizamos la fila de la tabla
+                        escaneoEditando.fila.cells[5].textContent = escaneoEditando.cantidad; // Cantidad
+                        escaneoEditando.fila.cells[7].textContent = escaneoEditando.subtotal.toFixed(2); // Subtotal
+
+                        // Limpiar los campos
+                        document.getElementById('input_numero_escaneoEditar').value = 1; // Reset cantidad
+                        document.getElementById('monto_escaneoEditar').value = 0; // Reset monto
+
+                        escaneoEditando = null; // Reiniciar la referencia
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                        if (modal) modal.hide(); // Cierra el modal si existe
+                    });
+                });
+
+                // Función de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    const fila = botonEliminar.closest("tr");
+                    fila.remove();
+                    fn_obtener_total(); // Recalcular los totales
+                });
+            });
+
+            fn_obtener_total(); // Recalcular totales
+        }
     });
 
 

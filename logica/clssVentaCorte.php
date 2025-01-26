@@ -25,6 +25,14 @@ function controladorVentaCorte($accion)
         case 'ADICIONARARTICULO':
             $data = json_decode($_POST["data"], true); // Decodificar JSON
             fn_adicionar_articulo($data);
+        break;
+        case 'ELIMINARARTICULO':
+            $id_rel_articulo = $_POST["id_rel_articulo"];
+            fn_eliminar_articulo($id_rel_articulo);
+            break;
+        case 'ELIMINARMOVIMIENTO':
+            $id_rel_articulo = $_POST["id_rel_articulo"];
+            fn_eliminar_movimiento($id_rel_articulo);
             break;
     }
 }
