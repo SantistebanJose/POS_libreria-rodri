@@ -15,12 +15,16 @@ if (isset($_GET['id'])) {
         cursor: pointer;
         /* Muestra un cursor de mano para indicar que es clickeable */
     }
+    
     #tabla_articulos th:nth-child(1),
-#tabla_articulos td:nth-child(1),
-#tabla_articulos th:nth-child(10),
-#tabla_articulos td:nth-child(10) {
-    display: none !important;
-}
+    #tabla_articulos td:nth-child(1),
+    #tabla_articulos th:nth-child(10),
+    #tabla_articulos td:nth-child(10),
+    #tabla_articulos th:nth-child(11),
+    #tabla_articulos td:nth-child(11) {
+        display: none !important;
+    }
+
 </style>
 <div
     class="container">
@@ -360,6 +364,7 @@ if (isset($_GET['id'])) {
                                         <th scope="col">Sub Total (S/)</th>
                                         <th scope="col">Accion</th>
                                         <th scope="col">IDMOVIMIENTO</th>
+                                        <th scope="col">IDRELARTICULO</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1463,7 +1468,7 @@ if (isset($_GET['id'])) {
         });
 
         // Función que maneja el evento de agregar datos
-        function agregarDatosCorte() {
+        async function agregarDatosCorte() {
             const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').value) || 0;
             const tarifa = parseFloat(document.getElementById('precioSoloCorte').value) || 0;
 
@@ -1471,25 +1476,59 @@ if (isset($_GET['id'])) {
             const datosCorte = [{
                 id: '0', // Id del corte
                 minutos: cantidadMinutos, // Minutos registrados
-                tarifa: tarifa, // Costo por minuto
+                costo_por_minuto: tarifa, // Costo por minuto
                 costo: cantidadMinutos * tarifa,
-                articulo: 'SOLO CORTE',
-                idmovimiento: 6,
+                articulo: 'CORTE MATERIAL',
+                id_movimiento: 6,
+                precio_venta: null,
+                cantidad: null,
+                id_rel_articulo: null,
+
             }];
 
-            console.log(datosCorte);
+            const corte = datosCorte[0];
+            let venta_id = document.getElementById('idVentaReserva').textContent;
 
-            // Llamar a la función fn_solo_corte_tabla para agregar a la tabla
-            fn_solo_corte_tabla(datosCorte);
+            try {
+                // Espera a que fn_insert_movimiento se complete
+                const response = await fn_adicionar_articulo(venta_id, corte);
+                console.log("Movimiento insertado con éxito:", response);
+                
+                let parsedResponse;
+                try {
+                    // Intentar parsear la respuesta si es una cadena
+                    parsedResponse = JSON.parse(response);
+                } catch (e) {
+                    console.error("Error al parsear la respuesta JSON:", e);
+                    return;
+                }
+                console.log("Respuesta procesada:", parsedResponse);
+                if (parsedResponse.success) {
+                    // Asignar el nuevo ID generado al objeto datosArticulo
+                    datosCorte[0].id_rel_articulo = parsedResponse.id_rel_articulo;
+                    console.log("Nuevo ID asignado:", datosCorte[0].id_rel_articulo);
+                } else {
+                    console.error("Error en la respuesta:", parsedResponse.message);
+                }
 
-            // Reiniciar los minutos a 0 en la interfaz
-            document.getElementById('cantidad_solocorte').value = '0';
-            document.getElementById('precioSoloCorte').value = '1.5'; // Valor inicial
+                console.log(datosCorte);
+                // Si tiene éxito, continúa con el resto del proceso
+                fn_solo_corte_tabla(datosCorte);
+                
+                document.getElementById('cantidad_solocorte').value = '0';
+                document.getElementById('precioSoloCorte').value = '1.5'; // Valor inicial
 
-            // Ocultar el modal
-            const modalElement = document.getElementById('modalSoloCorte');
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            modal.hide();
+                // Ocultar el modal
+                const modalElement = document.getElementById('modalSoloCorte');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                modal.hide();
+            } catch (error) {
+                // Manejar el error
+                console.error("Error al insertar movimiento:", error.message);
+                alert("Error al procesar el movimiento: " + error.message);
+            }
+
+           
         }
 
         function fn_solo_corte_tabla(datosCorte) {
@@ -1500,15 +1539,16 @@ if (isset($_GET['id'])) {
 
                 nuevaFila.insertCell(0).textContent = corte.id; // ID
                 nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
-                nuevaFila.insertCell(2).textContent = corte.tarifa; // Costo x Minuto
-                nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
+                nuevaFila.insertCell(2).textContent = corte.costo_por_minuto; // Costo x Minuto
+                nuevaFila.insertCell(3).textContent = (corte.costo).toFixed(2); // Costo x Minuto
                 nuevaFila.insertCell(4).textContent = corte.articulo; // Artículo
                 nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
                 nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
                 nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
 
                 let accionCell = nuevaFila.insertCell(8);
-                nuevaFila.insertCell(9).textContent = corte.idmovimiento; // Subtotal
+                nuevaFila.insertCell(9).textContent = corte.id_movimiento; // Subtotal
+                nuevaFila.insertCell(10).textContent = corte.id_rel_articulo;
 
                 // 1. Botón de Editar
                 let botonEditar = document.createElement("button");
@@ -1704,14 +1744,47 @@ if (isset($_GET['id'])) {
                 };
 
                 // Confirmar cantidad y agregar a la tabla
-                document.getElementById('btnConfirmarCantidad').onclick = () => {
-                    datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
-                    datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
-                    datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
-                    datosArticulo.id_movimiento = 1;
+                document.getElementById('btnConfirmarCantidad').onclick = async () => {
+                    try {
+                        datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
+                        datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
+                        datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
+                        datosArticulo.id_movimiento = 1;
 
-                    modalCantidad.hide();
-                    fn_agregar_articulo_tabla_Modal(datosArticulo);
+                        let venta_id = document.getElementById('idVentaReserva').textContent;
+
+                        const response = await fn_adicionar_articulo(venta_id, datosArticulo);
+                        console.log("Movimiento insertado con éxito:", response);
+                        
+                        let parsedResponse;
+                        try {
+                            // Intentar parsear la respuesta si es una cadena
+                            parsedResponse = JSON.parse(response);
+                        } catch (e) {
+                            console.error("Error al parsear la respuesta JSON:", e);
+                            return;
+                        }
+
+                        console.log("Respuesta procesada:", parsedResponse);
+
+                        // Verificar si la respuesta tiene el éxito esperado
+                        if (parsedResponse.success) {
+                            // Asignar el nuevo ID generado al objeto datosArticulo
+                            datosArticulo.id_rel_articulo = parsedResponse.id_rel_articulo;
+                            console.log("Nuevo ID asignado:", datosArticulo.id_rel_articulo);
+                        } else {
+                            console.error("Error en la respuesta:", parsedResponse.message);
+                        }
+
+                        console.log(datosArticulo);
+                        modalCantidad.hide();
+                        fn_agregar_articulo_tabla_Modal(datosArticulo);
+                    }catch (error) {
+                        // Manejo de errores
+                        console.error("Error al confirmar cantidad:", error);
+                        alert("Ocurrió un error al agregar el artículo.");
+                    }
+                    
                 };
 
                 // Mostrar el modal
@@ -1735,7 +1808,7 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
         nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"] || '-'; // Costo x Minuto
         nuevaFila.insertCell(4).textContent = datosArticulo["articulo"]; // Artículo
-        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"]; // Cantidad
+        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"] || '-'; // Cantidad
         nuevaFila.insertCell(6).textContent = datosArticulo["precio_venta"]; // Precio unitario
 
         let totalCorte = (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
@@ -1759,6 +1832,7 @@ if (isset($_GET['id'])) {
         // Agregar el botón de editar a la celda de acciones
         accionCell.appendChild(botonEditar);
         nuevaFila.insertCell(9).textContent = datosArticulo["id_movimiento"]; // Precio unitario
+        nuevaFila.insertCell(10).textContent = datosArticulo["id_rel_articulo"]; // Precio unitario
 
         // Función para manejar el botón de editar
         botonEditar.addEventListener("click", () => {
@@ -1980,13 +2054,14 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(2).textContent = datosArticulo["costo_por_minuto"] || '-'; // Costo x Minuto
         nuevaFila.insertCell(3).textContent = datosArticulo["costo_por_minuto"] * datosArticulo["minutos"] || '-'; // Costo x Minuto
         nuevaFila.insertCell(4).textContent = datosArticulo["articulo_nombre"]; // Artículo
-        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"]; // Cantidad
-        nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"]; // Precio unitario
+        nuevaFila.insertCell(5).textContent = datosArticulo["cantidad"] || '-'; // Cantidad
+        nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"] || '-';; // Precio unitario
         nuevaFila.insertCell(7).textContent = parseFloat(datosArticulo["sub_total"]).toFixed(2); // Subtotal
 
         // Celda para acciones
         let accionCell = nuevaFila.insertCell(8);
         nuevaFila.insertCell(9).textContent = datosArticulo["movimiento_id"]; // Subtotal
+        nuevaFila.insertCell(10).textContent = datosArticulo["rel_venta_articulo_id"]; // Precio unitario
 
         let botonEditar = document.createElement("button");
         botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
@@ -2130,7 +2205,6 @@ if (isset($_GET['id'])) {
     }
 </script>
 
-
 <!--Ploteo-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -2179,7 +2253,7 @@ if (isset($_GET['id'])) {
             });
 
             // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarPloteo').addEventListener('click', function () {
+            document.getElementById('btnAgregarPloteo').addEventListener('click', async function () {
                 const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
                 const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
 
@@ -2193,12 +2267,29 @@ if (isset($_GET['id'])) {
                     articulo: 'PLOTEO',
                     idmovimiento: 2,
                 }];
-                fn_ploteo_tabla(datosPloteo);
-                document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
-                document.getElementById('monto_ploteo').value = ''; // Reset monto
-                    // Cerrar modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                if (modal) modal.hide();
+
+                const ploteo = datosPloteo[0];
+                let venta_id = document.getElementById('idVentaReserva').textContent;
+
+                try {
+                    // Espera a que fn_insert_movimiento se complete
+                    const response = await fn_insert_movimiento(venta_id, ploteo.idmovimiento, ploteo.cantidad, ploteo.subtotal);
+                    console.log("Movimiento insertado con éxito:", response);
+
+                    // Si tiene éxito, continúa con el resto del proceso
+                    fn_ploteo_tabla(datosPloteo);
+                    document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
+                    document.getElementById('monto_ploteo').value = ''; // Reset monto
+                        // Cerrar modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                    if (modal) modal.hide();
+                } catch (error) {
+                    // Manejar el error
+                    console.error("Error al insertar movimiento:", error.message);
+                    alert("Error al procesar el movimiento: " + error.message);
+                }
+
+               
             });
 
             // Mostrar el modal
@@ -2228,6 +2319,7 @@ if (isset($_GET['id'])) {
 
                 let accionCell = nuevaFila.insertCell(8);
                 nuevaFila.insertCell(9).textContent = ploteo.idmovimiento; // Subtotal (multiplied)
+                nuevaFila.insertCell(10).textContent = ploteo.id_rel_articulo;
 
                 // 1. Botón de Editar
                 let botonEditar = document.createElement("button");
@@ -2384,7 +2476,7 @@ if (isset($_GET['id'])) {
             });
 
             // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarImpresion').addEventListener('click', function () {
+            document.getElementById('btnAgregarImpresion').addEventListener('click',async function () {
                 const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
                 const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
                 // Si no estamos editando, agregar una nueva impresión
@@ -2396,13 +2488,33 @@ if (isset($_GET['id'])) {
                     articulo: 'IMPRESIÓN',
                     idmovimiento: 3, // ID movimiento para impresión
                 }];
-                fn_impresion_tabla(datosImpresion);
-                document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
-                document.getElementById('monto_impresion').value = ''; // Reset monto
 
-                // Cerrar modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                if (modal) modal.hide();
+
+                const impresion = datosImpresion[0];
+                let venta_id = document.getElementById('idVentaReserva').textContent;
+
+                try {
+                    // Espera a que fn_insert_movimiento se complete
+                    const response = await fn_insert_movimiento(venta_id, impresion.idmovimiento, impresion.cantidad, impresion.subtotal);
+                    console.log("Movimiento insertado con éxito:", response);
+
+                    // Si tiene éxito, continúa con el resto del proceso
+                    fn_impresion_tabla(datosImpresion);
+
+                    document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
+                    document.getElementById('monto_impresion').value = ''; // Reset monto
+
+                    // Cerrar modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                    if (modal) modal.hide();
+                } catch (error) {
+                    // Manejar el error
+                    console.error("Error al insertar movimiento:", error.message);
+                    alert("Error al procesar el movimiento: " + error.message);
+                }
+
+
+              
             });
 
             // Mostrar el modal
@@ -2429,6 +2541,7 @@ if (isset($_GET['id'])) {
 
                 let accionCell = nuevaFila.insertCell(8);
                 nuevaFila.insertCell(9).textContent = impresion.idmovimiento; // ID de movimiento
+                nuevaFila.insertCell(10).textContent = impresion.id_rel_articulo;
 
                 // 1. Botón de Editar
                 let botonEditar = document.createElement("button");
@@ -2580,7 +2693,7 @@ if (isset($_GET['id'])) {
             });
 
             // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
+            document.getElementById('btnAgregarescaneo').addEventListener('click',async  function () {
                 const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
                 const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
 
@@ -2590,18 +2703,30 @@ if (isset($_GET['id'])) {
                     monto: '-', // Monto unitario
                     subtotal: montoEscaneo,
                     articulo: 'ESCANEO',
-                    idmovimiento: 4, // ID movimiento
+                    idmovimiento: 5, // ID movimiento
                 }];
+                const movimiento = datosEscaneo[0];
+                let venta_id = document.getElementById('idVentaReserva').textContent;
 
-                fn_escaneo_tabla(datosEscaneo);
+                try {
+                    // Espera a que fn_insert_movimiento se complete
+                    const response = await fn_insert_movimiento(venta_id, movimiento.idmovimiento, movimiento.cantidad, movimiento.subtotal);
+                    console.log("Movimiento insertado con éxito:", response);
 
-                // Reset campos
-                document.getElementById('input_numero_escaneo').value = 1;
-                document.getElementById('monto_escaneo').value = '';
+                    // Si tiene éxito, continúa con el resto del proceso
+                    fn_escaneo_tabla(datosEscaneo);
 
-                // Cerrar modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                if (modal) modal.hide();
+                    document.getElementById('input_numero_escaneo').value = 1;
+                    document.getElementById('monto_escaneo').value = '';
+
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                    if (modal) modal.hide();
+                } catch (error) {
+                    // Manejar el error
+                    console.error("Error al insertar movimiento:", error.message);
+                    alert("Error al procesar el movimiento: " + error.message);
+                }
+
             });
 
             // Mostrar el modal
@@ -2629,6 +2754,7 @@ if (isset($_GET['id'])) {
 
                 let accionCell = nuevaFila.insertCell(8);
                 nuevaFila.insertCell(9).textContent = escaneo.idmovimiento; // ID de movimiento
+                nuevaFila.insertCell(10).textContent = escaneo.id_rel_articulo;
 
                 // 1. Botón de Editar
                 let botonEditar = document.createElement("button");
@@ -2732,10 +2858,138 @@ if (isset($_GET['id'])) {
 
 </script>
 
+<!--Fn Insert, Update y Delete-->
+<script>
+
+    function fn_insert_movimiento(venta_id, movimiento_id, cantidad, sub_total) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const datos = {
+                        "venta_id": venta_id,
+                        "movimiento_id": movimiento_id,
+                        "cantidad": cantidad,
+                        "sub_total": sub_total
+                    };
+
+                    $.ajax({
+                        method: "POST",
+                        url: "logica/clssVentaCorte.php",
+                        data: {
+                            "accion": "INSERTMOVIMIENTO",
+                            "data": JSON.stringify(datos)
+                        }
+                    })
+                    .done(function (response) {
+                        const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
+                        if (jsonResponse.success) {
+                            resolve(jsonResponse); // Éxito: Resuelve la promesa
+                        } else {
+                            reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
+                        }
+                    })
+                    .fail(function (error) {
+                        reject(new Error(error.responseText || "Error en la solicitud AJAX")); // Error en la solicitud
+                    });
+                } catch (error) {
+                    reject(new Error(error.message)); // Error inesperado
+                }
+        });
+    }
+
+    function fn_adicionar_articulo(venta_id, datosArticulo) {
+        return new Promise((resolve, reject) => {
+            const datos = {
+                "venta_id": venta_id,  // Puedes cambiar este valor dinámicamente si es necesario
+                "articulo_id": datosArticulo['id'],  // También este valor puede ser dinámico
+                "cantidad": datosArticulo['cantidad'] ,
+                "sub_total": calcularSubTotal(datosArticulo),
+                "minutos": datosArticulo['minutos'],
+                "precio_unitario": datosArticulo['precio_venta'] ,
+                "costoxminuto": datosArticulo['costo_por_minuto'],
+                "movimiento_id": datosArticulo['id_movimiento'],
+
+            };
+
+            console.log(datos);
+            $.ajax({
+                method: "POST",
+                url: "logica/clssVentaCorte.php",
+                data: {
+                    "accion": "ADICIONARARTICULO",
+                    "data": JSON.stringify(datos)
+                }
+            }).done(function (response) {
+                console.log(response);
+                // Resolvemos la promesa con la respuesta de la solicitud
+                resolve(response);
+            }).fail(function (error) {
+                console.error("Error:", error.responseText);
+                // Rechazamos la promesa si hay un error
+                reject(error);
+            });
+        });
+    }
+
+    function calcularSubTotal(datosArticulo) {
+        let cantidad = datosArticulo['cantidad'] === '-' || datosArticulo['cantidad'] === null ? 0 : parseInt(datosArticulo['cantidad']);;
+        let precio_venta = datosArticulo['precio_venta'] === '-' || datosArticulo['precio_venta'] === null ? 0 : parseFloat(datosArticulo['precio_venta']);
+        let minutos = datosArticulo['minutos'] === '-' || datosArticulo['minutos'] === null ? 0 : parseInt(datosArticulo['minutos']);
+        let costo_por_minuto = datosArticulo['costo_por_minuto'] === '-' || datosArticulo['costo_por_minuto'] === null ? 0 : parseFloat(datosArticulo['costo_por_minuto']);
+        console.log(cantidad);
+        console.log(precio_venta);
+
+        console.log(minutos);
+
+        console.log(costo_por_minuto);
 
 
+        // Calcular subtotal: cantidad * precio_venta + minutos * costo_por_minuto
+        return (cantidad * precio_venta) + (minutos * costo_por_minuto);
+    }
 
+    function fn_eliminar_articulo(id_rel_articulo) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "POST",
+                url: "logica/clssVentaCorte.php",
+                data: {
+                    "accion": "ELIMINARARTICULO", // Acción que se realizará en PHP
+                    "id_rel_articulo": id_rel_articulo
+                }
+            }).done(function (response) {
+                console.log(response);
+                // Resolvemos la promesa con la respuesta de la solicitud
+                resolve(response);
+            }).fail(function (error) {
+                console.error("Error:", error.responseText);
+                // Rechazamos la promesa si hay un error
+                reject(error);
+            });
+        });
+    }
 
+    function fn_eliminar_movimiento(id_rel_articulo) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "POST",
+                url: "logica/clssVentaCorte.php",
+                data: {
+                    "accion": "ELIMINARMOVIMIENTO", // Acción que se realizará en PHP
+                    "id_rel_articulo": id_rel_articulo
+                }
+            }).done(function (response) {
+                console.log(response);
+                // Resolvemos la promesa con la respuesta de la solicitud
+                resolve(response);
+            }).fail(function (error) {
+                console.error("Error:", error.responseText);
+                // Rechazamos la promesa si hay un error
+                reject(error);
+            });
+        });
+    }
+
+</script>
 
 <script>
     document.getElementById("btnRealizarPago").addEventListener("click", function() {
