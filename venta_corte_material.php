@@ -25,6 +25,8 @@ if (isset($_GET['id'])) {
         display: none !important;
     }
 
+
+
 </style>
 <div
     class="container">
@@ -659,7 +661,7 @@ if (isset($_GET['id'])) {
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
+<script src="assets/js/scriptNotify.js"></script>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -1560,7 +1562,7 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"] || '-';; // Precio unitario
         nuevaFila.insertCell(7).textContent = parseFloat(datosArticulo["sub_total"]).toFixed(2); // Subtotal
 
-        // Celda para acciones
+            // Celda para acciones
         let accionCell = nuevaFila.insertCell(8);
         nuevaFila.insertCell(9).textContent = datosArticulo["movimiento_id"]; // Subtotal
         nuevaFila.insertCell(10).textContent = datosArticulo["rel_venta_articulo_id"]; // Precio unitario
@@ -2095,8 +2097,6 @@ if (isset($_GET['id'])) {
 
 <!--Agregar desde tabla Modal-->
 <script>
-
-
     function fn_agregar_venta(datosArticulo) {
         const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
 
@@ -2218,9 +2218,15 @@ if (isset($_GET['id'])) {
         document.getElementById('btnConfirmar').addEventListener('click', async function() {
             try {
                 const inputCantidad = document.getElementById('inputCantidad');
+
                 const cantidadCorte = document.getElementById('cantidadCorte');
+
                 const precioCorte = document.getElementById('precioCorte');
-                
+
+                if(!datosArticulo.corte){
+                    precioCorte.minutos = null;
+                    precioCorte.value = null;
+                }
                 // Actualizando datosArticulo con los valores de los inputs
                 datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
                 datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
@@ -2228,16 +2234,16 @@ if (isset($_GET['id'])) {
                 datosArticulo.id_movimiento = 1;
 
                 let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
+                console.log(datosArticulo);
                 // Llamada al servidor para agregar el artículo
                 const response = await fn_adicionar_articulo(venta_id_lbl, datosArticulo);
-                console.log("Movimiento insertado con éxito:", response);
 
                 // Cerrar el modal
                 modalCantidad.hide();
 
                 // Consultar la venta actualizada
-                fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+                //fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+                
             } catch (error) {
                 console.error("Error al confirmar cantidad:", error);
                 alert("Ocurrió un error al agregar el artículo.");
@@ -2259,8 +2265,6 @@ if (isset($_GET['id'])) {
 
 
 </script>
-
-
 
 <!--Ploteo-->
 <script>
@@ -2591,8 +2595,10 @@ if (isset($_GET['id'])) {
                     .done(function (response) {
                         const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                         if (jsonResponse.success) {
+                            showNotification("success");
                             resolve(jsonResponse); // Éxito: Resuelve la promesa
                         } else {
+                            showNotification("error");
                             reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
                         }
                     })
@@ -2628,9 +2634,15 @@ if (isset($_GET['id'])) {
                     "data": JSON.stringify(datos)
                 }
             }).done(function (response) {
-                console.log(response);
-                // Resolvemos la promesa con la respuesta de la solicitud
-                resolve(response);
+                const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
+                if (jsonResponse.success) {
+                    showNotification("success");
+                    resolve(jsonResponse); // Éxito: Resuelve la promesa
+                } else {
+                    showNotification("error");
+                    reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
+                }
+              
             }).fail(function (error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
@@ -2666,9 +2678,14 @@ if (isset($_GET['id'])) {
                     "id_rel_articulo": id_rel_articulo
                 }
             }).done(function (response) {
-                console.log(response);
-                // Resolvemos la promesa con la respuesta de la solicitud
-                resolve(response);
+                const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
+                if (jsonResponse.success) {
+                    showNotification("success");
+                    resolve(jsonResponse); // Éxito: Resuelve la promesa
+                } else {
+                    showNotification("error");
+                    reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
+                }
             }).fail(function (error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
@@ -2687,9 +2704,14 @@ if (isset($_GET['id'])) {
                     "id_rel_articulo": id_rel_articulo
                 }
             }).done(function (response) {
-                console.log(response);
-                // Resolvemos la promesa con la respuesta de la solicitud
-                resolve(response);
+                const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
+                if (jsonResponse.success) {
+                    showNotification("success");
+                    resolve(jsonResponse); // Éxito: Resuelve la promesa
+                } else {
+                    showNotification("error");
+                    reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
+                }
             }).fail(function (error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
@@ -2708,8 +2730,14 @@ if (isset($_GET['id'])) {
                     "data": JSON.stringify(datos) // Los datos a enviar para editar el artículo
                 }
             }).done(function (response) {
-                // Resolvemos la promesa con la respuesta de la solicitud
-                resolve(response);
+                const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
+                if (jsonResponse.success) {
+                    showNotification("success");
+                    resolve(jsonResponse); // Éxito: Resuelve la promesa
+                } else {
+                    showNotification("error");
+                    reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
+                }
             }).fail(function (error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
@@ -2728,8 +2756,14 @@ if (isset($_GET['id'])) {
                     "data": JSON.stringify(datos) // Los datos a enviar para editar el artículo
                 }
             }).done(function (response) {
-                // Resolvemos la promesa con la respuesta de la solicitud
-                resolve(response);
+                const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
+                if (jsonResponse.success) {
+                    showNotification("success");
+                    resolve(jsonResponse); // Éxito: Resuelve la promesa
+                } else {
+                    showNotification("error");
+                    reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
+                }
             }).fail(function (error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error

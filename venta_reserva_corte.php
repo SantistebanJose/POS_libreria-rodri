@@ -519,6 +519,7 @@ if (isset($_GET['id'])) {
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+<script src="assets/js/scriptNotify.js"></script>
 
 
 <script>
@@ -964,6 +965,7 @@ if (isset($_GET['id'])) {
 
                     modalCantidad.hide();
                     fn_agregar_articulo_tabla(datosArticulo);
+                    showNotification("success");
                 };
 
                 // Mostrar el modal
@@ -1290,10 +1292,30 @@ if (isset($_GET['id'])) {
                 "data": JSON.stringify(datos)
             }
         }).done(function (response) {
+    
+            var result = JSON.parse(response);
             console.log(response);
-            if(response.success){
-                alert("Reserva registrada correctamente.");
+            if (result.success === true) {
+                swal({
+                    title: "Reserva con Exito!",
+                    text: 'Reserva registrada correctamente',
+                    icon: "success",
+                    buttons: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload();
+                });;
+            }else{
+                swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
             }
+
            
         }).fail(function (error) {
             console.error("Error:", error.responseText);
@@ -1374,6 +1396,7 @@ if (isset($_GET['id'])) {
                     // Cerrar modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                 if (modal) modal.hide();
+                showNotification("success");
             });
 
             // Mostrar el modal
@@ -1686,6 +1709,7 @@ if (isset($_GET['id'])) {
                         impresionEditando = null; // Reiniciar la referencia
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
+                        showNotification("success");
                     });
 
                 });
@@ -1889,6 +1913,7 @@ if (isset($_GET['id'])) {
                         escaneoEditando = null; // Reiniciar la referencia
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
+                        showNotification("success");
                     });
                 });
 
