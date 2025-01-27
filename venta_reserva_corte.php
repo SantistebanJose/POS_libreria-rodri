@@ -24,7 +24,15 @@ if (isset($_GET['id'])) {
 #tabla_articulos td:nth-child(10) {
     display: none !important;
 }
+.error-input {
+        border: 2px solid red;
+    }
 
+    .error-message {
+        color: red;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
     
 </style>
 
@@ -706,12 +714,19 @@ if (isset($_GET['id'])) {
 
             // Seleccionar el botón "Agregar"
             const btn_agregar = document.getElementById('btn_agregar_solocorte');
+            btn_agregar.textContent = 'Agregar';
+    
+            btn_agregar.replaceWith(btn_agregar.cloneNode(true));
 
-            // Eliminar cualquier escucha de eventos previa
-            btn_agregar.removeEventListener("click", agregarDatosCorte);
+            // Seleccionar nuevamente el botón clonado
+            const nuevoBtnAgregar = document.getElementById('btn_agregar_solocorte');
+            
+            // Volver a agregar el evento para agregar datos
+            nuevoBtnAgregar.addEventListener("click", agregarDatosCorte);
 
-            // Agregar una nueva escucha de eventos para agregar un corte
-            btn_agregar.addEventListener("click", agregarDatosCorte);
+            // Limpiar los campos del formulario
+            document.getElementById("cantidad_solocorte").value = 0;
+            document.getElementById("precioSoloCorte").value = 1.5;
             modal.show(); // Muestra el modal
         });
 
@@ -719,6 +734,31 @@ if (isset($_GET['id'])) {
         function agregarDatosCorte() {
             const cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').value) || 0;
             const tarifa = parseFloat(document.getElementById('precioSoloCorte').value) || 0;
+
+            const inputMonto = document.getElementById('cantidad_solocorte');
+            const divContainer = inputMonto.closest('.d-flex');
+            const mensajeErrorExistente = document.querySelector('.error-message');
+            if (mensajeErrorExistente) mensajeErrorExistente.remove();
+            inputMonto.classList.remove('error-input');
+
+            // Validar que el monto haya sido ingresado y sea mayor a 0
+            if (isNaN(cantidadMinutos) || cantidadMinutos <= 0) {
+                // Añadir clase para resaltar el error
+                inputMonto.classList.add('error-input');
+
+                // Crear mensaje de error dinámicamente
+                const mensajeError = `
+                    <div class="error-message text-center">
+                        Por favor, ingresa un monto válido mayor a 0.
+                    </div>
+                `;
+
+                // Insertar el mensaje de error debajo del contenedor principal
+                divContainer.insertAdjacentHTML('afterend', mensajeError);
+
+                return; // Detener ejecución si el monto no es válido
+            }
+
 
             // Crear el objeto datosCorte
             const datosCorte = [{
@@ -802,7 +842,7 @@ if (isset($_GET['id'])) {
                         corte.minutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
                         corte.tarifa = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
                         corte.costo = corte.minutos * corte.tarifa; // Recalcular el costo
-
+                        
                         // Actualizar las celdas de la fila con los nuevos valores
                         nuevaFila.cells[1].textContent = corte.minutos; // Minutos
                         nuevaFila.cells[2].textContent = corte.tarifa; // Costo x Minuto
@@ -1379,7 +1419,27 @@ if (isset($_GET['id'])) {
             document.getElementById('btnAgregarPloteo').addEventListener('click', function () {
                 const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
                 const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
+                
+                const inputMonto = document.getElementById('monto_ploteo');
+                const mensajeErrorExistente = document.querySelector('.error-message');
+                if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                inputMonto.classList.remove('error-input');
 
+                // Validar que el monto haya sido ingresado y sea mayor a 0
+                if (isNaN(montoPloteo) || montoPloteo <= 0) {
+                    // Añadir clase para resaltar el error
+                    inputMonto.classList.add('error-input');
+
+                    // Crear mensaje de error
+                    const mensajeError = document.createElement('div');
+                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                    mensajeError.classList.add('error-message');
+
+                    // Insertar mensaje debajo del input
+                    inputMonto.parentNode.appendChild(mensajeError);
+
+                    return; // Detener ejecución si el monto no es válido
+                }
 
                 // Si no estamos editando, agregar un nuevo ploteo
                 const datosPloteo = [{
@@ -1496,6 +1556,28 @@ if (isset($_GET['id'])) {
                     document.getElementById('btnAgregarploteoEditar').addEventListener('click', function () {
                         const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
                         const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
+                        
+                        const inputMonto = document.getElementById('monto_ploteoeditar');
+                        const mensajeErrorExistente = document.querySelector('.error-message');
+                        if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                        inputMonto.classList.remove('error-input');
+
+                        // Validar que el monto haya sido ingresado y sea mayor a 0
+                        if (isNaN(montoPloteo) || montoPloteo <= 0) {
+                            // Añadir clase para resaltar el error
+                            inputMonto.classList.add('error-input');
+
+                            // Crear mensaje de error
+                            const mensajeError = document.createElement('div');
+                            mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                            mensajeError.classList.add('error-message');
+
+                            // Insertar mensaje debajo del input
+                            inputMonto.parentNode.appendChild(mensajeError);
+
+                            return; // Detener ejecución si el monto no es válido
+                        }
+                        
                         // Actualizamos los valores de la fila existente
                         ploteoEditando.cantidad = cantidadPloteos;
                         ploteoEditando.subtotal = montoPloteo;
@@ -1585,6 +1667,28 @@ if (isset($_GET['id'])) {
             document.getElementById('btnAgregarImpresion').addEventListener('click', function () {
                 const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
                 const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
+                
+                const inputMonto = document.getElementById('monto_impresion');
+                const mensajeErrorExistente = document.querySelector('.error-message');
+                if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                inputMonto.classList.remove('error-input');
+
+                // Validar que el monto haya sido ingresado y sea mayor a 0
+                if (isNaN(montoImpresion) || montoImpresion <= 0) {
+                    // Añadir clase para resaltar el error
+                    inputMonto.classList.add('error-input');
+
+                    // Crear mensaje de error
+                    const mensajeError = document.createElement('div');
+                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                    mensajeError.classList.add('error-message');
+
+                    // Insertar mensaje debajo del input
+                    inputMonto.parentNode.appendChild(mensajeError);
+
+                    return; // Detener ejecución si el monto no es válido
+                }
+
                 // Si no estamos editando, agregar una nueva impresión
                 const datosImpresion = [{
                     id: '0', // ID de la impresión
@@ -1693,7 +1797,27 @@ if (isset($_GET['id'])) {
                     document.getElementById('btnAgregarimpresionEditar').addEventListener('click', function () {
                         const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
                         const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
+                        
+                        const inputMonto = document.getElementById('monto_impresionEditar');
+                        const mensajeErrorExistente = document.querySelector('.error-message');
+                        if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                        inputMonto.classList.remove('error-input');
 
+                        // Validar que el monto haya sido ingresado y sea mayor a 0
+                        if (isNaN(montoImpresion) || montoImpresion <= 0) {
+                            // Añadir clase para resaltar el error
+                            inputMonto.classList.add('error-input');
+
+                            // Crear mensaje de error
+                            const mensajeError = document.createElement('div');
+                            mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                            mensajeError.classList.add('error-message');
+
+                            // Insertar mensaje debajo del input
+                            inputMonto.parentNode.appendChild(mensajeError);
+
+                            return; // Detener ejecución si el monto no es válido
+                        }
                         // Actualizamos los valores de la fila existente
                         impresionEditando.cantidad = cantidadImpresion;
                         impresionEditando.subtotal = montoImpresion;
@@ -1782,6 +1906,27 @@ if (isset($_GET['id'])) {
             document.getElementById('btnAgregarescaneo').addEventListener('click', function () {
                 const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
                 const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
+
+                const inputMonto = document.getElementById('monto_escaneo');
+                const mensajeErrorExistente = document.querySelector('.error-message');
+                if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                inputMonto.classList.remove('error-input');
+
+                // Validar que el monto haya sido ingresado y sea mayor a 0
+                if (isNaN(montoEscaneo) || montoEscaneo <= 0) {
+                    // Añadir clase para resaltar el error
+                    inputMonto.classList.add('error-input');
+
+                    // Crear mensaje de error
+                    const mensajeError = document.createElement('div');
+                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                    mensajeError.classList.add('error-message');
+
+                    // Insertar mensaje debajo del input
+                    inputMonto.parentNode.appendChild(mensajeError);
+
+                    return; // Detener ejecución si el monto no es válido
+                }
 
                 const datosEscaneo = [{
                     id: '0', // ID del escaneo
@@ -1897,7 +2042,28 @@ if (isset($_GET['id'])) {
                     document.getElementById('btnAgregarescaneoEditar').addEventListener('click', function () {
                         const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
                         const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
+                        
+                        const inputMonto = document.getElementById('monto_escaneoEditar');
+                        const mensajeErrorExistente = document.querySelector('.error-message');
+                        if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                        inputMonto.classList.remove('error-input');
 
+                        // Validar que el monto haya sido ingresado y sea mayor a 0
+                        if (isNaN(montoEscaneo) || montoEscaneo <= 0) {
+                            // Añadir clase para resaltar el error
+                            inputMonto.classList.add('error-input');
+
+                            // Crear mensaje de error
+                            const mensajeError = document.createElement('div');
+                            mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                            mensajeError.classList.add('error-message');
+
+                            // Insertar mensaje debajo del input
+                            inputMonto.parentNode.appendChild(mensajeError);
+
+                            return; // Detener ejecución si el monto no es válido
+                        }
+                
                         // Actualizamos los valores de la fila existente
                         escaneoEditando.cantidad = cantidadEscaneos;
                         escaneoEditando.subtotal = montoEscaneo;
