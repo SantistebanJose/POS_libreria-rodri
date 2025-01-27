@@ -320,7 +320,7 @@ if (isset($_GET['id'])) {
                                     <button class="nav-link" id="btnAbrirModalEscaneo" >Escaneo</button>
                                 </li>
                                 <li class="nav-item">
-                                    <button class="nav-link" id="btnAbrirModalSolo" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Solo Corte</button>
+                                    <button class="nav-link" id="btnAbrirModalSolo" >Solo Corte</button>
                                 </li>
                             </ul>
                         </div>

@@ -34,6 +34,14 @@ function controladorVentaCorte($accion)
             $id_rel_articulo = $_POST["id_rel_articulo"];
             fn_eliminar_movimiento($id_rel_articulo);
             break;
+        case 'EDITARARTICULO':
+            $data = json_decode($_POST["data"], true);
+            fn_editar_articulo($data);
+            break;
+        case 'EDITARMOVIMIENTO':
+            $data = json_decode($_POST["data"], true);
+            fn_editar_movimiento($data);
+            break;
     }
 }
 
@@ -337,6 +345,142 @@ function fn_eliminar_movimiento($id_rel_articulo) {
         // Si hay un error, hacer rollback de la transacción
         $conectar->rollBack();
         error_log("Error al eliminar movimiento: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+
+function fn_editar_articulo($datos = array())
+{
+    global $conectar;
+
+    try {
+        // Iniciar la transacción
+        $conectar->beginTransaction();
+
+        // Obtener la cantidad actual del artículo en la tabla
+        $orden = $conectar->prepare("SELECT cantidad, sub_total FROM rel_venta_articulo WHERE id = :id_rel_articulo");
+        $orden->bindParam(":id_rel_articulo", $datos['rel_venta_articulo_id'], PDO::PARAM_INT);
+        $orden->execute();
+        $articulo_actual = $orden->fetch(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+        $cantidad_actual = $articulo_actual['cantidad'];
+        $sub_total_anterior = $articulo_actual['sub_total'];
+
+        // Si 'cantidad' tiene un valor, calcular la diferencia
+        $diferencia_cantidad = null;
+        if (!is_null($datos['cantidad'])) {
+            $diferencia_cantidad = $datos['cantidad'] - $cantidad_actual;
+        }
+
+        // Actualizar los datos del artículo
+        $orden = $conectar->prepare("UPDATE rel_venta_articulo 
+                                     SET minutos = :minutos,
+                                         costo_por_minuto = :costo_por_minuto,
+                                         precio_unitario_articulo = :precio_unitario,
+                                         cantidad = :cantidad,
+                                         sub_total = :sub_total,
+                                         movimiento_id = :movimiento_id
+                                     WHERE id = :id_rel_articulo");
+
+        $minutos = ($datos['minutos'] === '-' || $datos['minutos'] === null) ? null : intval($datos['minutos']);
+        $costo_por_minuto = ($datos['costo_por_minuto'] === '-' || $datos['costo_por_minuto'] === null) ? null : floatval($datos['costo_por_minuto']);
+        $precioUnitario = $datos['precio_unitario_articulo'] === '-' ? null : $datos['precio_unitario_articulo'];
+
+        $orden->bindParam(":minutos", $minutos, $minutos === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $orden->bindParam(":costo_por_minuto", $costo_por_minuto, $costo_por_minuto === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden->bindParam(":precio_unitario", $precioUnitario, PDO::PARAM_STR);
+        $orden->bindParam(":cantidad", $datos['cantidad'], is_null($datos['cantidad']) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $orden->bindParam(":sub_total", $datos['sub_total'], PDO::PARAM_STR);
+        $orden->bindParam(":movimiento_id", $datos['movimiento_id'], PDO::PARAM_INT);
+        $orden->bindParam(":id_rel_articulo", $datos['rel_venta_articulo_id'], PDO::PARAM_INT);
+
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Si hay diferencia en la cantidad, ajustar el stock del artículo
+        if (!is_null($diferencia_cantidad)) {
+            $orden = $conectar->prepare("UPDATE articulo 
+                                         SET stock = stock - :diferencia_cantidad 
+                                         WHERE id = :articulo_id");
+            $orden->bindParam(":diferencia_cantidad", $diferencia_cantidad, PDO::PARAM_INT);
+            $orden->bindParam(":articulo_id", $datos['articulo_id'], PDO::PARAM_INT);
+            $orden->execute();
+            $orden->closeCursor();
+        }
+
+        // Actualizar el total de la venta
+        $diferencia_sub_total = $datos['sub_total'] - $sub_total_anterior;
+
+        $orden = $conectar->prepare("UPDATE venta 
+                                     SET total = total + :diferencia_sub_total 
+                                     WHERE id = :venta_id");
+        $orden->bindParam(":diferencia_sub_total", $diferencia_sub_total, PDO::PARAM_STR);
+        $orden->bindParam(":venta_id", $datos['venta_id'], PDO::PARAM_INT);
+        $orden->execute();
+        $orden->closeCursor();
+        // Confirmar la transacción
+        $conectar->commit();
+
+        echo json_encode(["success" => true]);
+
+    } catch (\Throwable $th) {
+        // Rollback si hay un error
+        $conectar->rollBack();
+        error_log("Error en editar articulo: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+
+function fn_editar_movimiento($datos = array())
+{
+    global $conectar;
+
+    try {
+        // Iniciar la transacción
+        $conectar->beginTransaction();
+        $orden = $conectar->prepare("SELECT sub_total FROM rel_venta_articulo WHERE id = :id_rel_articulo");
+        $orden->bindParam(":id_rel_articulo", $datos['rel_venta_articulo_id'], PDO::PARAM_INT);
+        $orden->execute();
+        $articulo_actual = $orden->fetch(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+        $sub_total_anterior = $articulo_actual['sub_total'];
+        // Actualizar los datos del artículo
+        $orden = $conectar->prepare("UPDATE rel_venta_articulo 
+                                     SET 
+                                         cantidad = :cantidad,
+                                         sub_total = :sub_total
+                                     WHERE id = :id_rel_articulo");
+
+        $orden->bindParam(":cantidad", $datos['cantidad'], is_null($datos['cantidad']) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $orden->bindParam(":sub_total", $datos['sub_total'], PDO::PARAM_STR);
+        $orden->bindParam(":id_rel_articulo", $datos['rel_venta_articulo_id'], PDO::PARAM_INT);
+
+        $orden->execute();
+        $orden->closeCursor();
+        // Actualizar el total de la venta
+        $diferencia_sub_total = $datos['sub_total'] - $sub_total_anterior;
+
+        $orden = $conectar->prepare("UPDATE venta 
+                                     SET total = total + :diferencia_sub_total 
+                                     WHERE id = :venta_id");
+        $orden->bindParam(":diferencia_sub_total", $diferencia_sub_total, PDO::PARAM_STR);
+        $orden->bindParam(":venta_id", $datos['venta_id'], PDO::PARAM_INT);
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Confirmar la transacción
+        $conectar->commit();
+
+        echo json_encode(["success" => true]);
+
+    } catch (\Throwable $th) {
+        // Rollback si hay un error
+        $conectar->rollBack();
+        error_log("Error en editar articulo: " . $th->getMessage());
         echo json_encode(["error" => true, "message" => $th->getMessage()]);
     }
 }

@@ -110,75 +110,10 @@ if (isset($_GET['id'])) {
                             <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <div class="col-12 p-4 bg-light rounded">
-                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
-                            <div class="mb-4">
-                                <!-- Minutos Corte -->
-                                <div class="text-center" style="flex: 1;">
-                                <p class="mb-1">Minutos Corte</p>
-                                <div class="d-flex justify-content-center align-items-center mb-2">
-                                    <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
-                                    <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
-                                    <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
-                                </div>
-                                </div>
-                                
-                                <!-- Línea divisoria -->
-                                <hr>
-                                
-                                <!-- Precio Corte -->
-                                <div class="text-center" style="flex: 1;">
-                                <p class="mb-1">Precio Corte</p>
-                                <div class="w-100 d-flex justify-content-center mb-1">
-                                    <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
-                                </div>
-                                <div class="d-flex justify-content-center">
-                                    <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
-                                    <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
-                                    <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
-                                    <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
-                                </div>
-                                </div>
-                            </div>
-                            </div>
+                        <div class="modal-body" id="contenido_solo_corte">
+                            
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-
-
-                <!-- Modal -->
-                <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="miModalLabel">Agregar Corte de Material</h5>
-                                <button type="button" id="btn_close" class="btn-close" aria-label="Close">X</button>
-                            </div>
-
-                            <!-- Modal Body -->
-                            <div class="modal-body">
-                                <!-- Acordeones dinámicos -->
-                                <div class="accordion" id="acordeonContainer">
-                                    <!-- Se llenará dinámicamente -->
-                                </div>
-                                <!-- Sección global -->
-                                <div id="globalContainer" class="mt-3">
-                                    <!-- Se llenará dinámicamente -->
-                                </div>
-                            </div>
-
-                            <!-- Modal Footer -->
-                            <div class="modal-footer d-flex justify-content-between">
-                                <button type="button" class="btn btn-secondary" id="btn_no">Cancelar</button>
-                                <button type="button" class="btn btn-primary" id="btn_si">Cortar</button>
-                            </div>
-
+                       
                         </div>
                     </div>
                 </div>
@@ -1394,95 +1329,116 @@ if (isset($_GET['id'])) {
 
 <!-- SOLO CORTE -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener("DOMContentLoaded", function () {
+        // Escuchar el evento del botón para abrir el modal
+        document.getElementById("btnAbrirModalSolo").addEventListener("click", function (event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto
 
-        // Registrar eventos para los botones de incremento y decremento (fuera del modal)
-        document.getElementById("btnSumarSoloCorte").addEventListener("click", function() {
+            // Seleccionar el contenedor del contenido dinámico
+            const contenidoCorte = document.getElementById("contenido_solo_corte");
+
+            // Generar el contenido dinámico, incluyendo el botón "Agregar"
+            contenidoCorte.innerHTML = `
+                <div class="col-12 p-4 bg-light rounded">
+                    <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                    <div class="mb-4">
+                        <!-- Minutos Corte -->
+                        <div class="text-center" style="flex: 1;">
+                            <p class="mb-1">Minutos Corte</p>
+                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
+                                <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
+                                <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Línea divisoria -->
+                        <hr>
+                        
+                        <!-- Precio Corte -->
+                        <div class="text-center" style="flex: 1;">
+                            <p class="mb-1">Precio Corte</p>
+                            <div class="w-100 d-flex justify-content-center mb-1">
+                                <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Botón Agregar -->
+                    <div class="text-center mt-3">
+                        <button id="btnAgregarSoloCorte" class="btn btn-secondary">Agregar</button>
+                    </div>
+                </div>
+            `;
+
+            // Resetear valores iniciales
+            document.getElementById("cantidad_solocorte").value = 0;
+            document.getElementById("precioSoloCorte").value = 1.5;
+
+
+            const modalElement = document.getElementById("modalSoloCorte");
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: "static", // Evita que se cierre al hacer clic fuera
+                keyboard: false,   // Evita que se cierre con la tecla 'Esc'
+            });
+            modal.show(); // Mostrar el modal
+            // Asignar eventos a los elementos generados dinámicamente
+            asignarEventosSoloCorte();
+        });
+    });
+
+    // Función para asignar eventos a los botones dinámicos
+    function asignarEventosSoloCorte() {
+        // Eventos para sumar y restar minutos
+        document.getElementById("btnSumarSoloCorte").addEventListener("click", function () {
             let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
-            if(cantidad == 0){
-                document.getElementById("cantidad_solocorte").value = 10;
-            }else{
-                document.getElementById("cantidad_solocorte").value = cantidad + 1;
-            }
+            document.getElementById("cantidad_solocorte").value = cantidad + 1;
         });
 
-        document.getElementById("btnRestarSoloCorte").addEventListener("click", function() {
+        document.getElementById("btnRestarSoloCorte").addEventListener("click", function () {
             let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
             if (cantidad > 0) {
                 document.getElementById("cantidad_solocorte").value = cantidad - 1;
             }
         });
 
-        // Para los incrementos en el precio
-        document.getElementById("btnIncremento05SoloCorte").addEventListener("click", function() {
+        // Eventos para incrementar precio
+        document.getElementById("btnIncremento05SoloCorte").addEventListener("click", function () {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 0.5).toFixed(2);
         });
 
-        document.getElementById("btnIncremento1SoloCorte").addEventListener("click", function() {
+        document.getElementById("btnIncremento1SoloCorte").addEventListener("click", function () {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 1).toFixed(2);
         });
 
-        document.getElementById("btnIncremento2SoloCorte").addEventListener("click", function() {
+        document.getElementById("btnIncremento2SoloCorte").addEventListener("click", function () {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 2).toFixed(2);
         });
 
-        document.getElementById("btnIncremento5SoloCorte").addEventListener("click", function() {
+        document.getElementById("btnIncremento5SoloCorte").addEventListener("click", function () {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 5).toFixed(2);
         });
 
-        // Abrir el modal y manejar el evento de agregar corte
-        document.getElementById('btnAbrirModalSolo').addEventListener('click', function(event) {
-            event.preventDefault();  // Prevenir el comportamiento por defecto del botón
-            // Seleccionar el botón "Agregar"
-            const btn_agregar = document.getElementById('btn_agregar_solocorte');
+        // Evento para el botón "Agregar"
+        document.getElementById("btnAgregarSoloCorte").addEventListener("click", agregarDatosCorte);
+    }
 
-            // Eliminar cualquier escucha de eventos previa
-            btn_agregar.removeEventListener("click", agregarDatosCorte);
-            
-            let navLinks = document.querySelectorAll(".nav-link");
-
-            // Remover la clase 'active' de todas las pestañas
-            navLinks.forEach(function(link) {
-                link.classList.remove("active");
-            });
-
-            // Desactivar todos los panes (contenido de las pestañas)
-            let tabPanes = document.querySelectorAll(".tab-pane");
-            tabPanes.forEach(function(pane) {
-                pane.classList.remove("show", "active");
-            });
-            // Mostrar el modal de Solo Corte
-            const modalElement = document.getElementById('modalSoloCorte');
-            const modal = new bootstrap.Modal(modalElement, {
-                backdrop: 'static', // Evita que se cierre al hacer clic fuera
-                keyboard: false // Evita que se cierre con la tecla 'Esc'
-            });
-
-            document.getElementById('cantidad_solocorte').value = '0';
-            document.getElementById('precioSoloCorte').value = '1.5';
-
-
-            // Agregar una nueva escucha de eventos para agregar un corte
-            btn_agregar.addEventListener("click", agregarDatosCorte);
-            modal.show(); // Muestra el modal
-        });
-
-        // Función que maneja el evento de agregar datos
-        
-
-        
-
-    });
-
+    // Función para manejar el evento de agregar datos
     async function agregarDatosCorte() {
-        var cantidadMinutos = parseInt(document.getElementById('cantidad_solocorte').value) || 0;
-        const tarifa = parseFloat(document.getElementById('precioSoloCorte').value) || 0;
+        const cantidadMinutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
+        const tarifa = parseFloat(document.getElementById("precioSoloCorte").value) || 0;
+
         // Crear el objeto datosCorte
-        const datosCorte = [{
+        const datosCorte = {
             id: '0', // Id del corte
             minutos: cantidadMinutos, // Minutos registrados
             costo_por_minuto: tarifa, // Costo por minuto
@@ -1491,55 +1447,65 @@ if (isset($_GET['id'])) {
             id_movimiento: 6,
             precio_venta: null,
             cantidad: null,
-        }];
+        };
 
-        const corte = datosCorte[0];
-        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+        const venta_id_lbl = document.getElementById("idVentaReserva").textContent;
 
         try {
-            // Espera a que fn_insert_movimiento se complete
-            const response = await fn_adicionar_articulo(venta_id_lbl, corte);
+            // Llamar a la función para insertar el movimiento
+            const response = await fn_adicionar_articulo(venta_id_lbl, datosCorte);
             console.log("Movimiento insertado con éxito:", response);
 
-            // Si tiene éxito, continúa con el resto del proceso                
-            document.getElementById('cantidad_solocorte').value = '0';
-            document.getElementById('precioSoloCorte').value = '1.5'; // Valor inicial
+            // Resetear valores
+            document.getElementById("cantidad_solocorte").value = 0;
+            document.getElementById("precioSoloCorte").value = 1.5;
 
             // Ocultar el modal
-            const modalElement = document.getElementById('modalSoloCorte');
+            const modalElement = document.getElementById("modalSoloCorte");
             const modal = bootstrap.Modal.getInstance(modalElement);
             modal.hide();
 
-
+            // Actualizar la venta
             fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-
         } catch (error) {
-            // Manejar el error
             console.error("Error al insertar movimiento:", error.message);
             alert("Error al procesar el movimiento: " + error.message);
         }
-       
-           
-
-           
     }
-
 </script>
+
 <!--Cargar Datos tabla-->
 <script>
     let datosDeVenta = [];
     let datosArticuloNuevos = [];
 
-    function fn_limpiar_modal() {
-        const acordeonContainer = document.getElementById('acordeonContainer');
-        const globalContainer = document.getElementById('globalContainer');
+    function fn_obtener_total () {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+        var filas = tabla.getElementsByTagName("tr");
+        var totalCorte = 0;
+        var totalArticulos = 0;
+        var total = 0;
 
-        // Limpiar los contenedores donde se muestran los cortes y cantidades
-        acordeonContainer.innerHTML = "";
-        globalContainer.innerHTML = "";
+        for (var i = 0; i < filas.length; i++) {
+            var celdas = filas[i].getElementsByTagName("td");
+            totalCorte += parseFloat(celdas[3].innerText) || 0;
+            totalArticulos += (parseFloat(celdas[5].innerText) * parseFloat(celdas[6].innerText)) || 0;
+            total += parseFloat(celdas[7].innerText) || 0;
+        }
 
+        var lbl_subtotal_cortes = document.getElementById("id_subtotal_cortes");
+        var lbl_subtotal_articulos= document.getElementById("id_subtotal_articulos");
+        var lbl_subtotal_general = document.getElementById("id_subtotal_general");
+
+        lbl_subtotal_cortes.innerText = totalCorte.toFixed(2);
+        lbl_subtotal_articulos.innerText = totalArticulos.toFixed(2);
+        lbl_subtotal_general.innerText = total.toFixed(2);
+
+
+   
 
     }
+
 
     function fn_consultarVenta(datosArticulo) {
         // Limpiar Tabla
@@ -1738,28 +1704,29 @@ if (isset($_GET['id'])) {
                         }
 
                         // Guardar el artículo actual para hacer la modificación posteriormente
-                        document.getElementById("btnConfirmarCantidad").addEventListener('click', function() {
+                        document.getElementById("btnConfirmarCantidad").addEventListener('click', async function() {
                             // Lógica para actualizar cantidad y precios
                             datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
                             datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
                             datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
-
-                            // Actualizamos la celda de cantidad y subtotal en la tabla
-                            nuevaFila.cells[5].textContent = datosArticulo["cantidad"];
-                            nuevaFila.cells[1].textContent = datosArticulo["minutos"] || '-';
-                            nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"] || '-';
-                            nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] || '-';
+                            let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
                             // Recalcular el subtotal considerando el precio de corte y minutos de corte
                             let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_unitario_articulo"];
                             subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
                             subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;
+                            datosArticulo["sub_total"] = subtotal;
+                            console.log(datosArticulo);
 
-                            nuevaFila.cells[7].textContent = subtotal.toFixed(2);
+                            const response = await fn_editar_articulo(datosArticulo);
+                            console.log(response);
+
+                            
+                            fn_consultarVenta([{ venta_id: venta_id_lbl }]);
 
                             // Cerramos el modal
                             $('#modalCantidad').modal('hide');
-                            fn_obtener_total(); // Recalcular los totales después de editar
+
                         });
 
                         // Mostrar el modal
@@ -1809,23 +1776,26 @@ if (isset($_GET['id'])) {
                     const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
 
-                    document.getElementById('btnAgregarploteoEditar').addEventListener('click', function () {
+                    document.getElementById('btnAgregarploteoEditar').addEventListener('click',async function () {
                         const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
                         const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
+                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+
                         datosArticulo["cantidad"] = cantidadPloteos;
                         datosArticulo["sub_total"] =  montoPloteo.toFixed(2);
-                        // Actualizamos la fila de la tabla
-                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"]; // Cantidad
-                        nuevaFila.cells[7].textContent = datosArticulo["sub_total"]; // Subtotal
-
                         // Limpiar los campos
                         document.getElementById('input_cantidad_ploteoEditar').value = 1;
                         document.getElementById('monto_ploteoeditar').value = 0;
 
+                        const response = await fn_editar_movimiento(datosArticulo);
+                        console.log(response);
+
+                            
+                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
                         // Resetear el botón y quitar la referencia al ploteo editado
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
-                        fn_obtener_total();
                     });
 
                 });
@@ -1873,24 +1843,26 @@ if (isset($_GET['id'])) {
                     const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
 
-                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', function () {
+                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', async function () {
                         const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
                         const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
+                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
                         datosArticulo["cantidad"] = cantidadImpresion;
                         datosArticulo["sub_total"] =  montoImpresion.toFixed(2);
-
-                        // Actualizamos la fila de la tabla
-                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"]; // Cantidad
-                        nuevaFila.cells[7].textContent = datosArticulo["sub_total"]; // Subtotal
 
                         // Limpiar los campos
                         document.getElementById('input_numero_impresionEditar').value = 1; // Reset cantidad
                         document.getElementById('monto_impresionEditar').value = 0; // Reset monto
 
+                        const response = await fn_editar_movimiento(datosArticulo);
+                        console.log(response);
+                            
+                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
-                        fn_obtener_total();
+
                     });
 
                 });
@@ -1937,30 +1909,33 @@ if (isset($_GET['id'])) {
                     const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
    
-                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', function () {
+                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', async function () {
                         const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
                         const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
+                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
                         datosArticulo["cantidad"] = cantidadEscaneos;
                         datosArticulo["sub_total"] =  montoEscaneo.toFixed(2);
-
-                        // Actualizamos la fila de la tabla
-                        nuevaFila.cells[5].textContent = datosArticulo["cantidad"]; // Cantidad
-                        nuevaFila.cells[7].textContent = datosArticulo["sub_total"]; // Subtotal
 
                         // Limpiar los campos
                         document.getElementById('input_numero_escaneoEditar').value = 1; // Reset cantidad
                         document.getElementById('monto_escaneoEditar').value = 0; // Reset monto
 
+                        const response = await fn_editar_movimiento(datosArticulo);
+                        console.log(response);
+                            
+                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
-                        fn_obtener_total();
+
                     });
                 });
                 
                 break;
             case 6:
                 botonEditar.addEventListener("click", () => {
+                    
                     // Llenamos el modal con los datos del corte
                     document.getElementById("cantidad_solocorte").value = datosArticulo["minutos"] || 0; // Minutos corte
                     document.getElementById("precioSoloCorte").value = datosArticulo["costo_por_minuto"] || 1.5; // Precio corte
@@ -1974,38 +1949,70 @@ if (isset($_GET['id'])) {
 
                     modal.show();
 
-                    // El botón de agregar se convierte en "Actualizar" para modificar los valores
-                    const btn_agregar = document.getElementById('btn_agregar_solocorte');
-                    const nuevoBtn = btn_agregar.cloneNode(true); // Clona el botón
-                    btn_agregar.parentNode.replaceChild(nuevoBtn, btn_agregar);
-                    nuevoBtn.textContent = 'Actualizar'; // Cambiar texto del botón
+                    const contenidoCorte = document.getElementById("contenido_solo_corte");
 
+                    // Generamos el contenido dinámico para mostrar el formulario de corte
+                    contenidoCorte.innerHTML = `
+                        <div class="col-12 p-4 bg-light rounded">
+                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                            <div class="mb-4">
+                                <!-- Minutos Corte -->
+                                <div class="text-center" style="flex: 1;">
+                                    <p class="mb-1">Minutos Corte</p>
+                                    <div class="d-flex justify-content-center align-items-center mb-2">
+                                        <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
+                                        <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="${datosArticulo.minutos}" style="width: 80px; font-size: 1.2rem;" />
+                                        <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Línea divisoria -->
+                                <hr>
+                                
+                                <!-- Precio Corte -->
+                                <div class="text-center" style="flex: 1;">
+                                    <p class="mb-1">Precio Corte</p>
+                                    <div class="w-100 d-flex justify-content-center mb-1">
+                                        <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="${datosArticulo.costo_por_minuto}" style="width: 90px; font-size: 1.2rem;" />
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                        <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                        <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                        <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Botón Actualizar -->
+                            <div class="text-center mt-3">
+                                <button id="btnActualizarSoloCorte" class="btn btn-secondary">Actualizar</button>
+                            </div>
+                        </div>
+                    `;
+
+                    // Crear el botón "Actualizar" dinámicamente
+                    const btnActualizar = document.getElementById("btnActualizarSoloCorte");
                     // Eliminar el evento original del botón de "Agregar"
-                    nuevoBtn.removeEventListener("click", agregarDatosCorte);
 
                     // Actualizar el corte en la tabla cuando se presiona "Actualizar"
-                    nuevoBtn.addEventListener("click", function() {
+                    btnEditar.addEventListener("click",async function() {
                         datosArticulo["minutos"] = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
                         datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
+                        datosArticulo["sub_total"] = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] ;
+                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
-                        // Actualizar las celdas de la fila con los nuevos valores
-                        nuevaFila.cells[1].textContent = datosArticulo["minutos"]; // Minutos
-                        nuevaFila.cells[2].textContent = datosArticulo["costo_por_minuto"]; // Costo x Minuto
-                        nuevaFila.cells[3].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"]; // Costo total
+                        const response = await fn_editar_articulo(datosArticulo);
+                        console.log(response);
 
-                        // Recalcular el subtotal
-                        nuevaFila.cells[7].textContent = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"]; // Subtotal
-
-                        // Limpiar los valores del formulario
                         
-                        // Cerrar el modal
+                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
                         modal.hide();
-                        fn_obtener_total(); // Recalcular los totales después de editar
 
                         // Volver a colocar el botón "Agregar" y restaurar el evento de agregar
-                        nuevoBtn.textContent = 'Agregar';
-                        nuevoBtn.addEventListener("click", agregarDatosCorte);
+                       
                     });
+
+
                 });
                 break;
             default:
@@ -2043,215 +2050,165 @@ if (isset($_GET['id'])) {
 <!--Agregar desde tabla Modal-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-            const botonesSumar = document.querySelectorAll('[id^="add_"]');
-            const botonesRestar = document.querySelectorAll('[id^="rest_"]');
+        const botonesSumar = document.querySelectorAll('[id^="add_"]');
+        const botonesRestar = document.querySelectorAll('[id^="rest_"]');
 
-            botonesSumar.forEach(boton => {
-                boton.addEventListener('click', function() {
-                    const id = boton.id.split('_')[1];
-                    const spanCantidad = document.getElementById(`cantidad_${id}`);
-                    let cantidad = parseInt(spanCantidad.textContent);
-                    cantidad++;
-                    spanCantidad.textContent = cantidad;
-                });
-            });
-
-
-            botonesRestar.forEach(boton => {
-                boton.addEventListener('click', function() {
-                    const id = boton.id.split('_')[1];
-                    const spanCantidad = document.getElementById(`cantidad_${id}`);
-                    let cantidad = parseInt(spanCantidad.textContent);
-                    if (cantidad > 1) {
-                        cantidad--;
-                        spanCantidad.textContent = cantidad;
-                    }
-                });
+        botonesSumar.forEach(boton => {
+            boton.addEventListener('click', function() {
+                const id = boton.id.split('_')[1];
+                const spanCantidad = document.getElementById(`cantidad_${id}`);
+                let cantidad = parseInt(spanCantidad.textContent);
+                cantidad++;
+                spanCantidad.textContent = cantidad;
             });
         });
 
-        function fn_agregar_venta(datosArticulo) {
-            //if (verificarSiArticuloExiste(datosArticulo['id'])) {
-               // Swal.fire({
-                //    icon: 'info',
-                  //  title: '¡Artículo ya registrado!',
-                    //text: 'Este artículo ya está en la tabla.',
-                    //confirmButtonText: 'Aceptar'
-                //});
-            //} else {
-                const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
-
-                // Configurar el nombre del artículo
-                const nombreArticulo = document.getElementById('nombreArticulo');
-                nombreArticulo.textContent = `Artículo: ${datosArticulo.articulo || "Sin nombre"}`;
-
-                // Resetear valores del modal
-                const inputCantidad = document.getElementById('inputCantidad');
-                const seccionCorte = document.getElementById('seccionCorte');
-                const cantidadCorte = document.getElementById('cantidadCorte');
-                const precioCorte = document.getElementById('precioCorte');
-
-                inputCantidad.value = 1; // Cantidad por defecto
-                cantidadCorte.value = 0; // Resetear minutos corte
-                precioCorte.value = 0; // Precio por defecto
-
-                // Mostrar u ocultar la sección de corte según datosArticulo.corte
-                if (datosArticulo.corte) {
-                    precioCorte.value = 1.5;
-                    seccionCorte.style.display = 'block';
-                } else {
-                    seccionCorte.style.display = 'none';
+        botonesRestar.forEach(boton => {
+            boton.addEventListener('click', function() {
+                const id = boton.id.split('_')[1];
+                const spanCantidad = document.getElementById(`cantidad_${id}`);
+                let cantidad = parseInt(spanCantidad.textContent);
+                if (cantidad > 1) {
+                    cantidad--;
+                    spanCantidad.textContent = cantidad;
                 }
+            });
+        });
+    });
 
-                // Configurar botones de cantidad
-                document.getElementById('btnRestarCantidad').onclick = () => {
-                    let cantidad = parseInt(inputCantidad.value, 10);
-                    
-                    // Restar si la cantidad es mayor a 1
-                    if (cantidad > 1) {
-                        inputCantidad.value = cantidad - 1;  // Restar cantidad
-                    }
+    function fn_agregar_venta(datosArticulo) {
+        const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
 
-                    // Verificar si la cantidad es 1 y el artículo tiene corte
-                    if (inputCantidad.value == 1 && datosArticulo.corte) {
-                        precioCorte.value = 1.5;
-                        seccionCorte.style.display = 'block';  // Mostrar sección de corte
-                        
-                    } else if (inputCantidad.value > 1) {
-                        // Ocultar sección de corte si la cantidad es mayor a 1
-                        precioCorte.value = 0;
-                        seccionCorte.style.display = 'none';
-                    }
-                };
+        // Resetear valores y contenido del modal
+        const nombreArticulo = document.getElementById('nombreArticulo');
+        nombreArticulo.textContent = `Artículo: ${datosArticulo.articulo || "Sin nombre"}`;
 
-                document.getElementById('btnSumarCantidad').onclick = () => {
-                    let cantidad = parseInt(inputCantidad.value, 10);
-                    inputCantidad.value = cantidad + 1;
-                    if (cantidad + 1 === 1 && datosArticulo.corte) {
-                        precioCorte.value = 1.5;
-                        seccionCorte.style.display = 'block';
-                    } else {
-                        precioCorte.value = 0;
-                        seccionCorte.style.display = 'none';
-                    }
-                };
+        const inputCantidad = document.getElementById('inputCantidad');
+        const seccionCorte = document.getElementById('seccionCorte');
+        const cantidadCorte = document.getElementById('cantidadCorte');
+        const precioCorte = document.getElementById('precioCorte');
 
-                // Configurar botones de corte
-                document.getElementById('btnRestarCorte').onclick = () => {
-                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
-                    if (corte > 0) cantidadCorte.value = corte - 1; // Cambié textContent por value
-                };
+        inputCantidad.value = 1; // Cantidad por defecto
+        cantidadCorte.value = 0; // Resetear minutos corte
+        precioCorte.value = 0; // Precio por defecto
 
-                document.getElementById('btnSumarCorte').onclick = () => {
-                    let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
-                    if(corte == 0){
-                        cantidadCorte.value = 10; // Cambié textContent por value
-                    } else {
-                        cantidadCorte.value = corte + 1; // Cambié textContent por value
-                    }
-                };
+        // Limpiar los eventos antes de agregar nuevos
+        const btnRestarCantidad = document.getElementById('btnRestarCantidad');
+        const btnSumarCantidad = document.getElementById('btnSumarCantidad');
+        const btnRestarCorte = document.getElementById('btnRestarCorte');
+        const btnSumarCorte = document.getElementById('btnSumarCorte');
+        const btnIncremento05 = document.getElementById('btnIncremento05');
+        const btnIncremento1 = document.getElementById('btnIncremento1');
+        const btnIncremento2 = document.getElementById('btnIncremento2');
+        const btnIncremento5 = document.getElementById('btnIncremento5');
+        const btnConfirmarCantidad = document.getElementById('btnConfirmarCantidad');
 
-                // Botones para modificar precio
-                document.getElementById('btnIncremento05').onclick = () => {
-                    precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
-                };
-                document.getElementById('btnIncremento1').onclick = () => {
-                    precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
-                };
-                document.getElementById('btnIncremento2').onclick = () => {
-                    precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
-                };
-                document.getElementById('btnIncremento5').onclick = () => {
-                    precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
-                };
+        // Remover eventos previos para evitar duplicación
+        btnRestarCantidad.removeEventListener('click', restarCantidad);
+        btnSumarCantidad.removeEventListener('click', sumarCantidad);
+        btnRestarCorte.removeEventListener('click', restarCorte);
+        btnSumarCorte.removeEventListener('click', sumarCorte);
+        btnIncremento05.removeEventListener('click', incremento05);
+        btnIncremento1.removeEventListener('click', incremento1);
+        btnIncremento2.removeEventListener('click', incremento2);
+        btnIncremento5.removeEventListener('click', incremento5);
+        btnConfirmarCantidad.removeEventListener('click', confirmarCantidad);
 
-                // Confirmar cantidad y agregar a la tabla
-                document.getElementById('btnConfirmarCantidad').addEventListener('click', async () => {
-                    try {
-                        // Lógica para confirmar cantidad
-                        datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
-                        datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
-                        datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
-                        datosArticulo.id_movimiento = 1;
-
-                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-                        const response = await fn_adicionar_articulo(venta_id_lbl, datosArticulo);
-                        console.log("Movimiento insertado con éxito:", response);
-
-                        modalCantidad.hide();
-                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-                    } catch (error) {
-                        console.error("Error al confirmar cantidad:", error);
-                        alert("Ocurrió un error al agregar el artículo.");
-                    }
-                });
-
-                // Mostrar el modal
-                modalCantidad.show();
+        // Funciones de los botones
+        function restarCantidad() {
+            let cantidad = parseInt(inputCantidad.value, 10);
+            if (cantidad > 1) {
+                inputCantidad.value = cantidad - 1;
             }
-        //}
-
-
-
-    function fn_limpiar_modal() {
-        const acordeonContainer = document.getElementById('acordeonContainer');
-        const globalContainer = document.getElementById('globalContainer');
-
-        // Limpiar los contenedores donde se muestran los cortes y cantidades
-        acordeonContainer.innerHTML = "";
-        globalContainer.innerHTML = "";
-
-
-    }
-
-
-    
-
-
-    function fn_obtener_total () {
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        var filas = tabla.getElementsByTagName("tr");
-        var totalCorte = 0;
-        var totalArticulos = 0;
-        var total = 0;
-
-        for (var i = 0; i < filas.length; i++) {
-            var celdas = filas[i].getElementsByTagName("td");
-            totalCorte += parseFloat(celdas[3].innerText) || 0;
-            totalArticulos += (parseFloat(celdas[5].innerText) * parseFloat(celdas[6].innerText)) || 0;
-            total += parseFloat(celdas[7].innerText) || 0;
-        }
-
-        var lbl_subtotal_cortes = document.getElementById("id_subtotal_cortes");
-        var lbl_subtotal_articulos= document.getElementById("id_subtotal_articulos");
-        var lbl_subtotal_general = document.getElementById("id_subtotal_general");
-
-        lbl_subtotal_cortes.innerText = totalCorte.toFixed(2);
-        lbl_subtotal_articulos.innerText = totalArticulos.toFixed(2);
-        lbl_subtotal_general.innerText = total.toFixed(2);
-
-
-   
-
-    }
-
-    function verificarSiArticuloExiste(idArticulo) {
-        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
-        var filas = tabla.getElementsByTagName("tr");
-
-        for (var i = 0; i < filas.length; i++) {
-            var celdas = filas[i].getElementsByTagName("td");
-            var idFila = celdas[0].textContent; // Suponiendo que el ID está en la primera celda
-
-            if (idFila == idArticulo) {
-                return true; // Si se encuentra una coincidencia, retorna true
+            // Mostrar o esconder la sección de corte según la cantidad
+            if (inputCantidad.value == 1 && datosArticulo.corte) {
+                precioCorte.value = 1.5;
+                seccionCorte.style.display = 'block';
+            } else if (inputCantidad.value > 1) {
+                precioCorte.value = 0;
+                seccionCorte.style.display = 'none';
             }
         }
-        return false; // Si no se encuentra ninguna coincidencia, retorna false
+
+        function sumarCantidad() {
+            let cantidad = parseInt(inputCantidad.value, 10);
+            inputCantidad.value = cantidad + 1;
+            if (cantidad + 1 === 1 && datosArticulo.corte) {
+                precioCorte.value = 1.5;
+                seccionCorte.style.display = 'block';
+            } else {
+                precioCorte.value = 0;
+                seccionCorte.style.display = 'none';
+            }
+        }
+
+        function restarCorte() {
+            let corte = parseInt(cantidadCorte.value, 10);
+            if (corte > 0) cantidadCorte.value = corte - 1;
+        }
+
+        function sumarCorte() {
+            let corte = parseInt(cantidadCorte.value, 10);
+            if(corte == 0) {
+                cantidadCorte.value = 10;
+            } else {
+                cantidadCorte.value = corte + 1;
+            }
+        }
+
+        function incremento05() {
+            precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
+        }
+
+        function incremento1() {
+            precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
+        }
+
+        function incremento2() {
+            precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
+        }
+
+        function incremento5() {
+            precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
+        }
+
+        // Confirmar cantidad y agregar a la tabla
+        async function confirmarCantidad() {
+            try {
+                datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
+                datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
+                datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
+                datosArticulo.id_movimiento = 1;
+
+                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+
+                const response = await fn_adicionar_articulo(venta_id_lbl, datosArticulo);
+                console.log("Movimiento insertado con éxito:", response);
+
+                modalCantidad.hide();
+                fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+            } catch (error) {
+                console.error("Error al confirmar cantidad:", error);
+                alert("Ocurrió un error al agregar el artículo.");
+            }
+        }
+
+        // Asignar los eventos nuevamente después de limpiarlos
+        btnRestarCantidad.addEventListener('click', restarCantidad);
+        btnSumarCantidad.addEventListener('click', sumarCantidad);
+        btnRestarCorte.addEventListener('click', restarCorte);
+        btnSumarCorte.addEventListener('click', sumarCorte);
+        btnIncremento05.addEventListener('click', incremento05);
+        btnIncremento1.addEventListener('click', incremento1);
+        btnIncremento2.addEventListener('click', incremento2);
+        btnIncremento5.addEventListener('click', incremento5);
+        btnConfirmarCantidad.addEventListener('click', confirmarCantidad);
+
+        // Mostrar el modal
+        modalCantidad.show();
     }
-    
 </script>
+
 
 
 <!--Ploteo-->
@@ -2680,6 +2637,46 @@ if (isset($_GET['id'])) {
                 }
             }).done(function (response) {
                 console.log(response);
+                // Resolvemos la promesa con la respuesta de la solicitud
+                resolve(response);
+            }).fail(function (error) {
+                console.error("Error:", error.responseText);
+                // Rechazamos la promesa si hay un error
+                reject(error);
+            });
+        });
+    }
+
+    function fn_editar_articulo(datos) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "POST",
+                url: "logica/clssVentaCorte.php",
+                data: {
+                    "accion": "EDITARARTICULO", // Acción que se realizará en PHP
+                    "data": JSON.stringify(datos) // Los datos a enviar para editar el artículo
+                }
+            }).done(function (response) {
+                // Resolvemos la promesa con la respuesta de la solicitud
+                resolve(response);
+            }).fail(function (error) {
+                console.error("Error:", error.responseText);
+                // Rechazamos la promesa si hay un error
+                reject(error);
+            });
+        });
+    }
+
+    function fn_editar_movimiento(datos) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                method: "POST",
+                url: "logica/clssVentaCorte.php",
+                data: {
+                    "accion": "EDITARMOVIMIENTO", // Acción que se realizará en PHP
+                    "data": JSON.stringify(datos) // Los datos a enviar para editar el artículo
+                }
+            }).done(function (response) {
                 // Resolvemos la promesa con la respuesta de la solicitud
                 resolve(response);
             }).fail(function (error) {
