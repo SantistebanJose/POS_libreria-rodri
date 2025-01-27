@@ -357,59 +357,11 @@ if (isset($_GET['id'])) {
                 <h5 class="modal-title" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <!-- Sección de cantidad -->
-                    <div class="row mb-3">
-                        <div class="col-12 p-3 bg-light rounded">
-                            <h6 id="nombreArticulo" class="fw-bold text-center mb-3">Nombre del artículo</h6>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <button id="btnRestarCantidad" class="btn btn-danger btn-round" >-</button>
-                                <input id="inputCantidad" type="number" class="form-control text-center mx-2 " value="1" style="width: 80px; font-size: 1.2rem;" />
-                                <button id="btnSumarCantidad" class="btn btn-success btn-round" >+</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sección de corte (solo visible si cantidad = 1) -->
-                    <div id="seccionCorte" class="row mb-3" style="display: none;">
-                        <div class="col-12 p-4 bg-light rounded">
-                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
-                            <div class="mb-4">
-                                <div class="text-center" style="flex: 1;">
-                                    <p class="mb-1">Minutos Corte</p>
-                                    <div class="d-flex justify-content-center align-items-center mb-2">
-                                        <button id="btnRestarCorte" class="btn btn-danger btn-round" >-</button>
-                                        <input id="cantidadCorte" type="number" class="form-control text-center mx-2 " value="0" style="width: 80px; font-size: 1.2rem;" />
-                                        <button id="btnSumarCorte" class="btn btn-success btn-round" >+</button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Línea divisoria -->
-                                <hr>
-                                
-                                <div class="text-center" style="flex: 1;">
-                                    <p class="mb-1">Precio Corte</p>
-                                    <div class="w-100 d-flex justify-content-center mb-1">
-                                        <input id="precioCorte" type="number" class="form-control text-center mx-2 " value="1.5" style="width: 90px; font-size: 1.2rem;" />
-                                    </div>
-                                    <div class="d-flex justify-content-center">
-                                        <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
-                                        <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
-                                        <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
-                                        <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-body" id="contenid_cantidad">
+               
             </div>
 
-            <div class="modal-footer">
-                <!-- Botón Confirmar a la izquierda -->
-                <button id="btnConfirmarCantidad" class="btn btn-primary" style="width: 120px;">Confirmar</button>
-            </div>
+           
         </div>
     </div>
 </div>
@@ -1397,7 +1349,11 @@ if (isset($_GET['id'])) {
         // Eventos para sumar y restar minutos
         document.getElementById("btnSumarSoloCorte").addEventListener("click", function () {
             let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
-            document.getElementById("cantidad_solocorte").value = cantidad + 1;
+            if (cantidad == 0) {
+                document.getElementById("cantidad_solocorte").value =10;
+            }else{
+                document.getElementById("cantidad_solocorte").value = cantidad + 1;
+            }
         });
 
         document.getElementById("btnRestarSoloCorte").addEventListener("click", function () {
@@ -1619,118 +1575,162 @@ if (isset($_GET['id'])) {
         switch (datosArticulo["movimiento_id"]) {
             case 1:
                 botonEditar.addEventListener("click", () => {
-                    // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
-                    document.getElementById("nombreArticulo").textContent = datosArticulo["articulo_nombre"];
-                    document.getElementById("inputCantidad").value = datosArticulo["cantidad"];
-                    
+                    const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
+                    const contenidoModal = `
+                        <div class="container-fluid">
+                            <!-- Sección de cantidad -->
+                            <div class="row mb-3">
+                                <div class="col-12 p-3 bg-light rounded">
+                                    <h6 id="nombreArticuloEditar" class="fw-bold text-center mb-3">${datosArticulo["articulo_nombre"] || "Sin nombre"}</h6>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <button id="btnRestarCantidadEditar" class="btn btn-danger btn-round">-</button>
+                                        <input id="inputCantidadEditar" type="number" class="form-control text-center mx-2" value="1" style="width: 80px; font-size: 1.2rem;" />
+                                        <button id="btnSumarCantidadEditar" class="btn btn-success btn-round">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección de corte (solo visible si cantidad = 1 y corte es true) -->
+                            <div id="seccionCorteEditar" class="row mb-3" style="display: ${datosArticulo["corte"] && parseInt(datosArticulo["cantidad"]) === 1 ? 'block' : 'none'};"> 
+                                <div class="col-12 p-4 bg-light rounded">
+                                    <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                                    <div class="mb-4">
+                                        <div class="text-center" style="flex: 1;">
+                                            <p class="mb-1">Minutos Corte</p>
+                                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                                <button id="btnRestarCorteEditar" class="btn btn-danger btn-round">-</button> 
+                                                <input id="cantidadCorteEditar" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" /> 
+                                                <button id="btnSumarCorteEditar" class="btn btn-success btn-round">+</button> 
+                                            </div>
+                                        </div>
+
+                                        <!-- Línea divisoria -->
+                                        <hr>
+
+                                        <div class="text-center" style="flex: 1;">
+                                            <p class="mb-1">Precio Corte</p>
+                                            <div class="w-100 d-flex justify-content-center mb-1">
+                                                <input id="precioCorteEditar" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" /> 
+                                            </div>
+                                            <div class="d-flex justify-content-center">
+                                                <button id="btnIncremento05Editar" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button> 
+                                                <button id="btnIncremento1Editar" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                                <button id="btnIncremento2Editar" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                                <button id="btnIncremento5Editar" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón Confirmar -->
+                            <div class="row mb-3">
+                                <div class="col-12 text-center">
+                                    <button id="btnConfirmarEditarCantidad" class="btn btn-primary btn-lg">Confirmar</button> 
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    const contenedorCantidad = document.getElementById('contenid_cantidad');
+                    contenedorCantidad.innerHTML = contenidoModal;
+
+                    // Abrir el modal
+                    modalCantidad.show();
+                                // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
+                    document.getElementById("nombreArticuloEditar").textContent = datosArticulo["articulo_nombre"];
+                    document.getElementById("inputCantidadEditar").value = datosArticulo["cantidad"];
+                    document.getElementById("cantidadCorteEditar").value = datosArticulo["minutos"] || 0;
+
                     // Mostrar los valores actuales de corte si es que existen
-                    document.getElementById('btnRestarCantidad').onclick = () => {
-                            let cantidad = parseInt(inputCantidad.value, 10);
-                            
-                            // Restar si la cantidad es mayor a 1
-                            if (cantidad > 1) {
-                                inputCantidad.value = cantidad - 1;  // Restar cantidad
-                            }
-
-                            // Verificar si la cantidad es 1 y el artículo tiene corte
-                            if (inputCantidad.value == 1 && datosArticulo.corte) {
-                                precioCorte.value = 1.5;
-                                seccionCorte.style.display = 'block';  // Mostrar sección de corte
-                                
-                            } else if (inputCantidad.value > 1) {
-                                // Ocultar sección de corte si la cantidad es mayor a 1
-                                precioCorte.value = 0;
-                                seccionCorte.style.display = 'none';
-                            }
-                        };
-
-                        document.getElementById('btnSumarCantidad').onclick = () => {
-                            let cantidad = parseInt(inputCantidad.value, 10);
-                            inputCantidad.value = cantidad + 1;
-                            if (cantidad + 1 === 1 && datosArticulo.corte) {
-                                precioCorte.value = 1.5;
-                                seccionCorte.style.display = 'block';
-                            } else {
-                                precioCorte.value = 0;
-                                seccionCorte.style.display = 'none';
-                            }
-                        };
-
-                        // Configurar botones de corte
-                        document.getElementById('btnRestarCorte').onclick = () => {
-                            let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
-                            if (corte > 0) cantidadCorte.value = corte - 1; // Cambié textContent por value
-                        };
-
-                        document.getElementById('btnSumarCorte').onclick = () => {
-                            let corte = parseInt(cantidadCorte.value, 10); // Cambié textContent por value
-                            if(corte == 0){
-                                cantidadCorte.value = 10; // Cambié textContent por value
-                            } else {
-                                cantidadCorte.value = corte + 1; // Cambié textContent por value
-                            }
-                        };
-
-                        // Botones para modificar precio
-                        document.getElementById('btnIncremento05').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
-                        };
-                        document.getElementById('btnIncremento1').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
-                        };
-                        document.getElementById('btnIncremento2').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
-                        };
-                        document.getElementById('btnIncremento5').onclick = () => {
-                            precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
-                        };
-
-
-                        // Mostrar u ocultar la sección de corte según datosArticulo.corte (solo se muestra si corte es true)
-                        const seccionCorte = document.getElementById("seccionCorte");
-                        if (datosArticulo["corte"] && datosArticulo["cantidad"] == 1) {
-                            document.getElementById("cantidadCorte").value = 
-                            datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
-
-                            document.getElementById("precioCorte").value = 
-                                datosArticulo["costo_por_minuto"] === '-' ? 1.5 : (datosArticulo["costo_por_minuto"] || 1.5);
-                            seccionCorte.style.display = "block";
+                    function actualizarVisibilidadCorte() {
+                        const cantidad = parseInt(document.getElementById("inputCantidadEditar").value, 10);
+                        const seccionCorte = document.getElementById("seccionCorteEditar");
+                        if (cantidad === 1 && datosArticulo["corte"]) {
+                            seccionCorte.style.display = 'block';
                         } else {
-                            document.getElementById("cantidadCorte").value = 
-                            datosArticulo["minutos"] === '-' ? 0 : (datosArticulo["minutos"] || 0);
-                            document.getElementById("precioCorte").value = 
-                            datosArticulo["costo_por_minuto"] === '-' ? 0 : (datosArticulo["costo_por_minuto"] || 0);
-                            seccionCorte.style.display = "none";
+                            seccionCorte.style.display = 'none';
                         }
+                    }
+
+                    // Botón Restar Cantidad
+                    document.getElementById("btnRestarCantidadEditar").addEventListener("click", function() {
+                        let cantidad = parseInt(document.getElementById("inputCantidadEditar").value, 10);
+                        if (cantidad > 1) {
+                            document.getElementById("inputCantidadEditar").value = cantidad - 1;
+                        }
+                        actualizarVisibilidadCorte(); // Actualizar visibilidad de la sección de corte
+                    });
+
+                    // Botón Sumar Cantidad
+                    document.getElementById("btnSumarCantidadEditar").addEventListener("click", function() {
+                        let cantidad = parseInt(document.getElementById("inputCantidadEditar").value, 10);
+                        document.getElementById("inputCantidadEditar").value = cantidad + 1;
+                        actualizarVisibilidadCorte(); // Actualizar visibilidad de la sección de corte
+                    });
+
+                    // Botón Restar Minutos Corte
+                    document.getElementById("btnRestarCorteEditar").addEventListener("click", function() {
+                        let corte = parseInt(document.getElementById("cantidadCorteEditar").value, 10);
+                        if (corte > 0) {
+                            document.getElementById("cantidadCorteEditar").value = corte - 1;
+                        }
+                    });
+
+                    // Botón Sumar Minutos Corte
+                    document.getElementById("btnSumarCorteEditar").addEventListener("click", function() {
+                        let corte = parseInt(document.getElementById("cantidadCorteEditar").value, 10);
+                        document.getElementById("cantidadCorteEditar").value = corte + 1;
+                    });
+
+                    // Incremento de precio por corte
+                    document.getElementById("btnIncremento05Editar").addEventListener("click", function() {
+                        let precio = parseFloat(document.getElementById("precioCorteEditar").value);
+                        document.getElementById("precioCorteEditar").value = (precio + 0.5).toFixed(2);
+                    });
+
+                    document.getElementById("btnIncremento1Editar").addEventListener("click", function() {
+                        let precio = parseFloat(document.getElementById("precioCorteEditar").value);
+                        document.getElementById("precioCorteEditar").value = (precio + 1).toFixed(2);
+                    });
+
+                    document.getElementById("btnIncremento2Editar").addEventListener("click", function() {
+                        let precio = parseFloat(document.getElementById("precioCorteEditar").value);
+                        document.getElementById("precioCorteEditar").value = (precio + 2).toFixed(2);
+                    });
+
+                    document.getElementById("btnIncremento5Editar").addEventListener("click", function() {
+                        let precio = parseFloat(document.getElementById("precioCorteEditar").value);
+                        document.getElementById("precioCorteEditar").value = (precio + 5).toFixed(2);
+                    });
 
                         // Guardar el artículo actual para hacer la modificación posteriormente
-                        document.getElementById("btnConfirmarCantidad").addEventListener('click', async function() {
-                            // Lógica para actualizar cantidad y precios
-                            datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidad").value);
-                            datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorte").value) || '-';
-                            datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioCorte").value) || '-';
-                            let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+                    document.getElementById("btnConfirmarEditarCantidad").addEventListener('click', async function() {
+                        // Lógica para actualizar cantidad y precios
+                        datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidadEditar").value);
+                        datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorteEditar").value) || '-';
+                        datosArticulo["costo_por_minuto"] = (parseFloat(document.getElementById("precioCorteEditar").value) === 0) ? '-' : parseFloat(document.getElementById("precioCorteEditar").value);
+                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
-                            // Recalcular el subtotal considerando el precio de corte y minutos de corte
-                            let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_unitario_articulo"];
-                            subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
-                            subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;
-                            datosArticulo["sub_total"] = subtotal;
-                            console.log(datosArticulo);
+                        // Recalcular el subtotal considerando el precio de corte y minutos de corte
+                        let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_unitario_articulo"];
+                        subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
+                        subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;
+                        datosArticulo["sub_total"] = subtotal;
+                        console.log(datosArticulo);
 
-                            const response = await fn_editar_articulo(datosArticulo);
-                            console.log(response);
+                        const response = await fn_editar_articulo(datosArticulo);
+                        console.log(response);
 
-                            
-                            fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+                        
+                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
 
-                            // Cerramos el modal
-                            $('#modalCantidad').modal('hide');
+                        // Cerramos el modal
+                        $('#modalCantidad').modal('hide');
 
-                        });
+                    });
 
-                        // Mostrar el modal
-                        $('#modalCantidad').modal('show');
+                    // Mostrar el modal
                 });
 
                 break;
@@ -1935,10 +1935,6 @@ if (isset($_GET['id'])) {
                 break;
             case 6:
                 botonEditar.addEventListener("click", () => {
-                    
-                    // Llenamos el modal con los datos del corte
-                    document.getElementById("cantidad_solocorte").value = datosArticulo["minutos"] || 0; // Minutos corte
-                    document.getElementById("precioSoloCorte").value = datosArticulo["costo_por_minuto"] || 1.5; // Precio corte
 
                     // Mostrar el modal
                     const modalElement = document.getElementById('modalSoloCorte');
@@ -1948,7 +1944,6 @@ if (isset($_GET['id'])) {
                     });
 
                     modal.show();
-
                     const contenidoCorte = document.getElementById("contenido_solo_corte");
 
                     // Generamos el contenido dinámico para mostrar el formulario de corte
@@ -1960,9 +1955,9 @@ if (isset($_GET['id'])) {
                                 <div class="text-center" style="flex: 1;">
                                     <p class="mb-1">Minutos Corte</p>
                                     <div class="d-flex justify-content-center align-items-center mb-2">
-                                        <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
+                                        <button id="btnRestarSoloCorteEditar" class="btn btn-danger btn-round">-</button>
                                         <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="${datosArticulo.minutos}" style="width: 80px; font-size: 1.2rem;" />
-                                        <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                                        <button id="btnSumarSoloCorteEditar" class="btn btn-success btn-round">+</button>
                                     </div>
                                 </div>
                                 
@@ -1976,10 +1971,10 @@ if (isset($_GET['id'])) {
                                         <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="${datosArticulo.costo_por_minuto}" style="width: 90px; font-size: 1.2rem;" />
                                     </div>
                                     <div class="d-flex justify-content-center">
-                                        <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
-                                        <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
-                                        <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
-                                        <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                        <button id="btnIncremento05SoloCorteEditar" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                        <button id="btnIncremento1SoloCorteEditar" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                        <button id="btnIncremento2SoloCorteEditar" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                        <button id="btnIncremento5SoloCorteEditar" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
                                     </div>
                                 </div>
                             </div>
@@ -1990,12 +1985,63 @@ if (isset($_GET['id'])) {
                         </div>
                     `;
 
+                    const cantidadInput = document.getElementById("cantidad_solocorte");
+                    const precioInput = document.getElementById("precioSoloCorte");
+
+                    // Asignar eventos de los botones de incrementar y decrementar
+                    const btnRestar = document.getElementById("btnRestarSoloCorteEditar");
+                    const btnSumar = document.getElementById("btnSumarSoloCorteEditar");
+                    const btnIncremento05 = document.getElementById("btnIncremento05SoloCorteEditar");
+                    const btnIncremento1 = document.getElementById("btnIncremento1SoloCorteEditar");
+                    const btnIncremento2 = document.getElementById("btnIncremento2SoloCorteEditar");
+                    const btnIncremento5 = document.getElementById("btnIncremento5SoloCorteEditar");
+
+                    // Botones de cantidad
+                    btnRestar.addEventListener("click", () => {
+                        let cantidad = parseInt(cantidadInput.value) || 0;
+                        cantidadInput.value = Math.max(cantidad - 1, 0);  // Evita valores negativos
+                    });
+
+                    btnSumar.addEventListener("click", () => {
+                        let cantidad = parseInt(cantidadInput.value) || 0;
+                        cantidadInput.value = cantidad + 1;
+                    });
+
+                    // Botones de incremento en precio
+                    btnIncremento05.addEventListener("click", () => {
+                        let precio = parseFloat(precioInput.value) || 0;
+                        precioInput.value = precio + 0.5;
+                    });
+
+                    btnIncremento1.addEventListener("click", () => {
+                        let precio = parseFloat(precioInput.value) || 0;
+                        precioInput.value = precio + 1;
+                    });
+
+                    btnIncremento2.addEventListener("click", () => {
+                        let precio = parseFloat(precioInput.value) || 0;
+                        precioInput.value = precio + 2;
+                    });
+
+                    btnIncremento5.addEventListener("click", () => {
+                        let precio = parseFloat(precioInput.value) || 0;
+                        precioInput.value = precio + 5;
+                    });
+
+
                     // Crear el botón "Actualizar" dinámicamente
                     const btnActualizar = document.getElementById("btnActualizarSoloCorte");
+                    
                     // Eliminar el evento original del botón de "Agregar"
+                    // Llenamos el modal con los datos del corte
+                    document.getElementById("cantidad_solocorte").value = datosArticulo["minutos"] || 0; // Minutos corte
+                    document.getElementById("precioSoloCorte").value = datosArticulo["costo_por_minuto"] || 1.5; // Precio corte
 
                     // Actualizar el corte en la tabla cuando se presiona "Actualizar"
-                    btnEditar.addEventListener("click",async function() {
+                    btnActualizar.addEventListener("click",async function() {
+                        const nuevosMinutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
+                        const nuevoPrecio = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
+
                         datosArticulo["minutos"] = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
                         datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
                         datosArticulo["sub_total"] = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] ;
@@ -2049,132 +2095,133 @@ if (isset($_GET['id'])) {
 
 <!--Agregar desde tabla Modal-->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const botonesSumar = document.querySelectorAll('[id^="add_"]');
-        const botonesRestar = document.querySelectorAll('[id^="rest_"]');
 
-        botonesSumar.forEach(boton => {
-            boton.addEventListener('click', function() {
-                const id = boton.id.split('_')[1];
-                const spanCantidad = document.getElementById(`cantidad_${id}`);
-                let cantidad = parseInt(spanCantidad.textContent);
-                cantidad++;
-                spanCantidad.textContent = cantidad;
-            });
-        });
-
-        botonesRestar.forEach(boton => {
-            boton.addEventListener('click', function() {
-                const id = boton.id.split('_')[1];
-                const spanCantidad = document.getElementById(`cantidad_${id}`);
-                let cantidad = parseInt(spanCantidad.textContent);
-                if (cantidad > 1) {
-                    cantidad--;
-                    spanCantidad.textContent = cantidad;
-                }
-            });
-        });
-    });
 
     function fn_agregar_venta(datosArticulo) {
         const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
 
-        // Resetear valores y contenido del modal
-        const nombreArticulo = document.getElementById('nombreArticulo');
-        nombreArticulo.textContent = `Artículo: ${datosArticulo.articulo || "Sin nombre"}`;
+        // Crear el contenido como un string HTML
+        const contenidoModal = `
+        <div class="container-fluid">
+            <!-- Sección de cantidad -->
+            <div class="row mb-3">
+                <div class="col-12 p-3 bg-light rounded">
+                    <h6 id="nombreArticulo" class="fw-bold text-center mb-3">${datosArticulo.articulo || "Sin nombre"}</h6>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button id="btnRestarCantidad" class="btn btn-danger btn-round">-</button>
+                        <input id="inputCantidad" type="number" class="form-control text-center mx-2" value="1" style="width: 80px; font-size: 1.2rem;" />
+                        <button id="btnSumarCantidad" class="btn btn-success btn-round">+</button>
+                    </div>
+                </div>
+            </div>
 
-        const inputCantidad = document.getElementById('inputCantidad');
-        const seccionCorte = document.getElementById('seccionCorte');
-        const cantidadCorte = document.getElementById('cantidadCorte');
-        const precioCorte = document.getElementById('precioCorte');
+            <!-- Sección de corte (solo visible si cantidad = 1 y corte es true) -->
+            <div id="seccionCorte" class="row mb-3" style="display: ${datosArticulo.corte && parseInt(datosArticulo.cantidad) === 1 ? 'block' : 'none'};">
+                <div class="col-12 p-4 bg-light rounded">
+                    <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                    <div class="mb-4">
+                        <div class="text-center" style="flex: 1;">
+                            <p class="mb-1">Minutos Corte</p>
+                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                <button id="btnRestarCorte" class="btn btn-danger btn-round">-</button>
+                                <input id="cantidadCorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
+                                <button id="btnSumarCorte" class="btn btn-success btn-round">+</button>
+                            </div>
+                        </div>
 
-        inputCantidad.value = 1; // Cantidad por defecto
-        cantidadCorte.value = 0; // Resetear minutos corte
-        precioCorte.value = 0; // Precio por defecto
+                        <!-- Línea divisoria -->
+                        <hr>
 
-        // Limpiar los eventos antes de agregar nuevos
-        const btnRestarCantidad = document.getElementById('btnRestarCantidad');
-        const btnSumarCantidad = document.getElementById('btnSumarCantidad');
-        const btnRestarCorte = document.getElementById('btnRestarCorte');
-        const btnSumarCorte = document.getElementById('btnSumarCorte');
-        const btnIncremento05 = document.getElementById('btnIncremento05');
-        const btnIncremento1 = document.getElementById('btnIncremento1');
-        const btnIncremento2 = document.getElementById('btnIncremento2');
-        const btnIncremento5 = document.getElementById('btnIncremento5');
-        const btnConfirmarCantidad = document.getElementById('btnConfirmarCantidad');
+                        <div class="text-center" style="flex: 1;">
+                            <p class="mb-1">Precio Corte</p>
+                            <div class="w-100 d-flex justify-content-center mb-1">
+                                <input id="precioCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        // Remover eventos previos para evitar duplicación
-        btnRestarCantidad.removeEventListener('click', restarCantidad);
-        btnSumarCantidad.removeEventListener('click', sumarCantidad);
-        btnRestarCorte.removeEventListener('click', restarCorte);
-        btnSumarCorte.removeEventListener('click', sumarCorte);
-        btnIncremento05.removeEventListener('click', incremento05);
-        btnIncremento1.removeEventListener('click', incremento1);
-        btnIncremento2.removeEventListener('click', incremento2);
-        btnIncremento5.removeEventListener('click', incremento5);
-        btnConfirmarCantidad.removeEventListener('click', confirmarCantidad);
+            <!-- Botón Confirmar -->
+            <div class="row mb-3">
+                <div class="col-12 text-center">
+                    <button id="btnConfirmar" class="btn btn-primary btn-lg">Confirmar</button>
+                </div>
+            </div>
+        </div>
+        `;
 
-        // Funciones de los botones
-        function restarCantidad() {
-            let cantidad = parseInt(inputCantidad.value, 10);
-            if (cantidad > 1) {
-                inputCantidad.value = cantidad - 1;
+        // Inyectar el contenido al modal
+        const contenedorCantidad = document.getElementById('contenid_cantidad');
+        contenedorCantidad.innerHTML = contenidoModal;
+
+        // Abrir el modal
+        modalCantidad.show();
+
+        // Funciones para los botones dentro del modal
+        document.getElementById('btnRestarCantidad').addEventListener('click', function() {
+            let inputCantidad = document.getElementById('inputCantidad');
+            if (inputCantidad.value > 1) {
+                inputCantidad.value--;
             }
-            // Mostrar o esconder la sección de corte según la cantidad
-            if (inputCantidad.value == 1 && datosArticulo.corte) {
-                precioCorte.value = 1.5;
-                seccionCorte.style.display = 'block';
-            } else if (inputCantidad.value > 1) {
-                precioCorte.value = 0;
-                seccionCorte.style.display = 'none';
+            // Actualizar la visibilidad de la sección de corte
+            actualizarVisibilidadCorte(datosArticulo);
+        });
+
+        document.getElementById('btnSumarCantidad').addEventListener('click', function() {
+            let inputCantidad = document.getElementById('inputCantidad');
+            inputCantidad.value++;
+            // Actualizar la visibilidad de la sección de corte
+            actualizarVisibilidadCorte(datosArticulo);
+        });
+
+        document.getElementById('btnRestarCorte').addEventListener('click', function() {
+            let cantidadCorte = document.getElementById('cantidadCorte');
+            if (cantidadCorte.value > 0) {
+                cantidadCorte.value--;
             }
-        }
+        });
 
-        function sumarCantidad() {
-            let cantidad = parseInt(inputCantidad.value, 10);
-            inputCantidad.value = cantidad + 1;
-            if (cantidad + 1 === 1 && datosArticulo.corte) {
-                precioCorte.value = 1.5;
-                seccionCorte.style.display = 'block';
-            } else {
-                precioCorte.value = 0;
-                seccionCorte.style.display = 'none';
-            }
-        }
+        document.getElementById('btnSumarCorte').addEventListener('click', function() {
+            let cantidadCorte = document.getElementById('cantidadCorte');
+            cantidadCorte.value++;
+        });
 
-        function restarCorte() {
-            let corte = parseInt(cantidadCorte.value, 10);
-            if (corte > 0) cantidadCorte.value = corte - 1;
-        }
+        // Lógica para los botones de incremento de precio de corte
+        document.getElementById('btnIncremento05').addEventListener('click', function() {
+            let precioCorte = document.getElementById('precioCorte');
+            precioCorte.value = parseFloat(precioCorte.value) + 0.5;
+        });
 
-        function sumarCorte() {
-            let corte = parseInt(cantidadCorte.value, 10);
-            if(corte == 0) {
-                cantidadCorte.value = 10;
-            } else {
-                cantidadCorte.value = corte + 1;
-            }
-        }
+        document.getElementById('btnIncremento1').addEventListener('click', function() {
+            let precioCorte = document.getElementById('precioCorte');
+            precioCorte.value = parseFloat(precioCorte.value) + 1;
+        });
 
-        function incremento05() {
-            precioCorte.value = (parseFloat(precioCorte.value) + 0.5).toFixed(2);
-        }
+        document.getElementById('btnIncremento2').addEventListener('click', function() {
+            let precioCorte = document.getElementById('precioCorte');
+            precioCorte.value = parseFloat(precioCorte.value) + 2;
+        });
 
-        function incremento1() {
-            precioCorte.value = (parseFloat(precioCorte.value) + 1).toFixed(2);
-        }
+        document.getElementById('btnIncremento5').addEventListener('click', function() {
+            let precioCorte = document.getElementById('precioCorte');
+            precioCorte.value = parseFloat(precioCorte.value) + 5;
+        });
 
-        function incremento2() {
-            precioCorte.value = (parseFloat(precioCorte.value) + 2).toFixed(2);
-        }
-
-        function incremento5() {
-            precioCorte.value = (parseFloat(precioCorte.value) + 5).toFixed(2);
-        }
-
-        // Confirmar cantidad y agregar a la tabla
-        async function confirmarCantidad() {
+        // Función para confirmar cantidad (se ejecuta al hacer click en el botón Confirmar)
+        document.getElementById('btnConfirmar').addEventListener('click', async function() {
             try {
+                const inputCantidad = document.getElementById('inputCantidad');
+                const cantidadCorte = document.getElementById('cantidadCorte');
+                const precioCorte = document.getElementById('precioCorte');
+                
+                // Actualizando datosArticulo con los valores de los inputs
                 datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
                 datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
                 datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
@@ -2182,31 +2229,35 @@ if (isset($_GET['id'])) {
 
                 let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
+                // Llamada al servidor para agregar el artículo
                 const response = await fn_adicionar_articulo(venta_id_lbl, datosArticulo);
                 console.log("Movimiento insertado con éxito:", response);
 
+                // Cerrar el modal
                 modalCantidad.hide();
+
+                // Consultar la venta actualizada
                 fn_consultarVenta([{ venta_id: venta_id_lbl }]);
             } catch (error) {
                 console.error("Error al confirmar cantidad:", error);
                 alert("Ocurrió un error al agregar el artículo.");
             }
+        });
+
+        // Función para actualizar la visibilidad de la sección de corte
+        function actualizarVisibilidadCorte(datosArticulo) {
+            const cantidad = parseInt(document.getElementById('inputCantidad').value);
+            const seccionCorte = document.getElementById('seccionCorte');
+            // Mostrar u ocultar la sección de corte dependiendo de la cantidad y el valor de corte en datosArticulo
+            if (cantidad === 1 && datosArticulo.corte) {
+                seccionCorte.style.display = 'block';
+            } else {
+                seccionCorte.style.display = 'none';
+            }
         }
-
-        // Asignar los eventos nuevamente después de limpiarlos
-        btnRestarCantidad.addEventListener('click', restarCantidad);
-        btnSumarCantidad.addEventListener('click', sumarCantidad);
-        btnRestarCorte.addEventListener('click', restarCorte);
-        btnSumarCorte.addEventListener('click', sumarCorte);
-        btnIncremento05.addEventListener('click', incremento05);
-        btnIncremento1.addEventListener('click', incremento1);
-        btnIncremento2.addEventListener('click', incremento2);
-        btnIncremento5.addEventListener('click', incremento5);
-        btnConfirmarCantidad.addEventListener('click', confirmarCantidad);
-
-        // Mostrar el modal
-        modalCantidad.show();
     }
+
+
 </script>
 
 
