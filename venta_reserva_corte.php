@@ -33,7 +33,32 @@ if (isset($_GET['id'])) {
         font-size: 0.9em;
         margin-top: 5px;
     }
-    
+
+    #modalCliente {
+    z-index: 1060 !important; /* Asegúrate de que sea más alto que el de los demás modales */
+}
+
+/* Estilo para cambiar el color de fondo y bordes del modal */
+#modalCliente .modal-content {
+    background-color: #f0f8ff;  /* Color de fondo claro (puedes cambiarlo) */
+    border-radius: 10px;  /* Bordes redondeados */
+    border: 2px solid #2a2f5b;  /* Borde azul para darle más protagonismo */
+}
+
+/* Agregar una sombra para resaltar más el modal */
+#modalCliente .modal-dialog {
+    box-shadow: 0 4px 10px #2a2f5b;  /* Sombra azul para resaltar el modal */
+}
+
+/* Título del modal más grande y con un color diferente */
+#modalCliente .modal-header {
+    background-color: #2a2f5b;  /* Fondo azul */
+    color: white;  /* Texto blanco */
+}
+#modalCliente .btn-close {
+    background-color: #f0f8ff;  /* Botón de cerrar rojo */
+}
+   
 </style>
 
 <div
@@ -263,9 +288,96 @@ if (isset($_GET['id'])) {
     </div>
 </div>
 
+<!-- Modal para registrar Cliente -->
+<div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalClienteLabel">Registrar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Pils para seleccionar entre Persona y Empresa -->
+                <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">Persona</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" id="pills-empresa-tab" data-bs-toggle="pill" data-bs-target="#pills-empresa" type="button" role="tab" aria-controls="pills-empresa" aria-selected="false">Empresa</button>
+                    </li>
+                </ul>
+                <hr>
+                <div class="tab-content mt-3" id="pills-tabContent">
+                    <!-- Formulario Persona -->
+                    <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
+                        <div class="mb-3">
+                            <label for="numeroDocumentoPersona" class="form-label">Número de Documento  <span class="fw-bold text-danger">*</span></label>
+                            <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
+                            <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombresPersona" class="form-label">Nombres  <span class="fw-bold text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
+                            <div class="invalid-feedback" id="error-nombresPersona"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidosPersona" class="form-label">Apellidos  <span class="fw-bold text-danger">*</span></label>
+                            <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
+                            <div class="invalid-feedback" id="error-apellidosPersona"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefonoPersona" class="form-label">Teléfono Móvil</label>
+                            <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
+                            <div class="invalid-feedback" id="error-telefonoPersona"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailPersona" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailPersona" placeholder="Email">
+                            <div class="invalid-feedback" id="error-emailPersona"></div>
+                        </div>
+                    </div>
 
+                    <!-- Formulario Empresa -->
+                    <div class="tab-pane fade" id="pills-empresa" role="tabpanel" aria-labelledby="pills-empresa-tab">
+                        <div class="mb-3">
+                            <label for="numeroDocumentoEmpresa" class="form-label">Número de Ruc  <span class="fw-bold text-danger">*</span></label>
+                            <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Número de Documento">
+                            <div class="invalid-feedback" id="error-numeroDocumentoEmpresa"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreComercial" class="form-label">Nombre Comercial  <span class="fw-bold text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nombreComercial" placeholder="Nombre Comercial">
+                            <div class="invalid-feedback" id="error-nombreComercial"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="razonSocial" class="form-label">Razón Social  <span class="fw-bold text-danger">*</span> </label>
+                            <input type="text" class="form-control" id="razonSocial" placeholder="Razón Social">
+                            <div class="invalid-feedback" id="error-razonSocial"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailEmpresa" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailEmpresa" placeholder="Email">
+                            <div class="invalid-feedback" id="error-emailEmpresa"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefonoEmpresa" class="form-label">Teléfono Móvil</label>
+                            <input type="text" class="form-control" id="telefonoEmpresa" placeholder="Teléfono Móvil">
+                            <div class="invalid-feedback" id="error-telefonoEmpresa"></div>
+                        </div>
+                    </div>
+                </div>
 
-
+                <div class="alert alert-light p-3" role="alert">
+    <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
+</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -409,7 +521,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
             <div class="col-md-3">
-                <button id="btnRealizarReserva" type="button" class="btn btn-success btn-block card card-stats card-round">
+                <button id="btnRealizarReserva" disabled="true" type="button" class="btn btn-success btn-block card card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_general" class="card-title">Realizar Reserva</h5>
                     </div>
@@ -475,11 +587,17 @@ if (isset($_GET['id'])) {
                         <hr>
                         <div class="mb-3 position-relative">
                             <label for="nombreCliente" class="form-label">Cliente</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="nombreCliente"
-                                placeholder="AGREGAR EL NOMBRE DEL CLIENTE O DNI" />
+                            <div class="d-flex align-items-center">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nombreCliente"
+                                    placeholder="AGREGAR EL NOMBRE DEL CLIENTE O DNI" />
+                                <!-- Botón "+" al lado del input -->
+                                <button type="button" class="btn btn-primary ms-2" id="btnAbrirModalCliente">
+                                    <i class="fas fa-plus"></i> <!-- Ícono "+" -->
+                                </button>
+                            </div>
                             <!-- Contenedor para las sugerencias -->
                             <div id="sugerencias" class="list-group position-absolute w-100"></div>
                         </div>
@@ -510,7 +628,7 @@ if (isset($_GET['id'])) {
             <div class="modal-footer">
                 <button
                     type="button"
-                    class="btn btn-secondary"
+                    class="btn btn-danger"
                     data-bs-dismiss="modal">
                     Salir
                 </button>
@@ -1236,10 +1354,14 @@ if (isset($_GET['id'])) {
         lbl_subtotal_articulos.innerText = totalArticulos.toFixed(2);
         lbl_subtotal_general.innerText = total.toFixed(2);
 
+        const btnReserva = document.getElementById("btnRealizarReserva");
+        btnReserva.disabled = (total === 0);
 
    
 
     }
+
+
 
     function verificarSiArticuloExiste(idArticulo) {
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
@@ -2225,6 +2347,342 @@ if (isset($_GET['id'])) {
 
 
 </script>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+          // Lógica para borrar los datos cuando se cambia entre los Pills
+        const personaTab = document.getElementById("pills-persona-tab");
+        const empresaTab = document.getElementById("pills-empresa-tab");
+
+        const btnAbrirModalCliente = document.getElementById("btnAbrirModalCliente");
+        const modalCliente = new bootstrap.Modal(document.getElementById("modalCliente"));
+
+        // Agrega un evento click para abrir el modal manualmente
+        btnAbrirModalCliente.addEventListener("click", function() {
+            console.log("click")
+            
+            modalCliente.show();  // Muestra el modal manualmente
+        });
+
+        personaTab.addEventListener('click', () => {
+            // Limpiar datos de la pestaña Empresa
+            document.getElementById('numeroDocumentoEmpresa').value = '';
+            document.getElementById('nombreComercial').value = '';
+            document.getElementById('razonSocial').value = '';
+            document.getElementById('telefonoEmpresa').value = '';
+            document.getElementById('emailEmpresa').value = '';
+            resetErrors();
+        });
+
+        empresaTab.addEventListener('click', () => {
+            // Limpiar datos de la pestaña Persona
+            document.getElementById('numeroDocumentoPersona').value = '';
+            document.getElementById('nombresPersona').value = '';
+            document.getElementById('apellidosPersona').value = '';
+            document.getElementById('telefonoPersona').value = '';
+            document.getElementById('emailPersona').value = '';
+            resetErrors();
+        });
+
+        function resetErrors() {
+            // Limpiar las clases 'is-invalid' y los mensajes de error
+            const inputs = document.querySelectorAll('.form-control');
+            const errorMessages = document.querySelectorAll('.invalid-feedback');
+
+            inputs.forEach(input => {
+                input.classList.remove('is-invalid');
+            });
+
+            errorMessages.forEach(message => {
+                message.textContent = '';
+            });
+        }
+
+        function limpiarcampos(){
+            document.getElementById('numeroDocumentoEmpresa').value = '';
+            document.getElementById('nombreComercial').value = '';
+            document.getElementById('razonSocial').value = '';
+            document.getElementById('telefonoEmpresa').value = '';
+            document.getElementById('emailEmpresa').value = '';
+            document.getElementById('numeroDocumentoPersona').value = '';
+            document.getElementById('nombresPersona').value = '';
+            document.getElementById('apellidosPersona').value = '';
+            document.getElementById('telefonoPersona').value = '';
+            document.getElementById('emailPersona').value = '';
+        }
+
+        // Seleccionando los elementos de los formularios
+        const formPersona = document.getElementById('pills-persona');
+        const formEmpresa = document.getElementById('pills-empresa');
+
+        const btnRegistrarCliente = document.getElementById('btnRegistrarCliente');
+
+        // Función para validar los campos
+        function validarCamposPersona() {
+            let valid = true;
+
+            // Validar el número de documento (solo si tiene datos)
+            const numeroDocumentoPersona = document.getElementById('numeroDocumentoPersona');
+            const errorNumeroDocumentoPersona = document.getElementById('error-numeroDocumentoPersona');
+            if (numeroDocumentoPersona.value.trim() !== '' && !/^\d{8,12}$/.test(numeroDocumentoPersona.value)) {
+                valid = false;
+                numeroDocumentoPersona.classList.add('is-invalid');
+                errorNumeroDocumentoPersona.textContent = 'Debe ser un número de documento válido (8 a 12 dígitos).';
+            } else {
+                numeroDocumentoPersona.classList.remove('is-invalid');
+                errorNumeroDocumentoPersona.textContent = '';
+            }
+
+            // Validar los nombres (solo si tiene datos y sin números)
+            const nombresPersona = document.getElementById('nombresPersona');
+            const errorNombresPersona = document.getElementById('error-nombresPersona');
+            if (nombresPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(nombresPersona.value)) {
+                valid = false;
+                nombresPersona.classList.add('is-invalid');
+                errorNombresPersona.textContent = 'Los nombres no pueden contener números.';
+            } else {
+                nombresPersona.classList.remove('is-invalid');
+                errorNombresPersona.textContent = '';
+            }
+
+            // Validar los apellidos (solo si tiene datos y sin números)
+            const apellidosPersona = document.getElementById('apellidosPersona');
+            const errorApellidosPersona = document.getElementById('error-apellidosPersona');
+            if (apellidosPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(apellidosPersona.value)) {
+                valid = false;
+                apellidosPersona.classList.add('is-invalid');
+                errorApellidosPersona.textContent = 'Los apellidos no pueden contener números.';
+            } else {
+                apellidosPersona.classList.remove('is-invalid');
+                errorApellidosPersona.textContent = '';
+            }
+
+            // Validar el teléfono (solo si tiene datos y es un número válido)
+            const telefonoPersona = document.getElementById('telefonoPersona');
+            const errorTelefonoPersona = document.getElementById('error-telefonoPersona');
+            if (telefonoPersona.value.trim() !== '' && !/^\d{9}$/.test(telefonoPersona.value)) {
+                valid = false;
+                telefonoPersona.classList.add('is-invalid');
+                errorTelefonoPersona.textContent = 'El teléfono debe tener 9 dígitos.';
+            } else {
+                telefonoPersona.classList.remove('is-invalid');
+                errorTelefonoPersona.textContent = '';
+            }
+
+            // Validar el email (solo si tiene datos y es un correo válido)
+            const emailPersona = document.getElementById('emailPersona');
+            const errorEmailPersona = document.getElementById('error-emailPersona');
+            if (emailPersona.value.trim() !== '' && !/\S+@\S+\.\S+/.test(emailPersona.value)) {
+                valid = false;
+                emailPersona.classList.add('is-invalid');
+                errorEmailPersona.textContent = 'Debe ser un correo electrónico válido.';
+            } else {
+                emailPersona.classList.remove('is-invalid');
+                errorEmailPersona.textContent = '';
+            }
+
+            return valid;
+        }
+
+
+        function validarCamposEmpresa() {
+            let valid = true;
+
+            // Validar RUC (solo si tiene datos)
+            const numeroDocumentoEmpresa = document.getElementById('numeroDocumentoEmpresa');
+            const errorNumeroDocumentoEmpresa = document.getElementById('error-numeroDocumentoEmpresa');
+            if (numeroDocumentoEmpresa.value.trim() !== '' && !/^\d{11}$/.test(numeroDocumentoEmpresa.value)) {
+                valid = false;
+                numeroDocumentoEmpresa.classList.add('is-invalid');
+                errorNumeroDocumentoEmpresa.textContent = 'Debe ser un RUC válido (11 dígitos).';
+            } else {
+                numeroDocumentoEmpresa.classList.remove('is-invalid');
+                errorNumeroDocumentoEmpresa.textContent = '';
+            }
+
+            // Validar nombre comercial (solo si tiene datos)
+            const nombreComercial = document.getElementById('nombreComercial');
+            const errorNombreComercial = document.getElementById('error-nombreComercial');
+            if (nombreComercial.value.trim() !== '' && nombreComercial.value.trim() === '') {
+                valid = false;
+                nombreComercial.classList.add('is-invalid');
+                errorNombreComercial.textContent = 'Este campo es obligatorio.';
+            } else {
+                nombreComercial.classList.remove('is-invalid');
+                errorNombreComercial.textContent = '';
+            }
+
+            // Validar razón social (solo si tiene datos)
+            const razonSocial = document.getElementById('razonSocial');
+            const errorRazonSocial = document.getElementById('error-razonSocial');
+            if (razonSocial.value.trim() !== '' && razonSocial.value.trim() === '') {
+                valid = false;
+                razonSocial.classList.add('is-invalid');
+                errorRazonSocial.textContent = 'Este campo es obligatorio.';
+            } else {
+                razonSocial.classList.remove('is-invalid');
+                errorRazonSocial.textContent = '';
+            }
+
+            // Validar teléfono (solo si tiene datos)
+            const telefonoEmpresa = document.getElementById('telefonoEmpresa');
+            const errorTelefonoEmpresa = document.getElementById('error-telefonoEmpresa');
+            if (telefonoEmpresa.value.trim() !== '' && !/^\d{9}$/.test(telefonoEmpresa.value)) {
+                valid = false;
+                telefonoEmpresa.classList.add('is-invalid');
+                errorTelefonoEmpresa.textContent = 'El teléfono debe tener 9 dígitos.';
+            } else {
+                telefonoEmpresa.classList.remove('is-invalid');
+                errorTelefonoEmpresa.textContent = '';
+            }
+
+            // Validar email (solo si tiene datos)
+            const emailEmpresa = document.getElementById('emailEmpresa');
+            const errorEmailEmpresa = document.getElementById('error-emailEmpresa');
+            if (emailEmpresa.value.trim() !== '' && !/\S+@\S+\.\S+/.test(emailEmpresa.value)) {
+                valid = false;
+                emailEmpresa.classList.add('is-invalid');
+                errorEmailEmpresa.textContent = 'Debe ser un correo electrónico válido.';
+            } else {
+                emailEmpresa.classList.remove('is-invalid');
+                errorEmailEmpresa.textContent = '';
+            }
+
+            return valid;
+        }
+
+
+        // Registrar cliente
+        btnRegistrarCliente.addEventListener('click', async function () {
+            let datos = {};
+            
+            if (document.getElementById('pills-persona-tab').classList.contains('active')) {
+                // Recolectar los datos del formulario Persona
+                if (validarCamposPersona()) {
+                    datos = {
+                        "numero_documento": document.getElementById('numeroDocumentoPersona').value,
+                        "nombres": document.getElementById('nombresPersona').value,
+                        "apellidos": document.getElementById('apellidosPersona').value,
+                        "telefono_movil": document.getElementById('telefonoPersona').value || null,
+                        "email": document.getElementById('emailPersona').value
+                    };
+
+                    // Llamar a la función AJAX para registrar la persona
+                    console.log(datos);
+                    const response = await fnRegistrarPersona(datos);
+                    console.log("Persona insertado con éxito:", response);
+                    const nombreencadenado = `${document.getElementById('numeroDocumentoPersona').value} - ${document.getElementById('nombresPersona').value} ${document.getElementById('apellidosPersona').value}`;
+                    console.log(nombreencadenado);
+                    console.log(response.persona_id);
+                    
+                    enviardatos(response.persona_id,nombreencadenado);
+                    limpiarcampos();
+                    showNotification("success");
+
+
+                    modalCliente.hide();
+
+                } else {
+                    alert('Por favor, corrige los errores antes de registrar.');
+                }
+            } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {
+                // Recolectar los datos del formulario Empresa
+                if (validarCamposEmpresa()) {
+                    datos = {
+                        "numero_documento": document.getElementById('numeroDocumentoEmpresa').value,
+                        "nombre_comercial": document.getElementById('nombreComercial').value,
+                        "razon_social": document.getElementById('razonSocial').value,
+                        "telefono_movil": document.getElementById('telefonoEmpresa').value,
+                        "email": document.getElementById('emailEmpresa').value
+                    };
+
+                    console.log(datos);
+                    // Llamar a la función AJAX para registrar la empresa
+                    const response = await fnRegistrarEmpresa(datos);
+                    console.log("Empresa insertado con éxito:", response);
+                    const nombreencadenado = `${document.getElementById('numeroDocumentoEmpresa').value} - ${document.getElementById('razonSocial').value}`;
+                    console.log(nombreencadenado);
+                    console.log(response.empresa_id);
+
+                    enviardatos(response.empresa_id,nombreencadenado);
+                    limpiarcampos();
+                    showNotification("success");
+
+                    modalCliente.hide();
+
+
+                } else {
+                    alert('Por favor, corrige los errores antes de registrar.');
+                }
+            }
+        });
+
+        function enviardatos(id_persona,nombre){
+            document.getElementById('idPersona').textContent = id_persona
+            document.getElementById('nombreCliente').value = nombre
+
+        }
+
+        function fnRegistrarPersona(datos) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    method: "POST",
+                    url: "logica/clssPersona.php",  // El archivo PHP donde se maneja el registro de persona
+                    data: {
+                        "accion": "REGISTRARPERSONARAPIDO",  // Acción que se realiza en el backend
+                        "data": JSON.stringify(datos)  // Los datos de la persona como JSON
+                    }
+                }).done(function (response) {
+                    console.log(response);
+                    const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
+                    if (jsonResponse.success) {
+                        resolve(jsonResponse);  // Resolvemos la promesa en caso de éxito
+                    } else {
+                        reject(new Error(jsonResponse.mensaje || "Error desconocido"));  // Si hay error en la respuesta del servidor
+                    }
+                }).fail(function (error) {
+                    console.error("Error:", error.responseText);
+                    reject(error);  // Rechazamos la promesa si ocurre un error en la solicitud AJAX
+                });
+            });
+        }
+
+        function fnRegistrarEmpresa(datos) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    method: "POST",
+                    url: "logica/clssPersona.php",  // El archivo PHP donde se maneja el registro de empresa
+                    data: {
+                        "accion": "REGISTRARPERSONARAPIDO",  // Acción que se realiza en el backend
+                        "data": JSON.stringify(datos)  // Los datos de la empresa como JSON
+                    }
+                }).done(function (response) {
+                    console.log(response);
+                    const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
+                    if (jsonResponse.success) {
+                        alert("Empresa registrada con éxito");
+                        resolve(jsonResponse);  // Resolvemos la promesa en caso de éxito
+                    } else {
+                        alert("Error al registrar empresa");
+                        reject(new Error(jsonResponse.mensaje || "Error desconocido"));  // Si hay error en la respuesta del servidor
+                    }
+                }).fail(function (error) {
+                    console.error("Error:", error.responseText);
+                    reject(error);  // Rechazamos la promesa si ocurre un error en la solicitud AJAX
+                });
+            });
+        }
+
+
+        
+    });
+</script>
+
+
 
 
 <?php

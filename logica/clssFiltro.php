@@ -26,13 +26,21 @@ function consultapersonaventa($data): void
     try {
         // Consulta SQL con la función LOWER para hacer la comparación insensible a mayúsculas y minúsculas
         $query = $conectar->prepare("
-            SELECT id, 
-                   CONCAT(numero_documento, ' - ', nombres, ' ', apellidos) AS persona_concatenada
-            FROM persona
-            WHERE LOWER(numero_documento) LIKE LOWER(:data)
-               OR LOWER(nombres) LIKE LOWER(:data)
-               OR LOWER(apellidos) LIKE LOWER(:data)
-            LIMIT 10;
+WITH words AS (
+  SELECT unnest(string_to_array(LOWER(:data), ' ')) AS word
+)
+SELECT id, 
+       CONCAT(numero_documento, ' - ', nombres, ' ', apellidos) AS persona_concatenada
+FROM persona
+WHERE EXISTS (
+    SELECT 1
+    FROM words w
+    WHERE 
+        LOWER(nombres) ILIKE CONCAT('%', w.word, '%')
+        OR LOWER(apellidos) ILIKE CONCAT('%', w.word, '%')
+        OR LOWER(numero_documento) ILIKE CONCAT('%', w.word, '%')  -- Filtrado por número de documento
+)
+LIMIT 10;
         ");
 
         // Pasamos el parámetro con los signos de porcentaje en PHP
