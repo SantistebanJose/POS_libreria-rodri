@@ -1762,7 +1762,7 @@ if (isset($_GET['id'])) {
                                 datosArticulo["costo_por_minuto"] = '-';
                                 datosArticulo["minutos"] = '-';
                             }
-                            }
+                            
                         }
 
 
