@@ -1714,7 +1714,13 @@ if (isset($_GET['id'])) {
                     // Botón Sumar Minutos Corte
                     document.getElementById("btnSumarCorteEditar").addEventListener("click", function() {
                         let corte = parseInt(document.getElementById("cantidadCorteEditar").value, 10);
-                        document.getElementById("cantidadCorteEditar").value = corte + 1;
+                        if(corte == 1){
+                            document.getElementById("cantidadCorteEditar").value = 10;
+
+                        }else{
+                            document.getElementById("cantidadCorteEditar").value = corte + 1;
+
+                        }
                     });
 
                     // Incremento de precio por corte
@@ -1742,14 +1748,29 @@ if (isset($_GET['id'])) {
                     document.getElementById("btnConfirmarEditarCantidad").addEventListener('click', async function() {
                         // Lógica para actualizar cantidad y precios
                         datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidadEditar").value);
-                        datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorteEditar").value) || '-';
-                        datosArticulo["costo_por_minuto"] = (parseFloat(document.getElementById("precioCorteEditar").value) === 0) ? '-' : parseFloat(document.getElementById("precioCorteEditar").value);
+
+                        if(datosArticulo["corte"] && datosArticulo["cantidad"] > 1){
+
+                        }
+                       
+                        if(datosArticulo["corte"]){
+                            if( datosArticulo["cantidad"] == 1){
+                                datosArticulo["costo_por_minuto"] = (parseFloat(document.getElementById("precioCorteEditar").value) === 0) ? '-' : parseFloat(document.getElementById("precioCorteEditar").value);
+                                datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorteEditar").value) || '-';
+                            }
+                            if(datosArticulo["cantidad"] > 1){
+                                datosArticulo["costo_por_minuto"] = '-';
+                                datosArticulo["minutos"] = '-';
+                            }
+                            }
+                        }
+
+
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
                         // Recalcular el subtotal considerando el precio de corte y minutos de corte
                         let subtotal = datosArticulo["cantidad"] * datosArticulo["precio_unitario_articulo"];
                         subtotal += (datosArticulo["costo_por_minuto"] * datosArticulo["minutos"]) || 0;
-                        subtotal += (datosArticulo["minutosCorte"] * datosArticulo["precioCorte"]) || 0;
                         datosArticulo["sub_total"] = subtotal;
                         console.log(datosArticulo);
 
@@ -2164,7 +2185,7 @@ if (isset($_GET['id'])) {
             </div>
 
             <!-- Sección de corte (solo visible si cantidad = 1 y corte es true) -->
-            <div id="seccionCorte" class="row mb-3" style="display: ${datosArticulo.corte && parseInt(datosArticulo.cantidad) === 1 ? 'block' : 'none'};">
+            <div id="seccionCorte" class="row mb-3" style="display: ${datosArticulo.corte ? 'block' : 'none'};">
                 <div class="col-12 p-4 bg-light rounded">
                     <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
                     <div class="mb-4">
@@ -2238,7 +2259,11 @@ if (isset($_GET['id'])) {
 
         document.getElementById('btnSumarCorte').addEventListener('click', function() {
             let cantidadCorte = document.getElementById('cantidadCorte');
-            cantidadCorte.value++;
+            if(cantidadCorte == 1){
+                cantidadCorte.value = 10;
+            }else{
+                cantidadCorte.value++;
+            }
         });
 
         // Lógica para los botones de incremento de precio de corte
@@ -2272,9 +2297,17 @@ if (isset($_GET['id'])) {
                 const precioCorte = document.getElementById('precioCorte');
 
                 if(!datosArticulo.corte){
-                    precioCorte.minutos = null;
+                    cantidadCorte.value = null;
                     precioCorte.value = null;
                 }
+
+                if(datosArticulo.corte && inputCantidad.value > 1 ){
+                    cantidadCorte.value = null;
+                    precioCorte.value = null;
+                }
+
+
+
                 // Actualizando datosArticulo con los valores de los inputs
                 datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
                 datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
