@@ -783,6 +783,7 @@ if (isset($_GET['id'])) {
             const modalElement = document.getElementById('modalSoloCorte');
             const modal = bootstrap.Modal.getInstance(modalElement);
             modal.hide();
+            showNotification("success");
         }
 
         function fn_solo_corte_tabla(datosCorte) {
@@ -853,15 +854,35 @@ if (isset($_GET['id'])) {
 
                         // Cerrar el modal
                         modal.hide();
+                        showNotification("success");
                         fn_obtener_total(); // Recalcular los totales después de editar
                     });
                 });
 
                 // Función para manejar el botón de eliminar
                 botonEliminar.addEventListener("click", () => {
-                    const fila = botonEliminar.closest("tr");
-                    fila.remove(); // Eliminar la fila
-                    fn_obtener_total(); // Recalcular los totales después de eliminar
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma, eliminamos la fila
+                            const fila = botonEliminar.closest("tr");
+                            fila.remove(); // Eliminar la fila
+                            
+                            // Recalcular los totales
+                            fn_obtener_total();
+
+                            // Mostrar mensaje de éxito
+                            showNotification("success");
+                        }
+                    });
                 });
             });
 
@@ -921,6 +942,10 @@ if (isset($_GET['id'])) {
                 const seccionCorte = document.getElementById('seccionCorte');
                 const cantidadCorte = document.getElementById('cantidadCorte');
                 const precioCorte = document.getElementById('precioCorte');
+               
+                const mensajeErrorExistente = document.querySelector('.error-message');
+                if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                cantidadCorte.classList.remove('error-input');
 
                 inputCantidad.value = 1; // Cantidad por defecto
                 cantidadCorte.value = 0; // Resetear minutos corte
@@ -1002,6 +1027,32 @@ if (isset($_GET['id'])) {
                     datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
                     datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
                     datosArticulo.id_movimiento = 1;
+
+                    if(datosArticulo.corte){
+                        const inputMonto = document.getElementById('cantidadCorte');
+                        const divContainer = inputMonto.closest('.d-flex');
+
+
+                        // Validar que el monto haya sido ingresado y sea mayor a 0
+                        if (isNaN(datosArticulo.minutos) || datosArticulo.minutos <= 0) {
+                            // Añadir clase para resaltar el error
+                            inputMonto.classList.add('error-input');
+
+                            // Crear mensaje de error dinámicamente
+                            const mensajeError = `
+                                <div class="error-message text-center">
+                                    Por favor, ingresa un monto válido mayor a 0.
+                                </div>
+                            `;
+
+                            // Insertar el mensaje de error debajo del contenedor principal
+                            divContainer.insertAdjacentHTML('afterend', mensajeError);
+
+                            return; // Detener ejecución si el monto no es válido
+                        }
+                    }
+
+
 
                     modalCantidad.hide();
                     fn_agregar_articulo_tabla(datosArticulo);
@@ -1116,9 +1167,28 @@ if (isset($_GET['id'])) {
 
         // Función para manejar el botón de eliminar
         botonEliminar.addEventListener("click", () => {
-            const fila = botonEliminar.closest("tr");
-            fila.remove(); // Eliminar la fila
-            fn_obtener_total(); // Recalcular los totales después de eliminar
+            Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma, eliminamos la fila
+                            const fila = botonEliminar.closest("tr");
+                            fila.remove(); // Eliminar la fila
+                            
+                            // Recalcular los totales
+                            fn_obtener_total();
+
+                            // Mostrar mensaje de éxito
+                            showNotification("success");
+                        }
+                    });
         });
 
        
@@ -1600,9 +1670,28 @@ if (isset($_GET['id'])) {
 
                 // Función de eliminar
                 botonEliminar.addEventListener("click", () => {
-                    const fila = botonEliminar.closest("tr");
-                    fila.remove();
-                    fn_obtener_total(); // Recalcular los totales
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma, eliminamos la fila
+                            const fila = botonEliminar.closest("tr");
+                            fila.remove(); // Eliminar la fila
+                            
+                            // Recalcular los totales
+                            fn_obtener_total();
+
+                            // Mostrar mensaje de éxito
+                            showNotification("success");
+                        }
+                    });
                 });
             });
 
@@ -1840,9 +1929,28 @@ if (isset($_GET['id'])) {
 
                 // Función de eliminar
                 botonEliminar.addEventListener("click", () => {
-                    const fila = botonEliminar.closest("tr");
-                    fila.remove();
-                    fn_obtener_total(); // Recalcular los totales
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma, eliminamos la fila
+                            const fila = botonEliminar.closest("tr");
+                            fila.remove(); // Eliminar la fila
+                            
+                            // Recalcular los totales
+                            fn_obtener_total();
+
+                            // Mostrar mensaje de éxito
+                            showNotification("success");
+                        }
+                    });
                 });
             });
 
@@ -1946,6 +2054,7 @@ if (isset($_GET['id'])) {
                 // Cerrar modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                 if (modal) modal.hide();
+                showNotification("success");
             });
 
             // Mostrar el modal
@@ -2085,9 +2194,28 @@ if (isset($_GET['id'])) {
 
                 // Función de eliminar
                 botonEliminar.addEventListener("click", () => {
-                    const fila = botonEliminar.closest("tr");
-                    fila.remove();
-                    fn_obtener_total(); // Recalcular los totales
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma, eliminamos la fila
+                            const fila = botonEliminar.closest("tr");
+                            fila.remove(); // Eliminar la fila
+                            
+                            // Recalcular los totales
+                            fn_obtener_total();
+
+                            // Mostrar mensaje de éxito
+                            showNotification("success");
+                        }
+                    });
                 });
             });
 

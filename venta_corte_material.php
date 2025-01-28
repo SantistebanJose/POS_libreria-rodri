@@ -2109,19 +2109,35 @@ if (isset($_GET['id'])) {
         
 
         // Función para manejar el botón de eliminar
-        botonEliminar.addEventListener("click",async  () => {
-            let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+        botonEliminar.addEventListener("click", async () => {
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
 
-            if(datosArticulo["movimiento_id"] == 1){
-                const response = await fn_eliminar_articulo(datosArticulo["rel_venta_articulo_id"]);
-            }else{
-                const response = await fn_eliminar_movimiento(datosArticulo["rel_venta_articulo_id"]);
+            if (result.isConfirmed) {
+                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+
+                // Determinar qué función llamar según el tipo de movimiento
+                if (datosArticulo["movimiento_id"] == 1) {
+                    await fn_eliminar_articulo(datosArticulo["rel_venta_articulo_id"]);
+                } else {
+                    await fn_eliminar_movimiento(datosArticulo["rel_venta_articulo_id"]);
+                }
+
+                // Actualizar los datos de la venta
+                await fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
+                // Mostrar notificación de éxito
+                
             }
-
-            fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-
         });
-
         // Llamamos la función para recalcular los totales si es necesario
         fn_obtener_total();
     }
