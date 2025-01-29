@@ -13,7 +13,6 @@ if (isset($_GET['id'])) {
                 <div class="card-sub">
                     Selecciona de acuerdo a las ventas que necesites :)
                 </div>
-
                 <div class="card-body">
                     <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                         <li class="nav-item">
@@ -97,12 +96,12 @@ if (isset($_GET['id'])) {
                                             class="dataTable display table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>fecha_orden</th>
+                                                    <th>#</th>
                                                     <th>#</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
-                                                    <th>hora</th>
+                                                    <th>HORA</th>
                                                     <th>TOTAL(S/)</th>
                                                     <th>TOTAL FINAL (S/)</th>
                                                     <th>pérdida</th>
@@ -195,6 +194,11 @@ if (isset($_GET['id'])) {
         padding: 15px;
         /* Espaciado dentro del modal para que el contenido no esté pegado a los bordes */
     }
+
+    .dataTable {
+        overflow-x: auto;
+        /* Para permitir desplazamiento horizontal si es necesario */
+    }
 </style>
 
 
@@ -276,7 +280,9 @@ if (isset($_GET['id'])) {
         </div>
     </div>
 </div>
+<script>
 
+</script>
 
 <script>
     function abrirModalDetalle(datosJsonVenta) {
@@ -305,7 +311,7 @@ if (isset($_GET['id'])) {
                 //acumulado_deuda
                 document.getElementById("idUtilidad").innerHTML = "<b>" + datosJsonVenta.estado_final + "</b><br> <span style='color:green'>  En esta venta fue realizada a CRÉDITO. Tiene abonado S/ " + datosJsonVenta.acumulado_deuda + " </span> <span style='color:orange'><br><strong>Para más información, Revisar en la seccion de DEUDA</span>";
             } else if (datosJsonVenta.estado_pago === "CREDITO" && datosJsonVenta.estado_final === "PAGADO - CREDTIO") {
-                document.getElementById("idUtilidad").innerHTML = "<b>" + datosJsonVenta.estado_final + "</b><br><span style='color:orange'> En esta venta fue realizada a CRÉDITO. <strong>Pagó su DEUDA</span>";
+                document.getElementById("idUtilidad").innerHTML = "<b>" + datosJsonVenta.estado_final + "</b><br><span style='color:orange'> En esta venta fue realizada a CRÉDITO. <strong style = 'color:green'>Pagó su DEUDA</span>";
             } else {
                 //document.getElementById("idUtilidad").innerHTML = "<span style='color:red'> En esta venta, PERDISTE un margen de utilidad de <strong>S/" + (parseFloat(datosJsonVenta.perdida_utilidad) * -1.00).toFixed(2) + ".</strong> </span>";
                 document.getElementById("idUtilidad").innerHTML = "<span style='color:green'> <b> En esta venta, no hiciste rebajas :)</b> </span>";
@@ -379,8 +385,12 @@ if (isset($_GET['id'])) {
 
 <script>
     $(document).ready(function() {
-        // Inicializar DataTable para todas las tablas con la clase 'dataTable'
-        $('.dataTable').DataTable({
+
+        fnDataTables();
+    });
+
+    function fnDataTables() {
+        $(".dataTable").DataTable({
             "order": [
                 [0, 'desc']
             ],
@@ -388,6 +398,7 @@ if (isset($_GET['id'])) {
                 "targets": [0], // Índice de la columna que quieres ocultar (empieza desde 0)
                 "visible": false // Oculta la columna
             }],
+
             language: {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -413,7 +424,7 @@ if (isset($_GET['id'])) {
                 }
             }
         });
-    });
+    }
 </script>
 
 

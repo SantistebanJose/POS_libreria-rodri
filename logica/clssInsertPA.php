@@ -21,6 +21,12 @@ function controladorClssInsertPA($accion)
                 finalizarVentaReservaCredito($jsDatosVenta);
             }
             break;
+        case 'ABONARDEUDACLIENTE':
+            if (isset($_POST["jsDatosAbono"])) {
+                $jsDatos = $_POST["jsDatosAbono"];
+                abonarDeuda($jsDatos);
+            }
+            break;
         case 'CAMBIARCONTRASEÑA':
             // Otros casos si los necesitas
             break;
@@ -83,14 +89,14 @@ function finalizarVentaReservaCredito($jsDatosVenta)
     $monto_original = $data['monto_original'];
     $monto_venta_final = $data['monto_venta_final'];
     $monto_inicial_deuda = $data['monto_inicial'];
-    $json_deuda = $data['js_detalle_deuda'];  
+    $json_deuda = $data['js_detalle_deuda'];
 
-    
+
     if (is_null($json_deuda) || empty($json_deuda)) {
-        
+
         $json_deuda = null;
     } else {
-        
+
         $json_deuda = json_encode($json_deuda);
     }
 
@@ -115,5 +121,44 @@ function finalizarVentaReservaCredito($jsDatosVenta)
         echo json_encode($response);
     } catch (Exception $e) {
         echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas.' . $e]);
+    }
+}
+function abonarDeuda($jsDatosAbono)
+{
+    global $conectar;
+
+
+    $data = json_decode($jsDatosAbono, true);
+
+
+    $cliente_id = $data['cliente_id'];
+    $usuario_id = $data['usuario_id'];
+    $montoAbono = $data['montoAbono'];
+    $json_pagos_abono = json_encode($data['js_detalle_pagos']);
+
+
+    try {
+
+        $sql = "SELECT fn_pagar_deuda(:p_cliente_id,:usuario_id_p,:monto_abono_p,:json_pagos_p);";
+        $stmt = $conectar->prepare($sql);
+
+
+        $stmt->bindParam(':p_cliente_id', $cliente_id);
+        $stmt->bindParam(':usuario_id_p', $usuario_id);
+        $stmt->bindParam(':monto_abono_p', $montoAbono);
+        $stmt->bindParam(':json_pagos_p', $json_pagos_abono);
+
+        $stmt->execute();
+
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $jsonResponse = $row['fn_pagar_deuda'];
+
+        $response = json_decode($jsonResponse, true);
+
+        echo json_encode($response);
+    } catch (Exception $e) {
+
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas']);
     }
 }

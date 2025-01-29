@@ -258,12 +258,7 @@ include('logica/clssConsultas.php');
                                             <span class="sub-item">Listado de Pagos</span>
                                         </a>
                                     </li>
-
-                                    <li>
-                                        <a href="venta_corte_material.php">
-                                            <span class="sub-item">Atención de reservas</span>
-                                        </a>
-                                    </li>
+                                    
 
 
                                 </ul>
@@ -277,20 +272,20 @@ include('logica/clssConsultas.php');
                                 class="collapsed"
                                 aria-expanded="false">
                                 <i class="fas fa-portrait"></i>
-                                <p>Deudas</p>
+                                <p>Crédito</p>
                                 <span class="caret"></span>
                             </a>
                             <div class="collapse" id="deuda">
                                 <ul class="nav nav-collapse">
                                     <li>
-                                        <a href="venta_reserva_corte.php">
-                                            <span class="sub-item">Listado de Deudas</span>
+                                        <a href="pagoCredito.php">
+                                            <span class="sub-item">Pagos de Credito</span>
                                         </a>
                                     </li>
 
                                     <li>
-                                        <a href="venta_corte_material.php">
-                                            <span class="sub-item">Atención de reservas</span>
+                                        <a href="historialClientes.php">
+                                            <span class="sub-item">Historial de Clientes </span>
                                         </a>
                                     </li>
 

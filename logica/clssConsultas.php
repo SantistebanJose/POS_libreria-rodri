@@ -18,6 +18,27 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result);
             }
             break;
+        case 'VENTAIDCLIENTEDEMRD':
+            if (isset($_POST["cliente_id"])) {
+                $cliente_id_ = $_POST["cliente_id"];
+                $result = fnListForDeudaPendientes($cliente_id_);
+                echo json_encode($result);
+            }
+            break;
+        case 'PAGOS_ABONADOS_CLIENTE_ID':
+            if (isset($_POST["cliente_id"])) {
+                $cliente_id_ = $_POST["cliente_id"];
+                $result = fnListForAbonosConsolidadoCliente($cliente_id_);
+                echo json_encode($result);
+            }
+            break;
+        case 'DETALLE_ABONO_DEUDA_CLIENTEDDRMD':
+            if (isset($_POST["abono_id"])) {
+                $abono_id = $_POST["abono_id"];
+                $result = fnListForAbonosClientePorVentaPagadas($abono_id);
+                echo json_encode($result);
+            }
+            break;
     }
 }
 function executeQuery(string $query, array $params = []): array
@@ -104,7 +125,7 @@ function listarVentaReservaCorte(): array
 
 function listarFormaPago(): array
 {
-    $query = "SELECT id, nombre FROM forma_pago WHERE deleted_at IS NULL";
+    $query = "SELECT id, nombre FROM forma_pago WHERE deleted_at IS NULL order by id";
     return executeQuery($query);
 }
 
@@ -188,16 +209,18 @@ function fnListForVentasSemanales(): array
             CASE 
                 WHEN v.estado_pago = 'P' THEN 'PAGADO'
                 WHEN v.estado_pago = 'C' THEN 'CREDITO'
-            END AS estado_final_venta,
-            v.estado_final
-        FROM venta AS v
+            END AS estado_pago,
+            v.estado_final,
+            du.acumulado AS acumulado_deuda
+            FROM venta AS v
+        LEFT JOIN deuda AS du ON v.id=du.id_venta
         INNER JOIN usuario AS us ON v.usuario_id = us.id  
         INNER JOIN persona AS usua ON us.persona_id = usua.id
         INNER JOIN persona AS p ON v.cliente_id = p.id
         WHERE v.estado_venta = 'VR' 
         AND v.deleted_at IS NULL
-        AND v.fecha_fin_transaccion >= date_trunc('week', CURRENT_DATE)
-        AND v.fecha_fin_transaccion < CURRENT_DATE + INTERVAL '1 day'
+        --AND v.fecha_fin_transaccion >= date_trunc('week', CURRENT_DATE)
+        --AND v.fecha_fin_transaccion < CURRENT_DATE + INTERVAL '1 day'
         ORDER BY v.fecha_fin_transaccion;
     ";
     return executeQuery($query);
@@ -231,4 +254,174 @@ function fnListarDetalleVentaID($idVenta): array
         LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
         WHERE rva.venta_id = :idVenta;";
     return executeQuery($query, params: ['idVenta' => $idVenta]);
+}
+
+function fnListForClientesDeuda(): array
+{
+    $query = "
+    SELECT 
+        DISTINCT
+        cliente.id AS cliente_id,
+        cliente.numero_documento,
+        cliente.nombres,
+        cliente.apellidos,
+        cliente.telefonofijo,
+        cliente.telefonomovil,
+        cliente.email,
+        CONCAT(cliente.nombres, ' ', cliente.apellidos) AS cliente, 
+        (SELECT SUM (monto-acumulado) FROM deuda WHERE cliente_id=cliente.id) as monto_deuda_pendiente
+    FROM 
+    persona as cliente
+    JOIN deuda as d ON d.cliente_id = cliente.id
+    WHERE d.estado='PENDIENTE';
+    ";
+    return executeQuery($query);
+}
+function fnListForClientesDeudaPagasAndNoPagadas(): array
+{
+    $query = "
+    SELECT 
+        DISTINCT
+        cliente.id AS cliente_id,
+        cliente.numero_documento,
+        cliente.nombres,
+        cliente.apellidos,
+        cliente.telefonofijo,
+        cliente.telefonomovil,
+        cliente.email,
+        CONCAT(cliente.nombres, ' ', cliente.apellidos) AS cliente, 
+        (SELECT SUM (monto-acumulado) FROM deuda WHERE cliente_id=cliente.id) as monto_deuda_pendiente
+    FROM 
+    persona as cliente
+    JOIN deuda as d ON d.cliente_id = cliente.id;
+    --WHERE d.estado='PENDIENTE';
+    ";
+    return executeQuery($query);
+}
+function fnListForDeudaPendientes($idCliente): array
+{
+    $query = "
+    SELECT 
+    id_venta,
+    created_at::date,
+    monto,
+    CONCAT(created_at::date,' [S/',(monto-acumulado),'] ','<b>',estado,'</b>')as formato,
+    acumulado,
+    (monto-acumulado) AS deuda_pendiente
+    FROM deuda 
+    WHERE estado <>'PAGADO'
+    AND cliente_id= :id_clientedemrd;
+    ";
+    return executeQuery($query, params: ['id_clientedemrd' => $idCliente]);
+}
+function fnListForAbonosConsolidadoCliente($idCliente): array
+{
+    $query = "
+    SELECT 
+        d.id_venta AS id_general,
+        'id_venta' as nombre_id,
+        'PAGO INICIAL' as estacion,
+        CONCAT('[Pago Inicial] ','ID VENTA: ',d.id_venta,' - VENTA de ',d.created_at::date,' [S/',monto_inicial,']')as formato,
+        CONCAT(c.nombres, ' ', c.apellidos) AS cliente, 
+
+        d.created_at::DATE as fecha,
+        TO_CHAR(d.created_at, 'HH12:MI AM') AS hora,
+        d.created_at AS fecha_general,
+        (SELECT SUM(monto) FROM detalle_forma_pago_deuda WHERE id_deuda=d.id) AS monto,
+        (
+            SELECT 
+            json_agg
+            (
+                jsonb_build_object(
+                    'ID_DETALLE',fpu.id,
+                    'FORMA_PAGO', fp.nombre,
+                    'MONTO', fpu.monto,
+                    'COLOR',fp.color
+                )
+            ) AS resultado
+            FROM detalle_forma_pago_deuda fpu
+            JOIN forma_pago fp ON fpu.id_forma_pago = fp.id
+            WHERE fpu.id_deuda=d.id
+        )::JSON AS js_detalle_forma_pago,
+        d.estado as estado_deuda,
+        d.monto as monto_deuda
+    FROM deuda d
+    JOIN persona as c ON c.id=d.cliente_id AND d.monto_inicial>0
+    WHERE d.cliente_id=:idCliente
+
+    UNION ALL
+    -- ABONOS DE CLIENTES 
+    SELECT 
+        a.id as id_general,
+        'abono_id',
+        'ABONO' as estacion,
+
+        --CONCAT('ID A: ',a.id,' - ', a.created_at::DATE,' [',c.nombres, ' ', c.apellidos,'] - S/',a.monto) AS formato,
+        CONCAT('ID ABONO: ',a.id,' - ABONO de ', a.created_at::DATE,' [S/',a.monto,']') AS formato2,
+        CONCAT(c.nombres, ' ', c.apellidos) AS cliente, 
+        a.created_at::date AS fecha,
+        TO_CHAR(a.created_at, 'HH12:MI AM') AS hora,
+        a.created_at AS fecha_general,
+        a.monto,
+        (
+            SELECT 
+            json_agg
+            (
+                jsonb_build_object(
+                    'ID_DETALLE',fpa.id,
+                    'FORMA_PAGO', fp.nombre,
+                    'MONTO', fpa.monto,
+                    'COLOR',fp.color
+                )
+            ) AS resultado
+            FROM detalle_forma_pago_abono fpa
+            JOIN forma_pago fp ON fpa.forma_pago_id = fp.id
+            WHERE fpa.id_abono=a.id
+        )::JSON as js_detalle_forma_pago,
+        'ABONADO' AS estad_,
+        0 as monto_deuda
+    FROM abono AS a
+    JOIN persona as c ON c.id=a.cliente_id
+    WHERE c.id=:idCliente 
+    order by 8 desc;
+    ";
+    return executeQuery($query, params: ['idCliente' => $idCliente]);
+}
+function fnListForAbonosCliente($idCliente): array
+{
+    $query = "
+    SELECT 
+    a.id as abono_id,
+    CONCAT('ID A: ',a.id,' - ', a.created_at::DATE,' [',c.nombres, ' ', c.apellidos,'] - S/',a.monto) AS formato,
+    CONCAT('ID A: ',a.id,' - ', a.created_at::DATE,' [S/',a.monto,']') AS formato2,
+    CONCAT(c.nombres, ' ', c.apellidos) AS cliente, 
+    a.created_at::date AS fecha,
+    TO_CHAR(a.created_at, 'HH12:MI AM') AS hora,
+    a.monto
+    FROM
+    abono AS a
+    JOIN persona as c ON c.id=a.cliente_id
+    WHERE c.id=:id_clientedemrd ;
+
+    ";
+    return executeQuery($query, params: ['id_clientedemrd' => $idCliente]);
+}
+
+function fnListForAbonosClientePorVentaPagadas($idAbono): array
+{
+    $query = "
+    SELECT 
+    --d.id AS id_deuda,
+    d.id_venta,
+    ad.abono_id,
+    d.created_at::date as fecha,
+    ad.monto,
+    CONCAT('<b>ID VENTA: ',d.id_venta,'</b> - VENTA de ',d.created_at::date,' [S/',ad.monto,'] ','',ad.estado_momento,'')as formato,
+    (d.monto-d.acumulado) AS deuda_pendiente
+    FROM deuda as d
+    JOIN abono_deuda AS ad ON ad.deuda_id=d.id
+    WHERE ad.abono_id=:abono_id
+    ORDER BY 1;
+    ";
+    return executeQuery($query, params: ['abono_id' => $idAbono]);
 }
