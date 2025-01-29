@@ -2259,7 +2259,7 @@ if (isset($_GET['id'])) {
 
         document.getElementById('btnSumarCorte').addEventListener('click', function() {
             let cantidadCorte = document.getElementById('cantidadCorte');
-            if(cantidadCorte == 1){
+            if(cantidadCorte == 0){
                 cantidadCorte.value = 10;
             }else{
                 cantidadCorte.value++;
