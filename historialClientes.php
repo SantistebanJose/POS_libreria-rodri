@@ -32,7 +32,7 @@ include("cabecera.php");
                                 <tr>
                                     <td><?php echo $datos["cliente_id"] ?></td>
                                     <td><i class="fas fa-user"></i><?php echo " - " . $datos["cliente"] ?></td>
-                                    <td><?php echo $datos["monto_deuda_pendiente"] ?></td>
+                                    <td><?php echo "S/ ".$datos["monto_deuda_pendiente"] ?></td>
                                     <td>
                                         <div class="mt-2 text-center">
 
@@ -126,63 +126,67 @@ include("cabecera.php");
 
             <div class="modal-body">
                 <div class="container-fluid">
-                    <div class="card text-start">
-                        <h4 class="card-title text-center" style="font-size: 28px;">Deuda de S/ <strong id="idMontoDeuda"></strong></h4>
-                        <div class="card-body">
-                            <div
-                                class="row justify-content-center align-items-center sm-2">
-                                <div class="col-md-6">
-                                    <div class="card text-start">
-                                        <div class="card-body">
-                                            <h4 class="card-title"><i class="fas fa-user"></i> Cliente </h4>
-                                            <hr>
-                                            <div><span id="idNombreDeudor">Cliente</span></div>
-                                            <div><strong>N° DOCUMENTO:</strong> <span id="docCliente"></span></div>
-                                            <div><strong>Número de Celular:</strong> <span id="numCelCliente"></span></div>
-                                            <div><strong>Correo:</strong> <span id="emailCliente"></span></div>
-                                        </div>
-                                    </div>
 
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card text-start">
-                                        <div class="card-body">
-                                            <h4 class="card-title" id=""><i class="fas fa-credit-card"></i> Datos de Deuda</h4>
-                                            <hr>
-                                            <div><strong id="idCantidadDeudas"> </strong></div>
-                                            <div>Acumulado en deuda (S/): <strong id="idMontoDeudaDeMrd">41.00</strong></div>
-                                            <hr>
-                                            <br>
+                    <h4 class="card-title text-center" style="font-size: 28px;">Deuda de S/ <strong id="idMontoDeuda"></strong></h4>
 
-                                        </div>
-                                    </div>
+                    <div
+                        class="row justify-content-center align-items-center sm-2">
+                        <div class="col-md-6">
+                            <div class="card text-start">
+                                <div class="card-body">
+                                    <h4 class="card-title"><i class="fas fa-user"></i> Cliente </h4>
+                                    <hr>
+                                    <div><span id="idNombreDeudor">Cliente</span></div>
+                                    <div><strong>N° DOCUMENTO:</strong> <span id="docCliente"></span></div>
+                                    <div><strong>Número de Celular:</strong> <span id="numCelCliente"></span></div>
+                                    <div><strong>Correo:</strong> <span id="emailCliente"></span></div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card text-start">
-                                    <div class="card-body">
-                                        <h4 class="card-title"><i class="fas fa-stream"></i> Pagos Realizados</h4>
-                                        <div>
-                                            <div id="accordionExample" class="accordion">
-                                                <!-- Los acordeones se agregarán dinámicamente aquí -->
-                                            </div>
-                                        </div>
-                                    </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card text-start">
+                                <div class="card-body">
+                                    <h4 class="card-title" id=""><i class="fas fa-credit-card"></i> Datos de Deuda</h4>
+                                    <hr>
+                                    <div><strong id="idCantidadDeudas"> </strong></div>
+                                    <div>Acumulado en deuda (S/): <strong id="idMontoDeudaDeMrd">41.00</strong></div>
+                                    <hr>
+                                    <br>
+
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title"><i class="fas fa-stream"></i> Pagos Realizados</h4>
+                            <hr>
+                            <div>
+                                <div id="accordionExample" class="accordion">
+                                    <!-- Los acordeones se agregarán dinámicamente aquí -->
+                                </div>
+                                <hr>
+                                <div id="paginationControls" class="text-center">
+                                    <button id="prevPage" class="btn btn-primary" onclick="changePage('prev')">Anterior</button>
+                                    <button id="nextPage" class="btn btn-primary" onclick="changePage('next')">Siguiente</button>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-danger"
+                                        data-bs-dismiss="modal">
+                                        Salir
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
-            <div class="text-center">
-                <button
-                    type="button"
-                    class="btn btn-danger"
-                    data-bs-dismiss="modal">
-                    Salir
-                </button>
-            </div>
+
             <br>
         </div>
     </div>
@@ -408,10 +412,10 @@ include("cabecera.php");
                     select.append('<option disabled>No hay deudas disponibles :)</option>');
                 }
                 var mensaje = "";
-                if(contador==0){
+                if (contador == 0) {
                     mensaje = "<span style = 'color:green'> Tiene <b>0 deudas 😀</b></span>"
-                }else{
-                    mensaje = "<span style = 'color:red'> Tiene <b>"+contador+" deudas 😞</b></span>"
+                } else {
+                    mensaje = "<span style = 'color:red'> Tiene <b>" + contador + " deudas 😞</b></span>"
                 }
                 document.getElementById("idCantidadDeudas").innerHTML = mensaje;
                 document.getElementById("idMontoDeudaDeMrd").innerText = acumDeuda.toFixed(2);
@@ -528,8 +532,11 @@ include("cabecera.php");
 
     }
 
-    function fn_listarPagosAbono(datosCliente) {
+    let acordeonesData = []; // Aquí almacenaremos todos los acordeones
+    let currentPage = 1; // Página actual
+    const itemsPerPage = 5; // Número de acordeones por página
 
+    function fn_listarPagosAbono(datosCliente) {
         $.ajax({
             url: 'logica/clssConsultas.php',
             type: 'POST',
@@ -541,155 +548,180 @@ include("cabecera.php");
             success: function(datos) {
                 console.log("DATOS DE MRD ABONOS:", datos);
 
-                var contenedor = document.getElementById('accordionExample');
-                contenedor.innerHTML = "";
+                // Almacena los acordeones completos
+                acordeonesData = datos;
 
-                var promesas = datos.map(function(item, index) {
-
-                    return new Promise(function(resolve, reject) {
-                        $.ajax({
-                            url: 'logica/clssConsultas.php',
-                            type: 'POST',
-                            data: {
-                                accion: "DETALLE_ABONO_DEUDA_CLIENTEDDRMD",
-                                abono_id: item.id_general
-                            },
-                            dataType: 'json',
-                            success: function(datosDetalle) {
-
-                                var pagos = JSON.parse(item.js_detalle_forma_pago);
-
-                                console.log("PAGOS DE MRD:", item.js_detalle_forma_pago);
-                                console.log("DATOS DE MRD DETALLE ABONO DEUDA:", datosDetalle);
-                                var tableRows = '';
-                                var tableRowsPagos = '';
-
-                                //<td><a href="javascript:void(0);" onclick="fn_verDetalle(${detalle.id_general})">ver detalle</a></td>
-                                datosDetalle.forEach(function(detalle) {
-                                    tableRows += `
-                                        <tr style="border-bottom: 1px solid #000;">
-                                            <td>${detalle.formato}</td>
-                                        </tr>
-                                    `;
-                                });
-                                //<td><a href="javascript:void(0);" onclick="fn_verDetalle(${pago.ID_DETALLE})">ver detalle</a></td>
-                                pagos.forEach(function(pago) {
-                                    // Por cada pago, agregamos una fila con los datos correspondientes
-                                    tableRowsPagos += `
-                                        <tr style="border-bottom: 1px solid #000;">
-                                            <td><strong style='color:${pago.COLOR}'>${pago.FORMA_PAGO}</strong></td>
-                                            <td><strong> S/ ${pago.MONTO.toFixed(2)} </strong></td>
-                                        </tr>
-                                    `;
-                                });
-                                var estado;
-                                if (item.estado_deuda === "PAGADO") {
-                                    estado = `
-                                        <div class="text-center">
-                                            <button class="btn btn-success rounded" disabled>${item.estado_deuda}</button>
-                                        </div>
-                                    `;
-                                } else {
-                                    estado = `
-                                        <div class="text-center">
-                                            <button class="btn btn-danger rounded" disabled>${item.estado_deuda}</button>
-                                        </div>
-                                    `;
-                                }
-                                var datosVentaPagoInicial = `
-                                        <div><strong>Cliente:</strong> ${item.cliente}</div>
-                                        <div><strong>Fecha:</strong> ${item.fecha}</div>
-                                        <div><strong>Hora:</strong> ${item.hora}</div>
-                                        <div><strong>Monto Venta:</strong> <span style='color:blue'>S/${item.monto_deuda}</span></div>
-                                        <div><strong>Pago Inicial:</strong> <span style='color:green'>S/${item.monto}</span></div>
-                                        ${estado}
-                                        
-                                        <hr>
-                                `;
-                                var datosVentaPagoAbono = `
-                                        <div><strong>Cliente:</strong> ${item.cliente}</div>
-                                        <div><strong>Fecha:</strong> ${item.fecha}</div>
-                                        <div><strong>Hora:</strong> ${item.hora}</div>
-                                        <div><strong>Monto:</strong> <span style='color:green'>S/${item.monto}</span></div>
-                                        <hr>
-                                        <div>
-                                            <table id="tablita" class="table table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="border-bottom: 1px solid #000;"><i class="fas fa-shopping-bag"></i> Venta</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    ${tableRows} <!-- Aquí insertamos las filas dinámicas -->
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                `;
-                                var concatenar;
-                                if (item.estacion === "PAGO INICIAL") {
-                                    concatenar = datosVentaPagoInicial;
-
-                                } else if (item.estacion === "ABONO") {
-                                    concatenar = datosVentaPagoAbono;
-                                }
-                                var acordeonHTML = `
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading${index + 1}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapse${index + 1}" aria-expanded="false" aria-controls="collapse${index + 1}">
-                                        ${item.formato} <!-- Título del acordeón -->
-                                    </button>
-                                </h2>
-                                <div id="collapse${index + 1}" class="accordion-collapse collapse" aria-labelledby="heading${index + 1}"
-                                     data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-
-                                        ${concatenar}
-
-                                        <div>
-                                            <table id="tablita" class="table table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="border-bottom: 1px solid #000;"><i class="fas fa-credit-card"></i> Pagos</th>
-                                                        <th style="border-bottom: 1px solid #000;"> </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    ${tableRowsPagos} <!-- Aquí insertamos las filas dinámicas -->
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-
-                                resolve(acordeonHTML);
-                            },
-                            error: function(xhr, status, error) {
-                                console.error("Error al obtener los detalles del abono:", error);
-                                reject(error);
-                            }
-                        });
-                    });
-                });
-
-
-                Promise.all(promesas).then(function(acordeonesHTML) {
-
-                    contenedor.innerHTML = acordeonesHTML.join('');
-                }).catch(function(error) {
-                    console.error("Error en alguna de las peticiones:", error);
-                });
-
+                // Llama a la función para mostrar los acordeones de la página actual
+                displayAcordeones();
             },
             error: function(xhr, status, error) {
                 console.error("Error al obtener los abonos:", error);
             }
         });
-
-
     }
+
+    // Función para mostrar acordeones de acuerdo a la página actual
+    function displayAcordeones() {
+        const contenedor = document.getElementById('accordionExample');
+        contenedor.innerHTML = "";
+
+        // Calcula los índices para dividir los acordeones
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = currentPage * itemsPerPage;
+
+        // Selecciona los acordeones que se mostrarán en la página actual
+        const acordeonesToShow = acordeonesData.slice(start, end);
+
+        // Mapeamos los datos para crear los acordeones
+        const promesas = acordeonesToShow.map(function(item, index) {
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: 'logica/clssConsultas.php',
+                    type: 'POST',
+                    data: {
+                        accion: "DETALLE_ABONO_DEUDA_CLIENTEDDRMD",
+                        abono_id: item.id_general
+                    },
+                    dataType: 'json',
+                    success: function(datosDetalle) {
+
+                        var pagos = JSON.parse(item.js_detalle_forma_pago);
+
+                        var tableRows = '';
+                        var tableRowsPagos = '';
+
+                        datosDetalle.forEach(function(detalle) {
+                            tableRows += `
+                            <tr style="border-bottom: 1px solid #000;">
+                                <td>${detalle.formato}</td>
+                                <td></td>
+                            </tr>
+                        `;
+                        });
+
+                        pagos.forEach(function(pago) {
+                            tableRowsPagos += `
+                            <tr style="border-bottom: 1px solid #000;">
+                                <td><strong style='color:${pago.COLOR}'>${pago.FORMA_PAGO}</strong></td>
+                                <td><strong> S/ ${pago.MONTO.toFixed(2)} </strong></td>
+                            </tr>
+                        `;
+                        });
+
+                        var estado = item.estado_deuda === "PAGADO" ? `
+                        <div class="text-center">
+                            <button class="btn btn-success rounded" disabled>${item.estado_deuda}</button>
+                        </div>
+                    ` : `
+                        <div class="text-center">
+                            <button class="btn btn-danger rounded" disabled>${item.estado_deuda}</button>
+                        </div>
+                    `;
+
+                        var datosVentaPagoInicial = `
+                        <div><strong>Cliente:</strong> ${item.cliente}</div>
+                        <div><strong>Fecha:</strong> ${item.fecha}</div>
+                        <div><strong>Hora:</strong> ${item.hora}</div>
+                        <div><strong>Monto Venta:</strong> <span style='color:blue'>S/${item.monto_deuda}</span></div>
+                        <div><strong>Pago Inicial:</strong> <span style='color:green'>S/${item.monto}</span></div>
+                        ${estado}
+                        <hr>
+                    `;
+
+                        var datosVentaPagoAbono = `
+                        <div><strong>Cliente:</strong> ${item.cliente}</div>
+                        <div><strong>Fecha:</strong> ${item.fecha}</div>
+                        <div><strong>Hora:</strong> ${item.hora}</div>
+                        <div><strong>Monto:</strong> <span style='color:green'>S/${item.monto}</span></div>
+                        <hr>
+                        <div>
+                            <table id="tablita" class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="border-bottom: 1px solid #000;"><i class="fas fa-shopping-bag"></i> Venta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${tableRows}
+                                </tbody>
+                            </table>
+                            <hr>
+                        </div>
+                    `;
+
+                        var concatenar = item.estacion === "PAGO INICIAL" ? datosVentaPagoInicial : datosVentaPagoAbono;
+
+                        var acordeonHTML = `
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading${start + index + 1}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse${start + index + 1}" aria-expanded="false" aria-controls="collapse${start + index + 1}">
+                                    ${item.formato}
+                                </button>
+                            </h2>
+                            <div id="collapse${start + index + 1}" class="accordion-collapse collapse" aria-labelledby="heading${start + index + 1}"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    ${concatenar}
+                                    <div>
+                                        <table id="tablita" class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th style="border-bottom: 1px solid #000;"><i class="fas fa-credit-card"></i> Pagos</th>
+                                                    <th style="border-bottom: 1px solid #000;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${tableRowsPagos}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                        resolve(acordeonHTML);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al obtener los detalles del abono:", error);
+                        reject(error);
+                    }
+                });
+            });
+        });
+
+        // Una vez que todos los acordeones están listos, los agregamos al contenedor
+        Promise.all(promesas).then(function(acordeonesHTML) {
+            contenedor.innerHTML = acordeonesHTML.join('');
+        }).catch(function(error) {
+            console.error("Error en alguna de las peticiones:", error);
+        });
+
+        // Actualiza los controles de la paginación
+        updatePaginationControls();
+    }
+
+    // Función para cambiar de página
+    function changePage(direction) {
+        if (direction === 'prev' && currentPage > 1) {
+            currentPage--;
+        } else if (direction === 'next' && currentPage * itemsPerPage < acordeonesData.length) {
+            currentPage++;
+        }
+
+        // Llamamos a displayAcordeones para actualizar la vista
+        displayAcordeones();
+    }
+
+    // Función para actualizar los controles de paginación
+    function updatePaginationControls() {
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage * itemsPerPage >= acordeonesData.length;
+    }
+
+    // Llamamos a la función para obtener los pagos del cliente
+    fn_listarPagosAbono(datosCliente);
 </script>
 
 <script>
