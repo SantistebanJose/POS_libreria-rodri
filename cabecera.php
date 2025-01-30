@@ -52,6 +52,8 @@ include('logica/clssConsultas.php');
                 sessionStorage.fonts = true;
             },
         });
+
+        
     </script>
 
     <!-- CSS Files -->
@@ -99,7 +101,7 @@ include('logica/clssConsultas.php');
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
-                        <li class="nav-item active">
+                        <li class="nav-item ">
                             <a
                                 data-bs-toggle="collapse"
                                 href="#dashboard"
@@ -254,7 +256,7 @@ include('logica/clssConsultas.php');
                             <div class="collapse" id="pago">
                                 <ul class="nav nav-collapse">
                                     <li>
-                                        <a href="venta_reserva_corte.php">
+                                        <a href="">
                                             <span class="sub-item">Listado de Pagos</span>
                                         </a>
                                     </li>
@@ -883,3 +885,22 @@ include('logica/clssConsultas.php');
                 <!-- End Navbar -->
             </div>
             <br>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let menuItems = document.querySelectorAll(".nav-item a");
+    let currentPath = window.location.pathname.split("/").pop(); // Obtiene solo el nombre del archivo
+
+    menuItems.forEach(item => {
+        let menuPath = item.getAttribute("href").split("/").pop(); // Obtiene solo el nombre del archivo
+
+        if (currentPath.includes(menuPath) && menuPath !== "") {
+            document.querySelectorAll(".nav-item").forEach(nav => nav.classList.remove("active")); // Remueve la clase active de todos
+            item.closest(".nav-item").classList.add("active"); // Agrega active al elemento correcto
+        }
+    });
+});
+
+
+
+</script>
