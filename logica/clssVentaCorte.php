@@ -52,30 +52,36 @@ function consultarDetalleReserva($venta_id)
     try {
         $orden = $conectar->prepare("
         SELECT 
-        rva.id AS rel_venta_articulo_id,
-        rva.venta_id,
-        rva.articulo_id,
-        CASE 
-            WHEN ar.dimension_id IS NOT NULL THEN
-                CONCAT(ar.nombre, ' (', dim.medida, ')')
-            WHEN ar.nombre IS NULL THEN
-                m.descripcion
-            ELSE
-                ar.nombre 
-        END as articulo_nombre,
-        rva.cantidad,
-        rva.precio_unitario_articulo,
-        rva.minutos,
-        rva.costo_por_minuto,
-        rva.sub_total,
-        ar.corte,
-        rva.movimiento_id
+            rva.id AS rel_venta_articulo_id,
+            rva.venta_id,
+            rva.articulo_id,
+            CASE 
+                WHEN ar.dimension_id IS NOT NULL THEN
+                    CONCAT(ar.nombre, ' (', dim.medida, ')')
+                WHEN ar.nombre IS NULL THEN
+                    CASE 
+                        WHEN rva.nota_archivo != 'Sin nota' THEN 
+                            CONCAT(m.descripcion, ' (', rva.nota_archivo, ')')
+                        ELSE
+                            m.descripcion
+                    END
+                ELSE
+                    ar.nombre 
+            END as articulo_nombre,
+            rva.cantidad,
+            rva.precio_unitario_articulo,
+            rva.minutos,
+            rva.costo_por_minuto,
+            rva.sub_total,
+            ar.corte,
+            rva.movimiento_id,
+            rva.nota_archivo
         FROM rel_venta_articulo AS rva
-        JOIN movimiento as m ON rva.movimiento_id=m.id
+        JOIN movimiento AS m ON rva.movimiento_id = m.id
         LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
-        LEFT  JOIN dimension AS dim ON ar.dimension_id = dim.id
+        LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
         WHERE rva.venta_id = :id
-        order by rva.id;");
+        ORDER BY rva.id;");
         $orden->bindParam(":id", $venta_id);
         $orden->execute();
 
@@ -104,8 +110,8 @@ function registrar_reserva($datos = array())
 
         // Insertar en la tabla rel_venta_articulo y descontar stock
         foreach ($datos['articulos'] as $articulo) {
-            $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto, precio_unitario_articulo, cantidad, sub_total,movimiento_id) 
-                                         VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto, :precio_unitario, :cantidad, :sub_total, :movimiento_id);");
+            $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto, precio_unitario_articulo, cantidad, sub_total,movimiento_id,nota_archivo) 
+                                         VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto, :precio_unitario, :cantidad, :sub_total, :movimiento_id,:nota_archivo)");
             $orden->bindParam(":venta_id", $venta_id);
 
             $articuloId = ($articulo['articulo_id'] === 0 || (int)$articulo['articulo_id'] === 0) 
@@ -126,6 +132,8 @@ function registrar_reserva($datos = array())
             $orden->bindParam(":cantidad", $articulo['cantidad']);
             $orden->bindParam(":sub_total", $articulo['sub_total']);
             $orden->bindParam(":movimiento_id", $articulo['movimiento_id']);
+            $orden->bindParam(":nota_archivo", $articulo['nota_archivo']);
+
             $orden->execute();
             $orden->closeCursor();
 
@@ -153,10 +161,11 @@ function fn_insert_movimiento($datos = array())
     global $conectar;
     try {
         // Preparar la consulta
-        $orden = $conectar->prepare("SELECT fn_insert_pis_for_movimientos(:venta_id, :movimiento_id, :cantidad, :sub_total) AS respuesta;");
+        $orden = $conectar->prepare("SELECT fn_insert_pis_for_movimientos(:venta_id, :movimiento_id, :cantidad,:nota_archivo, :sub_total) AS respuesta;");
         $orden->bindParam(":venta_id", $datos['venta_id']);
         $orden->bindParam(":movimiento_id", $datos['movimiento_id']);
         $orden->bindParam(":cantidad", $datos['cantidad']);
+        $orden->bindParam(":nota_archivo", $datos['nota_archivo']);
         $orden->bindParam(":sub_total", $datos['sub_total']);
         
         $orden->execute();
@@ -186,8 +195,8 @@ function fn_adicionar_articulo($datos = array())
         $conectar->beginTransaction();
 
         // Preparar la consulta para insertar el artículo
-        $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto,precio_unitario_articulo , cantidad, sub_total,movimiento_id) 
-                                     VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto,:precio_unitario, :cantidad, :sub_total, :movimiento_id);");
+        $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto,precio_unitario_articulo , cantidad, sub_total,movimiento_id,nota_archivo) 
+                                     VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto,:precio_unitario, :cantidad, :sub_total, :movimiento_id,'Sin nota');");
         $orden->bindParam(":venta_id", $datos['venta_id']);
         
         $articuloId = ($datos['articulo_id'] === 0 || (int)$datos['articulo_id'] === 0) 
@@ -452,11 +461,13 @@ function fn_editar_movimiento($datos = array())
         $orden = $conectar->prepare("UPDATE rel_venta_articulo 
                                      SET 
                                          cantidad = :cantidad,
-                                         sub_total = :sub_total
+                                         sub_total = :sub_total,
+                                         nota_archivo = :nota_archivo
                                      WHERE id = :id_rel_articulo");
 
         $orden->bindParam(":cantidad", $datos['cantidad'], is_null($datos['cantidad']) ? PDO::PARAM_NULL : PDO::PARAM_INT);
         $orden->bindParam(":sub_total", $datos['sub_total'], PDO::PARAM_STR);
+        $orden->bindParam(":nota_archivo", $datos['nota_archivo'], PDO::PARAM_STR);
         $orden->bindParam(":id_rel_articulo", $datos['rel_venta_articulo_id'], PDO::PARAM_INT);
 
         $orden->execute();

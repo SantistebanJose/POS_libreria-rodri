@@ -381,6 +381,269 @@ if (isset($_GET['id'])) {
     </div>
 </div>
 
+<!-- Modal Body -->
+<div
+    class="modal fade"
+    id="modalRealizarPago"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true">
+    <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+        role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div
+                    class="card border-primary">
+                    <div class="card-body">
+
+                        <div class="card-body text-center">
+                            <h4 class="card-title fs-1 fw-bold">Realizar Pago </h4>
+                            <h1 class="card-title fw-bold" style="font-size: 3rem;"> S/ <span id="idMontoVentaTitulo">#</span></h1>
+                        </div>
+                        <!--<div class="card-body text-center">
+                            <h1 class="card-title">S/ xx.xx</h1>
+                        </div>-->
+
+                        <div class="card-sub">
+                            Aquí realiza tus pagos
+                        </div>
+                        <div>
+                            <span>ID Venta: <span id="idVenta">#</span></span> |
+                            <span>ID Cliente: <span id="idPersona">#</span></span> |
+                            <span>ID Usuario Reserva: <span id="idUsuario">#</span>
+                                <br>
+                                <span><strong>Atendiendo la Transacción:</strong> <span id="idAtencionFinal"><?php echo $id_usuario_s . "-" . $nombre . ", " . $ape_usuario ?></span></span>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label for="" class="form-label"><strong>Cliente</strong></label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name=""
+                                id="nombreCliente"
+                                aria-describedby="helpId"
+                                placeholder="AGREGAR EL NOMBRE DEL CLIENTE" readonly />
+                        </div>
+                        <div class="row justify-content-center align-items-center g-2">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label"><strong>Número de Telefono</strong></label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name=""
+                                        id="idUpdateNumTelefonoCliente"
+                                        aria-describedby="helpId"
+                                        placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label"><strong>Correo Electronico</strong></label>
+                                    <input
+                                        type="email"
+                                        class="form-control"
+                                        name=""
+                                        id="idUpdateCorreoCliente"
+                                        aria-describedby="helpId"
+                                        placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- Monto Total -->
+                        <div
+                            class="row justify-content-center align-items-center md-2">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="montoTotal" class="form-label"><strong>Monto Original de Venta</strong> </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">S/</span>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="montoTotal"
+                                            readonly />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="montoVentaFinal" class="form-label">Monto Final de Venta</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">S/</span>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="montoTotalFinal"
+                                            placeholder="Monto con descuento a clientes" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body">
+                            <ul class="nav nav-pills nav-secondary  nav-pills-no-bd nav-pills-icons justify-content-center" id="pills-tab-with-icon" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab-icon" data-bs-toggle="pill" href="#pago-directo" role="tab" aria-controls="pago-directo" aria-selected="true">
+                                        Pago Directo
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab-icon" data-bs-toggle="pill" href="#pago-credito" role="tab" aria-controls="pago-credito" aria-selected="false">
+                                        Pago Crédito
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content mt-2 mb-3" id="pills-with-icon-tabContent">
+                                <div class="tab-pane fade show active" id="pago-directo" role="tabpanel" aria-labelledby="pills-home-tab-icon">
+                                    <form id="form-pago-directo">
+                                        <div id="panel_forma_pago" class="mb-3">
+                                            <div class="card-sub">
+                                                <div class="text-center">
+                                                    Aquí podrás elegir si realizan pagos Directo.
+                                                </div>
+                                            </div>
+
+                                            <label for="" class="form-label"><strong>Forma de Pago</strong></label>
+                                            <!-- Botón de agregar más formas de pago -->
+                                            <button id="btnAgregarPago" class="btn btn-secondary btn-round ms-2" type="button">+</button>
+
+                                            <div class="d-flex align-items-center">
+                                                <!-- Select de formas de pago -->
+                                                <select class="form-select form-select-md" name="formaPago" id="formaPagoSelect">
+                                                    <?php
+                                                    foreach (listarFormaPago() as $datosFormaPago) {
+                                                        $datosFormaPagoJSON = json_encode($datosFormaPago);
+                                                    ?>
+                                                        <option value="<?php echo $datosFormaPago["id"] ?>"><?php echo $datosFormaPago["nombre"] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+
+                                                <!-- Caja de texto para monto -->
+                                                <input type="number" class="form-control form-control-md ms-2" placeholder="Monto" min="0" name="monto" id="montoSelect_0">
+                                            </div>
+
+                                            <!-- Contenedor para los selects adicionales -->
+                                            <div id="contenedorPagos" class="mt-3"></div>
+                                        </div>
+
+                                        <hr>
+
+                                        <!-- Monto Total -->
+                                        <!--
+                                        <div id="panelMontos" class="row justify-content-center align-items-center g-2">
+                                            <div class="col-md-4">
+                                                <label for="" class="form-label"><b>Falta Pagar</b></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">S/</span>
+                                                    <input type="number" class="form-control" name="faltaPagar" placeholder="" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="" class="form-label"><b>Paga Con</b></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">S/</span>
+                                                    <input type="number" class="form-control" name="pagaCon" placeholder="" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="" class="form-label"><b>Vuelto (S/)</b></label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">S/</span>
+                                                    <input type="number" class="form-control" name="vuelto" placeholder="" />
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                        -->
+                                    </form>
+                                    <div class="text-center">
+                                        <a class="btn btn-success" href="#" role="button" onclick="fn_pagar_directo()">Pagar</a>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="pago-credito" role="tabpanel" aria-labelledby="pills-profile-tab-icon">
+                                    <div class="card-sub">
+                                        <div class="text-center">
+                                            Aquí podrás elegir si realizan pagos al Crédito.
+                                        </div>
+                                    </div>
+
+                                    <div class="card-sub">
+                                        <div class="text-center">
+
+                                            Si un cliente te deja pagado algo de la venta, <strong>REGISTRALO</strong>.
+                                            <br>
+                                            Si no, deja en blanco y darle click al boton Realizar <br><strong>Pago a Credito</strong>
+                                        </div>
+                                    </div>
+
+
+
+                                    <!-- Formulario para el pago a crédito -->
+                                    <form id="form-pago-credito">
+                                        <!-- Monto Total -->
+                                        <label for="" class="form-label"><strong>Forma de Pago</strong></label>
+
+                                        <!-- Botón de agregar más formas de pago -->
+                                        <button id="btnAgregarPagoCredito" class="btn btn-secondary btn-round ms-2" type="button">+</button>
+
+                                        <!-- Primer campo de pago -->
+                                        <div class="d-flex align-items-center" id="pagoCredito_0">
+                                            <!-- Select de formas de pago -->
+                                            <select class="form-select form-select-md" name="formaPagoCredito[]" id="formaPagoCreditoSelect_0">
+                                                <?php
+                                                foreach (listarFormaPago() as $datosFormaPago) {
+                                                    echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+
+                                            <!-- Caja de texto para monto -->
+                                            <input type="number" class="form-control form-control-md ms-2" placeholder="Monto" min="0" name="montoCredito[]" id="montoSelectCredito_0">
+                                        </div>
+
+                                        <!-- Contenedor para los selects adicionales -->
+                                        <div id="contenedorPagosCredito" class="mt-3"></div>
+
+                                        <br>
+                                        <!-- Botón para realizar el pago -->
+                                        <div class="text-center">
+                                            <a class="btn btn-secondary" href="#" role="button" onclick="fn_pagar_credito()">Realizar Pago a Credito</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Salir
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Modal -->
@@ -524,9 +787,9 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
             <div class="col-md-3">
-                <button id="btnRealizarReserva" disabled="true" type="button" class="btn btn-success btn-block card card-stats card-round">
+                <button id="btnRealizarPago" disabled="true" type="button" class="btn btn-success btn-block card card-stats card-round">
                     <div class="card-body text-center">
-                        <h5 id="label_total_general" class="card-title">Realizar Reserva</h5>
+                        <h5 id="label_total_general" class="card-title">Realizar Venta</h5>
                     </div>
                 </button>
             </div>
@@ -1388,7 +1651,7 @@ if (isset($_GET['id'])) {
         lbl_subtotal_articulos.innerText = totalArticulos.toFixed(2);
         lbl_subtotal_general.innerText = total.toFixed(2);
 
-        const btnReserva = document.getElementById("btnRealizarReserva");
+        const btnReserva = document.getElementById("btnRealizarPago");
         btnReserva.disabled = (total === 0);
 
    
@@ -1413,6 +1676,7 @@ if (isset($_GET['id'])) {
     }
     
 </script>
+
 <!--Tabla-->
 <script>
     document.getElementById("btnRealizarReserva").addEventListener("click", function () {
@@ -1593,6 +1857,22 @@ if (isset($_GET['id'])) {
 
 
     });
+</script>
+
+<script>
+    document.getElementById("btnRealizarPago").addEventListener("click", function() {
+
+
+        // Mostrar el modal manualmente
+        const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
+        modal.show();
+
+        const subtotalGeneral = document.getElementById("id_subtotal_general").textContent;
+        document.getElementById("montoTotal").value = subtotalGeneral; // Asignar el monto total
+        document.getElementById("idMontoVentaTitulo").textContent = subtotalGeneral;
+
+    });
+
 </script>
 
 <!--Ploteo-->
@@ -2756,6 +3036,454 @@ if (isset($_GET['id'])) {
 
 </script>
 
+<!--FRANCO -->
+<script>
+    function validarNumero(event) {
+        // Eliminar cualquier cosa que no sea un número
+        event.target.value = event.target.value.replace(/[^0-9]/g, '');
+    }
+
+    const btnMas = document.getElementById('btn_mas');
+    const btnContador = document.getElementById('id_contador');
+    const inputNumero = document.getElementById('input_numero');
+
+    const btnMasImpresion = document.getElementById('btn_mas_impresion');
+    const btnContadorImpresion = document.getElementById('id_contador_impresion');
+    const inputNumeroImpresion = document.getElementById('input_numero_impresion');
+
+    btnMas.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumero.value);
+        if (!isNaN(currentValue) && currentValue > 1) {
+            inputNumero.value = currentValue - 1;
+        }
+    });
+
+    btnMasImpresion.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumeroImpresion.value);
+        if (!isNaN(currentValue) && currentValue > 1) {
+            inputNumeroImpresion.value = currentValue - 1;
+        }
+    });
+
+
+    btnContador.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumero.value);
+        if (!isNaN(currentValue)) {
+            inputNumero.value = currentValue + 1;
+        }
+    });
+
+    btnContadorImpresion.addEventListener('click', () => {
+        let currentValue = parseInt(inputNumeroImpresion.value);
+        if (!isNaN(currentValue)) {
+            inputNumeroImpresion.value = currentValue + 1;
+        }
+    });
+</script>
+<!--FRANCO -->
+<script>
+    // Variables para manejar los selects y montos adicionales
+    const btnAgregarPago = document.getElementById('btnAgregarPago');
+    const contenedorPagos = document.getElementById('contenedorPagos');
+    let contador = 1; // Para numerar los campos adicionales
+
+    // Evento para agregar más selects con montos
+    btnAgregarPago.addEventListener('click', function() {
+        // Crear un contenedor para el nuevo select y su campo de monto
+        const nuevoContenedor = document.createElement('div');
+        nuevoContenedor.classList.add('d-flex', 'align-items-center', 'mb-2');
+
+        // Crear un nuevo select
+        const nuevoSelect = document.createElement('select');
+        nuevoSelect.classList.add('form-select', 'form-select-md', 'me-2');
+        nuevoSelect.name = 'formaPago_' + contador; // Agregar nombre dinámico
+        nuevoSelect.innerHTML = `<?php
+                                    foreach (listarFormaPago() as $datosFormaPago) {
+                                        echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
+                                    }
+                                    ?>`;
+
+        // Crear una nueva caja de texto para el monto
+        const nuevoInputMonto = document.createElement('input');
+        nuevoInputMonto.type = 'number';
+        nuevoInputMonto.classList.add('form-control', 'form-control-md', 'ms-2');
+        nuevoInputMonto.placeholder = 'Monto';
+        nuevoInputMonto.min = '0';
+        nuevoInputMonto.name = 'monto_' + contador; // Agregar nombre dinámico
+        nuevoInputMonto.id = 'montoSelect_' + contador;
+
+        // Crear un botón de eliminación pequeño
+        const btnEliminar = document.createElement('button');
+        btnEliminar.type = 'button';
+        btnEliminar.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2'); // Clase btn-sm para hacerlo más pequeño
+        btnEliminar.textContent = '-'; // Texto del botón
+        btnEliminar.addEventListener('click', function() {
+            contenedorPagos.removeChild(nuevoContenedor); // Eliminar el contenedor
+        });
+
+        // Agregar el select, el input y el botón de eliminación al contenedor
+        nuevoContenedor.appendChild(nuevoSelect);
+        nuevoContenedor.appendChild(nuevoInputMonto);
+        nuevoContenedor.appendChild(btnEliminar);
+
+        // Agregar el contenedor al contenedor principal
+        contenedorPagos.appendChild(nuevoContenedor);
+
+        // Incrementar el contador para los nuevos inputs
+        contador++;
+    });
+
+    // Variables para manejar los selects y montos adicionales de pago a crédito
+    const btnAgregarPagoCredito = document.getElementById('btnAgregarPagoCredito');
+    const contenedorPagosCredito = document.getElementById('contenedorPagosCredito');
+    let contadorCredito = 1; // Para numerar los campos adicionales de pago a crédito
+
+    // Evento para agregar más selects con montos de pago a crédito
+    btnAgregarPagoCredito.addEventListener('click', function() {
+        // Crear un contenedor para el nuevo select y su campo de monto
+        const nuevoContenedorCredito = document.createElement('div');
+        nuevoContenedorCredito.classList.add('d-flex', 'align-items-center', 'mb-2');
+        nuevoContenedorCredito.id = 'pagoCredito_' + contadorCredito; // ID único para cada contenedor
+
+        // Crear un nuevo select para el pago a crédito
+        const nuevoSelectCredito = document.createElement('select');
+        nuevoSelectCredito.classList.add('form-select', 'form-select-md', 'me-2');
+        nuevoSelectCredito.name = 'formaPagoCredito[]'; // Nombre único para el array
+        nuevoSelectCredito.id = 'formaPagoCreditoSelect_' + contadorCredito; // ID único para el select
+        nuevoSelectCredito.innerHTML = `<?php
+                                        foreach (listarFormaPago() as $datosFormaPago) {
+                                            echo '<option value="' . $datosFormaPago["id"] . '">' . $datosFormaPago["nombre"] . '</option>';
+                                        }
+                                        ?>`;
+
+        // Crear una nueva caja de texto para el monto de pago a crédito
+        const nuevoInputMontoCredito = document.createElement('input');
+        nuevoInputMontoCredito.type = 'number';
+        nuevoInputMontoCredito.classList.add('form-control', 'form-control-md', 'ms-2');
+        nuevoInputMontoCredito.placeholder = 'Monto';
+        nuevoInputMontoCredito.min = '0';
+        nuevoInputMontoCredito.name = 'montoCredito[]'; // Nombre único para el array
+        nuevoInputMontoCredito.id = 'montoSelectCredito_' + contadorCredito; // ID único para el campo de monto
+
+        // Crear un botón de eliminación pequeño
+        const btnEliminarCredito = document.createElement('button');
+        btnEliminarCredito.type = 'button';
+        btnEliminarCredito.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2'); // Clase btn-sm para hacerlo más pequeño
+        btnEliminarCredito.textContent = '-'; // Texto del botón
+        btnEliminarCredito.addEventListener('click', function() {
+            contenedorPagosCredito.removeChild(nuevoContenedorCredito); // Eliminar el contenedor
+        });
+
+        // Agregar el select, el input y el botón de eliminación al contenedor
+        nuevoContenedorCredito.appendChild(nuevoSelectCredito);
+        nuevoContenedorCredito.appendChild(nuevoInputMontoCredito);
+        nuevoContenedorCredito.appendChild(btnEliminarCredito);
+
+        // Agregar el contenedor al contenedor principal
+        contenedorPagosCredito.appendChild(nuevoContenedorCredito);
+
+        // Incrementar el contador para los nuevos inputs
+        contadorCredito++;
+    });
+</script>
+
+<!-- FRANCO -->
+<script>
+    function fn_pagar_directo() {
+        var datosSerializados = $('#form-pago-directo').serializeArray();
+
+        console.log(datosSerializados); // Ver los datos serializados como un array de objetos
+
+        //////////////////////////////////////////////////////
+        var numTelefonoUpdate = document.getElementById('idUpdateNumTelefonoCliente').value;
+        //////////////////////////////////////////////////////////////////////////
+        var idVenta = document.getElementById('idVenta').textContent;
+        var idPersona = document.getElementById('idPersona').textContent;
+        var idUsuario = document.getElementById('idUsuario').textContent;
+        var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
+        var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
+        ////
+
+        var montoOriginal = parseFloat(document.getElementById('montoTotal').value);
+        var montoFinal = parseFloat(document.getElementById('montoTotalFinal').value);
+
+        if (isNaN(montoFinal)) {
+            montoFinal = montoOriginal;
+        };
+
+
+
+        ///////////////////////////////////////////////////////
+
+        var js_detalle_pago = [];
+
+        var formaPago = null;
+        var monto = null;
+        var acumMontos = 0;
+        for (var i = 0; i < datosSerializados.length; i++) {
+            var dato = datosSerializados[i];
+
+            if (dato.name.startsWith('formaPago')) {
+                formaPago = dato.value;
+            }
+
+            if (dato.name.startsWith('monto')) {
+                monto = parseFloat(dato.value);
+                acumMontos = acumMontos + monto;
+            }
+            if (formaPago && monto) {
+                js_detalle_pago.push({
+                    "venta_id": idVenta,
+                    "id_forma_pago": formaPago,
+                    "monto_forma_pago": monto
+                });
+                formaPago = null;
+                monto = null;
+            }
+        };
+        var js_venta = {
+            "venta_id": idVenta,
+            "atencion_final_usuario": idAtencionFinal,
+            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "js_detalle_pagos": js_detalle_pago
+        };
+
+        var js_for_pago = {
+            "venta_id": idVenta,
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "comentario": ""
+        };
+        //monto_forma_pago
+        if (js_detalle_pago.length === 0) {
+            swal("Ups!, Falta Agregar los monto de acuerdo a forma de Pago", "Agrega los montos :)", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+            console.log("Falta Agregar los Metodos de Pago");
+        } else if (acumMontos > montoFinal) {
+            swal("Ups!, Los montos ingresados son MAYORES al Monto final de la venta", "Agrega correctamente los montos :)", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+
+        } else if (acumMontos < montoFinal) {
+            swal("Ups!, Los montos ingresados son MENORES al Monto final de la venta", "Agrega correctamente los montos :)", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+
+        } else {
+            console.log("js_detalle_pago", js_detalle_pago);
+            console.log("CELULAR UPDATE", numTelefonoUpdate);
+
+            console.log("js_detalle_pago final: ", js_detalle_pago);
+
+            $.ajax({
+                url: 'logica/clssInsertPA.php',
+                type: 'POST',
+                data: {
+                    accion: 'FINALIZARVENTA',
+                    jsDatosVenta: JSON.stringify(js_venta)
+                },
+                success: function(response) {
+
+                    console.log("Respuesta del servidor: ", response);
+
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.estado === true) {
+                            swal({
+                                title: "Pagado con Exito!",
+                                text: result.mensaje,
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });;
+                        } else {
+                            swal("Error", result.mensaje, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log("Error al parsear el JSON: ", e);
+                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    swal("Error", "Hubo un problema con la solicitud.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            });
+        }
+    }
+
+    function fn_pagar_credito() {
+
+
+        //////////////////////////////////////////////////////
+        var numTelefonoUpdate = document.getElementById('idUpdateNumTelefonoCliente').value;
+        //////////////////////////////////////////////////////////////////////////
+        var idVenta = document.getElementById('idVenta').textContent;
+        var idPersona = document.getElementById('idPersona').textContent;
+        var idUsuario = document.getElementById('idUsuario').textContent;
+        var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
+        var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
+        ////
+
+        var montoOriginal = parseFloat(document.getElementById('montoTotal').value);
+        var montoFinal = parseFloat(document.getElementById('montoTotalFinal').value);
+
+        if (isNaN(montoFinal)) {
+            montoFinal = montoOriginal;
+        };
+
+        var datosSerializadosCredito = $('#form-pago-credito').serializeArray();
+        console.log(datosSerializadosCredito);
+
+        var js_detalle_deuda = [];
+
+        var formaPagoCredito = null;
+        var montoCredito = null;
+        var acumMontos = 0;
+        for (var i = 0; i < datosSerializadosCredito.length; i++) {
+            var dato = datosSerializadosCredito[i];
+
+            if (dato.name.startsWith('formaPagoCredito[]')) {
+                formaPagoCredito = dato.value;
+            }
+
+            if (dato.name.startsWith('montoCredito[]')) {
+                montoCredito = parseFloat(dato.value);
+                acumMontos = acumMontos + montoCredito;
+            }
+            if (formaPagoCredito && montoCredito) {
+                js_detalle_deuda.push({
+                    "venta_id": idVenta,
+                    "id_forma_pago": formaPagoCredito,
+                    "monto_forma_pago": montoCredito
+                });
+                formaPagoCredito = null;
+                montoCredito = null;
+            }
+        };
+        if (isNaN(acumMontos)) {
+            acumMontos = 0;
+        }
+        if (js_detalle_deuda.length === 0) {
+            js_detalle_deuda = null;
+        }
+
+        var js_venta = {
+            "venta_id": idVenta,
+            "atencion_final_usuario": idAtencionFinal,
+            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
+            "monto_original": montoOriginal,
+            "monto_venta_final": montoFinal,
+            "monto_inicial": acumMontos,
+            "js_detalle_deuda": js_detalle_deuda
+        };
+        console.log(js_venta);
+        $.ajax({
+            url: 'logica/clssInsertPA.php',
+            type: 'POST',
+            data: {
+                accion: 'FINALIZARVENTACREDITO',
+                jsDatosVenta: JSON.stringify(js_venta)
+            },
+            success: function(response) {
+
+                console.log("Respuesta del servidor: ", response);
+
+                try {
+                    var result = JSON.parse(response);
+                    if (result.estado === true) {
+                        swal({
+                            title: "Pagado con Exito!",
+                            text: result.mensaje,
+                            icon: "success",
+                            buttons: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });;
+                    } else {
+                        swal("Error", result.mensaje, {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                } catch (e) {
+                    console.log("Error al parsear el JSON: ", e);
+                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Error: " + error);
+                swal("Error", "Hubo un problema con la solicitud.", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+        });
+
+
+
+
+
+
+    }
+</script>
 
 
 

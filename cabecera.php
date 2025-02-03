@@ -228,7 +228,7 @@ include('logica/clssConsultas.php');
                             <div class="collapse" id="venta">
                                 <ul class="nav nav-collapse">
                                     <li>
-                                        <a href="#">
+                                        <a href="venta_rapida.php">
                                             <span class="sub-item">Punto de Venta Rapida</span>
                                         </a>
                                     </li>
