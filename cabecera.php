@@ -52,8 +52,6 @@ include('logica/clssConsultas.php');
                 sessionStorage.fonts = true;
             },
         });
-
-        
     </script>
 
     <!-- CSS Files -->
@@ -256,11 +254,11 @@ include('logica/clssConsultas.php');
                             <div class="collapse" id="pago">
                                 <ul class="nav nav-collapse">
                                     <li>
-                                        <a href="">
+                                        <a href="listadoPagos.php">
                                             <span class="sub-item">Listado de Pagos</span>
                                         </a>
                                     </li>
-                                    
+
 
 
                                 </ul>
@@ -273,7 +271,7 @@ include('logica/clssConsultas.php');
                                 href="#deuda"
                                 class="collapsed"
                                 aria-expanded="false">
-                                <i class="fas fa-portrait"></i>
+                                <i class="fas fa-user-lock"></i>
                                 <p>Crédito</p>
                                 <span class="caret"></span>
                             </a>
@@ -281,7 +279,7 @@ include('logica/clssConsultas.php');
                                 <ul class="nav nav-collapse">
                                     <li>
                                         <a href="pagoCredito.php">
-                                            <span class="sub-item">Pagos de Credito</span>
+                                            <span class="sub-item">Realizar Abono a Crédito</span>
                                         </a>
                                     </li>
 
@@ -886,21 +884,18 @@ include('logica/clssConsultas.php');
             </div>
             <br>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    let menuItems = document.querySelectorAll(".nav-item a");
-    let currentPath = window.location.pathname.split("/").pop(); // Obtiene solo el nombre del archivo
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    let menuItems = document.querySelectorAll(".nav-item a");
+                    let currentPath = window.location.pathname.split("/").pop(); // Obtiene solo el nombre del archivo
 
-    menuItems.forEach(item => {
-        let menuPath = item.getAttribute("href").split("/").pop(); // Obtiene solo el nombre del archivo
+                    menuItems.forEach(item => {
+                        let menuPath = item.getAttribute("href").split("/").pop(); // Obtiene solo el nombre del archivo
 
-        if (currentPath.includes(menuPath) && menuPath !== "") {
-            document.querySelectorAll(".nav-item").forEach(nav => nav.classList.remove("active")); // Remueve la clase active de todos
-            item.closest(".nav-item").classList.add("active"); // Agrega active al elemento correcto
-        }
-    });
-});
-
-
-
-</script>
+                        if (currentPath.includes(menuPath) && menuPath !== "") {
+                            document.querySelectorAll(".nav-item").forEach(nav => nav.classList.remove("active")); // Remueve la clase active de todos
+                            item.closest(".nav-item").classList.add("active"); // Agrega active al elemento correcto
+                        }
+                    });
+                });
+            </script>

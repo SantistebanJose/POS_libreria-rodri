@@ -152,6 +152,7 @@ function fnListForVentasDiarias(): array
             p.email AS email_cliente, 
             p.numero_documento AS numero_doc_cliente,
             CONCAT(us.id, '-', usua.nombres, ', ', usua.apellidos) AS usuario, 
+            v.atencion_final_usuario,
             p.id AS id_persona,
             v.usuario_id,
             v.monto_venta_final,
@@ -163,15 +164,17 @@ function fnListForVentasDiarias(): array
             END AS estado_pago,
             v.estado_final,
             du.acumulado AS acumulado_deuda
-        FROM venta AS v
-        LEFT JOIN deuda AS du ON v.id=du.id_venta 
+            FROM venta AS v
+        LEFT JOIN deuda AS du ON v.id=du.id_venta
         INNER JOIN usuario AS us ON v.usuario_id = us.id  
         INNER JOIN persona AS usua ON us.persona_id = usua.id
         INNER JOIN persona AS p ON v.cliente_id = p.id
         WHERE v.estado_venta = 'VR' 
         AND v.deleted_at IS NULL
-        AND v.fecha_fin_transaccion::DATE = CURRENT_DATE
-        ORDER BY v.id desc;
+        AND v.fecha_fin_transaccion = current_date
+        --AND v.fecha_fin_transaccion >= date_trunc('week', CURRENT_DATE)
+        --AND v.fecha_fin_transaccion < CURRENT_DATE + INTERVAL '1 day'
+        ORDER BY v.fecha_fin_transaccion;
     ";
     return executeQuery($query);
 }
@@ -219,8 +222,8 @@ function fnListForVentasSemanales(): array
         INNER JOIN persona AS p ON v.cliente_id = p.id
         WHERE v.estado_venta = 'VR' 
         AND v.deleted_at IS NULL
-        --AND v.fecha_fin_transaccion >= date_trunc('week', CURRENT_DATE)
-        --AND v.fecha_fin_transaccion < CURRENT_DATE + INTERVAL '1 day'
+        AND v.fecha_fin_transaccion >= date_trunc('week', CURRENT_DATE)
+        AND v.fecha_fin_transaccion < CURRENT_DATE + INTERVAL '1 day'
         ORDER BY v.fecha_fin_transaccion;
     ";
     return executeQuery($query);
@@ -425,4 +428,345 @@ function fnListForAbonosClientePorVentaPagadas($idAbono): array
     ORDER BY 1;
     ";
     return executeQuery($query, params: ['abono_id' => $idAbono]);
+}
+
+function fnListForPagos(): array
+{
+    $query = "   
+            SELECT 
+            p.created_at,
+            p.id as pago_id,
+            concat('P',LPAD(p.id::TEXT,10,'0'),'F',to_char(p.created_at::date, 'YYYYMMDD')) as codigo,
+            CASE 
+                WHEN EXTRACT(DOW FROM p.created_at) = 0 THEN UPPER('Domingo')
+                WHEN EXTRACT(DOW FROM p.created_at) = 1 THEN UPPER('Lunes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 2 THEN UPPER('Martes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 3 THEN UPPER('Miércoles')
+                WHEN EXTRACT(DOW FROM p.created_at) = 4 THEN UPPER('Jueves')
+                WHEN EXTRACT(DOW FROM p.created_at) = 5 THEN UPPER('Viernes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 6 THEN UPPER('Sábado')
+            END AS dia_nombre,
+            
+            TO_CHAR(p.created_at, 'YYYY-MM-DD') as fecha,
+            TO_CHAR(p.created_at, 'HH12:MI:SS AM') as hora,
+            p.monto_venta_original,
+            p.monto_venta_final,
+            (p.monto_venta_original - p.monto_venta_final) AS utilidad,
+            (
+                SELECT 
+                    jsonb_build_object(
+                        'venta_id', v.id,
+                        'fecha_fin_transaccion', v.fecha_fin_transaccion,
+                        'dia_nombre', CASE 
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 2 THEN UPPER('Martes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 3 THEN UPPER('Miércoles')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 4 THEN UPPER('Jueves')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 5 THEN UPPER('Viernes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 6 THEN UPPER('Sábado')
+                        END,
+                        'cliente', CONCAT(ci.nombres, ' ', ci.apellidos),
+                        'fecha', TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD'),
+                        'hora', TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM'),
+                        'telefonomovil_cliente', ci.telefonomovil,
+                        'email_cliente', ci.email,
+                        'numero_doc_cliente', ci.numero_documento,
+                        'usuario', CONCAT(us.id, '-', usua.nombres, ', ', usua.apellidos),
+                        'id_persona', ci.id,
+                        'usuario_id', v.usuario_id,
+                        'monto_venta_final', v.monto_venta_final,
+                        'total', v.total,
+                        'perdida_utilidad', (v.monto_venta_final - v.total),
+                        'estado_pago', CASE 
+                            WHEN v.estado_pago = 'P' THEN 'PAGADO'
+                            WHEN v.estado_pago = 'C' THEN 'CREDITO'
+                        END,
+                        'estado_final', v.estado_final,
+                        'acumulado_deuda', du.acumulado
+                ) AS resultado_json
+                FROM venta AS v
+                LEFT JOIN deuda AS du ON v.id = du.id_venta 
+                INNER JOIN usuario AS us ON v.usuario_id = us.id  
+                INNER JOIN persona AS usua ON us.persona_id = usua.id
+                INNER JOIN persona AS ci ON v.cliente_id = ci.id
+                WHERE v.id = p.id_venta
+                --WHERE v.estado_venta = 'VR' 
+                AND v.deleted_at IS NULL
+            ) as js_venta,
+            (
+                SELECT jsonb_agg(
+                            jsonb_build_object(
+                                'rel_venta_articulo_id', rva.id,
+                                'venta_id', rva.venta_id,
+                                'articulo_id', rva.articulo_id,
+                                'descripcion_movimiento', m.descripcion,
+                                'descripcion_articulo', CASE 
+                                    WHEN ar.dimension_id IS NOT NULL THEN CONCAT(ar.nombre, ' (', dim.medida, ')')
+                                    WHEN ar.nombre IS NULL THEN m.descripcion
+                                    ELSE ar.nombre 
+                                END,
+                                'cantidad', rva.cantidad,
+                                'precio_unitario_articulo', rva.precio_unitario_articulo,
+                                'minutos', rva.minutos,
+                                'costo_por_minuto', rva.costo_por_minuto,
+                                'sub_total', rva.sub_total
+                            )
+                        ) AS resultado_json
+                FROM rel_venta_articulo AS rva
+                JOIN movimiento AS m ON rva.movimiento_id = m.id 
+                LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
+                LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
+                WHERE rva.venta_id = p.id_venta
+            )as js_detalle_venta,
+            (
+                SELECT 
+                json_agg
+                (
+                    jsonb_build_object(
+                        'ID_DETALLE',dfp.id,
+                        'FORMA_PAGO', fp.nombre,
+                        'MONTO', dfp.monto,
+                        'COLOR',fp.color
+                    )
+                ) AS resultado
+                FROM detalle_forma_pago dfp
+                JOIN forma_pago fp ON dfp.id_forma_pago = fp.id
+                WHERE dfp.id_venta = p.id_venta
+            ) as js_detalle_forma_pago
+            FROM pago p
+            -- WHERE p.id = 2
+            where p.created_at::date = current_date
+            order by p.created_at desc;
+    ";
+    return executeQuery($query);
+}
+
+
+function fnListForPagosSemanales(): array
+{
+
+    $query = "   
+            SELECT 
+            p.created_at,
+            p.id as pago_id,
+            concat('P',LPAD(p.id::TEXT,10,'0'),'F',to_char(p.created_at::date, 'YYYYMMDD')) as codigo,
+            CASE 
+                WHEN EXTRACT(DOW FROM p.created_at) = 0 THEN UPPER('Domingo')
+                WHEN EXTRACT(DOW FROM p.created_at) = 1 THEN UPPER('Lunes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 2 THEN UPPER('Martes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 3 THEN UPPER('Miércoles')
+                WHEN EXTRACT(DOW FROM p.created_at) = 4 THEN UPPER('Jueves')
+                WHEN EXTRACT(DOW FROM p.created_at) = 5 THEN UPPER('Viernes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 6 THEN UPPER('Sábado')
+            END AS dia_nombre,
+            
+            TO_CHAR(p.created_at, 'YYYY-MM-DD') as fecha,
+            TO_CHAR(p.created_at, 'HH12:MI:SS AM') as hora,
+            p.monto_venta_original,
+            p.monto_venta_final,
+            (p.monto_venta_original - p.monto_venta_final) AS utilidad,
+            (
+                SELECT 
+                    jsonb_build_object(
+                        'venta_id', v.id,
+                        'fecha_fin_transaccion', v.fecha_fin_transaccion,
+                        'dia_nombre', CASE 
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 2 THEN UPPER('Martes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 3 THEN UPPER('Miércoles')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 4 THEN UPPER('Jueves')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 5 THEN UPPER('Viernes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 6 THEN UPPER('Sábado')
+                        END,
+                        'cliente', CONCAT(ci.nombres, ' ', ci.apellidos),
+                        'fecha', TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD'),
+                        'hora', TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM'),
+                        'telefonomovil_cliente', ci.telefonomovil,
+                        'email_cliente', ci.email,
+                        'numero_doc_cliente', ci.numero_documento,
+                        'usuario', CONCAT(us.id, '-', usua.nombres, ', ', usua.apellidos),
+                        'id_persona', ci.id,
+                        'usuario_id', v.usuario_id,
+                        'monto_venta_final', v.monto_venta_final,
+                        'total', v.total,
+                        'perdida_utilidad', (v.monto_venta_final - v.total),
+                        'estado_pago', CASE 
+                            WHEN v.estado_pago = 'P' THEN 'PAGADO'
+                            WHEN v.estado_pago = 'C' THEN 'CREDITO'
+                        END,
+                        'estado_final', v.estado_final,
+                        'acumulado_deuda', du.acumulado
+                ) AS resultado_json
+                FROM venta AS v
+                LEFT JOIN deuda AS du ON v.id = du.id_venta 
+                INNER JOIN usuario AS us ON v.usuario_id = us.id  
+                INNER JOIN persona AS usua ON us.persona_id = usua.id
+                INNER JOIN persona AS ci ON v.cliente_id = ci.id
+                WHERE v.id = p.id_venta
+                --WHERE v.estado_venta = 'VR' 
+                AND v.deleted_at IS NULL
+            ) as js_venta,
+            (
+                SELECT jsonb_agg(
+                            jsonb_build_object(
+                                'rel_venta_articulo_id', rva.id,
+                                'venta_id', rva.venta_id,
+                                'articulo_id', rva.articulo_id,
+                                'descripcion_movimiento', m.descripcion,
+                                'descripcion_articulo', CASE 
+                                    WHEN ar.dimension_id IS NOT NULL THEN CONCAT(ar.nombre, ' (', dim.medida, ')')
+                                    WHEN ar.nombre IS NULL THEN m.descripcion
+                                    ELSE ar.nombre 
+                                END,
+                                'cantidad', rva.cantidad,
+                                'precio_unitario_articulo', rva.precio_unitario_articulo,
+                                'minutos', rva.minutos,
+                                'costo_por_minuto', rva.costo_por_minuto,
+                                'sub_total', rva.sub_total
+                            )
+                        ) AS resultado_json
+                FROM rel_venta_articulo AS rva
+                JOIN movimiento AS m ON rva.movimiento_id = m.id 
+                LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
+                LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
+                WHERE rva.venta_id = p.id_venta
+            )as js_detalle_venta,
+            (
+                SELECT 
+                json_agg
+                (
+                    jsonb_build_object(
+                        'ID_DETALLE',dfp.id,
+                        'FORMA_PAGO', fp.nombre,
+                        'MONTO', dfp.monto,
+                        'COLOR',fp.color
+                    )
+                ) AS resultado
+                FROM detalle_forma_pago dfp
+                JOIN forma_pago fp ON dfp.id_forma_pago = fp.id
+                WHERE dfp.id_venta = p.id_venta
+            ) as js_detalle_forma_pago
+            FROM pago p
+            -- WHERE p.id = 2
+            Where p.created_at::date >= date_trunc('week', CURRENT_DATE)
+            AND p.created_at::date < CURRENT_DATE + INTERVAL '1 day'
+            order by p.created_at desc;
+    ";
+    return executeQuery($query);
+}
+
+function fnListForAllPagos(): array
+{
+
+    $query = "   
+            SELECT 
+            p.created_at,
+            p.id as pago_id,
+            concat('P',LPAD(p.id::TEXT,10,'0'),'F',to_char(p.created_at::date, 'YYYYMMDD')) as codigo,
+            CASE 
+                WHEN EXTRACT(DOW FROM p.created_at) = 0 THEN UPPER('Domingo')
+                WHEN EXTRACT(DOW FROM p.created_at) = 1 THEN UPPER('Lunes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 2 THEN UPPER('Martes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 3 THEN UPPER('Miércoles')
+                WHEN EXTRACT(DOW FROM p.created_at) = 4 THEN UPPER('Jueves')
+                WHEN EXTRACT(DOW FROM p.created_at) = 5 THEN UPPER('Viernes')
+                WHEN EXTRACT(DOW FROM p.created_at) = 6 THEN UPPER('Sábado')
+            END AS dia_nombre,
+            
+            TO_CHAR(p.created_at, 'YYYY-MM-DD') as fecha,
+            TO_CHAR(p.created_at, 'HH12:MI:SS AM') as hora,
+            p.monto_venta_original,
+            p.monto_venta_final,
+            (p.monto_venta_original - p.monto_venta_final) AS utilidad,
+            (
+                SELECT 
+                    jsonb_build_object(
+                        'venta_id', v.id,
+                        'fecha_fin_transaccion', v.fecha_fin_transaccion,
+                        'dia_nombre', CASE 
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 2 THEN UPPER('Martes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 3 THEN UPPER('Miércoles')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 4 THEN UPPER('Jueves')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 5 THEN UPPER('Viernes')
+                            WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 6 THEN UPPER('Sábado')
+                        END,
+                        'cliente', CONCAT(ci.nombres, ' ', ci.apellidos),
+                        'fecha', TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD'),
+                        'hora', TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM'),
+                        'telefonomovil_cliente', ci.telefonomovil,
+                        'email_cliente', ci.email,
+                        'numero_doc_cliente', ci.numero_documento,
+                        'usuario', CONCAT(us.id, '-', usua.nombres, ', ', usua.apellidos),
+                        'id_persona', ci.id,
+                        'usuario_id', v.usuario_id,
+                        'monto_venta_final', v.monto_venta_final,
+                        'total', v.total,
+                        'perdida_utilidad', (v.monto_venta_final - v.total),
+                        'estado_pago', CASE 
+                            WHEN v.estado_pago = 'P' THEN 'PAGADO'
+                            WHEN v.estado_pago = 'C' THEN 'CREDITO'
+                        END,
+                        'estado_final', v.estado_final,
+                        'acumulado_deuda', du.acumulado
+                ) AS resultado_json
+                FROM venta AS v
+                LEFT JOIN deuda AS du ON v.id = du.id_venta 
+                INNER JOIN usuario AS us ON v.usuario_id = us.id  
+                INNER JOIN persona AS usua ON us.persona_id = usua.id
+                INNER JOIN persona AS ci ON v.cliente_id = ci.id
+                WHERE v.id = p.id_venta
+                --WHERE v.estado_venta = 'VR' 
+                AND v.deleted_at IS NULL
+            ) as js_venta,
+            (
+                SELECT jsonb_agg(
+                            jsonb_build_object(
+                                'rel_venta_articulo_id', rva.id,
+                                'venta_id', rva.venta_id,
+                                'articulo_id', rva.articulo_id,
+                                'descripcion_movimiento', m.descripcion,
+                                'descripcion_articulo', CASE 
+                                    WHEN ar.dimension_id IS NOT NULL THEN CONCAT(ar.nombre, ' (', dim.medida, ')')
+                                    WHEN ar.nombre IS NULL THEN m.descripcion
+                                    ELSE ar.nombre 
+                                END,
+                                'cantidad', rva.cantidad,
+                                'precio_unitario_articulo', rva.precio_unitario_articulo,
+                                'minutos', rva.minutos,
+                                'costo_por_minuto', rva.costo_por_minuto,
+                                'sub_total', rva.sub_total
+                            )
+                        ) AS resultado_json
+                FROM rel_venta_articulo AS rva
+                JOIN movimiento AS m ON rva.movimiento_id = m.id 
+                LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
+                LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
+                WHERE rva.venta_id = p.id_venta
+            )as js_detalle_venta,
+            (
+                SELECT 
+                json_agg
+                (
+                    jsonb_build_object(
+                        'ID_DETALLE',dfp.id,
+                        'FORMA_PAGO', fp.nombre,
+                        'MONTO', dfp.monto,
+                        'COLOR',fp.color
+                    )
+                ) AS resultado
+                FROM detalle_forma_pago dfp
+                JOIN forma_pago fp ON dfp.id_forma_pago = fp.id
+                WHERE dfp.id_venta = p.id_venta
+            ) as js_detalle_forma_pago
+            FROM pago p
+            -- WHERE p.id = 2
+            --Where p.created_at::date >= date_trunc('week', CURRENT_DATE)
+            --AND p.created_at::date < CURRENT_DATE + INTERVAL '1 day'
+            order by p.created_at desc;
+    ";
+    return executeQuery($query);
 }

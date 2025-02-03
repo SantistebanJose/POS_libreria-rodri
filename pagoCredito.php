@@ -711,8 +711,8 @@ include("cabecera.php");
                     nuevaFila.insertCell(0).innerHTML = texto;
                     nuevaFila.insertCell(1).textContent = totalCorteRedondeado;
                     nuevaFila.insertCell(2).textContent = articulo["cantidad"] || '-';
-                    nuevaFila.insertCell(3).textContent = articulo["precio_unitario_articulo"] || '-';
-                    nuevaFila.insertCell(4).textContent = articulo["sub_total"] || '-';
+                    nuevaFila.insertCell(3).textContent = "S/ " + articulo["precio_unitario_articulo"] || '-';
+                    nuevaFila.insertCell(4).textContent = "S/ " + articulo["sub_total"] || '-';
                 }
 
 

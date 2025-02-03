@@ -16,13 +16,13 @@ if (isset($_GET['id'])) {
                 <div class="card-body">
                     <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="ventaDiaria" data-bs-toggle="pill" href="#pills-ventaDiaria" role="tab" aria-controls="pills-ventaDiaria" aria-selected="true">Ventas Diarias</a>
+                            <a class="nav-link active" id="ventaDiaria" data-bs-toggle="pill" href="#pills-ventaDiaria" role="tab" aria-controls="pills-ventaDiaria" aria-selected="true">Ventas del Día</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="ventaSemanal" data-bs-toggle="pill" href="#pills-ventaSemanal" role="tab" aria-controls="pills-ventaSemanal" aria-selected="false">Ventas Semanales</a>
+                            <a class="nav-link" id="ventaSemanal" data-bs-toggle="pill" href="#pills-ventaSemanal" role="tab" aria-controls="pills-ventaSemanal" aria-selected="false">Ventas de la Semana</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Contact</a>
+                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Filtros</a>
                         </li>
                     </ul>
                     <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
@@ -53,7 +53,6 @@ if (isset($_GET['id'])) {
                                                 foreach (fnListForVentasDiarias() as $datos) {
                                                     $datos['accion_ajax'] = 'DETALLEVENTA_VENTA_ID';
                                                     $datosJSON = json_encode($datos);
-
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["fecha_fin_transaccion"] ?></td>
@@ -347,7 +346,8 @@ if (isset($_GET['id'])) {
                         (articulo["minutos"] && articulo["costo_por_minuto"]) ?
                         (articulo["costo_por_minuto"] * articulo["minutos"]) : articulo["sub_total"] || '-';
 
-                    let totalCorteRedondeado = (totalCorte !== '-') ? totalCorte.toFixed(2) : totalCorte;
+                    let totalCorteRedondeado = (totalCorte !== '-') ? "S/ " + (totalCorte.toFixed(2)) : totalCorte;
+                    
                     let texto = "";
                     if (articulo["minutos"] !== null || articulo["costo_por_minuto"] !== null) {
                         texto = articulo["descripcion"] + "\n" + "<span style='color:blue'> <b>[" + min + " Minutos X " + articulo["costo_por_minuto"] + " = " + totalCorte.toFixed(2) + "]</b></span>";
@@ -360,7 +360,7 @@ if (isset($_GET['id'])) {
                     nuevaFila.insertCell(0).innerHTML = texto;
                     nuevaFila.insertCell(1).textContent = totalCorteRedondeado;
                     nuevaFila.insertCell(2).textContent = articulo["cantidad"] || '-';
-                    nuevaFila.insertCell(3).textContent = "S/ " + articulo["precio_unitario_articulo"] || '-';
+                    nuevaFila.insertCell(3).textContent = articulo["precio_unitario_articulo"] != null ? "S/ " + articulo["precio_unitario_articulo"] : '-';
                     nuevaFila.insertCell(4).textContent = "S/ " + articulo["sub_total"] || '-';
                 }
 
