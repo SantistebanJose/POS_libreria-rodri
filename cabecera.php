@@ -115,7 +115,7 @@ include('logica/clssConsultas.php');
                                 <ul class="nav nav-collapse">
                                     <?php if ($rol === '1') { ?>
                                         <li>
-                                            <a href="../demo1/index.html">
+                                            <a href="usuario.php">
                                                 <span class="sub-item">Usuarios</span>
                                             </a>
                                         </li>

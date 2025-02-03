@@ -148,7 +148,7 @@ include("cabecera.php");
                                 <div class="card-body">
                                     <h4 class="card-title" id=""><i class="fas fa-credit-card"></i> Datos de Deuda</h4>
                                     <hr>
-                                    <div>Tiene un Total de <strong id="idCantidadDeudas"> </strong>😞</div>
+                                    <div> <strong id="idCantidadDeudas"></strong></div>
                                     <div>Acumulado en deuda (S/): <strong id="idMontoDeudaDeMrd">41.00</strong></div>
                                     <hr>
                                     <br>
@@ -629,6 +629,8 @@ include("cabecera.php");
                 var mensaje = "";
                 if (contador == 0) {
                     mensaje = "<span style = 'color:green'> Tiene <b>0 deudas 😀</b></span>"
+                }else if(contador == 1){
+                    mensaje = "<span style = 'color:red'> Tiene <b>" + contador + " deuda 😞</b></span>"
                 } else {
                     mensaje = "<span style = 'color:red'> Tiene <b>" + contador + " deudas 😞</b></span>"
                 }
@@ -705,7 +707,7 @@ include("cabecera.php");
                     } else {
                         texto = articulo["descripcion"];
                     }
-
+                    texto = articulo["descripcion"];
                     nuevaFila.insertCell(0).innerHTML = texto;
                     nuevaFila.insertCell(1).textContent = totalCorteRedondeado;
                     nuevaFila.insertCell(2).textContent = articulo["cantidad"] || '-';

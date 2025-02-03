@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>#</th>
+                                                    <th>ID</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
@@ -62,9 +62,9 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
-                                                        <td><?php echo $datos["total"] ?></td>
-                                                        <td><?php echo $datos["monto_venta_final"] ?></td>
-                                                        <td><?php echo $datos["perdida_utilidad"] ?></td>
+                                                        <td><?php echo "S/ ".$datos["total"] ?></td>
+                                                        <td><?php echo "S/ ".$datos["monto_venta_final"] ?></td>
+                                                        <td><?php echo "S/ ".$datos["perdida_utilidad"] ?></td>
                                                         <td><?php echo $datos["estado_pago"] ?></td>
                                                         <td>
                                                             <div class="mt-2 text-center">
@@ -97,7 +97,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>#</th>
+                                                    <th>ID</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
@@ -122,9 +122,9 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
-                                                        <td><?php echo $datos["total"] ?></td>
-                                                        <td><?php echo $datos["monto_venta_final"] ?></td>
-                                                        <td><?php echo $datos["perdida_utilidad"] ?></td>
+                                                        <td><?php echo "S/ ".$datos["total"] ?></td>
+                                                        <td><?php echo "S/ ".$datos["monto_venta_final"] ?></td>
+                                                        <td><?php echo "S/ ".$datos["perdida_utilidad"] ?></td>
                                                         <td><?php echo $datos["estado_pago"] ?></td>
                                                         <td>
                                                             <div class="mt-2 text-center">
@@ -226,7 +226,7 @@ if (isset($_GET['id'])) {
                         <div class="col-sm-6">
                             <div class="card text-start">
                                 <div class="card-body">
-                                    <h4 class="card-title">Cliente</h4>
+                                    <h4 class="card-title"><i class="fas fa-user"> </i> Cliente</h4>
                                     <p class="card-text" id="nombreCliente"></p>
                                     <hr>
                                     <div><strong>N° DOCUMENTO:</strong> <span id="docCliente"></span></div>
@@ -238,7 +238,7 @@ if (isset($_GET['id'])) {
                         <div class="col-sm-6">
                             <div class="card text-start">
                                 <div class="card-body">
-                                    <h4 class="card-text">Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
+                                    <h4 class="card-text"><i class="fas fa-credit-card"> </i>  Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
                                     <p>La venta real fue de <strong id="idTotalOriginal"></strong></p>
                                     <div><strong>Atendido Por: </strong> <span id="idUsuario">3- FRANCO RODRIGO VALDIVIESO FIGUEROA</span></div>
                                     <div><strong>Fecha:</strong> <span id="idFechaVenta"></span></div>
@@ -309,7 +309,7 @@ if (isset($_GET['id'])) {
         } else {
             if (datosJsonVenta.estado_pago === "CREDITO" && datosJsonVenta.estado_final === "VENTA REALIZADA AL CREDITO - AUN DEBE") {
                 //acumulado_deuda
-                document.getElementById("idUtilidad").innerHTML = "<b>" + datosJsonVenta.estado_final + "</b><br> <span style='color:green'>  En esta venta fue realizada a CRÉDITO. Tiene abonado S/ " + datosJsonVenta.acumulado_deuda + " </span> <span style='color:orange'><br><strong>Para más información, Revisar en la seccion de DEUDA</span>";
+                document.getElementById("idUtilidad").innerHTML = "<b>" + datosJsonVenta.estado_final + "</b><br> <span style='color:green'>  En esta venta fue realizada a CRÉDITO. Tiene abonado S/ " + datosJsonVenta.acumulado_deuda + " </span> <span style='color:orange'><br><strong>Para más información, Revisar en la seccion de Crédito [Historial Clientes] </span>";
             } else if (datosJsonVenta.estado_pago === "CREDITO" && datosJsonVenta.estado_final === "PAGADO - CREDTIO") {
                 document.getElementById("idUtilidad").innerHTML = "<b>" + datosJsonVenta.estado_final + "</b><br><span style='color:orange'> En esta venta fue realizada a CRÉDITO. <strong style = 'color:green'>Pagó su DEUDA</span>";
             } else {
@@ -355,12 +355,13 @@ if (isset($_GET['id'])) {
                     } else {
                         texto = articulo["descripcion"];
                     }
+                    texto = articulo["descripcion"]; 
 
                     nuevaFila.insertCell(0).innerHTML = texto;
                     nuevaFila.insertCell(1).textContent = totalCorteRedondeado;
                     nuevaFila.insertCell(2).textContent = articulo["cantidad"] || '-';
-                    nuevaFila.insertCell(3).textContent = articulo["precio_unitario_articulo"] || '-';
-                    nuevaFila.insertCell(4).textContent = articulo["sub_total"] || '-';
+                    nuevaFila.insertCell(3).textContent = "S/ " + articulo["precio_unitario_articulo"] || '-';
+                    nuevaFila.insertCell(4).textContent = "S/ " + articulo["sub_total"] || '-';
                 }
 
             },
@@ -394,11 +395,6 @@ if (isset($_GET['id'])) {
             "order": [
                 [0, 'desc']
             ],
-            "columnDefs": [{
-                "targets": [0], // Índice de la columna que quieres ocultar (empieza desde 0)
-                "visible": false // Oculta la columna
-            }],
-
             language: {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",

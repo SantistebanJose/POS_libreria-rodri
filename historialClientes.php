@@ -414,6 +414,8 @@ include("cabecera.php");
                 var mensaje = "";
                 if (contador == 0) {
                     mensaje = "<span style = 'color:green'> Tiene <b>0 deudas 😀</b></span>"
+                }else if(contador == 1){
+                    mensaje = "<span style = 'color:red'> Tiene <b>" + contador + " deuda 😞</b></span>"
                 } else {
                     mensaje = "<span style = 'color:red'> Tiene <b>" + contador + " deudas 😞</b></span>"
                 }

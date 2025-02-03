@@ -321,7 +321,7 @@ function fnListForAbonosConsolidadoCliente($idCliente): array
         d.id_venta AS id_general,
         'id_venta' as nombre_id,
         'PAGO INICIAL' as estacion,
-        CONCAT('[Pago Inicial] ','ID VENTA: ',d.id_venta,' - VENTA de ',d.created_at::date,' [S/',monto_inicial,']')as formato,
+        CONCAT('<b>[Pago Inicial] </b>',' ID VENTA: ',d.id_venta,' - VENTA de ',d.created_at::date,' [S/',monto_inicial,']')as formato,
         CONCAT(c.nombres, ' ', c.apellidos) AS cliente, 
 
         d.created_at::DATE as fecha,
@@ -357,7 +357,7 @@ function fnListForAbonosConsolidadoCliente($idCliente): array
         'ABONO' as estacion,
 
         --CONCAT('ID A: ',a.id,' - ', a.created_at::DATE,' [',c.nombres, ' ', c.apellidos,'] - S/',a.monto) AS formato,
-        CONCAT('ID ABONO: ',a.id,' - ABONO de ', a.created_at::DATE,' [S/',a.monto,']') AS formato2,
+        CONCAT('<b>[Pago de Abono] </b>',' ID ABONO: ',a.id,' - ABONO de ', a.created_at::DATE,' [S/',a.monto,']') AS formato2,
         CONCAT(c.nombres, ' ', c.apellidos) AS cliente, 
         a.created_at::date AS fecha,
         TO_CHAR(a.created_at, 'HH12:MI AM') AS hora,
@@ -383,7 +383,8 @@ function fnListForAbonosConsolidadoCliente($idCliente): array
     FROM abono AS a
     JOIN persona as c ON c.id=a.cliente_id
     WHERE c.id=:idCliente 
-    order by 8 desc;
+    order by 8 desc
+    limit 10;
     ";
     return executeQuery($query, params: ['idCliente' => $idCliente]);
 }
