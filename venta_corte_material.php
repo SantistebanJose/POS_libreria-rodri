@@ -21,7 +21,10 @@ if (isset($_GET['id'])) {
     #tabla_articulos th:nth-child(10),
     #tabla_articulos td:nth-child(10),
     #tabla_articulos th:nth-child(11),
-    #tabla_articulos td:nth-child(11) {
+    #tabla_articulos td:nth-child(11),
+    #tabla_articulos th:nth-child(12),
+    #tabla_articulos td:nth-child(12) 
+ {
         display: none !important;
     }
     .error-input {
@@ -310,6 +313,8 @@ if (isset($_GET['id'])) {
                                         <th scope="col">Accion</th>
                                         <th scope="col">IDMOVIMIENTO</th>
                                         <th scope="col">IDRELARTICULO</th>
+                                        <th scope="col">NOTAARCHIVO</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -395,7 +400,6 @@ if (isset($_GET['id'])) {
 </div>
 
 <!-- Modal Body -->
-<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
 <div
     class="modal fade"
     id="modalRealizarPago"
@@ -1598,7 +1602,7 @@ if (isset($_GET['id'])) {
         let accionCell = nuevaFila.insertCell(8);
         nuevaFila.insertCell(9).textContent = datosArticulo["movimiento_id"]; // Subtotal
         nuevaFila.insertCell(10).textContent = datosArticulo["rel_venta_articulo_id"]; // Precio unitario
-
+        nuevaFila.insertCell(11).textContent = datosArticulo["nota_archivo"]
         let botonEditar = document.createElement("button");
         botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
         botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
@@ -1793,29 +1797,116 @@ if (isset($_GET['id'])) {
                 botonEditar.addEventListener("click", () => {
                     document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
                     document.getElementById('modalContent').innerHTML = `
-                        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Ploteo</h4>
-                            <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad de Ploteo</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                            <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
-                            <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                            <button id="btn_mas_ploteoEditar" class="btn btn-success btn-round ms-2">+</button>
+                        <div class="text-center">
+                            <div class="card">
+                                
+                                <div class="card-body">
+                                    <h4 class="card-title">Servicio de Ploteo</h4>
+                                    <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
+                                    <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Cantidad de Ploteo</p>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                    <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
+                                    <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
+                                    <button id="btn_mas_ploteoEditar" class="btn btn-success btn-round ms-2">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <p class="card-text">Dimensión</p>
+                                    <div class="selectgroup selectgroup-pills" >
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A0"
+                                                class="selectgroup-input"
+                                            
+                                            />
+                                            <span class="selectgroup-button">A0</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A1"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A1</span>
+                                            </label>
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A2"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A2</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A3"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A3</span>
+                                        </label>
+
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A4"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A4</span>
+                                        </label>
+
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A5"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A5</span>
+                                        </label>
+
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A6"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A6</span>
+                                        </label>
+                                    
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <p class="card-text">Monto (S/)</p>
+                                    <input type="number" id="monto_ploteoeditar" class="form-control" value="${datosArticulo["sub_total"]}">
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_ploteoeditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
-                        </div>
-                        </div>
                     `;
+
+                    if (datosArticulo["nota_archivo"] && datosArticulo["nota_archivo"] !== 'Sin nota') {
+                        let dimensionesSeleccionadas = datosArticulo["nota_archivo"].split(", "); // Convertir string a array si es necesario
+                        document.querySelectorAll('.selectgroup-input').forEach((checkbox) => {
+                            if (dimensionesSeleccionadas.includes(checkbox.value)) {
+                                checkbox.checked = true; // Marcar el checkbox si su valor está en la lista
+                            }
+                        });
+                    }
 
                     document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
                         let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
@@ -1835,8 +1926,15 @@ if (isset($_GET['id'])) {
                         const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
                         const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+                        
+                        let dimensionesSeleccionadas = [];
+                        document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+                            dimensionesSeleccionadas.push(checkbox.value);
+                        });
+                        let textoDimensiones = dimensionesSeleccionadas.join(", ");
 
                         datosArticulo["cantidad"] = cantidadPloteos;
+                        datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
                         datosArticulo["sub_total"] =  montoPloteo.toFixed(2);
                         // Limpiar los campos
                         document.getElementById('input_cantidad_ploteoEditar').value = 1;
@@ -1860,27 +1958,104 @@ if (isset($_GET['id'])) {
                 botonEditar.addEventListener("click", () => {             
                     document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
                     document.getElementById('modalContent').innerHTML = `
-                        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Impresión</h4>
-                            <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad a Imprimir</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                            <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
-                            <input id="input_numero_impresionEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                            <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_impresionEditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                        </div>
                         <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
-                        </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Servicio de Impresión</h4>
+                                    <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
+                                    <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Cantidad a Imprimir</p>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                    <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
+                                    <input id="input_numero_impresionEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
+                                    <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <p class="card-text">Dimensión</p>
+                                    <div class="selectgroup selectgroup-pills" >
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A0"
+                                                class="selectgroup-input"
+                                            
+                                            />
+                                            <span class="selectgroup-button">A0</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A1"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A1</span>
+                                            </label>
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A2"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A2</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A3"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A3</span>
+                                        </label>
+
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A4"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A4</span>
+                                        </label>
+
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A5"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A5</span>
+                                        </label>
+
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="value"
+                                                value="A6"
+                                                class="selectgroup-input"
+                                            />
+                                            <span class="selectgroup-button">A6</span>
+                                        </label>
+                                    
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <p class="card-text">Monto (S/)</p>
+                                    <input type="number" id="monto_impresionEditar" class="form-control" value="${datosArticulo["sub_total"]}">
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
+                                </div>
+                            </div>
                         </div>
                     `;
 
@@ -1894,6 +2069,15 @@ if (isset($_GET['id'])) {
                         document.getElementById('input_numero_impresionEditar').value = cantidad + 1;
                     });
 
+                    if (datosArticulo["nota_archivo"] && datosArticulo["nota_archivo"] !== 'Sin nota') {
+                        let dimensionesSeleccionadas = datosArticulo["nota_archivo"].split(", "); // Convertir string a array si es necesario
+                        document.querySelectorAll('.selectgroup-input').forEach((checkbox) => {
+                            if (dimensionesSeleccionadas.includes(checkbox.value)) {
+                                checkbox.checked = true; // Marcar el checkbox si su valor está en la lista
+                            }
+                        });
+                    }
+
                     // Mostrar el modal
                     const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
@@ -1903,7 +2087,14 @@ if (isset($_GET['id'])) {
                         const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
+                        let dimensionesSeleccionadas = [];
+                        document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+                            dimensionesSeleccionadas.push(checkbox.value);
+                        });
+                        let textoDimensiones = dimensionesSeleccionadas.join(", ");
+
                         datosArticulo["cantidad"] = cantidadImpresion;
+                        datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
                         datosArticulo["sub_total"] =  montoImpresion.toFixed(2);
 
                         // Limpiar los campos
@@ -1927,27 +2118,29 @@ if (isset($_GET['id'])) {
                     
                     document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
                     document.getElementById('modalContent').innerHTML = `
-                        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Escaneo</h4>
-                            <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad de Escaneo</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                            <button id="btn_menos_escaneoEditar" class="btn btn-danger btn-round me-2">-</button>
-                            <input id="input_numero_escaneoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                            <button id="btn_mas_escaneoEditar" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_escaneoEditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                        </div>
                         <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
-                        </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Servicio de Escaneo</h4>
+                                    <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
+                                    <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Cantidad de Escaneo</p>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                    <button id="btn_menos_escaneoEditar" class="btn btn-danger btn-round me-2">-</button>
+                                    <input id="input_numero_escaneoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
+                                    <button id="btn_mas_escaneoEditar" class="btn btn-success btn-round ms-2">+</button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Monto (S/)</p>
+                                    <input type="number" id="monto_escaneoEditar" class="form-control" value="${datosArticulo["sub_total"]}">
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
+                                </div>
+                            </div>
                         </div>
                     `;
                     document.getElementById('btn_menos_escaneoEditar').addEventListener('click', () => {
@@ -2367,6 +2560,81 @@ if (isset($_GET['id'])) {
                                 <button id="btn_mas_ploteo" class="btn btn-success btn-round ms-2">+</button>
                             </div>
                         </div>
+
+                        <div class="card-body">
+                            <p class="card-text">Dimensión</p>
+                            <div class="selectgroup selectgroup-pills" >
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A0"
+                                        class="selectgroup-input"
+                                    
+                                    />
+                                    <span class="selectgroup-button">A0</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A1"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A1</span>
+                                    </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A2"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A2</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A3"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A3</span>
+                                </label>
+
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A4"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A4</span>
+                                </label>
+
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A5"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A5</span>
+                                </label>
+
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A6"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A6</span>
+                                </label>
+                               
+                            </div>
+                        </div>
+
                         <div class="card-body">
                             <p class="card-text">Monto (S/)</p>
                             <input type="number" id="monto_ploteo" class="form-control" placeholder="Monto (S/)">
@@ -2401,6 +2669,14 @@ if (isset($_GET['id'])) {
                 const mensajeErrorExistente = document.querySelector('.error-message');
                 if (mensajeErrorExistente) mensajeErrorExistente.remove();
                 inputMonto.classList.remove('error-input');
+                
+                let dimensionesSeleccionadas = [];
+                document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+                    dimensionesSeleccionadas.push(checkbox.value);
+                });
+
+                // Convertir el array a un string separado por comas
+                let textoDimensiones = dimensionesSeleccionadas.join(", ");
 
                 // Validar que el monto haya sido ingresado y sea mayor a 0
                 if (isNaN(montoPloteo) || montoPloteo <= 0) {
@@ -2426,6 +2702,8 @@ if (isset($_GET['id'])) {
                     subtotal: montoPloteo, // Subtotal
                     articulo: 'PLOTEO',
                     idmovimiento: 2,
+                    nota_archivo : textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones
+
                 }];
 
                 const ploteo = datosPloteo[0];
@@ -2433,7 +2711,7 @@ if (isset($_GET['id'])) {
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, ploteo.idmovimiento, ploteo.cantidad, ploteo.subtotal);
+                    const response = await fn_insert_movimiento(venta_id_lbl, ploteo.idmovimiento, ploteo.cantidad,ploteo.nota_archivo, ploteo.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
@@ -2492,6 +2770,81 @@ if (isset($_GET['id'])) {
                                 <button id="btn_mas_impresion" class="btn btn-success btn-round ms-2">+</button>
                             </div>
                         </div>
+
+                         <div class="card-body">
+                            <p class="card-text">Dimensión</p>
+                            <div class="selectgroup selectgroup-pills" >
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A0"
+                                        class="selectgroup-input"
+                                    
+                                    />
+                                    <span class="selectgroup-button">A0</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A1"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A1</span>
+                                    </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A2"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A2</span>
+                                </label>
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A3"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A3</span>
+                                </label>
+
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A4"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A4</span>
+                                </label>
+
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A5"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A5</span>
+                                </label>
+
+                                <label class="selectgroup-item">
+                                    <input
+                                        type="checkbox"
+                                        name="value"
+                                        value="A6"
+                                        class="selectgroup-input"
+                                    />
+                                    <span class="selectgroup-button">A6</span>
+                                </label>
+                               
+                            </div>
+                        </div>
+
                         <div class="card-body">
                             <p class="card-text">Monto (S/)</p>
                             <input type="number" id="monto_impresion" class="form-control" placeholder="Monto (S/)">
@@ -2527,6 +2880,14 @@ if (isset($_GET['id'])) {
                 if (mensajeErrorExistente) mensajeErrorExistente.remove();
                 inputMonto.classList.remove('error-input');
 
+                let dimensionesSeleccionadas = [];
+                document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+                    dimensionesSeleccionadas.push(checkbox.value);
+                });
+
+                // Convertir el array a un string separado por comas
+                let textoDimensiones = dimensionesSeleccionadas.join(", ");
+
                 // Validar que el monto haya sido ingresado y sea mayor a 0
                 if (isNaN(montoImpresion) || montoImpresion <= 0) {
                     // Añadir clase para resaltar el error
@@ -2551,6 +2912,7 @@ if (isset($_GET['id'])) {
                     subtotal: montoImpresion, // Subtotal
                     articulo: 'IMPRESIÓN',
                     idmovimiento: 3, // ID movimiento para impresión
+                    nota_archivo: textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones
                 }];
 
 
@@ -2559,7 +2921,7 @@ if (isset($_GET['id'])) {
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, impresion.idmovimiento, impresion.cantidad, impresion.subtotal);
+                    const response = await fn_insert_movimiento(venta_id_lbl, impresion.idmovimiento, impresion.cantidad,impresion.nota_archivo, impresion.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
@@ -2675,13 +3037,14 @@ if (isset($_GET['id'])) {
                     subtotal: montoEscaneo,
                     articulo: 'ESCANEO',
                     idmovimiento: 5, // ID movimiento
+                    nota_archivo: 'Sin nota',
                 }];
                 const movimiento = datosEscaneo[0];
                 let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, movimiento.idmovimiento, movimiento.cantidad, movimiento.subtotal);
+                    const response = await fn_insert_movimiento(venta_id_lbl, movimiento.idmovimiento, movimiento.cantidad,'Sin nota', movimiento.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
@@ -2717,14 +3080,15 @@ if (isset($_GET['id'])) {
 <!--Fn Insert, Update y Delete-->
 <script>
 
-    function fn_insert_movimiento(venta_id, movimiento_id, cantidad, sub_total) {
+    function fn_insert_movimiento(venta_id, movimiento_id, cantidad,nota_archivo, sub_total) {
             return new Promise((resolve, reject) => {
                 try {
                     const datos = {
                         "venta_id": venta_id,
                         "movimiento_id": movimiento_id,
                         "cantidad": cantidad,
-                        "sub_total": sub_total
+                        "sub_total": sub_total,
+                        "nota_archivo":nota_archivo
                     };
 
                     $.ajax({
