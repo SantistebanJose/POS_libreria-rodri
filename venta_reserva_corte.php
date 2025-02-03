@@ -1146,7 +1146,7 @@ if (isset($_GET['id'])) {
                     datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
                     datosArticulo.id_movimiento = 1;
 
-                    if(datosArticulo.corte){
+                    if(datosArticulo.corte && datosArticulo.cantidad == 1){
                         const inputMonto = document.getElementById('cantidadCorte');
                         const divContainer = inputMonto.closest('.d-flex');
 
