@@ -27,7 +27,9 @@ function consultapersonaventa($data): void
         // Consulta SQL con la función LOWER para hacer la comparación insensible a mayúsculas y minúsculas
         $query = $conectar->prepare("
             SELECT id, 
-                   CONCAT(numero_documento, ' - ', nombres, ' ', apellidos) AS persona_concatenada
+                CONCAT(numero_documento, ' - ', nombres, ' ', apellidos) AS persona_concatenada,
+                COALESCE(NULLIF(telefonomovil, ''), 'Sin número') AS telefonomovil,
+                COALESCE(NULLIF(email, ''), 'Sin correo') AS email
             FROM persona
             WHERE LOWER(numero_documento) LIKE LOWER(:data)
                OR LOWER(nombres) LIKE LOWER(:data)

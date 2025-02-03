@@ -416,20 +416,26 @@ if (isset($_GET['id'])) {
                         <div>
                             <span>ID Venta: <span id="idVenta">#</span></span> |
                             <span>ID Cliente: <span id="idPersona">#</span></span> |
-                            <span>ID Usuario Reserva: <span id="idUsuario">#</span>
+                            <span>ID Usuario Reserva: <span id="idUsuario"><?php echo $id_usuario_s ?></span>
                                 <br>
                                 <span><strong>Atendiendo la Transacción:</strong> <span id="idAtencionFinal"><?php echo $id_usuario_s . "-" . $nombre . ", " . $ape_usuario ?></span></span>
                         </div>
                         <hr>
                         <div class="mb-3">
                             <label for="" class="form-label"><strong>Cliente</strong></label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                name=""
-                                id="nombreCliente"
-                                aria-describedby="helpId"
-                                placeholder="AGREGAR EL NOMBRE DEL CLIENTE" readonly />
+                            <div class="d-flex align-items-center">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nombreCliente"
+                                    placeholder="AGREGAR EL NOMBRE DEL CLIENTE O DNI" />
+                                <!-- Botón "+" al lado del input -->
+                                <button type="button" class="btn btn-primary ms-2" id="btnAbrirModalCliente">
+                                    <i class="fas fa-plus"></i> <!-- Ícono "+" -->
+                                </button>
+                            </div>
+                            <!-- Contenedor para las sugerencias -->
+                            <div id="sugerencias" class="list-group position-absolute w-100"></div>
                         </div>
                         <div class="row justify-content-center align-items-center g-2">
                             <div class="col-md-6">
@@ -815,94 +821,7 @@ if (isset($_GET['id'])) {
   </div>
 </div>
 
-<!-- Modal Body -->
-<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-<div
-    class="modal fade"
-    id="modalRealizarPago"
-    tabindex="-1"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
 
-    role="dialog"
-    aria-labelledby="modalTitleId"
-    aria-hidden="true">
-    <div
-        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
-        role="document">
-        <div class="modal-content">
-
-            <div class="modal-body">
-                <div
-                    class="card border-primary">
-                    <div class="card-body">
-
-                        <div class="card-body text-center">
-                            <h4 class="card-title">Realizar Reserva</h4>
-                        </div>
-                       <!--<div class="card-body text-center">
-                            <h1 class="card-title">S/ xx.xx</h1>
-                        </div>-->
-
-                        <div class="card-sub">
-                            Aquí realiza tus pagos
-                        </div>
-                        <div>
-                            <span>ID Cliente: <span id="idPersona">#</span></span>
-                        </div>
-                        <hr>
-                        <div class="mb-3 position-relative">
-                            <label for="nombreCliente" class="form-label">Cliente</label>
-                            <div class="d-flex align-items-center">
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="nombreCliente"
-                                    placeholder="AGREGAR EL NOMBRE DEL CLIENTE O DNI" />
-                                <!-- Botón "+" al lado del input -->
-                                <button type="button" class="btn btn-primary ms-2" id="btnAbrirModalCliente">
-                                    <i class="fas fa-plus"></i> <!-- Ícono "+" -->
-                                </button>
-                            </div>
-                            <!-- Contenedor para las sugerencias -->
-                            <div id="sugerencias" class="list-group position-absolute w-100"></div>
-                        </div>
-                          <!-- Monto Total -->
-                        <div class="mb-3">
-                            <label for="montoTotal" class="form-label">Monto Total</label>
-                            <div class="input-group">
-                                <span class="input-group-text">S/</span>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="montoTotal"
-                                    placeholder="Monto total de la venta"
-                                    readonly />
-                            </div>
-                        </div>
-
-                      
-                        <div class="text-center">
-                            <a class="btn btn-success" id="Reservar" role="button">Reservar</a>
-                        </div>
-
-
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button
-                    type="button"
-                    class="btn btn-danger"
-                    data-bs-dismiss="modal">
-                    Salir
-                </button>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -1679,21 +1598,11 @@ if (isset($_GET['id'])) {
 
 <!--Tabla-->
 <script>
-    document.getElementById("btnRealizarReserva").addEventListener("click", function () {
-  
-
-        // Mostrar el modal manualmente
-        const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
-        modal.show();
-
-        const subtotalGeneral = document.getElementById("id_subtotal_general").textContent;
-        document.getElementById("montoTotal").value = subtotalGeneral; // Asignar el monto total
-
-    });
-
     document.addEventListener("DOMContentLoaded", function () {
         const nombreCliente = document.getElementById("nombreCliente");
         const sugerencias = document.getElementById("sugerencias");
+        const numero_telefono = document.getElementById("idUpdateNumTelefonoCliente");
+        const correo = document.getElementById("idUpdateCorreoCliente");
         const persona_id = document.getElementById("idPersona");
         nombreCliente.addEventListener("input", function () {
             const query = nombreCliente.value.trim();
@@ -1729,7 +1638,8 @@ if (isset($_GET['id'])) {
                                     // Establecer el valor del input con el nombre seleccionado
                                     nombreCliente.value = persona.persona_concatenada;
                                     persona_id.textContent = persona.id
- 
+                                    numero_telefono.value = persona.telefonomovil
+                                    correo.value = persona.email
 
                                     // Limpiar las sugerencias
                                     sugerencias.innerHTML = "";
@@ -1773,91 +1683,7 @@ if (isset($_GET['id'])) {
    
 </script>
 
-<!--Reserva-->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    // Evento para el botón "Reservar"
-    document.getElementById("Reservar").addEventListener("click", function () {
-        var idCliente = document.getElementById('idPersona').textContent.trim();
-        var total = document.getElementById("montoTotal").value;
 
-        const userId = <?php echo $_SESSION['id']; ?>;
-        console.log(idCliente);
-        console.log(userId);
-
-        const datos = {
-            "usuario_id": userId,  // Puedes cambiar este valor dinámicamente si es necesario
-            "cliente_id": idCliente,  // También este valor puede ser dinámico
-            "total": total,
-            "articulos": []
-        };
-
-        // Obtener todas las filas de la tabla (excepto el encabezado)
-        const rows = document.querySelectorAll("#tabla_articulos tbody tr");
-
-        // Recorrer todas las filas y obtener los datos de cada columna
-        rows.forEach(function(row) {
-            const articulo = {
-                "articulo_id": row.cells[0].textContent,  // El ID del artículo
-                "minutos": row.cells[1].textContent, 
-                "costoxminuto": row.cells[2].textContent, 
-                "precio_unitario": parseFloat(row.cells[6].textContent),  // Precio Unitario
-                "cantidad": parseInt(row.cells[5].textContent),  // Cantidad
-                "sub_total": parseFloat(row.cells[7].textContent), // Subtotal
-                "movimiento_id": parseFloat(row.cells[9].textContent),  // Subtotal
-                "nota_archivo": row.cells[10] ? row.cells[10].textContent.trim() || "Sin nota" : "Sin nota",
-            };
-
-            // Agregar el artículo al array
-            datos.articulos.push(articulo);
-        });
-
-        // Mostrar los datos en la consola para verificar
-        console.log(JSON.stringify(datos));
-        $.ajax({
-            method: "POST",
-            url: "logica/clssVentaCorte.php",
-            data: {
-                "accion": "REGISTRARRESERVA",
-                "data": JSON.stringify(datos)
-            }
-        }).done(function (response) {
-    
-            var result = JSON.parse(response);
-            console.log(response);
-            if (result.success === true) {
-                swal({
-                    title: "Reserva con Exito!",
-                    text: 'Reserva registrada correctamente',
-                    icon: "success",
-                    buttons: false,
-                    timer: 1500
-                }).then(() => {
-                    location.reload();
-                });;
-            }else{
-                swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                    icon: "error",
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-danger",
-                        },
-                    },
-                });
-            }
-
-           
-        }).fail(function (error) {
-            console.error("Error:", error.responseText);
-            alert("Error al registrar la reserva.");
-        });
-       
-       
-    });
-
-
-    });
-</script>
 
 <script>
     document.getElementById("btnRealizarPago").addEventListener("click", function() {
@@ -3190,134 +3016,155 @@ if (isset($_GET['id'])) {
 <!-- FRANCO -->
 <script>
     function fn_pagar_directo() {
-        var datosSerializados = $('#form-pago-directo').serializeArray();
+        try {
+            var datosSerializados = $('#form-pago-directo').serializeArray();
 
-        console.log(datosSerializados); // Ver los datos serializados como un array de objetos
+            console.log(datosSerializados); // Ver los datos serializados como un array de objetos
 
-        //////////////////////////////////////////////////////
-        var numTelefonoUpdate = document.getElementById('idUpdateNumTelefonoCliente').value;
-        //////////////////////////////////////////////////////////////////////////
-        var idVenta = document.getElementById('idVenta').textContent;
-        var idPersona = document.getElementById('idPersona').textContent;
-        var idUsuario = document.getElementById('idUsuario').textContent;
-        var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
-        var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
-        ////
+            //////////////////////////////////////////////////////
+            var numTelefonoUpdate = document.getElementById('idUpdateNumTelefonoCliente').value;
+            //////////////////////////////////////////////////////////////////////////
+            var idVenta = 0
 
-        var montoOriginal = parseFloat(document.getElementById('montoTotal').value);
-        var montoFinal = parseFloat(document.getElementById('montoTotalFinal').value);
+            var idPersona = document.getElementById('idPersona').textContent;
+            var idUsuario = document.getElementById('idUsuario').textContent;
+            var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
+            var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
+            ////
 
-        if (isNaN(montoFinal)) {
-            montoFinal = montoOriginal;
-        };
+            var montoOriginal = parseFloat(document.getElementById('montoTotal').value);
+            var montoFinal = parseFloat(document.getElementById('montoTotalFinal').value);
+
+            if (isNaN(montoFinal)) {
+                montoFinal = montoOriginal;
+            };
 
 
 
-        ///////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////
 
-        var js_detalle_pago = [];
+            var js_detalle_pago = [];
+            var js_articulos = []
+            var formaPago = null;
+            var monto = null;
+            var acumMontos = 0;
+            for (var i = 0; i < datosSerializados.length; i++) {
+                var dato = datosSerializados[i];
 
-        var formaPago = null;
-        var monto = null;
-        var acumMontos = 0;
-        for (var i = 0; i < datosSerializados.length; i++) {
-            var dato = datosSerializados[i];
+                if (dato.name.startsWith('formaPago')) {
+                    formaPago = dato.value;
+                }
 
-            if (dato.name.startsWith('formaPago')) {
-                formaPago = dato.value;
-            }
+                if (dato.name.startsWith('monto')) {
+                    monto = parseFloat(dato.value);
+                    acumMontos = acumMontos + monto;
+                }
+                if (formaPago && monto) {
+                    js_detalle_pago.push({
+                        "venta_id": idVenta,
+                        "id_forma_pago": formaPago,
+                        "monto_forma_pago": monto
+                    });
+                    formaPago = null;
+                    monto = null;
+                }
+            };
 
-            if (dato.name.startsWith('monto')) {
-                monto = parseFloat(dato.value);
-                acumMontos = acumMontos + monto;
-            }
-            if (formaPago && monto) {
-                js_detalle_pago.push({
-                    "venta_id": idVenta,
-                    "id_forma_pago": formaPago,
-                    "monto_forma_pago": monto
+            js_articulos = obtener_json_articulos();
+
+            var js_venta = {
+                "venta_id": idVenta,
+                "atencion_final_usuario": idAtencionFinal,
+                "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
+                "monto_original": montoOriginal,
+                "monto_venta_final": montoFinal,
+                "js_detalle_pagos": js_detalle_pago,
+                "js_detalle_rel_venta_articulo": js_articulos
+            };
+
+
+
+            var js_for_pago = {
+                "venta_id": idVenta,
+                "monto_original": montoOriginal,
+                "monto_venta_final": montoFinal,
+                "comentario": ""
+            };
+            //monto_forma_pago
+            if (js_detalle_pago.length === 0) {
+                swal("Ups!, Falta Agregar los monto de acuerdo a forma de Pago", "Agrega los montos :)", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
                 });
-                formaPago = null;
-                monto = null;
-            }
-        };
-        var js_venta = {
-            "venta_id": idVenta,
-            "atencion_final_usuario": idAtencionFinal,
-            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
-            "monto_original": montoOriginal,
-            "monto_venta_final": montoFinal,
-            "js_detalle_pagos": js_detalle_pago
-        };
-
-        var js_for_pago = {
-            "venta_id": idVenta,
-            "monto_original": montoOriginal,
-            "monto_venta_final": montoFinal,
-            "comentario": ""
-        };
-        //monto_forma_pago
-        if (js_detalle_pago.length === 0) {
-            swal("Ups!, Falta Agregar los monto de acuerdo a forma de Pago", "Agrega los montos :)", {
-                icon: "error",
-                buttons: {
-                    confirm: {
-                        className: "btn btn-danger",
+                console.log("Falta Agregar los Metodos de Pago");
+            } else if (acumMontos > montoFinal) {
+                swal("Ups!, Los montos ingresados son MAYORES al Monto final de la venta", "Agrega correctamente los montos :)", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
                     },
-                },
-            });
-            console.log("Falta Agregar los Metodos de Pago");
-        } else if (acumMontos > montoFinal) {
-            swal("Ups!, Los montos ingresados son MAYORES al Monto final de la venta", "Agrega correctamente los montos :)", {
-                icon: "error",
-                buttons: {
-                    confirm: {
-                        className: "btn btn-danger",
+                });
+
+            } else if (acumMontos < montoFinal) {
+                swal("Ups!, Los montos ingresados son MENORES al Monto final de la venta", "Agrega correctamente los montos :)", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
                     },
-                },
-            });
+                });
 
-        } else if (acumMontos < montoFinal) {
-            swal("Ups!, Los montos ingresados son MENORES al Monto final de la venta", "Agrega correctamente los montos :)", {
-                icon: "error",
-                buttons: {
-                    confirm: {
-                        className: "btn btn-danger",
+            } else {
+                console.log("js_detalle_pago", js_detalle_pago);
+                console.log("CELULAR UPDATE", numTelefonoUpdate);
+                console.log("js_articulo", js_articulos);
+
+                console.log("js_detalle_pago final: ", js_detalle_pago);
+                console.log("js_venta final: ", js_venta);
+
+                $.ajax({
+                    url: 'logica/clssInsertPA.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'FINALIZARVENTARAPIDO',
+                        jsDatosVenta: JSON.stringify(js_venta)
                     },
-                },
-            });
+                    success: function(response) {
 
-        } else {
-            console.log("js_detalle_pago", js_detalle_pago);
-            console.log("CELULAR UPDATE", numTelefonoUpdate);
+                        console.log("Respuesta del servidor: ", response);
 
-            console.log("js_detalle_pago final: ", js_detalle_pago);
-
-            $.ajax({
-                url: 'logica/clssInsertPA.php',
-                type: 'POST',
-                data: {
-                    accion: 'FINALIZARVENTA',
-                    jsDatosVenta: JSON.stringify(js_venta)
-                },
-                success: function(response) {
-
-                    console.log("Respuesta del servidor: ", response);
-
-                    try {
-                        var result = JSON.parse(response);
-                        if (result.estado === true) {
-                            swal({
-                                title: "Pagado con Exito!",
-                                text: result.mensaje,
-                                icon: "success",
-                                buttons: false,
-                                timer: 1500
-                            }).then(() => {
-                                location.reload();
-                            });;
-                        } else {
-                            swal("Error", result.mensaje, {
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Pagado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger",
+                                        },
+                                    },
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
                                 icon: "error",
                                 buttons: {
                                     confirm: {
@@ -3326,9 +3173,10 @@ if (isset($_GET['id'])) {
                                 },
                             });
                         }
-                    } catch (e) {
-                        console.log("Error al parsear el JSON: ", e);
-                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
                             icon: "error",
                             buttons: {
                                 confirm: {
@@ -3337,19 +3185,12 @@ if (isset($_GET['id'])) {
                             },
                         });
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.log("Error: " + error);
-                    swal("Error", "Hubo un problema con la solicitud.", {
-                        icon: "error",
-                        buttons: {
-                            confirm: {
-                                className: "btn btn-danger",
-                            },
-                        },
-                    });
-                }
-            });
+                });
+
+                
+            }
+        } catch (error) {
+            console.error("Error en el proceso de pago:", error);
         }
     }
 
@@ -3485,7 +3326,49 @@ if (isset($_GET['id'])) {
     }
 </script>
 
+<script>
+    function obtener_json_articulos (){
+        var idCliente = document.getElementById('idPersona').textContent.trim();
+        var total = document.getElementById("montoTotal").value;
 
+        const userId = <?php echo $_SESSION['id']; ?>;
+        console.log(idCliente);
+        console.log(userId);
+
+        const datos = {
+            "usuario_id": userId,  // Puedes cambiar este valor dinámicamente si es necesario
+            "cliente_id": idCliente,  // También este valor puede ser dinámico
+            "total": total,
+            "articulos": []
+        };
+
+        // Obtener todas las filas de la tabla (excepto el encabezado)
+        const rows = document.querySelectorAll("#tabla_articulos tbody tr");
+
+        // Recorrer todas las filas y obtener los datos de cada columna
+        rows.forEach(function(row) {
+            const articulo = {
+                "articulo_id": row.cells[0].textContent.trim() === '0' ? null : row.cells[0].textContent.trim() || null,  // Si el ID es '0' o vacío, asigna null
+                "minutos": isNaN(parseFloat(row.cells[1].textContent)) ? null : parseFloat(row.cells[1].textContent),
+                "costoxminuto": isNaN(parseFloat(row.cells[2].textContent)) ? null : parseFloat(row.cells[2].textContent),
+                "precio_unitario": isNaN(parseFloat(row.cells[6].textContent)) ? null : parseFloat(row.cells[6].textContent),
+                "cantidad": isNaN(parseInt(row.cells[5].textContent)) ? null : parseInt(row.cells[5].textContent),
+                "sub_total": isNaN(parseFloat(row.cells[7].textContent)) ? null : parseFloat(row.cells[7].textContent),
+                "movimiento_id": isNaN(parseFloat(row.cells[9].textContent)) ? null : parseFloat(row.cells[9].textContent),
+                "nota_archivo": row.cells[10] ? row.cells[10].textContent.trim() || "Sin nota" : "Sin nota"
+            };
+
+            // Agregar el artículo al array
+            datos.articulos.push(articulo);
+        });
+
+        // Mostrar los datos en la consola para verificar
+        console.log(JSON.stringify(datos));
+
+        return datos.articulos;
+       
+    }
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -3714,8 +3597,10 @@ if (isset($_GET['id'])) {
                     const nombreencadenado = `${document.getElementById('numeroDocumentoPersona').value} - ${document.getElementById('nombresPersona').value} ${document.getElementById('apellidosPersona').value}`;
                     console.log(nombreencadenado);
                     console.log(response.persona_id);
+
+
                     
-                    enviardatos(response.persona_id,nombreencadenado);
+                    enviardatos(response.persona_id,nombreencadenado,document.getElementById('telefonoPersona').value || 'Sin numero',document.getElementById('emailPersona').value || 'Sin Correo');
                     limpiarcampos();
                     showNotification("success");
 
@@ -3757,10 +3642,11 @@ if (isset($_GET['id'])) {
             }
         });
 
-        function enviardatos(id_persona,nombre){
+        function enviardatos(id_persona,nombre,numero_celular,correo){
             document.getElementById('idPersona').textContent = id_persona
             document.getElementById('nombreCliente').value = nombre
-
+            document.getElementById('idUpdateNumTelefonoCliente').textContent = numero_celular
+            document.getElementById('idUpdateCorreoCliente').value = correo
         }
 
         function fnRegistrarPersona(datos) {
