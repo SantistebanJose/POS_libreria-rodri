@@ -131,14 +131,13 @@ function finalizarVentaReservaCreditoRapido($jsDatosVenta,$js_articulos,$js_deta
     global $conectar;
 
 
-    if (is_null($js_detalle_deuda) || empty($js_detalle_deuda)) {
-
-        $js_detalle_deuda = null;
-    } 
-
     try {
         $sql = "SELECT fn_finalizar_venta_credito_rapida(:json_venta,:json_detalles, :json_deudas)";
         $stmt = $conectar->prepare($sql);
+        
+        if ($js_detalle_deuda === null || $js_detalle_deuda === "null") {
+            $js_detalle_deuda = "[]"; // Reemplaza null por un array vacío en JSON
+        }
 
         $stmt->bindParam(':json_venta', $jsDatosVenta);
         $stmt->bindParam(':json_detalles', $js_articulos);

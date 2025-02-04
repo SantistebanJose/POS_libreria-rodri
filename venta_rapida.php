@@ -3235,7 +3235,6 @@ if (isset($_GET['id'])) {
             }
             if (formaPagoCredito && montoCredito) {
                 js_detalle_deuda.push({
-                    "venta_id": idVenta,
                     "id_forma_pago": formaPagoCredito,
                     "monto_forma_pago": montoCredito
                 });
@@ -3255,7 +3254,7 @@ if (isset($_GET['id'])) {
             "usuario_id": parseInt(idUsuario),
             "cliente_id": parseInt(idPersona),
             "atencion_final_usuario": idAtencionFinal,
-            "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
+            "numerotelefono_cliente_venta": numUpdateTelefonoPersona,
             "monto_original": montoOriginal,
             "monto_venta_final": montoFinal,
             "monto_inicial": acumMontos
