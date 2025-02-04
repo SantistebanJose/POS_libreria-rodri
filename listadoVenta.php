@@ -61,9 +61,9 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
-                                                        <td><?php echo "S/ ".$datos["total"] ?></td>
-                                                        <td><?php echo "S/ ".$datos["monto_venta_final"] ?></td>
-                                                        <td><?php echo "S/ ".$datos["perdida_utilidad"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["total"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["perdida_utilidad"] ?></td>
                                                         <td><?php echo $datos["estado_pago"] ?></td>
                                                         <td>
                                                             <div class="mt-2 text-center">
@@ -121,9 +121,9 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
-                                                        <td><?php echo "S/ ".$datos["total"] ?></td>
-                                                        <td><?php echo "S/ ".$datos["monto_venta_final"] ?></td>
-                                                        <td><?php echo "S/ ".$datos["perdida_utilidad"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["total"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["perdida_utilidad"] ?></td>
                                                         <td><?php echo $datos["estado_pago"] ?></td>
                                                         <td>
                                                             <div class="mt-2 text-center">
@@ -212,70 +212,70 @@ if (isset($_GET['id'])) {
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
 
-            <div class="card text-start">
-                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="card-body">
-                    <h4 class="card-title text-center" style="font-size: 28px;">Venta de S/ <strong id="idMontoVenta"></strong></h4>
-                    <hr>
-                    <p class="card-text text-center" id="idUtilidad">ssss</p>
-                    <div class="card-sub text-center">
-                        Aquí podrás revisar los datos de la venta.
-                    </div>
-                    <div class="row justify-content-center align-items-center sm-2">
-                        <div class="col-sm-6">
-                            <div class="card text-start">
-                                <div class="card-body">
-                                    <h4 class="card-title"><i class="fas fa-user"> </i> Cliente</h4>
-                                    <p class="card-text" id="nombreCliente"></p>
-                                    <hr>
-                                    <div><strong>N° DOCUMENTO:</strong> <span id="docCliente"></span></div>
-                                    <div><strong>Número de Celular:</strong> <span id="numCelCliente"></span></div>
-                                    <div><strong>Correo:</strong> <span id="emailCliente"></span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="card text-start">
-                                <div class="card-body">
-                                    <h4 class="card-text"><i class="fas fa-credit-card"> </i>  Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
-                                    <p>La venta real fue de <strong id="idTotalOriginal"></strong></p>
-                                    <div><strong>Atendido Por: </strong> <span id="idUsuario">3- FRANCO RODRIGO VALDIVIESO FIGUEROA</span></div>
-                                    <div><strong>Fecha:</strong> <span id="idFechaVenta"></span></div>
-                                    <div><strong>Hora:</strong> <span id="idHoraVenta">19:00:00</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-title">Detalle de Venta</div>
-                            <div class="card-sub">
-                                Revisa el detalle de la venta :)
-                            </div>
-                            <div class="table-responsive">
-                                <table
-                                    id="tablaDetalle"
-                                    class="table table-head-bg-secondary mt-4">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">descripción</th>
-                                            <th scope="col">corte</th>
-                                            <th scope="col">Cant</th>
-                                            <th scope="col">P.Uni</th>
-                                            <th scope="col">Sub Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="">
 
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h4 class="card-title text-center" style="font-size: 28px;">Venta de S/ <strong id="idMontoVenta"></strong></h4>
+                <hr>
+                <p class="card-text text-center" id="idUtilidad">ssss</p>
+                <div class="card-sub text-center">
+                    Aquí podrás revisar los datos de la venta.
                 </div>
+                <div class="row justify-content-center align-items-center sm-2">
+                    <div class="col-sm-6">
+                        <div class="card text-start">
+                            <div class="card-body" style="color:indigo">
+                                <h4 class="card-title" style="color:indigo"><i class="fas fa-user"> </i> Cliente</h4>
+                                <p class="card-text" id="nombreCliente"></p>
+                                <hr>
+                                <div><strong>N° DOCUMENTO:</strong> <span id="docCliente"></span></div>
+                                <div><strong>Número de Celular:</strong> <span id="numCelCliente"></span></div>
+                                <div><strong>Correo:</strong> <span id="emailCliente"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card text-start">
+                            <div class="card-body">
+                                <h4 class="card-text"  style="color:green"><i class="fas fa-credit-card"> </i> Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
+                                <p>La venta real fue de <strong id="idTotalOriginal"></strong></p>
+                                <div><strong>Atendido Por: </strong> <span id="idUsuario">3- FRANCO RODRIGO VALDIVIESO FIGUEROA</span></div>
+                                <div><strong>Fecha:</strong> <span id="idFechaVenta"></span></div>
+                                <div><strong>Hora:</strong> <span id="idHoraVenta">19:00:00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">Detalle de Venta</div>
+                        <div class="card-sub">
+                            Revisa el detalle de la venta :)
+                        </div>
+                        <div class="table-responsive">
+                            <table
+                                id="tablaDetalle"
+                                class="table table-head-bg-secondary mt-4">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">descripción</th>
+                                        <th scope="col">corte</th>
+                                        <th scope="col">Cant</th>
+                                        <th scope="col">P.Uni</th>
+                                        <th scope="col">Sub Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="">
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </div>
 </div>
@@ -347,7 +347,7 @@ if (isset($_GET['id'])) {
                         (articulo["costo_por_minuto"] * articulo["minutos"]) : articulo["sub_total"] || '-';
 
                     let totalCorteRedondeado = (totalCorte !== '-') ? "S/ " + (totalCorte.toFixed(2)) : totalCorte;
-                    
+
                     let texto = "";
                     if (articulo["minutos"] !== null || articulo["costo_por_minuto"] !== null) {
                         texto = articulo["descripcion"] + "\n" + "<span style='color:blue'> <b>[" + min + " Minutos X " + articulo["costo_por_minuto"] + " = " + totalCorte.toFixed(2) + "]</b></span>";
@@ -355,7 +355,7 @@ if (isset($_GET['id'])) {
                     } else {
                         texto = articulo["descripcion"];
                     }
-                    texto = articulo["descripcion"]; 
+                    texto = articulo["descripcion"];
 
                     nuevaFila.insertCell(0).innerHTML = texto;
                     nuevaFila.insertCell(1).textContent = totalCorteRedondeado;
