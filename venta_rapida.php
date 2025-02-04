@@ -3061,7 +3061,6 @@ if (isset($_GET['id'])) {
                 }
                 if (formaPago && monto) {
                     js_detalle_pago.push({
-                        "venta_id": idVenta,
                         "id_forma_pago": formaPago,
                         "monto_forma_pago": monto
                     });
@@ -3073,23 +3072,22 @@ if (isset($_GET['id'])) {
             js_articulos = obtener_json_articulos();
 
             var js_venta = {
-                "venta_id": idVenta,
+                "usuario_id": parseInt(idUsuario),
+                "cliente_id": parseInt(idPersona),
                 "atencion_final_usuario": idAtencionFinal,
-                "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
+                "numerotelefono_cliente_venta": numUpdateTelefonoPersona,
                 "monto_original": montoOriginal,
                 "monto_venta_final": montoFinal,
-                "js_detalle_pagos": js_detalle_pago,
-                "js_detalle_rel_venta_articulo": js_articulos
             };
 
 
 
             var js_for_pago = {
-                "venta_id": idVenta,
                 "monto_original": montoOriginal,
                 "monto_venta_final": montoFinal,
                 "comentario": ""
             };
+
             //monto_forma_pago
             if (js_detalle_pago.length === 0) {
                 swal("Ups!, Falta Agregar los monto de acuerdo a forma de Pago", "Agrega los montos :)", {
@@ -3134,7 +3132,9 @@ if (isset($_GET['id'])) {
                     type: 'POST',
                     data: {
                         accion: 'FINALIZARVENTARAPIDO',
-                        jsDatosVenta: JSON.stringify(js_venta)
+                        jsDatosVenta: JSON.stringify(js_venta),
+                        js_articulos: JSON.stringify(js_articulos),
+                        js_detalle_pago: JSON.stringify(js_detalle_pago),
                     },
                     success: function(response) {
 
@@ -3249,23 +3249,29 @@ if (isset($_GET['id'])) {
         if (js_detalle_deuda.length === 0) {
             js_detalle_deuda = null;
         }
+        js_articulos = obtener_json_articulos();
 
         var js_venta = {
-            "venta_id": idVenta,
+            "usuario_id": parseInt(idUsuario),
+            "cliente_id": parseInt(idPersona),
             "atencion_final_usuario": idAtencionFinal,
             "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
             "monto_original": montoOriginal,
             "monto_venta_final": montoFinal,
-            "monto_inicial": acumMontos,
-            "js_detalle_deuda": js_detalle_deuda
+            "monto_inicial": acumMontos
         };
+
         console.log(js_venta);
+        console.log(js_detalle_deuda);
         $.ajax({
             url: 'logica/clssInsertPA.php',
             type: 'POST',
             data: {
-                accion: 'FINALIZARVENTACREDITO',
-                jsDatosVenta: JSON.stringify(js_venta)
+                accion: 'FINALIZARVENTACREDITORAPIDO',
+                jsDatosVenta: JSON.stringify(js_venta),
+                js_articulos: JSON.stringify(js_articulos),
+                js_detalle_deuda: JSON.stringify(js_detalle_deuda)
+
             },
             success: function(response) {
 
@@ -3348,7 +3354,7 @@ if (isset($_GET['id'])) {
         // Recorrer todas las filas y obtener los datos de cada columna
         rows.forEach(function(row) {
             const articulo = {
-                "articulo_id": row.cells[0].textContent.trim() === '0' ? null : row.cells[0].textContent.trim() || null,  // Si el ID es '0' o vacío, asigna null
+                "articulo_id": row.cells[0].textContent.trim() === '0' || row.cells[0].textContent.trim() === '' ? null : parseInt(row.cells[0].textContent.trim()) || null,
                 "minutos": isNaN(parseFloat(row.cells[1].textContent)) ? null : parseFloat(row.cells[1].textContent),
                 "costoxminuto": isNaN(parseFloat(row.cells[2].textContent)) ? null : parseFloat(row.cells[2].textContent),
                 "precio_unitario": isNaN(parseFloat(row.cells[6].textContent)) ? null : parseFloat(row.cells[6].textContent),
