@@ -105,7 +105,7 @@ include('logica/clssConsultas.php');
                                 href="#dashboard"
                                 class="collapsed"
                                 aria-expanded="false">
-                                <i class="fas fa-home"></i>
+                                <i class="fas fa-cog"></i>
                                 <p>Adiministrador</p>
                                 <span class="caret"></span>
                             </a>
@@ -122,6 +122,7 @@ include('logica/clssConsultas.php');
                                                 <span class="sub-item">Personas</span>
                                             </a>
                                         </li>
+
                                     <?php } ?>
                                     <li>
                                         <a href="../demo1/index.html">
@@ -188,10 +189,48 @@ include('logica/clssConsultas.php');
                         <li class="nav-item">
                             <a
                                 data-bs-toggle="collapse"
+                                href="#compras"
+                                class="collapsed"
+                                aria-expanded="false">
+                                <i class="fas fa-store-alt"></i>
+                                <p>Negocio</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="compras">
+                                <ul class="nav nav-collapse">
+
+                                    <li>
+                                        <a href="compra.php">
+                                            <span class="sub-item">Compra de Articulos</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <span class="sub-item">Listado de Compras</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">
+                                            <span class="sub-item">Manejo de Caja</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="">
+                                            <span class="sub-item">Egresos</span>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a
+                                data-bs-toggle="collapse"
                                 href="#reserva"
                                 class="collapsed"
                                 aria-expanded="false">
-                                <i class="fas fa-calendar-alt"></i>
+                                <i class="fas fa-toolbox"></i>
                                 <p>Reserva</p>
                                 <span class="caret"></span>
                             </a>
@@ -219,7 +258,7 @@ include('logica/clssConsultas.php');
                                 href="#venta"
                                 class="collapsed"
                                 aria-expanded="false">
-                                <i class="fas fa-store"></i>
+                                <i class="fas fa-cart-plus"></i>
                                 <p>Venta</p>
                                 <span class="caret"></span>
                             </a>

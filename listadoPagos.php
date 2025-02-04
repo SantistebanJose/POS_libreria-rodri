@@ -250,108 +250,108 @@ if (isset($_GET['id'])) {
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
 
-            <div class="card text-start">
-                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="card-body">
-                    <h4 class="card-title text-center" style="font-size: 28px;">Venta de S/ <strong id="idMontoVenta"></strong></h4>
-                    <hr>
-                    <div class="card-sub text-center">
-                        Aquí podrás revisar los datos de la venta.
-                    </div>
-                    <div class="row justify-content-center align-items-center sm-2">
-                        <div class="col-sm-6">
-                            <div class="card text-start">
-                                <div class="card-body">
-                                    <h4 class="card-title"><i class="fas fa-user"> </i> Cliente</h4>
-                                    <p class="card-text" id="nombreCliente"></p>
-                                    <hr>
-                                    <div><strong>N° DOCUMENTO:</strong> <span id="docCliente"></span></div>
-                                    <div><strong>Número de Celular:</strong> <span id="numCelCliente"></span></div>
-                                    <div><strong>Correo:</strong> <span id="emailCliente"></span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="card text-start">
-                                <div class="card-body">
-                                    <h4 class="card-text"><i class="fas fa-credit-card"> </i> Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
-                                    <p>La venta real fue de <strong id="idTotalOriginal"></strong></p>
-                                    <div><strong>Atendido Por: </strong> <span id="idUsuario">3- USUARIO</span></div>
-                                    <div><strong>Fecha:</strong> <span id="idFechaVenta"></span></div>
-                                    <div><strong>Hora:</strong> <span id="idHoraVenta">19:00:00</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-
-
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="accordion accordion-flush" id="accordionFlushExample">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingOne">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                            <strong><i class="fas fa-cart-arrow-down"></i> Detalle de Venta</strong>
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body">
-                                            <div class="card-sub">
-                                                Revisa el detalle de la venta :)
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table
-                                                    id="tablaDetalle"
-                                                    class="table table-head-bg-secondary mt-4">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">descripción</th>
-                                                            <th scope="col">corte</th>
-                                                            <th scope="col">Cant</th>
-                                                            <th scope="col">P.Uni</th>
-                                                            <th scope="col">Sub Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="">
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-headingTwo">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                            <strong><i class="fas fa-donate"></i> Forma de Pagos</strong>
-                                        </button>
-                                    </h2>
-                                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                        <div class="accordion-body">
-                                            <div>
-                                                <table id="tablita" class="table table-sm">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="border-bottom: 1px solid #000;"><i class="fas fa-credit-card"></i> Pagos</th>
-                                                            <th style="border-bottom: 1px solid #000;"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="idTbodyTablita">
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h4 class="card-title text-center" style="font-size: 28px;">Venta de S/ <strong id="idMontoVenta"></strong></h4>
+                <hr>
+                <div class="card-sub text-center">
+                    Aquí podrás revisar los datos de la venta.
                 </div>
+                <div class="row justify-content-center align-items-center sm-2">
+                    <div class="col-sm-6">
+                        <div class="card text-start">
+                            <div class="card-body">
+                                <h4 class="card-title"><i class="fas fa-user"> </i> Cliente</h4>
+                                <p class="card-text" id="nombreCliente"></p>
+                                <hr>
+                                <div><strong>N° DOCUMENTO:</strong> <span id="docCliente"></span></div>
+                                <div><strong>Número de Celular:</strong> <span id="numCelCliente"></span></div>
+                                <div><strong>Correo:</strong> <span id="emailCliente"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card text-start">
+                            <div class="card-body" >
+                                <h4 class="card-text"><i class="fas fa-credit-card"> </i> Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
+                                <p>La venta real fue de <strong id="idTotalOriginal"></strong></p>
+                                <div><strong>Atendido Por: </strong> <span id="idUsuario">3- USUARIO</span></div>
+                                <div><strong>Fecha:</strong> <span id="idFechaVenta"></span></div>
+                                <div><strong>Hora:</strong> <span id="idHoraVenta">19:00:00</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        <strong><i class="fas fa-cart-arrow-down"></i> Detalle de Venta</strong>
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        <div class="card-sub">
+                                            Revisa el detalle de la venta :)
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table
+                                                id="tablaDetalle"
+                                                class="table table-head-bg-secondary mt-4">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">descripción</th>
+                                                        <th scope="col">corte</th>
+                                                        <th scope="col">Cant</th>
+                                                        <th scope="col">P.Uni</th>
+                                                        <th scope="col">Sub Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="flush-headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                        <strong><i class="fas fa-donate"></i> Forma de Pagos</strong>
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        <div>
+                                            <table id="tablita" class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="border-bottom: 1px solid #000;"><i class="fas fa-credit-card"></i> Pagos</th>
+                                                        <th style="border-bottom: 1px solid #000;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="idTbodyTablita">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </div>
 </div>
