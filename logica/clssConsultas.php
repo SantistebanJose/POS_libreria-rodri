@@ -75,6 +75,32 @@ function listarInsumosCompra(): array
     return executeQuery($query);
 }
 
+function listarUsuarios(): array
+{
+    $query = "
+        SELECT 
+            u.id, 
+           u.username, 
+            CASE 
+                WHEN  u.rol = '1' THEN 'ADMINISTRADOR'
+                ELSE 'EMPLEADO'
+            END AS rol,
+            CONCAT(p.numero_documento, ' - ', p.nombres, ' ', p.apellidos) AS persona_concatenada,
+            CASE 
+                WHEN u.deleted_at IS NULL THEN 'ACTIVO'
+                ELSE 'BLOQUEADO'
+            END AS estado
+        FROM 
+            usuario AS u
+        INNER JOIN 
+            persona AS p 
+        ON 
+            u.persona_id = p.id
+        order BY u.id;
+    ";
+    return executeQuery($query);
+}
+
 function listarPostres(): array
 {
     $query = "SELECT id, nombre, descripcion FROM postre WHERE deleted_at IS NULL";
