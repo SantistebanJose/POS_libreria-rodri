@@ -101,6 +101,29 @@ function listarUsuarios(): array
     return executeQuery($query);
 }
 
+function listarPersonas(): array
+{
+    $query = "
+        select id,
+        numero_documento, 
+        tipo_persona,
+        condicion, 
+        nombres ,
+        apellidos,
+        fecha_nacimiento,
+        telefonofijo,
+        telefonomovil,
+        email,
+        direccion,
+        nombre_comercial, 
+        razon_social ,deleted_at
+        from persona
+                order BY id;
+    ";
+    return executeQuery($query);
+}
+
+
 function listarPostres(): array
 {
     $query = "SELECT id, nombre, descripcion FROM postre WHERE deleted_at IS NULL";

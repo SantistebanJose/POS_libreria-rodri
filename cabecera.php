@@ -118,14 +118,14 @@ include('logica/clssConsultas.php');
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="../demo1/index.html">
+                                            <a href="persona.php">
                                                 <span class="sub-item">Personas</span>
                                             </a>
                                         </li>
 
                                     <?php } ?>
                                     <li>
-                                        <a href="../demo1/index.html">
+                                        <a href="articulos.php">
                                             <span class="sub-item">Artículos</span>
                                         </a>
                                     </li>

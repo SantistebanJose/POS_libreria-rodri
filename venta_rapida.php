@@ -3452,10 +3452,14 @@ if (isset($_GET['id'])) {
             // Validar el número de documento (solo si tiene datos)
             const numeroDocumentoPersona = document.getElementById('numeroDocumentoPersona');
             const errorNumeroDocumentoPersona = document.getElementById('error-numeroDocumentoPersona');
-            if (numeroDocumentoPersona.value.trim() !== '' && !/^\d{8,12}$/.test(numeroDocumentoPersona.value)) {
+            if (numeroDocumentoPersona.value.trim() === '') {
                 valid = false;
                 numeroDocumentoPersona.classList.add('is-invalid');
-                errorNumeroDocumentoPersona.textContent = 'Debe ser un número de documento válido (8 a 12 dígitos).';
+                errorNumeroDocumentoPersona.textContent = 'El DNI es obligatorio.';
+            } else if (!/^\d{8}$/.test(numeroDocumentoPersona.value)) {
+                valid = false;
+                numeroDocumentoPersona.classList.add('is-invalid');
+                errorNumeroDocumentoPersona.textContent = 'Debe ser un DNI válido (8 dígitos).';
             } else {
                 numeroDocumentoPersona.classList.remove('is-invalid');
                 errorNumeroDocumentoPersona.textContent = '';
@@ -3464,11 +3468,16 @@ if (isset($_GET['id'])) {
             // Validar los nombres (solo si tiene datos y sin números)
             const nombresPersona = document.getElementById('nombresPersona');
             const errorNombresPersona = document.getElementById('error-nombresPersona');
-            if (nombresPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(nombresPersona.value)) {
+            if (nombresPersona.value.trim() == '') {
+                valid = false;
+                nombresPersona.classList.add('is-invalid');
+                errorNombresPersona.textContent = 'Los nombres es obligatorio.';
+            }else if(/[^a-zA-Z\s]/.test(nombresPersona.value)){
                 valid = false;
                 nombresPersona.classList.add('is-invalid');
                 errorNombresPersona.textContent = 'Los nombres no pueden contener números.';
-            } else {
+            } 
+            else {
                 nombresPersona.classList.remove('is-invalid');
                 errorNombresPersona.textContent = '';
             }
@@ -3476,11 +3485,15 @@ if (isset($_GET['id'])) {
             // Validar los apellidos (solo si tiene datos y sin números)
             const apellidosPersona = document.getElementById('apellidosPersona');
             const errorApellidosPersona = document.getElementById('error-apellidosPersona');
-            if (apellidosPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(apellidosPersona.value)) {
+            if (apellidosPersona.value.trim() == '' ) {
+                valid = false;
+                apellidosPersona.classList.add('is-invalid');
+                errorApellidosPersona.textContent = 'Los apellidos es obligatorio.';
+            } else if(/[^a-zA-Z\s]/.test(apellidosPersona.value)){
                 valid = false;
                 apellidosPersona.classList.add('is-invalid');
                 errorApellidosPersona.textContent = 'Los apellidos no pueden contener números.';
-            } else {
+            }else {
                 apellidosPersona.classList.remove('is-invalid');
                 errorApellidosPersona.textContent = '';
             }
@@ -3519,7 +3532,11 @@ if (isset($_GET['id'])) {
             // Validar RUC (solo si tiene datos)
             const numeroDocumentoEmpresa = document.getElementById('numeroDocumentoEmpresa');
             const errorNumeroDocumentoEmpresa = document.getElementById('error-numeroDocumentoEmpresa');
-            if (numeroDocumentoEmpresa.value.trim() !== '' && !/^\d{11}$/.test(numeroDocumentoEmpresa.value)) {
+            if (numeroDocumentoEmpresa.value.trim() === '') {
+                valid = false;
+                numeroDocumentoEmpresa.classList.add('is-invalid');
+                errorNumeroDocumentoEmpresa.textContent = 'El RUC es obligatorio.';
+            } else if (!/^\d{11}$/.test(numeroDocumentoEmpresa.value)) {
                 valid = false;
                 numeroDocumentoEmpresa.classList.add('is-invalid');
                 errorNumeroDocumentoEmpresa.textContent = 'Debe ser un RUC válido (11 dígitos).';
@@ -3531,7 +3548,7 @@ if (isset($_GET['id'])) {
             // Validar nombre comercial (solo si tiene datos)
             const nombreComercial = document.getElementById('nombreComercial');
             const errorNombreComercial = document.getElementById('error-nombreComercial');
-            if (nombreComercial.value.trim() !== '' && nombreComercial.value.trim() === '') {
+            if (nombreComercial.value.trim() == '' ) {
                 valid = false;
                 nombreComercial.classList.add('is-invalid');
                 errorNombreComercial.textContent = 'Este campo es obligatorio.';
@@ -3543,7 +3560,7 @@ if (isset($_GET['id'])) {
             // Validar razón social (solo si tiene datos)
             const razonSocial = document.getElementById('razonSocial');
             const errorRazonSocial = document.getElementById('error-razonSocial');
-            if (razonSocial.value.trim() !== '' && razonSocial.value.trim() === '') {
+            if (razonSocial.value.trim() == '' ) {
                 valid = false;
                 razonSocial.classList.add('is-invalid');
                 errorRazonSocial.textContent = 'Este campo es obligatorio.';
@@ -3576,8 +3593,22 @@ if (isset($_GET['id'])) {
                 errorEmailEmpresa.textContent = '';
             }
 
+            const condicion = document.getElementById('condicion');
+            const errorCondicion = document.getElementById('error-condicion');
+
+            // Verificar si la opción seleccionada es válida
+            if (condicion.value === '') {
+                valid = false;  // La variable valid debe ser parte de tu lógica de validación general
+                condicion.classList.add('is-invalid');
+                errorCondicion.textContent = 'Debe seleccionar una opción válida.';
+            } else {
+                condicion.classList.remove('is-invalid');
+                errorCondicion.textContent = '';
+            }
+
             return valid;
         }
+
 
 
         // Registrar cliente

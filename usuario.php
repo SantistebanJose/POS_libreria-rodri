@@ -646,10 +646,14 @@ include("cabecera.php");
             // Validar el número de documento (solo si tiene datos)
             const numeroDocumentoPersona = document.getElementById('numeroDocumentoPersona');
             const errorNumeroDocumentoPersona = document.getElementById('error-numeroDocumentoPersona');
-            if (numeroDocumentoPersona.value.trim() !== '' && !/^\d{8,12}$/.test(numeroDocumentoPersona.value)) {
+            if (numeroDocumentoPersona.value.trim() === '') {
                 valid = false;
                 numeroDocumentoPersona.classList.add('is-invalid');
-                errorNumeroDocumentoPersona.textContent = 'Debe ser un número de documento válido (8 a 12 dígitos).';
+                errorNumeroDocumentoPersona.textContent = 'El DNI es obligatorio.';
+            } else if (!/^\d{8}$/.test(numeroDocumentoPersona.value)) {
+                valid = false;
+                numeroDocumentoPersona.classList.add('is-invalid');
+                errorNumeroDocumentoPersona.textContent = 'Debe ser un DNI válido (11 dígitos).';
             } else {
                 numeroDocumentoPersona.classList.remove('is-invalid');
                 errorNumeroDocumentoPersona.textContent = '';
@@ -658,11 +662,16 @@ include("cabecera.php");
             // Validar los nombres (solo si tiene datos y sin números)
             const nombresPersona = document.getElementById('nombresPersona');
             const errorNombresPersona = document.getElementById('error-nombresPersona');
-            if (nombresPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(nombresPersona.value)) {
+            if (nombresPersona.value.trim() == '') {
+                valid = false;
+                nombresPersona.classList.add('is-invalid');
+                errorNombresPersona.textContent = 'Los nombres es obligatorio.';
+            }else if(/[^a-zA-Z\s]/.test(nombresPersona.value)){
                 valid = false;
                 nombresPersona.classList.add('is-invalid');
                 errorNombresPersona.textContent = 'Los nombres no pueden contener números.';
-            } else {
+            } 
+            else {
                 nombresPersona.classList.remove('is-invalid');
                 errorNombresPersona.textContent = '';
             }
@@ -670,11 +679,15 @@ include("cabecera.php");
             // Validar los apellidos (solo si tiene datos y sin números)
             const apellidosPersona = document.getElementById('apellidosPersona');
             const errorApellidosPersona = document.getElementById('error-apellidosPersona');
-            if (apellidosPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(apellidosPersona.value)) {
+            if (apellidosPersona.value.trim() == '' ) {
+                valid = false;
+                apellidosPersona.classList.add('is-invalid');
+                errorApellidosPersona.textContent = 'Los apellidos es obligatorio.';
+            } else if(/[^a-zA-Z\s]/.test(apellidosPersona.value)){
                 valid = false;
                 apellidosPersona.classList.add('is-invalid');
                 errorApellidosPersona.textContent = 'Los apellidos no pueden contener números.';
-            } else {
+            }else {
                 apellidosPersona.classList.remove('is-invalid');
                 errorApellidosPersona.textContent = '';
             }
@@ -705,7 +718,6 @@ include("cabecera.php");
 
             return valid;
         }
-
 
        
 
