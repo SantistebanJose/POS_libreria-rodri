@@ -33,7 +33,7 @@ include("cabecera.php");
 /* Estilo para cambiar el color de fondo y bordes del modal */
 /* Estilo para cambiar el color de fondo y bordes del modal */
 #modalCliente .modal-content {
-    background-color: #f0f8ff;  /* Color de fondo claro (puedes cambiarlo) */
+    background-color:rgb(255, 255, 255);  /* Color de fondo claro (puedes cambiarlo) */
     border-radius: 10px;  /* Bordes redondeados */
     border: 2px solid #2a2f5b;  /* Borde azul para darle más protagonismo */
 }
@@ -45,8 +45,8 @@ include("cabecera.php");
 
 /* Título del modal más grande y con un color diferente */
 #modalCliente .modal-header {
-    background-color: #2a2f5b;  /* Fondo azul */
-    color: white;  /* Texto blanco */
+    background-color:rgb(255, 255, 255);  /* Fondo azul */
+    color: #2a2f5b; /* Texto blanco */
 }
 #modalCliente .btn-close {
     background-color: #f0f8ff;  /* Botón de cerrar rojo */
@@ -120,7 +120,7 @@ include("cabecera.php");
 
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="card-title">Personas</h4>
-                    <button class="btn btn-success" id="btnAbrirModalGenerico"> Agregar Persona</button>
+                    <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico">Agregar Persona <i class="fas fa-plus"> </i></button>
                 </div>
                 <hr>
                 <div
@@ -317,8 +317,7 @@ include("cabecera.php");
         document.getElementById("btnAbrirModalGenerico").addEventListener("click", function () {
             document.getElementById("contenidoUsuario").innerHTML = `
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalClienteLabel">Registrar Persona</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title mx-auto fw-bold" id="modalClienteLabel">Registrar Persona</h5>
                     </div>
                     <div class="modal-body">
                         <!-- Pils para seleccionar entre Persona y Empresa -->
@@ -433,8 +432,8 @@ include("cabecera.php");
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
+                        <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Salir</button>
+                        <button type="button" class="btn btn-success rounded-5" id="btnRegistrarCliente">Registrar</button>
                     </div>
             `;
 
@@ -833,8 +832,7 @@ include("cabecera.php");
     function fn_editar_usuario(datosUsuario) {
         document.getElementById("contenidoUsuario").innerHTML = `
            <div class="modal-header">
-                        <h5 class="modal-title" id="modalClienteLabel">Editar Persona</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title mx-auto fw-bold" id="modalClienteLabel">Editar Persona</h5>
                     </div>
                     <div class="modal-body">
                         <!-- Pils para seleccionar entre Persona y Empresa -->
@@ -945,8 +943,8 @@ include("cabecera.php");
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success" id="btnEditarCliente">Registrar</button>
+                        <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success rounded-5" id="btnEditarCliente">Registrar</button>
                     </div>
             `;
         

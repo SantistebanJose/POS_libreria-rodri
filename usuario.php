@@ -64,7 +64,7 @@ include("cabecera.php");
 
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="card-title">Usuarios</h4>
-                    <button class="btn btn-success" id="btnAbrirModalGenerico"> Agregar Usuario</button>
+                    <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico"> Agregar Usuario <i class="fas fa-plus"> </i></button>
                 </div>
                 <hr>
                 <div
@@ -363,8 +363,7 @@ include("cabecera.php");
         document.getElementById("btnAbrirModalGenerico").addEventListener("click", function () {
             document.getElementById("contenidoUsuario").innerHTML = `
                 <div class="modal-header">
-                    <h5 class="modal-title">Registrar Usuario</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title mx-auto fw-bold">Registrar Usuario</h5>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -372,7 +371,7 @@ include("cabecera.php");
                         <span id="idPersona">#</span>
                         <div class="d-flex align-items-center">
                             <input type="text" class="form-control required" id="nombreCliente" placeholder="AGREGAR EL NOMBRE DEL EMPLEADO O DNI" />
-                            <button type="button" class="btn btn-primary ms-2" id="btnAbrirModalCliente">
+                            <button type="button" class="btn btn-primary ms-2 rounded-5" id="btnAbrirModalCliente">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -381,21 +380,18 @@ include("cabecera.php");
                         <div id="error-nombreCliente" class="error-message"></div>
                     </div>
                     <div class="row justify-content-center align-items-center sm-2">
-                        <div class="col-sm-12">
-                            <div class="form-floating form-floating-custom mb-3">
-                                <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" />
+                        <div class="col-sm-12 mb-3">
                                 <label for="nombreUsuario">Nombre de Usuario <span class="fw-bold text-danger">*</span></label>
+                                <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" />
                                 <div id="error-nombreUsuario" class="error-message"></div>
-                            </div>
+                          
                         </div>
-                        <div class="col-sm-12">
-                            <div class="form-floating form-floating-custom mb-3">
-                                <input type="password" class="form-control required" id="contrasena" placeholder="********" />
-                                <label for="contrasena">Contraseña <span class="fw-bold text-danger">*</span></label>
-                                <div id="error-contrasena" class="error-message"></div>
-                            </div>
+                        <div class="col-sm-12 mb-3">
+                            <label for="contrasena">Contraseña <span class="fw-bold text-danger">*</span></label>
+                            <input type="password" class="form-control required" id="contrasena" placeholder="********" />
+                            <div id="error-contrasena" class="error-message"></div>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 mb-3">
                             <div class="mb-3">
                                 <label class="form-label">Rol <span class="fw-bold text-danger">*</span></label>
                                 <select class="form-select required" id="rol">
@@ -412,8 +408,8 @@ include("cabecera.php");
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-success" id="btnRegistrarUsuario">Registrar</button>
+                    <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success rounded-5" id="btnRegistrarUsuario">Registrar</button>
                 </div>
             `;
 
@@ -801,26 +797,23 @@ include("cabecera.php");
     function fn_editar_usuario(datosUsuario) {
         document.getElementById("contenidoUsuario").innerHTML = `
             <div class="modal-header">
-                <h5 class="modal-title">Editar Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title mx-auto fw-bold">Editar Usuario</h5>
             </div>
             <div class="modal-body">
                 <div class="row justify-content-center align-items-center sm-2">
-                    <div class="col-sm-12">
-                        <div class="form-floating form-floating-custom mb-3">
-                            <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" value="${datosUsuario.username}" />
-                            <label for="nombreUsuario">Nombre de Usuario <span class="fw-bold text-danger">*</span></label>
-                            <div id="error-nombreUsuario" class="error-message"></div>
-                        </div>
+                    <div class="col-sm-12 mb-3">
+                        <label for="nombreUsuario">Nombre de Usuario <span class="fw-bold text-danger">*</span></label>
+                        <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" value="${datosUsuario.username}" />
+                        <div id="error-nombreUsuario" class="error-message"></div>
+                
                     </div>
-                    <div class="col-sm-12">
-                        <div class="form-floating form-floating-custom mb-3">
-                            <input type="password" class="form-control" id="cambiarContrasena" placeholder="********" />
+                    <div class="col-sm-12 mb-3">
                             <label for="cambiarContrasena">Cambiar Contraseña</label>
+                            <input type="password" class="form-control" id="cambiarContrasena" placeholder="********" />
                             <div id="error-cambiarContrasena" class="error-message"></div>
-                        </div>
+                     
                     </div>
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 mb-3">
                         <div class="mb-3">
                             <label class="form-label">Rol <span class="fw-bold text-danger">*</span></label>
                             <select class="form-select required" id="rol">
@@ -837,8 +830,8 @@ include("cabecera.php");
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" id="btnEditarUsuario">Editar</button>
+                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success rounded-5" id="btnEditarUsuario">Editar</button>
             </div>
         `;
 

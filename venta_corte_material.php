@@ -30,7 +30,10 @@ if (isset($_GET['id'])) {
     .error-input {
         border: 2px solid red;
     }
-
+    .modal-header {
+    background-color:rgb(255, 255, 255);  /* Fondo azul */
+    color: #2a2f5b; /* Texto blanco */
+}
     .error-message {
         color: red;
         font-size: 0.9em;
@@ -175,7 +178,6 @@ if (isset($_GET['id'])) {
                         <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" id="contenido_solo_corte">
                             
@@ -423,8 +425,7 @@ if (isset($_GET['id'])) {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title mx-auto fw-bold" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
             </div>
             <div class="modal-body" id="contenid_cantidad">
                
@@ -442,13 +443,14 @@ if (isset($_GET['id'])) {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalGenericoLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title mx-auto fw-bold" id="modalGenericoLabel"></h5>
       </div>
       <div class="modal-body" id="modalContent">
         <!-- Contenido dinámico se cargará aquí -->
       </div>
-
+      <div class="modal-footer">
+            <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+        </div>
     </div>
   </div>
 </div>
@@ -1359,7 +1361,7 @@ if (isset($_GET['id'])) {
 
             // Generar el contenido dinámico, incluyendo el botón "Agregar"
             contenidoCorte.innerHTML = `
-                <div class="col-12 p-4 bg-light rounded">
+                <div class="col-12  bg-light rounded">
                     <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
                     <div class="mb-4">
                         <!-- Minutos Corte -->
@@ -1390,9 +1392,11 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                     <!-- Botón Agregar -->
-                    <div class="text-center mt-3">
-                        <button id="btnAgregarSoloCorte" class="btn btn-secondary">Agregar</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                        <button id="btnAgregarSoloCorte" class="btn btn-secondary rounded-5">Agregar</button>
                     </div>
+
                 </div>
             `;
 
@@ -1716,11 +1720,13 @@ if (isset($_GET['id'])) {
                             </div>
 
                             <!-- Botón Confirmar -->
-                            <div class="row mb-3">
-                                <div class="col-12 text-center">
-                                    <button id="btnConfirmarEditarCantidad" class="btn btn-primary btn-lg">Confirmar</button> 
-                                </div>
+                              <div class="modal-footer">
+                                <!-- Botón Confirmar a la izquierda -->
+                                <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
+                                <button id="btnConfirmarEditarCantidad" class="btn btn-primary rounded-5">Confirmar</button> 
+
                             </div>
+                            
                         </div>
                     `;
 
@@ -1946,8 +1952,8 @@ if (isset($_GET['id'])) {
                                     <p class="card-text">Monto (S/)</p>
                                     <input type="number" id="monto_ploteoeditar" class="form-control" value="${datosArticulo["sub_total"]}">
                                 </div>
-                                <div class="text-center">
-                                    <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
+                                <div class="text-center mb-3">
+                                    <button class="btn btn-secondary rounded-5" id="btnAgregarploteoEditar" role="button">Actualizar</button>
                                 </div>
                             </div>
                         </div>
@@ -2106,8 +2112,8 @@ if (isset($_GET['id'])) {
                                     <p class="card-text">Monto (S/)</p>
                                     <input type="number" id="monto_impresionEditar" class="form-control" value="${datosArticulo["sub_total"]}">
                                 </div>
-                                <div class="text-center">
-                                    <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
+                                <div class="text-center mb-3">
+                                    <button class="btn btn-secondary rounded-5" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
                                 </div>
                             </div>
                         </div>
@@ -2191,8 +2197,8 @@ if (isset($_GET['id'])) {
                                     <p class="card-text">Monto (S/)</p>
                                     <input type="number" id="monto_escaneoEditar" class="form-control" value="${datosArticulo["sub_total"]}">
                                 </div>
-                                <div class="text-center">
-                                    <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
+                                <div class="text-center mb-3">
+                                    <button class="btn btn-secondary rounded-5" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
                                 </div>
                             </div>
                         </div>
@@ -2250,7 +2256,7 @@ if (isset($_GET['id'])) {
 
                     // Generamos el contenido dinámico para mostrar el formulario de corte
                     contenidoCorte.innerHTML = `
-                        <div class="col-12 p-4 bg-light rounded">
+                        <div class="col-12  bg-light rounded">
                             <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
                             <div class="mb-4">
                                 <!-- Minutos Corte -->
@@ -2280,9 +2286,11 @@ if (isset($_GET['id'])) {
                                     </div>
                                 </div>
                             </div>
-                            <!-- Botón Actualizar -->
-                            <div class="text-center mt-3">
-                                <button id="btnActualizarSoloCorte" class="btn btn-secondary">Actualizar</button>
+                            
+                       
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                                <button id="btnActualizarSoloCorte" class="btn btn-secondary rounded-5">Actualizar</button>
                             </div>
                         </div>
                     `;
@@ -2465,11 +2473,12 @@ if (isset($_GET['id'])) {
             </div>
 
             <!-- Botón Confirmar -->
-            <div class="row mb-3">
-                <div class="col-12 text-center">
-                    <button id="btnConfirmar" class="btn btn-primary btn-lg">Confirmar</button>
-                </div>
+            <div class="modal-footer">
+                <!-- Botón Confirmar a la izquierda -->
+                <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
+                <button id="btnConfirmar" class="btn btn-primary rounded-5">Confirmar</button>
             </div>
+           
         </div>
         `;
 
@@ -2693,8 +2702,8 @@ if (isset($_GET['id'])) {
                             <p class="card-text">Monto (S/)</p>
                             <input type="number" id="monto_ploteo" class="form-control" placeholder="Monto (S/)">
                         </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-secondary rounded-5" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
                         </div>
                         <br>
                     </div>
@@ -2903,8 +2912,8 @@ if (isset($_GET['id'])) {
                             <p class="card-text">Monto (S/)</p>
                             <input type="number" id="monto_impresion" class="form-control" placeholder="Monto (S/)">
                         </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-secondary rounded-5" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
                         </div>
                         <br>
                     </div>
@@ -3036,8 +3045,8 @@ if (isset($_GET['id'])) {
                             <p class="card-text">Monto (S/)</p>
                             <input type="number" id="monto_escaneo" class="form-control" placeholder="Monto (S/)">
                         </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-secondary rounded-5" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
                         </div>
                         <br>
                     </div>
