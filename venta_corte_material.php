@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
         cursor: pointer;
         /* Muestra un cursor de mano para indicar que es clickeable */
     }
-    
+
     #tabla_articulos th:nth-child(1),
     #tabla_articulos td:nth-child(1),
     #tabla_articulos th:nth-child(10),
@@ -23,10 +23,10 @@ if (isset($_GET['id'])) {
     #tabla_articulos th:nth-child(11),
     #tabla_articulos td:nth-child(11),
     #tabla_articulos th:nth-child(12),
-    #tabla_articulos td:nth-child(12) 
- {
+    #tabla_articulos td:nth-child(12) {
         display: none !important;
     }
+
     .error-input {
         border: 2px solid red;
     }
@@ -36,8 +36,6 @@ if (isset($_GET['id'])) {
         font-size: 0.9em;
         margin-top: 5px;
     }
-
-
 </style>
 <div
     class="container">
@@ -119,14 +117,14 @@ if (isset($_GET['id'])) {
                 <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" id="contenido_solo_corte">
-                            
-                        </div>
-                       
+                            <div class="modal-header">
+                                <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="contenido_solo_corte">
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -152,7 +150,7 @@ if (isset($_GET['id'])) {
                                     <a class="nav-link " id="pills-home-tab-nobd" data-bs-toggle="pill" href="#pills-home-nobd" role="tab" aria-controls="pills-home-nobd" aria-selected="true">Materiales y/o Corte</a>
                                 </li>
                                 <li class="nav-item">
-                                    <button class="nav-link" id="btnAbrirModalPloteo" >Ploteo</button>
+                                    <button class="nav-link" id="btnAbrirModalPloteo">Ploteo</button>
                                 </li>
                                 <li class="nav-item">
                                     <button class="nav-link" id="btnAbrirModalImprimir">Imprimir</button>
@@ -170,7 +168,7 @@ if (isset($_GET['id'])) {
 
 
                     <div class="card-body">
-                        
+
 
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
@@ -235,7 +233,7 @@ if (isset($_GET['id'])) {
                                         </table>
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </div>
 
@@ -373,10 +371,10 @@ if (isset($_GET['id'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="contenid_cantidad">
-               
+
             </div>
 
-           
+
         </div>
     </div>
 </div>
@@ -385,18 +383,18 @@ if (isset($_GET['id'])) {
 <!-- Modal trigger button -->
 <!-- Modal  -->
 <div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalGenericoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalGenericoLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="modalContent">
-        <!-- Contenido dinámico se cargará aquí -->
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalGenericoLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Contenido dinámico se cargará aquí -->
+            </div>
 
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Modal Body -->
@@ -533,10 +531,13 @@ if (isset($_GET['id'])) {
                                                     Aquí podrás elegir si realizan pagos Directo.
                                                 </div>
                                             </div>
-
-                                            <label for="" class="form-label"><strong>Forma de Pago</strong></label>
+                                            <!--<label for="" class="form-label"><strong>Forma de Pago</strong></label> -->
+                                            <div class="text-center">
+                                                <button id="btnAgregarPago" class="btn btn-secondary" type="button">Agregar Monto (S/) Forma de Pago</button>
+                                            </div>
+                                            <br>
                                             <!-- Botón de agregar más formas de pago -->
-                                            <button id="btnAgregarPago" class="btn btn-secondary btn-round ms-2" type="button">+</button>
+
 
                                             <div class="d-flex align-items-center">
                                                 <!-- Select de formas de pago -->
@@ -653,11 +654,10 @@ if (isset($_GET['id'])) {
             <div class="modal-footer">
                 <button
                     type="button"
-                    class="btn btn-secondary"
+                    class="btn btn-danger"
                     data-bs-dismiss="modal">
                     Salir
                 </button>
-
             </div>
         </div>
     </div>
@@ -1295,9 +1295,9 @@ if (isset($_GET['id'])) {
 
 <!-- SOLO CORTE -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         // Escuchar el evento del botón para abrir el modal
-        document.getElementById("btnAbrirModalSolo").addEventListener("click", function (event) {
+        document.getElementById("btnAbrirModalSolo").addEventListener("click", function(event) {
             event.preventDefault(); // Prevenir el comportamiento por defecto
 
             // Seleccionar el contenedor del contenido dinámico
@@ -1350,7 +1350,7 @@ if (isset($_GET['id'])) {
             const modalElement = document.getElementById("modalSoloCorte");
             const modal = new bootstrap.Modal(modalElement, {
                 backdrop: "static", // Evita que se cierre al hacer clic fuera
-                keyboard: false,   // Evita que se cierre con la tecla 'Esc'
+                keyboard: false, // Evita que se cierre con la tecla 'Esc'
             });
             modal.show(); // Mostrar el modal
             // Asignar eventos a los elementos generados dinámicamente
@@ -1361,16 +1361,16 @@ if (isset($_GET['id'])) {
     // Función para asignar eventos a los botones dinámicos
     function asignarEventosSoloCorte() {
         // Eventos para sumar y restar minutos
-        document.getElementById("btnSumarSoloCorte").addEventListener("click", function () {
+        document.getElementById("btnSumarSoloCorte").addEventListener("click", function() {
             let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
             if (cantidad == 0) {
-                document.getElementById("cantidad_solocorte").value =10;
-            }else{
+                document.getElementById("cantidad_solocorte").value = 10;
+            } else {
                 document.getElementById("cantidad_solocorte").value = cantidad + 1;
             }
         });
 
-        document.getElementById("btnRestarSoloCorte").addEventListener("click", function () {
+        document.getElementById("btnRestarSoloCorte").addEventListener("click", function() {
             let cantidad = parseInt(document.getElementById("cantidad_solocorte").value);
             if (cantidad > 0) {
                 document.getElementById("cantidad_solocorte").value = cantidad - 1;
@@ -1378,22 +1378,22 @@ if (isset($_GET['id'])) {
         });
 
         // Eventos para incrementar precio
-        document.getElementById("btnIncremento05SoloCorte").addEventListener("click", function () {
+        document.getElementById("btnIncremento05SoloCorte").addEventListener("click", function() {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 0.5).toFixed(2);
         });
 
-        document.getElementById("btnIncremento1SoloCorte").addEventListener("click", function () {
+        document.getElementById("btnIncremento1SoloCorte").addEventListener("click", function() {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 1).toFixed(2);
         });
 
-        document.getElementById("btnIncremento2SoloCorte").addEventListener("click", function () {
+        document.getElementById("btnIncremento2SoloCorte").addEventListener("click", function() {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 2).toFixed(2);
         });
 
-        document.getElementById("btnIncremento5SoloCorte").addEventListener("click", function () {
+        document.getElementById("btnIncremento5SoloCorte").addEventListener("click", function() {
             let precio = parseFloat(document.getElementById("precioSoloCorte").value);
             document.getElementById("precioSoloCorte").value = (precio + 5).toFixed(2);
         });
@@ -1406,7 +1406,7 @@ if (isset($_GET['id'])) {
     async function agregarDatosCorte() {
         const cantidadMinutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
         const tarifa = parseFloat(document.getElementById("precioSoloCorte").value) || 0;
-        
+
         const inputMonto = document.getElementById('cantidad_solocorte');
         const divContainer = inputMonto.closest('.d-flex');
         const mensajeErrorExistente = document.querySelector('.error-message');
@@ -1430,7 +1430,7 @@ if (isset($_GET['id'])) {
 
             return; // Detener ejecución si el monto no es válido
         }
-                
+
         // Crear el objeto datosCorte
         const datosCorte = {
             id: '0', // Id del corte
@@ -1460,7 +1460,9 @@ if (isset($_GET['id'])) {
             modal.hide();
 
             // Actualizar la venta
-            fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+            fn_consultarVenta([{
+                venta_id: venta_id_lbl
+            }]);
         } catch (error) {
             console.error("Error al insertar movimiento:", error.message);
             alert("Error al procesar el movimiento: " + error.message);
@@ -1473,7 +1475,7 @@ if (isset($_GET['id'])) {
     let datosDeVenta = [];
     let datosArticuloNuevos = [];
 
-    function fn_obtener_total () {
+    function fn_obtener_total() {
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
         var filas = tabla.getElementsByTagName("tr");
         var totalCorte = 0;
@@ -1488,7 +1490,7 @@ if (isset($_GET['id'])) {
         }
 
         var lbl_subtotal_cortes = document.getElementById("id_subtotal_cortes");
-        var lbl_subtotal_articulos= document.getElementById("id_subtotal_articulos");
+        var lbl_subtotal_articulos = document.getElementById("id_subtotal_articulos");
         var lbl_subtotal_general = document.getElementById("id_subtotal_general");
 
         lbl_subtotal_cortes.innerText = totalCorte.toFixed(2);
@@ -1496,7 +1498,7 @@ if (isset($_GET['id'])) {
         lbl_subtotal_general.innerText = total.toFixed(2);
 
 
-   
+
 
     }
 
@@ -1526,9 +1528,9 @@ if (isset($_GET['id'])) {
         }).done(async function(text) {
             var Data = JSON.parse(text);
 
-             // Almacena los datos originales
-            console.log("datos venta",datosDeVenta)
-            if(Array.isArray(datosArticulo) && datosArticulo.length > 0){
+            // Almacena los datos originales
+            console.log("datos venta", datosDeVenta)
+            if (Array.isArray(datosArticulo) && datosArticulo.length > 0) {
                 llenarDatosModal(
                     datosDeVenta['venta_id'],
                     datosDeVenta['id_persona'],
@@ -1548,7 +1550,7 @@ if (isset($_GET['id'])) {
                     datosDeVenta['email_cliente'],
                     datosDeVenta['numero_doc_cliente']
                 );
-            }else{
+            } else {
                 datosDeVenta = datosArticulo;
                 llenarDatosModal(
                     datosArticulo['venta_id'],
@@ -1569,8 +1571,8 @@ if (isset($_GET['id'])) {
                     datosArticulo['numero_doc_cliente'],
                 );
             }
-            
-            
+
+
 
             console.log(Data);
 
@@ -1598,7 +1600,7 @@ if (isset($_GET['id'])) {
         nuevaFila.insertCell(6).textContent = datosArticulo["precio_unitario_articulo"] || '-';; // Precio unitario
         nuevaFila.insertCell(7).textContent = parseFloat(datosArticulo["sub_total"]).toFixed(2); // Subtotal
 
-            // Celda para acciones
+        // Celda para acciones
         let accionCell = nuevaFila.insertCell(8);
         nuevaFila.insertCell(9).textContent = datosArticulo["movimiento_id"]; // Subtotal
         nuevaFila.insertCell(10).textContent = datosArticulo["rel_venta_articulo_id"]; // Precio unitario
@@ -1609,7 +1611,7 @@ if (isset($_GET['id'])) {
 
         // Agregar el botón de editar a la celda de acciones
         accionCell.appendChild(botonEditar);
-        
+
         switch (datosArticulo["movimiento_id"]) {
             case 1:
                 botonEditar.addEventListener("click", () => {
@@ -1675,7 +1677,7 @@ if (isset($_GET['id'])) {
 
                     // Abrir el modal
                     modalCantidad.show();
-                                // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
+                    // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
                     document.getElementById("nombreArticuloEditar").textContent = datosArticulo["articulo_nombre"];
                     document.getElementById("inputCantidadEditar").value = datosArticulo["cantidad"];
                     document.getElementById("cantidadCorteEditar").value = datosArticulo["minutos"] || 0;
@@ -1718,10 +1720,10 @@ if (isset($_GET['id'])) {
                     // Botón Sumar Minutos Corte
                     document.getElementById("btnSumarCorteEditar").addEventListener("click", function() {
                         let corte = parseInt(document.getElementById("cantidadCorteEditar").value, 10);
-                        if(corte == 1){
+                        if (corte == 1) {
                             document.getElementById("cantidadCorteEditar").value = 10;
 
-                        }else{
+                        } else {
                             document.getElementById("cantidadCorteEditar").value = corte + 1;
 
                         }
@@ -1748,25 +1750,25 @@ if (isset($_GET['id'])) {
                         document.getElementById("precioCorteEditar").value = (precio + 5).toFixed(2);
                     });
 
-                        // Guardar el artículo actual para hacer la modificación posteriormente
+                    // Guardar el artículo actual para hacer la modificación posteriormente
                     document.getElementById("btnConfirmarEditarCantidad").addEventListener('click', async function() {
                         // Lógica para actualizar cantidad y precios
                         datosArticulo["cantidad"] = parseInt(document.getElementById("inputCantidadEditar").value);
 
-                        if(datosArticulo["corte"] && datosArticulo["cantidad"] > 1){
+                        if (datosArticulo["corte"] && datosArticulo["cantidad"] > 1) {
 
                         }
-                       
-                        if(datosArticulo["corte"]){
-                            if( datosArticulo["cantidad"] == 1){
+
+                        if (datosArticulo["corte"]) {
+                            if (datosArticulo["cantidad"] == 1) {
                                 datosArticulo["costo_por_minuto"] = (parseFloat(document.getElementById("precioCorteEditar").value) === 0) ? '-' : parseFloat(document.getElementById("precioCorteEditar").value);
                                 datosArticulo["minutos"] = parseInt(document.getElementById("cantidadCorteEditar").value) || '-';
                             }
-                            if(datosArticulo["cantidad"] > 1){
+                            if (datosArticulo["cantidad"] > 1) {
                                 datosArticulo["costo_por_minuto"] = '-';
                                 datosArticulo["minutos"] = '-';
                             }
-                            
+
                         }
 
 
@@ -1781,8 +1783,10 @@ if (isset($_GET['id'])) {
                         const response = await fn_editar_articulo(datosArticulo);
                         console.log(response);
 
-                        
-                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
+                        fn_consultarVenta([{
+                            venta_id: venta_id_lbl
+                        }]);
 
                         // Cerramos el modal
                         $('#modalCantidad').modal('hide');
@@ -1795,7 +1799,7 @@ if (isset($_GET['id'])) {
                 break;
             case 2:
                 botonEditar.addEventListener("click", () => {
-                    document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
+                    document.getElementById('modalGenericoLabel').textContent = 'Editar Ploteo';
                     document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -1922,11 +1926,11 @@ if (isset($_GET['id'])) {
                     const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
 
-                    document.getElementById('btnAgregarploteoEditar').addEventListener('click',async function () {
+                    document.getElementById('btnAgregarploteoEditar').addEventListener('click', async function() {
                         const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
                         const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-                        
+
                         let dimensionesSeleccionadas = [];
                         document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
                             dimensionesSeleccionadas.push(checkbox.value);
@@ -1935,7 +1939,7 @@ if (isset($_GET['id'])) {
 
                         datosArticulo["cantidad"] = cantidadPloteos;
                         datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
-                        datosArticulo["sub_total"] =  montoPloteo.toFixed(2);
+                        datosArticulo["sub_total"] = montoPloteo.toFixed(2);
                         // Limpiar los campos
                         document.getElementById('input_cantidad_ploteoEditar').value = 1;
                         document.getElementById('monto_ploteoeditar').value = 0;
@@ -1943,8 +1947,10 @@ if (isset($_GET['id'])) {
                         const response = await fn_editar_movimiento(datosArticulo);
                         console.log(response);
 
-                            
-                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
+                        fn_consultarVenta([{
+                            venta_id: venta_id_lbl
+                        }]);
 
                         // Resetear el botón y quitar la referencia al ploteo editado
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
@@ -1955,8 +1961,8 @@ if (isset($_GET['id'])) {
 
                 break;
             case 3:
-                botonEditar.addEventListener("click", () => {             
-                    document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
+                botonEditar.addEventListener("click", () => {
+                    document.getElementById('modalGenericoLabel').textContent = 'Editar Impresión';
                     document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -2082,7 +2088,7 @@ if (isset($_GET['id'])) {
                     const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
 
-                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', async function () {
+                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', async function() {
                         const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
                         const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
@@ -2095,7 +2101,7 @@ if (isset($_GET['id'])) {
 
                         datosArticulo["cantidad"] = cantidadImpresion;
                         datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
-                        datosArticulo["sub_total"] =  montoImpresion.toFixed(2);
+                        datosArticulo["sub_total"] = montoImpresion.toFixed(2);
 
                         // Limpiar los campos
                         document.getElementById('input_numero_impresionEditar').value = 1; // Reset cantidad
@@ -2103,8 +2109,10 @@ if (isset($_GET['id'])) {
 
                         const response = await fn_editar_movimiento(datosArticulo);
                         console.log(response);
-                            
-                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
+                        fn_consultarVenta([{
+                            venta_id: venta_id_lbl
+                        }]);
 
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
@@ -2115,8 +2123,8 @@ if (isset($_GET['id'])) {
                 break;
             case 5:
                 botonEditar.addEventListener("click", () => {
-                    
-                    document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
+
+                    document.getElementById('modalGenericoLabel').textContent = 'Editar Escaneo';
                     document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -2156,14 +2164,14 @@ if (isset($_GET['id'])) {
                     // Mostrar el modal
                     const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
-   
-                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', async function () {
+
+                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', async function() {
                         const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
                         const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
                         datosArticulo["cantidad"] = cantidadEscaneos;
-                        datosArticulo["sub_total"] =  montoEscaneo.toFixed(2);
+                        datosArticulo["sub_total"] = montoEscaneo.toFixed(2);
 
                         // Limpiar los campos
                         document.getElementById('input_numero_escaneoEditar').value = 1; // Reset cantidad
@@ -2171,15 +2179,17 @@ if (isset($_GET['id'])) {
 
                         const response = await fn_editar_movimiento(datosArticulo);
                         console.log(response);
-                            
-                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
+                        fn_consultarVenta([{
+                            venta_id: venta_id_lbl
+                        }]);
 
                         const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                         if (modal) modal.hide(); // Cierra el modal si existe
 
                     });
                 });
-                
+
                 break;
             case 6:
                 botonEditar.addEventListener("click", () => {
@@ -2247,7 +2257,7 @@ if (isset($_GET['id'])) {
                     // Botones de cantidad
                     btnRestar.addEventListener("click", () => {
                         let cantidad = parseInt(cantidadInput.value) || 0;
-                        cantidadInput.value = Math.max(cantidad - 1, 0);  // Evita valores negativos
+                        cantidadInput.value = Math.max(cantidad - 1, 0); // Evita valores negativos
                     });
 
                     btnSumar.addEventListener("click", () => {
@@ -2279,31 +2289,33 @@ if (isset($_GET['id'])) {
 
                     // Crear el botón "Actualizar" dinámicamente
                     const btnActualizar = document.getElementById("btnActualizarSoloCorte");
-                    
+
                     // Eliminar el evento original del botón de "Agregar"
                     // Llenamos el modal con los datos del corte
                     document.getElementById("cantidad_solocorte").value = datosArticulo["minutos"] || 0; // Minutos corte
                     document.getElementById("precioSoloCorte").value = datosArticulo["costo_por_minuto"] || 1.5; // Precio corte
 
                     // Actualizar el corte en la tabla cuando se presiona "Actualizar"
-                    btnActualizar.addEventListener("click",async function() {
+                    btnActualizar.addEventListener("click", async function() {
                         const nuevosMinutos = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
                         const nuevoPrecio = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
 
                         datosArticulo["minutos"] = parseInt(document.getElementById("cantidad_solocorte").value) || 0;
                         datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioSoloCorte").value) || 1.5;
-                        datosArticulo["sub_total"] = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"] ;
+                        datosArticulo["sub_total"] = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"];
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
                         const response = await fn_editar_articulo(datosArticulo);
                         console.log(response);
 
-                        
-                        fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+
+                        fn_consultarVenta([{
+                            venta_id: venta_id_lbl
+                        }]);
                         modal.hide();
 
                         // Volver a colocar el botón "Agregar" y restaurar el evento de agregar
-                       
+
                     });
 
 
@@ -2313,14 +2325,14 @@ if (isset($_GET['id'])) {
                 break;
         }
 
-        
+
         let botonEliminar = document.createElement("button");
         botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
         botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
 
         accionCell.appendChild(botonEliminar);
 
-        
+
 
         // Función para manejar el botón de eliminar
         botonEliminar.addEventListener("click", async () => {
@@ -2346,10 +2358,12 @@ if (isset($_GET['id'])) {
                 }
 
                 // Actualizar los datos de la venta
-                await fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+                await fn_consultarVenta([{
+                    venta_id: venta_id_lbl
+                }]);
 
                 // Mostrar notificación de éxito
-                
+
             }
         });
         // Llamamos la función para recalcular los totales si es necesario
@@ -2452,9 +2466,9 @@ if (isset($_GET['id'])) {
 
         document.getElementById('btnSumarCorte').addEventListener('click', function() {
             let cantidadCorte = document.getElementById('cantidadCorte');
-            if(cantidadCorte == 0){
+            if (cantidadCorte == 0) {
                 cantidadCorte.value = 10;
-            }else{
+            } else {
                 cantidadCorte.value++;
             }
         });
@@ -2489,12 +2503,12 @@ if (isset($_GET['id'])) {
 
                 const precioCorte = document.getElementById('precioCorte');
 
-                if(!datosArticulo.corte){
+                if (!datosArticulo.corte) {
                     cantidadCorte.value = null;
                     precioCorte.value = null;
                 }
 
-                if(datosArticulo.corte && inputCantidad.value > 1 ){
+                if (datosArticulo.corte && inputCantidad.value > 1) {
                     cantidadCorte.value = null;
                     precioCorte.value = null;
                 }
@@ -2516,8 +2530,10 @@ if (isset($_GET['id'])) {
                 modalCantidad.hide();
 
                 // Consultar la venta actualizada
-                fn_consultarVenta([{ venta_id: venta_id_lbl }]);
-                
+                fn_consultarVenta([{
+                    venta_id: venta_id_lbl
+                }]);
+
             } catch (error) {
                 console.error("Error al confirmar cantidad:", error);
                 alert("Ocurrió un error al agregar el artículo.");
@@ -2540,9 +2556,9 @@ if (isset($_GET['id'])) {
 
 <!--Ploteo-->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
-        document.getElementById('btnAbrirModalPloteo').addEventListener('click', function () {
+        document.getElementById('btnAbrirModalPloteo').addEventListener('click', function() {
             document.getElementById('modalGenericoLabel').textContent = 'Servicio de Ploteo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
@@ -2648,12 +2664,12 @@ if (isset($_GET['id'])) {
             `;
 
             // 1. Manejar Incremento y Decremento de Ploteos
-            document.getElementById("btn_mas_ploteo").addEventListener("click", function () {
+            document.getElementById("btn_mas_ploteo").addEventListener("click", function() {
                 let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
                 document.getElementById("input_cantidad_ploteo").value = cantidad + 1;
             });
 
-            document.getElementById("btn_menos_ploteo").addEventListener("click", function () {
+            document.getElementById("btn_menos_ploteo").addEventListener("click", function() {
                 let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
                 if (cantidad > 1) {
                     document.getElementById("input_cantidad_ploteo").value = cantidad - 1;
@@ -2661,15 +2677,15 @@ if (isset($_GET['id'])) {
             });
 
             // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarPloteo').addEventListener('click', async function () {
+            document.getElementById('btnAgregarPloteo').addEventListener('click', async function() {
                 const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
                 const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
-    
+
                 const inputMonto = document.getElementById('monto_ploteo');
                 const mensajeErrorExistente = document.querySelector('.error-message');
                 if (mensajeErrorExistente) mensajeErrorExistente.remove();
                 inputMonto.classList.remove('error-input');
-                
+
                 let dimensionesSeleccionadas = [];
                 document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
                     dimensionesSeleccionadas.push(checkbox.value);
@@ -2702,7 +2718,7 @@ if (isset($_GET['id'])) {
                     subtotal: montoPloteo, // Subtotal
                     articulo: 'PLOTEO',
                     idmovimiento: 2,
-                    nota_archivo : textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones
+                    nota_archivo: textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones
 
                 }];
 
@@ -2711,16 +2727,18 @@ if (isset($_GET['id'])) {
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, ploteo.idmovimiento, ploteo.cantidad,ploteo.nota_archivo, ploteo.subtotal);
+                    const response = await fn_insert_movimiento(venta_id_lbl, ploteo.idmovimiento, ploteo.cantidad, ploteo.nota_archivo, ploteo.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
                     document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
                     document.getElementById('monto_ploteo').value = ''; // Reset monto
-                        // Cerrar modal
+                    // Cerrar modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                     if (modal) modal.hide();
-                    fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+                    fn_consultarVenta([{
+                        venta_id: venta_id_lbl
+                    }]);
 
                 } catch (error) {
                     // Manejar el error
@@ -2728,31 +2746,27 @@ if (isset($_GET['id'])) {
                     alert("Error al procesar el movimiento: " + error.message);
                 }
 
-               
+
             });
 
             // Mostrar el modal
             const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
             modal.show();
         });
-       
 
-    
 
-       
+
+
+
     });
-
-
-
-
 </script>
 
 <!--Impresion-->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         let impresionEditando = null; // Variable para guardar la impresión que se está editando
 
-        document.getElementById('btnAbrirModalImprimir').addEventListener('click', function () {
+        document.getElementById('btnAbrirModalImprimir').addEventListener('click', function() {
             document.getElementById('modalGenericoLabel').textContent = 'Servicio de Impresión';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
@@ -2858,12 +2872,12 @@ if (isset($_GET['id'])) {
             `;
 
             // 1. Manejar Incremento y Decremento de Impresiones
-            document.getElementById("btn_mas_impresion").addEventListener("click", function () {
+            document.getElementById("btn_mas_impresion").addEventListener("click", function() {
                 let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
                 document.getElementById("input_numero_impresion").value = cantidad + 1;
             });
 
-            document.getElementById("btn_menos_impresion").addEventListener("click", function () {
+            document.getElementById("btn_menos_impresion").addEventListener("click", function() {
                 let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
                 if (cantidad > 1) {
                     document.getElementById("input_numero_impresion").value = cantidad - 1;
@@ -2871,10 +2885,10 @@ if (isset($_GET['id'])) {
             });
 
             // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarImpresion').addEventListener('click',async function () {
+            document.getElementById('btnAgregarImpresion').addEventListener('click', async function() {
                 const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
                 const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
-                
+
                 const inputMonto = document.getElementById('monto_impresion');
                 const mensajeErrorExistente = document.querySelector('.error-message');
                 if (mensajeErrorExistente) mensajeErrorExistente.remove();
@@ -2903,7 +2917,7 @@ if (isset($_GET['id'])) {
 
                     return; // Detener ejecución si el monto no es válido
                 }
-                
+
                 // Si no estamos editando, agregar una nueva impresión
                 const datosImpresion = [{
                     id: '0', // ID de la impresión
@@ -2921,7 +2935,7 @@ if (isset($_GET['id'])) {
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, impresion.idmovimiento, impresion.cantidad,impresion.nota_archivo, impresion.subtotal);
+                    const response = await fn_insert_movimiento(venta_id_lbl, impresion.idmovimiento, impresion.cantidad, impresion.nota_archivo, impresion.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
@@ -2932,7 +2946,9 @@ if (isset($_GET['id'])) {
                     // Cerrar modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                     if (modal) modal.hide();
-                    fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+                    fn_consultarVenta([{
+                        venta_id: venta_id_lbl
+                    }]);
 
                 } catch (error) {
                     // Manejar el error
@@ -2941,7 +2957,7 @@ if (isset($_GET['id'])) {
                 }
 
 
-              
+
             });
 
             // Mostrar el modal
@@ -2950,17 +2966,17 @@ if (isset($_GET['id'])) {
         });
 
         // 3. Función para Agregar a la Tabla de Impresiones
-        
+
     });
 </script>
 
 <!--Escaneo-->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         let escaneoEditando = null; // Variable para guardar el escaneo que se está editando
 
-         // Abrir modal con el contenido específico para Escaneo
-         document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function () {
+        // Abrir modal con el contenido específico para Escaneo
+        document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function() {
             document.getElementById('modalGenericoLabel').textContent = 'Servicio de Escaneo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
@@ -2991,12 +3007,12 @@ if (isset($_GET['id'])) {
             `;
 
             // Funcionalidades de Incremento y Decremento
-            document.getElementById("btn_mas_escaneo").addEventListener("click", function () {
+            document.getElementById("btn_mas_escaneo").addEventListener("click", function() {
                 let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
                 document.getElementById("input_numero_escaneo").value = cantidad + 1;
             });
 
-            document.getElementById("btn_menos_escaneo").addEventListener("click", function () {
+            document.getElementById("btn_menos_escaneo").addEventListener("click", function() {
                 let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
                 if (cantidad > 1) {
                     document.getElementById("input_numero_escaneo").value = cantidad - 1;
@@ -3004,10 +3020,10 @@ if (isset($_GET['id'])) {
             });
 
             // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarescaneo').addEventListener('click',async  function () {
+            document.getElementById('btnAgregarescaneo').addEventListener('click', async function() {
                 const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
                 const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
-                
+
                 const inputMonto = document.getElementById('monto_escaneo');
                 const mensajeErrorExistente = document.querySelector('.error-message');
                 if (mensajeErrorExistente) mensajeErrorExistente.remove();
@@ -3028,7 +3044,7 @@ if (isset($_GET['id'])) {
 
                     return; // Detener ejecución si el monto no es válido
                 }
-                
+
 
                 const datosEscaneo = [{
                     id: '0', // ID del escaneo
@@ -3044,7 +3060,7 @@ if (isset($_GET['id'])) {
 
                 try {
                     // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, movimiento.idmovimiento, movimiento.cantidad,'Sin nota', movimiento.subtotal);
+                    const response = await fn_insert_movimiento(venta_id_lbl, movimiento.idmovimiento, movimiento.cantidad, 'Sin nota', movimiento.subtotal);
                     console.log("Movimiento insertado con éxito:", response);
 
                     // Si tiene éxito, continúa con el resto del proceso
@@ -3054,7 +3070,9 @@ if (isset($_GET['id'])) {
 
                     const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
                     if (modal) modal.hide();
-                    fn_consultarVenta([{ venta_id: venta_id_lbl }]);
+                    fn_consultarVenta([{
+                        venta_id: venta_id_lbl
+                    }]);
 
                 } catch (error) {
                     // Manejar el error
@@ -3069,29 +3087,26 @@ if (isset($_GET['id'])) {
             modal.show();
         });
 
-        
 
-       
+
+
     });
-
-
 </script>
 
 <!--Fn Insert, Update y Delete-->
 <script>
+    function fn_insert_movimiento(venta_id, movimiento_id, cantidad, nota_archivo, sub_total) {
+        return new Promise((resolve, reject) => {
+            try {
+                const datos = {
+                    "venta_id": venta_id,
+                    "movimiento_id": movimiento_id,
+                    "cantidad": cantidad,
+                    "sub_total": sub_total,
+                    "nota_archivo": nota_archivo
+                };
 
-    function fn_insert_movimiento(venta_id, movimiento_id, cantidad,nota_archivo, sub_total) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const datos = {
-                        "venta_id": venta_id,
-                        "movimiento_id": movimiento_id,
-                        "cantidad": cantidad,
-                        "sub_total": sub_total,
-                        "nota_archivo":nota_archivo
-                    };
-
-                    $.ajax({
+                $.ajax({
                         method: "POST",
                         url: "logica/clssVentaCorte.php",
                         data: {
@@ -3099,7 +3114,7 @@ if (isset($_GET['id'])) {
                             "data": JSON.stringify(datos)
                         }
                     })
-                    .done(function (response) {
+                    .done(function(response) {
                         const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                         if (jsonResponse.success) {
                             showNotification("success");
@@ -3109,24 +3124,24 @@ if (isset($_GET['id'])) {
                             reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
                         }
                     })
-                    .fail(function (error) {
+                    .fail(function(error) {
                         reject(new Error(error.responseText || "Error en la solicitud AJAX")); // Error en la solicitud
                     });
-                } catch (error) {
-                    reject(new Error(error.message)); // Error inesperado
-                }
+            } catch (error) {
+                reject(new Error(error.message)); // Error inesperado
+            }
         });
     }
 
     function fn_adicionar_articulo(venta_id, datosArticulo) {
         return new Promise((resolve, reject) => {
             const datos = {
-                "venta_id": venta_id,  // Puedes cambiar este valor dinámicamente si es necesario
-                "articulo_id": datosArticulo['id'],  // También este valor puede ser dinámico
-                "cantidad": datosArticulo['cantidad'] ,
+                "venta_id": venta_id, // Puedes cambiar este valor dinámicamente si es necesario
+                "articulo_id": datosArticulo['id'], // También este valor puede ser dinámico
+                "cantidad": datosArticulo['cantidad'],
                 "sub_total": calcularSubTotal(datosArticulo),
                 "minutos": datosArticulo['minutos'],
-                "precio_unitario": datosArticulo['precio_venta'] ,
+                "precio_unitario": datosArticulo['precio_venta'],
                 "costoxminuto": datosArticulo['costo_por_minuto'],
                 "movimiento_id": datosArticulo['id_movimiento'],
 
@@ -3140,7 +3155,7 @@ if (isset($_GET['id'])) {
                     "accion": "ADICIONARARTICULO",
                     "data": JSON.stringify(datos)
                 }
-            }).done(function (response) {
+            }).done(function(response) {
                 const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                 if (jsonResponse.success) {
                     showNotification("success");
@@ -3149,8 +3164,8 @@ if (isset($_GET['id'])) {
                     showNotification("error");
                     reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
                 }
-              
-            }).fail(function (error) {
+
+            }).fail(function(error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
                 reject(error);
@@ -3184,7 +3199,7 @@ if (isset($_GET['id'])) {
                     "accion": "ELIMINARARTICULO", // Acción que se realizará en PHP
                     "id_rel_articulo": id_rel_articulo
                 }
-            }).done(function (response) {
+            }).done(function(response) {
                 const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                 if (jsonResponse.success) {
                     showNotification("success");
@@ -3193,7 +3208,7 @@ if (isset($_GET['id'])) {
                     showNotification("error");
                     reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
                 }
-            }).fail(function (error) {
+            }).fail(function(error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
                 reject(error);
@@ -3210,7 +3225,7 @@ if (isset($_GET['id'])) {
                     "accion": "ELIMINARMOVIMIENTO", // Acción que se realizará en PHP
                     "id_rel_articulo": id_rel_articulo
                 }
-            }).done(function (response) {
+            }).done(function(response) {
                 const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                 if (jsonResponse.success) {
                     showNotification("success");
@@ -3219,7 +3234,7 @@ if (isset($_GET['id'])) {
                     showNotification("error");
                     reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
                 }
-            }).fail(function (error) {
+            }).fail(function(error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
                 reject(error);
@@ -3236,7 +3251,7 @@ if (isset($_GET['id'])) {
                     "accion": "EDITARARTICULO", // Acción que se realizará en PHP
                     "data": JSON.stringify(datos) // Los datos a enviar para editar el artículo
                 }
-            }).done(function (response) {
+            }).done(function(response) {
                 const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                 if (jsonResponse.success) {
                     showNotification("success");
@@ -3245,7 +3260,7 @@ if (isset($_GET['id'])) {
                     showNotification("error");
                     reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
                 }
-            }).fail(function (error) {
+            }).fail(function(error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
                 reject(error);
@@ -3262,7 +3277,7 @@ if (isset($_GET['id'])) {
                     "accion": "EDITARMOVIMIENTO", // Acción que se realizará en PHP
                     "data": JSON.stringify(datos) // Los datos a enviar para editar el artículo
                 }
-            }).done(function (response) {
+            }).done(function(response) {
                 const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                 if (jsonResponse.success) {
                     showNotification("success");
@@ -3271,14 +3286,13 @@ if (isset($_GET['id'])) {
                     showNotification("error");
                     reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
                 }
-            }).fail(function (error) {
+            }).fail(function(error) {
                 console.error("Error:", error.responseText);
                 // Rechazamos la promesa si hay un error
                 reject(error);
             });
         });
     }
-
 </script>
 
 <script>
@@ -3307,7 +3321,7 @@ if (isset($_GET['id'])) {
 
     }
 
-    function llenarDatosPanelCliente(idVenta,cliente, fechaReserva, horaReserva, usuario, telefonomovil, email, numeroDoc) {
+    function llenarDatosPanelCliente(idVenta, cliente, fechaReserva, horaReserva, usuario, telefonomovil, email, numeroDoc) {
         // Actualizamos el contenido del modal con los datos proporcionados
         document.getElementById("idVentaReserva").textContent = idVenta;
 

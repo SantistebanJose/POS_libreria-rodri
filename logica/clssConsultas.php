@@ -39,6 +39,24 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result);
             }
             break;
+        case 'BUSQUEDAD_PROVEEDOR':
+            if (isset($_POST["cadenaBusqueda"])) {
+                $cadena = $_POST["cadenaBusqueda"];
+                $result = fnListadoProveedores($cadena);
+
+                // Si no hay resultados, devuelves un array vacío
+                echo json_encode($result ? $result : []);
+            }
+            break;
+        case 'BUSQUEDAD_FILTRO_ARTICULOS':
+            if (isset($_POST["cadenaBusqueda"])) {
+                $cadena = $_POST["cadenaBusqueda"];
+                $result = fnListadoProductos($cadena);
+
+                echo json_encode($result ? $result : []);
+            }
+            break;
+            //
     }
 }
 function executeQuery(string $query, array $params = []): array
@@ -104,6 +122,26 @@ function listarUsuarios(): array
 function listarPostres(): array
 {
     $query = "SELECT id, nombre, descripcion FROM postre WHERE deleted_at IS NULL";
+    return executeQuery($query);
+}
+function listarCategoria(): array
+{
+    $query = "SELECT id, abreviatura FROM categoria WHERE deleted_at IS NULL ORDER BY 1";
+    return executeQuery($query);
+}
+function listarDimension(): array
+{
+    $query = "SELECT id, medida FROM dimension WHERE deleted_at IS NULL ORDER BY 1";
+    return executeQuery($query);
+}
+function listarEscala(): array
+{
+    $query = "SELECT id, abreviatura FROM escala WHERE deleted_at IS NULL ORDER BY 1";
+    return executeQuery($query);
+}
+function listarTipoArticulos(): array
+{
+    $query = "SELECT id, abreviatura FROM tipo WHERE deleted_at IS NULL ORDER BY 1";
     return executeQuery($query);
 }
 
@@ -711,7 +749,8 @@ function fnListForAllPagos(): array
                     jsonb_build_object(
                         'venta_id', v.id,
                         'fecha_fin_transaccion', v.fecha_fin_transaccion,
-                        'dia_nombre', CASE 
+                        'dia_nombre', 
+                        CASE 
                             WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
                             WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
                             WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 2 THEN UPPER('Martes')
@@ -794,5 +833,224 @@ function fnListForAllPagos(): array
             --AND p.created_at::date < CURRENT_DATE + INTERVAL '1 day'
             order by p.created_at desc;
     ";
+    return executeQuery($query);
+}
+
+
+function fnListadoProveedores($cadena): array
+{
+    // La consulta SQL para buscar proveedores
+    $query = "   
+    SELECT id, numero_documento, tipo_persona, condicion, nombre_comercial, razon_social 
+    FROM persona 
+    WHERE condicion = 'PROVEEDOR' 
+    AND (
+        upper(nombre_comercial) LIKE upper(:busqueda) OR 
+        upper(razon_social) LIKE upper(:busqueda) OR
+        numero_documento LIKE :busqueda
+    )
+     
+    AND deleted_at IS NULL LIMIT 10;
+    ";
+
+    // Ejecuta la consulta con el parámetro de búsqueda
+    return executeQuery($query, params: ['busqueda' => '%' . $cadena . '%']);
+}
+
+function fnListadoProductos($cadena): array
+{
+    // La consulta SQL para buscar proveedores
+    $query = "   
+    SELECT 
+    CASE escala
+        WHEN '-' THEN
+            CONCAT(articulo,' | Tipo: ',tipo,' | Dimension: ',dimension,' |  STOCK: ',stock::INTEGER,' | ', 'Precio de Venta: S/ ',precio_venta)
+        ELSE
+            CONCAT(articulo,' | Tipo:',tipo,' | Dimension: ',dimension,' | ',escala,' - STOCK: ',stock::INTEGER,' | ', 'Precio de Venta: S/ ',precio_venta)
+    END articulo_formato ,
+    *
+    FROM view_articulos 
+    WHERE articulo LIKE UPPER(:busqueda) LIMIT 10;
+    ";
+
+    // Ejecuta la consulta con el parámetro de búsqueda
+    return executeQuery($query, params: ['busqueda' => '%' . $cadena . '%']);
+}
+function fnListadoCompras(): array
+{
+    // La consulta SQL para buscar proveedores
+    $query = "   
+    SELECT 
+    c.id as compra_id, 
+    --c.usuario_id, --AS realizada_por,
+    CONCAT (us.nombres,' ',us.apellidos) AS realizada_por,
+    CASE 
+        WHEN c.proveedor_id IS NOT null THEN
+            CONCAT(proveedor.numero_documento,' - ', UPPER(proveedor.nombre_comercial))
+        ELSE	
+            'SIN REGISTRO DE PROVEEDOR'
+    END proveedor,
+    proveedor.numero_documento as proveedor_num_doc,
+    UPPER(proveedor.nombre_comercial) as nombre_comercial_proveedor,
+    --c.proveedor_id,
+    CASE 
+        WHEN c.fecha IS NULL THEN
+            'SIN REGISTRO'
+        ELSE
+            TO_CHAR(c.fecha, 'YYYY-MM-DD')
+    END fecha_compra,
+    --c.fecha as fecha_compra,
+    c.numero_comprobante,
+    CASE 
+        WHEN c.total IS NULL THEN
+            'SIN REGISTRO'
+        ELSE
+            CONCAT('S/',' ',c.total)
+            ----TO_CHAR(c.total, '999999999.00')
+    END total,
+    --c.total,
+    --js_detalle_compra
+    c.created_at::DATE as fecha_registro,
+    TO_CHAR(c.created_at, 'HH12:MI:SS AM') as hora,
+    js_detalle_compra,
+    --c.created_at::TIME as hora,
+    c.created_at as fecha_hora_registro
+    FROM compra c
+    JOIN usuario u ON u.id = c.usuario_id AND c.created_at::DATE >= CURRENT_DATE - INTERVAL '3 months'
+    JOIN persona us ON u.persona_id = us.id
+    LEFT JOIN persona proveedor ON c.proveedor_id = proveedor.id;
+    ";
+
+    // Ejecuta la consulta con el parámetro de búsqueda
+    return executeQuery($query);
+}
+
+//
+function fnListadoCajaChica(): array
+{
+    // La consulta SQL para buscar proveedores
+    $query = "   
+    WITH with_detalle_caja AS
+    (
+        SELECT 
+        dc.id as detalle_caja_id,
+        dc.caja_id,
+        dc.responsable,
+        c.titulo as concepto,
+        dc.monto,
+        dc.created_at,
+        dc.created_at::DATE fecha_registro,
+        TO_CHAR(dc.created_at, 'HH12:MI:SS AM') as hora_registro,
+        dc.tipo_movimiento,
+        dc.nota
+        FROM detalle_caja_chica dc
+        JOIN concepto c ON c.id = dc.concepto_id
+        order by dc.id
+    )
+    SELECT *, 
+    CASE
+		WHEN saldo IS NULL THEN
+			0
+		ELSE
+			(monto-saldo)
+	END as egresos_de_caja,
+    COALESCE(saldo,monto) as saldo_v2,
+    COALESCE(((monto-saldo)/monto)*100,0)::INTEGER as porcentaje,
+    apertura::date as fecha_apertura,
+    TO_CHAR(apertura, 'HH12:MI:SS AM') as hora_apertura,
+    (
+        SELECT 
+            json_agg(
+                json_build_object(
+                    'detalle_caja_id',d.detalle_caja_id,
+                    'caja_id', d.detalle_caja_id,
+                    'responsable', d.responsable,
+                    'concepto', d.concepto,
+                    'monto', d.monto,
+                    'created_at',d.created_at,
+                    'fecha_registro', d.fecha_registro,
+                    'hora_registro', d.hora_registro,
+                    'tipo_movimiento',d.tipo_movimiento,
+                    'nota', d.nota
+                )
+            )
+        FROM with_detalle_caja d WHERE d.caja_id = c.id
+    ) as js_detalle_caja
+    FROM caja c where cierre IS NULL ORDER BY 1 DESC LIMIT 1;  
+    ";
+
+    // Ejecuta la consulta con el parámetro de búsqueda
+    return executeQuery($query);
+}
+
+function fnListadoCajaChicaCerradas(): array
+{
+    // La consulta SQL para buscar proveedores
+    $query = "   
+    WITH with_detalle_caja AS
+    (
+        SELECT 
+        dc.id as detalle_caja_id,
+        dc.caja_id,
+        dc.responsable,
+        c.titulo as concepto,
+        dc.monto,
+        dc.created_at,
+        dc.created_at::DATE fecha_registro,
+        TO_CHAR(dc.created_at, 'HH12:MI:SS AM') as hora_registro,
+        dc.tipo_movimiento,
+        dc.nota
+        FROM detalle_caja_chica dc
+        JOIN concepto c ON c.id = dc.concepto_id
+        order by dc.id
+    )
+    SELECT *, 
+    CASE 
+        WHEN EXTRACT(DOW FROM c.apertura) = 0 THEN UPPER('Domingo')
+        WHEN EXTRACT(DOW FROM c.apertura) = 1 THEN UPPER('Lunes')
+        WHEN EXTRACT(DOW FROM c.apertura) = 2 THEN UPPER('Martes')
+        WHEN EXTRACT(DOW FROM c.apertura) = 3 THEN UPPER('Miércoles')
+        WHEN EXTRACT(DOW FROM c.apertura) = 4 THEN UPPER('Jueves')
+        WHEN EXTRACT(DOW FROM c.apertura) = 5 THEN UPPER('Viernes')
+        WHEN EXTRACT(DOW FROM c.apertura) = 6 THEN UPPER('Sábado')
+    END dia_semana,
+    CASE
+        WHEN saldo IS NULL THEN
+            0
+        ELSE
+            (monto-saldo)
+    END as egresos_de_caja,
+    COALESCE(saldo,monto) saldo_v2,
+    COALESCE(((monto-saldo)/monto)*100,0)::INTEGER as porcentaje,
+    apertura::date as fecha_apertura,
+    cierre::date as fecha_cierre,
+
+    TO_CHAR(apertura, 'HH12:MI:SS AM') as hora_apertura,
+    TO_CHAR(cierre, 'HH12:MI:SS AM') as hora_cierre,
+    (
+        SELECT 
+            json_agg(
+                json_build_object(
+                    'detalle_caja_id',d.detalle_caja_id,
+                    'caja_id', d.detalle_caja_id,
+                    'responsable', d.responsable,
+                    'concepto', d.concepto,
+                    'monto', d.monto,
+                    'created_at',d.created_at,
+                    'fecha_registro', d.fecha_registro,
+                    'hora_registro', d.hora_registro,
+                    'tipo_movimiento',d.tipo_movimiento,
+                    'nota', d.nota
+                )
+            )
+        FROM with_detalle_caja d WHERE d.caja_id = c.id
+    ) as js_detalle_caja
+    FROM caja c 
+    where cierre IS NOT NULL AND deleted_at IS null
+    ORDER BY 1 DESC;  
+
+    ";
+
+    // Ejecuta la consulta con el parámetro de búsqueda
     return executeQuery($query);
 }

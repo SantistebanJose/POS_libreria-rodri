@@ -21,7 +21,7 @@ include("cabecera.php");
                                 <th>ID</th>
                                 <th>Cliente</th>
                                 <th>monto deuda (S/)</th>
-                                <th>Accion</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,8 +39,8 @@ include("cabecera.php");
                                                 name=""
                                                 id=""
                                                 onclick='fnAbrirModalPagarCredito(<?php echo $datosJSON ?>)'
-                                                class="btn btn-success btn-round"
-                                                role="button"> <i class="fas fa-check-square"></i> Acciones</a>
+                                                class="btn btn-success btn-round btn-sm"
+                                                role="button"> <i class="fas fa-external-link-square-alt"></i></a>
                                         </div>
                                     </td>
                                 </tr>

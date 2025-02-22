@@ -99,86 +99,89 @@ include('logica/clssConsultas.php');
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
-                        <li class="nav-item ">
-                            <a
-                                data-bs-toggle="collapse"
-                                href="#dashboard"
-                                class="collapsed"
-                                aria-expanded="false">
-                                <i class="fas fa-cog"></i>
-                                <p>Adiministrador</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="dashboard">
-                                <ul class="nav nav-collapse">
-                                    <?php if ($rol === '1') { ?>
+
+                        <?php if ($rol === '1') { ?>
+                            <li class="nav-item ">
+                                <a
+                                    data-bs-toggle="collapse"
+                                    href="#dashboard"
+                                    class="collapsed"
+                                    aria-expanded="false">
+                                    <i class="fas fa-cog"></i>
+                                    <p>Adiministrador</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="dashboard">
+                                    <ul class="nav nav-collapse">
+
                                         <li>
                                             <a href="usuario.php">
                                                 <span class="sub-item">Usuarios</span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="../demo1/index.html">
+                                            <a href="#">
                                                 <span class="sub-item">Personas</span>
                                             </a>
                                         </li>
 
-                                    <?php } ?>
-                                    <li>
-                                        <a href="../demo1/index.html">
-                                            <span class="sub-item">Artículos</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="../demo1/index.html">
-                                            <span class="sub-item">Mantenimientos</span>
-                                        </a>
-                                    </li>
 
-                                </ul>
-                            </div>
-                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <span class="sub-item">Artículos</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="../demo1/index.html">
+                                                <span class="sub-item">Mantenimientos</span>
+                                            </a>
+                                        </li>
 
-                        
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    data-bs-toggle="collapse"
+                                    href="#compras"
+                                    class="collapsed"
+                                    aria-expanded="false">
+                                    <i class="fas fa-store-alt"></i>
+                                    <p>Negocio</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="compras">
+                                    <ul class="nav nav-collapse">
 
-                        <li class="nav-item">
-                            <a
-                                data-bs-toggle="collapse"
-                                href="#compras"
-                                class="collapsed"
-                                aria-expanded="false">
-                                <i class="fas fa-store-alt"></i>
-                                <p>Negocio</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="compras">
-                                <ul class="nav nav-collapse">
+                                        <li>
+                                            <a href="compra.php">
+                                                <span class="sub-item">Gestionar de Compras</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <span class="sub-item">Productos</span>
+                                            </a>
+                                        </li>
 
-                                    <li>
-                                        <a href="compra.php">
-                                            <span class="sub-item">Compra de Articulos</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="sub-item">Listado de Compras</span>
-                                        </a>
-                                    </li>
+                                        <li>
+                                            <a href="cajaChica.php">
+                                                <span class="sub-item">Caja Chica</span>
+                                            </a>
+                                        </li>
 
-                                    <li>
-                                        <a href="">
-                                            <span class="sub-item">Manejo de Caja</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="">
-                                            <span class="sub-item">Egresos</span>
-                                        </a>
-                                    </li>
+                                        <li>
+                                            <a href="">
+                                                <span class="sub-item">Manejo de Caja</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
 
-                                </ul>
-                            </div>
-                        </li>
+                        <?php } ?>
+
+
                         <li class="nav-item">
                             <a
                                 data-bs-toggle="collapse"
@@ -287,7 +290,7 @@ include('logica/clssConsultas.php');
                                 </ul>
                             </div>
                         </li>
-              
+
                     </ul>
                 </div>
             </div>
@@ -330,7 +333,93 @@ include('logica/clssConsultas.php');
                         </nav>
 
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-                  
+                            <a
+                                name=""
+                                id=""
+                                class="btn"
+                                href="index.php"
+                                role="button"><i class="fas fa-home"></i></a>
+                            <li class="nav-item topbar-icon dropdown hidden-caret">
+                                <a
+                                    class="nav-link"
+                                    data-bs-toggle="dropdown"
+                                    href="#"
+                                    aria-expanded="false">
+                                    <i class="fas fa-layer-group"></i>
+                                </a>
+                                <div class="dropdown-menu quick-actions animated fadeIn">
+                                    <div class="quick-actions-header" style="background-color: #1a2035;">
+                                        <span class="title mb-1">Accesos Rápidos</span>
+                                        <span class="subtitle op-7">Todo en un solo click.</span>
+                                    </div>
+                                    <div class="quick-actions-scroll scrollbar-outer">
+                                        <div class="quick-actions-items">
+                                            <div class="row m-0">
+                                                <a class="col-6 col-md-4 p-0" href="venta_rapida.php">
+                                                    <div class="quick-actions-item">
+                                                        <div class="avatar-item bg-primary rounded-circle">
+                                                            <i class="fas fa-users"></i>
+                                                        </div>
+                                                        <span class="text">Venta Rapida</span>
+                                                    </div>
+                                                </a>
+                                                <a class="col-6 col-md-4 p-0" href="venta_reserva_corte.php">
+                                                    <div class="quick-actions-item">
+                                                        <div
+                                                            class="avatar-item bg-info rounded-circle">
+                                                            <i class="fas fa-user-check"></i>
+                                                        </div>
+                                                        <span class="text">Venta Por Reserva</span>
+                                                    </div>
+                                                </a>
+                                                <a class="col-6 col-md-4 p-0" href="venta_corte_material.php">
+                                                    <div class="quick-actions-item">
+                                                        <div class="avatar-item bg-secondary rounded-circle">
+                                                            <i class="fas fa-luggage-cart"></i>
+                                                        </div>
+                                                        <span class="text">Atender Reserva</span>
+                                                    </div>
+                                                </a>
+                                                <?php if ($rol === '1') { ?>
+                                                    <a class="col-6 col-md-4 p-0" href="pagoCredito.php">
+                                                        <div class="quick-actions-item">
+                                                            <div
+                                                                class="avatar-item bg-black rounded-circle">
+                                                                <i class="fas fa-credit-card"></i>
+                                                            </div>
+                                                            <span class="text">Pagos al Crédito</span>
+                                                        </div>
+                                                    </a>
+                                                    <a class="col-6 col-md-4 p-0" href="cajaChica.php">
+                                                        <div class="quick-actions-item">
+                                                            <div
+                                                                class="avatar-item bg-success rounded-circle">
+                                                                <i class="fas fa-box-open"></i>
+                                                            </div>
+                                                            <span class="text">Caja Chica</span>
+                                                        </div>
+                                                    </a>
+                                                    <a class="col-6 col-md-4 p-0" href="">
+                                                        <div class="quick-actions-item">
+                                                            <div
+                                                                class="avatar-item bg-warning rounded-circle">
+                                                                <i class="fas fa-toolbox"></i>
+                                                            </div>
+                                                            <span class="text">Manejo de Caja</span>
+                                                        </div>
+                                                    </a>
+                                                <?php } ?>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+
+
+
+
 
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a
@@ -344,6 +433,9 @@ include('logica/clssConsultas.php');
                                             alt="..."
                                             class="avatar-img rounded-circle" />
                                     </div>
+
+
+
                                     <span class="profile-username">
                                         <span class="op-7">Hola,</span>
                                         <span class="fw-bold"><?php echo $nombre ? $nombre : 'Error'; ?></span>

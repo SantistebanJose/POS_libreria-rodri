@@ -36,7 +36,6 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>CODIGO de PAGO</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
                                                     <th>HORA</th>
@@ -53,7 +52,6 @@ if (isset($_GET['id'])) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
-                                                        <td><?php echo $datos["codigo"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
@@ -62,12 +60,13 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["utilidad"] ?></td>
                                                         <td>
                                                             <div class="mt-2 text-center">
+                                                                
                                                                 <a
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
-                                                                    class="btn btn-success btn-round"
-                                                                    role="button">Ver</a>
+                                                                    class="btn btn-success btn-round btn-round btn-sm"
+                                                                    role="button">  <i class="fas fa-external-link-alt"></i> </a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -91,7 +90,6 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>CODIGO de PAGO</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
                                                     <th>HORA</th>
@@ -108,7 +106,6 @@ if (isset($_GET['id'])) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
-                                                        <td><?php echo $datos["codigo"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
@@ -121,8 +118,8 @@ if (isset($_GET['id'])) {
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
-                                                                    class="btn btn-success btn-round"
-                                                                    role="button">Ver</a>
+                                                                    class="btn btn-success btn-round btn-sm"
+                                                                    role="button"> <i class="fas fa-external-link-alt"></i> </a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -145,7 +142,6 @@ if (isset($_GET['id'])) {
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>CODIGO de PAGO</th>
                                                 <th>DÍA</th>
                                                 <th>FECHA</th>
                                                 <th>HORA</th>
@@ -162,7 +158,6 @@ if (isset($_GET['id'])) {
                                             ?>
                                                 <tr>
                                                     <td><?php echo $datos["pago_id"] ?></td>
-                                                    <td><?php echo $datos["codigo"] ?></td>
                                                     <td><?php echo $datos["dia_nombre"] ?></td>
                                                     <td><?php echo $datos["fecha"] ?></td>
                                                     <td><?php echo $datos["hora"] ?></td>
@@ -175,8 +170,8 @@ if (isset($_GET['id'])) {
                                                                 name=""
                                                                 id=""
                                                                 onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
-                                                                class="btn btn-success btn-round"
-                                                                role="button">Ver</a>
+                                                                class="btn btn-success btn-round btn-sm"
+                                                                role="button"> <i class="fas fa-external-link-alt"></i> </a>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -249,8 +244,6 @@ if (isset($_GET['id'])) {
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
-
-
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="card-body">
                 <h4 class="card-title text-center" style="font-size: 28px;">Venta de S/ <strong id="idMontoVenta"></strong></h4>
