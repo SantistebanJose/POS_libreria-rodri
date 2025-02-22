@@ -28,7 +28,10 @@ $sqlBase = "SELECT id, numero_documento,
                    COALESCE(condicion, '-') AS condicion, 
                    COALESCE(telefonomovil, COALESCE(telefonofijo, '-')) AS telefono, 
                    deleted_at 
-            FROM persona";
+            FROM persona
+            
+            --where deleted_at is null   
+            ";
 // Aplicar búsqueda si hay un valor de búsqueda
 $sqlFiltro = "";
 $params = [];

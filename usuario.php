@@ -6,14 +6,15 @@ include("cabecera.php");
     #sugerencias {
         max-height: 200px;
         overflow-y: auto;
-        z-index: 1050; /* Para asegurar que esté sobre otros elementos */
+        z-index: 1050;
+        /* Para asegurar que esté sobre otros elementos */
     }
 
     #sugerencias .list-group-item {
         cursor: pointer;
     }
-  
-.error-input {
+
+    .error-input {
         border: 2px solid red;
     }
 
@@ -25,32 +26,38 @@ include("cabecera.php");
 
 
     #modalCliente {
-    z-index: 1060 !important; /* Asegúrate de que sea más alto que el de los demás modales */
-}
+        z-index: 1060 !important;
+        /* Asegúrate de que sea más alto que el de los demás modales */
+    }
 
-/* Estilo para cambiar el color de fondo y bordes del modal */
-#modalCliente .modal-content {
-    background-color: #f0f8ff;  /* Color de fondo claro (puedes cambiarlo) */
-    border-radius: 10px;  /* Bordes redondeados */
-    border: 2px solid #2a2f5b;  /* Borde azul para darle más protagonismo */
-}
+    /* Estilo para cambiar el color de fondo y bordes del modal */
+    #modalCliente .modal-content {
+        background-color: #f0f8ff;
+        /* Color de fondo claro (puedes cambiarlo) */
+        border-radius: 10px;
+        /* Bordes redondeados */
+        border: 2px solid #2a2f5b;
+        /* Borde azul para darle más protagonismo */
+    }
 
-/* Agregar una sombra para resaltar más el modal */
-#modalCliente .modal-dialog {
-    box-shadow: 0 4px 10px #2a2f5b;  /* Sombra azul para resaltar el modal */
-}
+    /* Agregar una sombra para resaltar más el modal */
+    #modalCliente .modal-dialog {
+        box-shadow: 0 4px 10px #2a2f5b;
+        /* Sombra azul para resaltar el modal */
+    }
 
-/* Título del modal más grande y con un color diferente */
-#modalCliente .modal-header {
-    background-color: #2a2f5b;  /* Fondo azul */
-    color: white;  /* Texto blanco */
-}
-#modalCliente .btn-close {
-    background-color: #f0f8ff;  /* Botón de cerrar rojo */
-}
+    /* Título del modal más grande y con un color diferente */
+    #modalCliente .modal-header {
+        background-color: #2a2f5b;
+        /* Fondo azul */
+        color: white;
+        /* Texto blanco */
+    }
 
-
-   
+    #modalCliente .btn-close {
+        background-color: #f0f8ff;
+        /* Botón de cerrar rojo */
+    }
 </style>
 
 <div
@@ -69,84 +76,84 @@ include("cabecera.php");
                 <hr>
                 <div
                     class="row justify-content-center align-items-center md-2">
-                 
+
                     <div class="col-sm-12">
-                    <div class="table-responsive">
-                                    <table
-                                        id="multi-filter-select"
-                                        class="display table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>USERNAME</th>
-                                                <th>ROL</th>
-                                                <th>PERSONA</th>
-                                                <th>ESTADO</th>
-                                                <th>Accion</th>
-                                            </tr>
-                                        </thead>
-                                        <tfoot>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>USERNAME</th>
-                                                <th>ROL</th>
-                                                <th>PERSONA</th>
-                                                <th>ESTADO</th>
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
+                        <div class="table-responsive">
+                            <table
+                                id="multi-filter-select"
+                                class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>USERNAME</th>
+                                        <th>ROL</th>
+                                        <th>PERSONA</th>
+                                        <th>ESTADO</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>USERNAME</th>
+                                        <th>ROL</th>
+                                        <th>PERSONA</th>
+                                        <th>ESTADO</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
 
-                                            <?php
-                                            foreach (listarUsuarios() as $datosUsuario) {
-                                                $datosUsuarioJSON = json_encode($datosUsuario);
+                                    <?php
+                                    foreach (listarUsuarios() as $datosUsuario) {
+                                        $datosUsuarioJSON = json_encode($datosUsuario);
 
 
-                                            ?>
-                                                <tr>
-                                                    <td><?php echo $datosUsuario["id"] ?></td>
-                                                    <td><?php echo $datosUsuario["username"] ?></td>
-                                                    <td><?php echo $datosUsuario["rol"] ?></td>
-                                                    <td><?php echo $datosUsuario["persona_concatenada"] ?></td>
-                                                    <td><?php echo $datosUsuario["estado"] ?></td>
-                                                    <th>
-                                                        <div class="mt-2 text-center">
-                                                            <!-- Botón de Agregar -->
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $datosUsuario["id"] ?></td>
+                                            <td><?php echo $datosUsuario["username"] ?></td>
+                                            <td><?php echo $datosUsuario["rol"] ?></td>
+                                            <td><?php echo $datosUsuario["persona_concatenada"] ?></td>
+                                            <td><?php echo $datosUsuario["estado"] ?></td>
+                                            <th>
+                                                <div class="mt-2 text-center">
+                                                    <!-- Botón de Agregar -->
 
-                                                            <!-- Botón de Editar (con ícono amarillo) -->
-                                                            <a name="edit" id="edit" class="btn btn-warning btn-round ml-2" 
-                                                            onclick='fn_editar_usuario(<?php echo $datosUsuarioJSON; ?>)' role="button">
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
+                                                    <!-- Botón de Editar (con ícono amarillo) -->
+                                                    <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                        onclick='fn_editar_usuario(<?php echo $datosUsuarioJSON; ?>)' role="button">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
 
-                                                            <!-- Botón de Activar/Bloquear -->
-                                                            <?php if ($datosUsuario["estado"]  == 'ACTIVO') { ?>
-    <!-- Botón para bloquear -->
-                                                                <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                    onclick='fn_bloquear_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
-                                                                    <i class="fa fa-lock"></i> 
-                                                                </a>
-                                                            <?php } else { ?>
-                                                                <!-- Botón para activar -->
-                                                                <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
-                                                                    onclick='fn_desbloquear_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
-                                                                    <i class="fa fa-unlock"></i> 
-                                                                </a>
-                                                            <?php } ?>
+                                                    <!-- Botón de Activar/Bloquear -->
+                                                    <?php if ($datosUsuario["estado"]  == 'ACTIVO') { ?>
+                                                        <!-- Botón para bloquear -->
+                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                            onclick='fn_bloquear_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
+                                                            <i class="fa fa-lock"></i>
+                                                        </a>
+                                                    <?php } else { ?>
+                                                        <!-- Botón para activar -->
+                                                        <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
+                                                            onclick='fn_desbloquear_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
+                                                            <i class="fa fa-unlock"></i>
+                                                        </a>
+                                                    <?php } ?>
 
-                                                            <!-- Botón de Eliminar -->
-                                                            <a name="delete" id="delete" class="btn btn-danger btn-round ml-2" 
-                                                            onclick='fn_eliminar_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
-                                                                <i class="fa fa-trash"></i> 
-                                                            </a>
-                                                        </div>
-                                                    </th>
-                                                </tr>
-                                            <?php
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                    <!-- Botón de Eliminar -->
+                                                    <a name="delete" id="delete" class="btn btn-danger btn-round ml-2"
+                                                        onclick='fn_eliminar_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
 
                     </div>
                 </div>
@@ -170,24 +177,24 @@ include("cabecera.php");
                     <li class="nav-item">
                         <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">Empleado</button>
                     </li>
-                   
+
                 </ul>
                 <hr>
                 <div class="tab-content mt-3" id="pills-tabContent">
                     <!-- Formulario Persona -->
                     <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
                         <div class="mb-3">
-                            <label for="numeroDocumentoPersona" class="form-label">Número de Documento  <span class="fw-bold text-danger">*</span></label>
+                            <label for="numeroDocumentoPersona" class="form-label">Número de Documento <span class="fw-bold text-danger">*</span></label>
                             <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
                             <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="nombresPersona" class="form-label">Nombres  <span class="fw-bold text-danger">*</span></label>
+                            <label for="nombresPersona" class="form-label">Nombres <span class="fw-bold text-danger">*</span></label>
                             <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
                             <div class="invalid-feedback" id="error-nombresPersona"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="apellidosPersona" class="form-label">Apellidos  <span class="fw-bold text-danger">*</span></label>
+                            <label for="apellidosPersona" class="form-label">Apellidos <span class="fw-bold text-danger">*</span></label>
                             <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
                             <div class="invalid-feedback" id="error-apellidosPersona"></div>
                         </div>
@@ -204,25 +211,25 @@ include("cabecera.php");
                     </div>
 
                     <!-- Formulario Empresa -->
-                    
+
                 </div>
 
                 <div class="alert alert-light p-3" role="alert">
-    <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
-    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
+                    <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
+            </div>
         </div>
+    </div>
 </div>
 
-<div class="modal fade" id="modalUsuario" tabindex="-1"  data-bs-backdrop="static" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
+<div class="modal fade" id="modalUsuario" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="contenidoUsuario">
-           
+
         </div>
     </div>
 </div>
@@ -358,20 +365,25 @@ include("cabecera.php");
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
 
-        document.getElementById("btnAbrirModalGenerico").addEventListener("click", function () {
+        document.getElementById("btnAbrirModalGenerico").addEventListener("click", function() {
             document.getElementById("contenidoUsuario").innerHTML = `
-                <div class="modal-header">
-                    <h5 class="modal-title mx-auto fw-bold">Registrar Usuario</h5>
-                </div>
+                
+                
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Persona <span class="fw-bold text-danger">*</span></label>
+                    <div class="card text-start">
+                        <div class="card-body">
+                            <h4 class="card-title text-center"><i class="fas fa-user"></i> Registrar Usuario</h4>
+                            <div class="card-sub text-center">
+                                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                            </div>
+                            <div class="mb-3">
+                        <label class="form-label"><b> Persona <span class="fw-bold text-danger">*</span></b></label>
                         <span id="idPersona">#</span>
                         <div class="d-flex align-items-center">
                             <input type="text" class="form-control required" id="nombreCliente" placeholder="AGREGAR EL NOMBRE DEL EMPLEADO O DNI" />
-                            <button type="button" class="btn btn-primary ms-2 rounded-5" id="btnAbrirModalCliente">
+                            <button type="button" class="btn btn-primary ms-2 rounded-5 btn-sm" id="btnAbrirModalCliente">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -381,19 +393,19 @@ include("cabecera.php");
                     </div>
                     <div class="row justify-content-center align-items-center sm-2">
                         <div class="col-sm-12 mb-3">
-                                <label for="nombreUsuario">Nombre de Usuario <span class="fw-bold text-danger">*</span></label>
+                                <label for="nombreUsuario"><b> Nombre de Usuario <span class="fw-bold text-danger">*</span></b></label>
                                 <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" />
                                 <div id="error-nombreUsuario" class="error-message"></div>
                           
                         </div>
                         <div class="col-sm-12 mb-3">
-                            <label for="contrasena">Contraseña <span class="fw-bold text-danger">*</span></label>
+                            <label for="contrasena"><b>Contraseña <span class="fw-bold text-danger">*</b></span></label>
                             <input type="password" class="form-control required" id="contrasena" placeholder="********" />
                             <div id="error-contrasena" class="error-message"></div>
                         </div>
                         <div class="col-sm-12 mb-3">
                             <div class="mb-3">
-                                <label class="form-label">Rol <span class="fw-bold text-danger">*</span></label>
+                                <label class="form-label"><b>Rol <span class="fw-bold text-danger">*</span></b></label>
                                 <select class="form-select required" id="rol">
                                     <option value="">Seleccione una opción</option>
                                     <option value="1">Administrador</option>
@@ -402,11 +414,13 @@ include("cabecera.php");
                                 <div id="error-rol" class="error-message"></div>
                             </div>
                         </div>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                    <div class="alert alert-light p-3" role="alert">
-                        <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
-                    </div>
-                </div>
+                    
+                    
+                    
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-success rounded-5" id="btnRegistrarUsuario">Registrar</button>
@@ -417,9 +431,9 @@ include("cabecera.php");
             modal.show();
 
             // Agregar evento de validación al botón "Registrar"
-    
-            document.getElementById("btnRegistrarUsuario").addEventListener("click", async function () {
-                if(!validarFormulario()){
+
+            document.getElementById("btnRegistrarUsuario").addEventListener("click", async function() {
+                if (!validarFormulario()) {
                     return;
                 }
 
@@ -429,10 +443,10 @@ include("cabecera.php");
                 const persona_id = parseInt(document.getElementById("idPersona").textContent)
 
                 const datos = {
-                    "username":username,
-                    "contraseña":contraseña,
-                    "rol":rol,
-                    "persona_id":persona_id
+                    "username": username,
+                    "contraseña": contraseña,
+                    "rol": rol,
+                    "persona_id": persona_id
                 };
                 console.log(datos);
 
@@ -443,7 +457,7 @@ include("cabecera.php");
                         "accion": "REGISTRARUSUARIO",
                         "data": JSON.stringify(datos)
                     }
-                }).done(function (response) {
+                }).done(function(response) {
 
                     var result = JSON.parse(response);
                     console.log(response);
@@ -472,14 +486,14 @@ include("cabecera.php");
                         });
                     }
 
-                }).fail(function (error) {
+                }).fail(function(error) {
                     console.error("Error:", error.responseText);
                     alert("Error al registrar el usuario.");
                 });
-                                
+
 
             });
-    
+
         });
 
         function validarFormulario() {
@@ -504,95 +518,92 @@ include("cabecera.php");
             return true;
         }
     });
-
 </script>
 
 <script>
-    document.addEventListener("input", function (event) {
-    if (event.target && event.target.id === "nombreCliente") {
-        const nombreCliente = event.target;
-        const sugerencias = document.getElementById("sugerencias");
-        const persona_id = document.getElementById("idPersona");
+    document.addEventListener("input", function(event) {
+        if (event.target && event.target.id === "nombreCliente") {
+            const nombreCliente = event.target;
+            const sugerencias = document.getElementById("sugerencias");
+            const persona_id = document.getElementById("idPersona");
 
-        const query = nombreCliente.value.trim();
-        console.log(query);
+            const query = nombreCliente.value.trim();
+            console.log(query);
 
-        if (query.length > 0) {
-            $.ajax({
-                method: "POST",
-                url: "logica/clssFiltro.php",
-                data: {
-                    "accion": "FILTROEMPLEADO",
-                    "data": query
-                }
-            }).done(function (response) {
-                try {
-                    console.log(response);
-                    const resultados = JSON.parse(response);
-                    sugerencias.innerHTML = "";
-
-                    if (resultados.length > 0) {
-                        resultados.forEach(persona => {
-                            const item = document.createElement("div");
-                            item.classList.add("list-group-item");
-                            item.textContent = persona.persona_concatenada;
-
-                            item.addEventListener("click", function () {
-                                nombreCliente.value = persona.persona_concatenada;
-                                persona_id.textContent = persona.id;
-                                sugerencias.innerHTML = "";
-                            });
-
-                            sugerencias.appendChild(item);
-                        });
-                    } else {
-                        const noResults = document.createElement("div");
-                        noResults.classList.add("list-group-item", "text-muted");
-                        noResults.textContent = "Sin resultados";
-                        sugerencias.appendChild(noResults);
+            if (query.length > 0) {
+                $.ajax({
+                    method: "POST",
+                    url: "logica/clssFiltro.php",
+                    data: {
+                        "accion": "FILTROEMPLEADO",
+                        "data": query
                     }
-                } catch (e) {
-                    console.error("Error al procesar los resultados:", e);
+                }).done(function(response) {
+                    try {
+                        console.log(response);
+                        const resultados = JSON.parse(response);
+                        sugerencias.innerHTML = "";
+
+                        if (resultados.length > 0) {
+                            resultados.forEach(persona => {
+                                const item = document.createElement("div");
+                                item.classList.add("list-group-item");
+                                item.textContent = persona.persona_concatenada;
+
+                                item.addEventListener("click", function() {
+                                    nombreCliente.value = persona.persona_concatenada;
+                                    persona_id.textContent = persona.id;
+                                    sugerencias.innerHTML = "";
+                                });
+
+                                sugerencias.appendChild(item);
+                            });
+                        } else {
+                            const noResults = document.createElement("div");
+                            noResults.classList.add("list-group-item", "text-muted");
+                            noResults.textContent = "Sin resultados";
+                            sugerencias.appendChild(noResults);
+                        }
+                    } catch (e) {
+                        console.error("Error al procesar los resultados:", e);
+                        sugerencias.innerHTML = "";
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
                     sugerencias.innerHTML = "";
-                }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                });
+            } else {
                 sugerencias.innerHTML = "";
-            });
-        } else {
-            sugerencias.innerHTML = "";
+            }
         }
-    }
     });
 
     // Para cerrar sugerencias si se hace clic fuera
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", function(e) {
         const nombreCliente = document.getElementById("nombreCliente");
         const sugerencias = document.getElementById("sugerencias");
-        
+
         if (sugerencias && nombreCliente && !nombreCliente.contains(e.target) && !sugerencias.contains(e.target)) {
             sugerencias.innerHTML = "";
         }
     });
-
-
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         console.log("El script ha cargado correctamente");
-          // Lógica para borrar los datos cuando se cambia entre los Pills
+        // Lógica para borrar los datos cuando se cambia entre los Pills
         const personaTab = document.getElementById("pills-persona-tab");
 
         // Agrega un evento click para abrir el modal manualmente
-        document.body.addEventListener("click", function (event) {
+        document.body.addEventListener("click", function(event) {
             // Verifica si el clic fue en el botón o en cualquier parte del botón (incluido el icono dentro de él)
             if (event.target && event.target.closest("#btnAbrirModalCliente")) {
                 console.log("¡Clic en el botón o icono del botón dinámico!");
-                
+
                 // Muestra el modal
                 const modalCliente = new bootstrap.Modal(document.getElementById("modalCliente"));
-                modalCliente.show();  // Muestra el modal manualmente
+                modalCliente.show(); // Muestra el modal manualmente
             }
         });
 
@@ -606,7 +617,7 @@ include("cabecera.php");
             resetErrors();
         });
 
-       
+
         function resetErrors() {
             // Limpiar las clases 'is-invalid' y los mensajes de error
             const inputs = document.querySelectorAll('.form-control');
@@ -621,7 +632,7 @@ include("cabecera.php");
             });
         }
 
-        function limpiarcampos(){
+        function limpiarcampos() {
             document.getElementById('numeroDocumentoPersona').value = '';
             document.getElementById('nombresPersona').value = '';
             document.getElementById('apellidosPersona').value = '';
@@ -633,7 +644,7 @@ include("cabecera.php");
         const formPersona = document.getElementById('pills-persona');
 
         const btnRegistrarCliente = document.getElementById('btnRegistrarCliente');
-        console.log("botn",btnRegistrarCliente);
+        console.log("botn", btnRegistrarCliente);
 
         // Función para validar los campos
         function validarCamposPersona() {
@@ -662,12 +673,11 @@ include("cabecera.php");
                 valid = false;
                 nombresPersona.classList.add('is-invalid');
                 errorNombresPersona.textContent = 'Los nombres es obligatorio.';
-            }else if(/[^a-zA-Z\s]/.test(nombresPersona.value)){
+            } else if (/[^a-zA-Z\s]/.test(nombresPersona.value)) {
                 valid = false;
                 nombresPersona.classList.add('is-invalid');
                 errorNombresPersona.textContent = 'Los nombres no pueden contener números.';
-            } 
-            else {
+            } else {
                 nombresPersona.classList.remove('is-invalid');
                 errorNombresPersona.textContent = '';
             }
@@ -675,15 +685,15 @@ include("cabecera.php");
             // Validar los apellidos (solo si tiene datos y sin números)
             const apellidosPersona = document.getElementById('apellidosPersona');
             const errorApellidosPersona = document.getElementById('error-apellidosPersona');
-            if (apellidosPersona.value.trim() == '' ) {
+            if (apellidosPersona.value.trim() == '') {
                 valid = false;
                 apellidosPersona.classList.add('is-invalid');
                 errorApellidosPersona.textContent = 'Los apellidos es obligatorio.';
-            } else if(/[^a-zA-Z\s]/.test(apellidosPersona.value)){
+            } else if (/[^a-zA-Z\s]/.test(apellidosPersona.value)) {
                 valid = false;
                 apellidosPersona.classList.add('is-invalid');
                 errorApellidosPersona.textContent = 'Los apellidos no pueden contener números.';
-            }else {
+            } else {
                 apellidosPersona.classList.remove('is-invalid');
                 errorApellidosPersona.textContent = '';
             }
@@ -715,13 +725,13 @@ include("cabecera.php");
             return valid;
         }
 
-       
+
 
         // Registrar cliente
-        btnRegistrarCliente.addEventListener('click', async function () {
+        btnRegistrarCliente.addEventListener('click', async function() {
             let datos = {};
             console.log("click")
-            
+
             if (document.getElementById('pills-persona-tab').classList.contains('active')) {
                 // Recolectar los datos del formulario Persona
                 if (validarCamposPersona()) {
@@ -742,8 +752,8 @@ include("cabecera.php");
                     console.log(response.persona_id);
 
 
-                    
-                    enviardatos(response.persona_id,nombreencadenado);
+
+                    enviardatos(response.persona_id, nombreencadenado);
                     limpiarcampos();
                     showNotification("success");
 
@@ -753,43 +763,43 @@ include("cabecera.php");
                 } else {
                     alert('Por favor, corrige los errores antes de registrar.');
                 }
-            } 
+            }
         });
 
-        function enviardatos(id_persona,nombre,numero_celular,correo){
+        function enviardatos(id_persona, nombre, numero_celular, correo) {
             document.getElementById('idPersona').textContent = id_persona
             document.getElementById('nombreCliente').value = nombre
-           
+
         }
 
         function fnRegistrarPersona(datos) {
             return new Promise((resolve, reject) => {
                 $.ajax({
                     method: "POST",
-                    url: "logica/clssPersona.php",  // El archivo PHP donde se maneja el registro de persona
+                    url: "logica/clssPersona.php", // El archivo PHP donde se maneja el registro de persona
                     data: {
-                        "accion": "REGISTRARPERSONAEMPLEADO",  // Acción que se realiza en el backend
-                        "data": JSON.stringify(datos)  // Los datos de la persona como JSON
+                        "accion": "REGISTRARPERSONAEMPLEADO", // Acción que se realiza en el backend
+                        "data": JSON.stringify(datos) // Los datos de la persona como JSON
                     }
-                }).done(function (response) {
+                }).done(function(response) {
                     console.log(response);
                     const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
                     if (jsonResponse.success) {
-                        resolve(jsonResponse);  // Resolvemos la promesa en caso de éxito
+                        resolve(jsonResponse); // Resolvemos la promesa en caso de éxito
                     } else {
-                        reject(new Error(jsonResponse.mensaje || "Error desconocido"));  // Si hay error en la respuesta del servidor
+                        reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Si hay error en la respuesta del servidor
                     }
-                }).fail(function (error) {
+                }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    reject(error);  // Rechazamos la promesa si ocurre un error en la solicitud AJAX
+                    reject(error); // Rechazamos la promesa si ocurre un error en la solicitud AJAX
                 });
             });
         }
 
-       
 
 
-        
+
+
     });
 </script>
 
@@ -802,7 +812,8 @@ include("cabecera.php");
             <div class="modal-body">
                 <div class="row justify-content-center align-items-center sm-2">
                     <div class="col-sm-12 mb-3">
-                        <label for="nombreUsuario">Nombre de Usuario <span class="fw-bold text-danger">*</span></label>
+
+                        <label for="nombreUsuario"> Nombre de Usuario <span class="fw-bold text-danger">*</span></label>
                         <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" value="${datosUsuario.username}" />
                         <div id="error-nombreUsuario" class="error-message"></div>
                 
@@ -840,8 +851,8 @@ include("cabecera.php");
         const modal = new bootstrap.Modal(document.getElementById("modalUsuario"));
         modal.show();
 
-        document.getElementById("btnEditarUsuario").addEventListener("click", async function () {
-            if(!validarFormulario()){
+        document.getElementById("btnEditarUsuario").addEventListener("click", async function() {
+            if (!validarFormulario()) {
                 return;
             }
 
@@ -851,9 +862,9 @@ include("cabecera.php");
 
             const datos = {
                 "id": datosUsuario.id,
-                "username":username,
-                "contraseña":contraseña,
-                "rol":rol,
+                "username": username,
+                "contraseña": contraseña,
+                "rol": rol,
             };
             console.log(datos);
 
@@ -864,7 +875,7 @@ include("cabecera.php");
                     "accion": "EDITARRUSUARIO",
                     "data": JSON.stringify(datos)
                 }
-            }).done(function (response) {
+            }).done(function(response) {
 
                 var result = JSON.parse(response);
                 console.log(response);
@@ -893,11 +904,11 @@ include("cabecera.php");
                     });
                 }
 
-            }).fail(function (error) {
+            }).fail(function(error) {
                 console.error("Error:", error.responseText);
                 alert("Error al registrar el usuario.");
             });
-                            
+
 
         });
 
@@ -924,7 +935,7 @@ include("cabecera.php");
         }
     }
 
-    function fn_bloquear_usuario(datosUsuario){
+    function fn_bloquear_usuario(datosUsuario) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -936,7 +947,7 @@ include("cabecera.php");
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                
+
                 $.ajax({
                     method: "POST",
                     url: "logica/clssUsuario.php",
@@ -944,7 +955,7 @@ include("cabecera.php");
                         "accion": "BLOQUEARUSUARIO",
                         "id": datosUsuario
                     }
-                }).done(function (response) {
+                }).done(function(response) {
 
                     var result = JSON.parse(response);
                     console.log(response);
@@ -964,7 +975,7 @@ include("cabecera.php");
                         });
                     }
 
-                }).fail(function (error) {
+                }).fail(function(error) {
                     console.error("Error:", error.responseText);
                     alert("Error al registrar el usuario.");
                 });
@@ -972,7 +983,7 @@ include("cabecera.php");
         });
     }
 
-    function fn_desbloquear_usuario(datosUsuario){
+    function fn_desbloquear_usuario(datosUsuario) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -991,7 +1002,7 @@ include("cabecera.php");
                         "accion": "DESBLOQUEARUSUARIO",
                         "id": datosUsuario
                     }
-                }).done(function (response) {
+                }).done(function(response) {
 
                     var result = JSON.parse(response);
                     console.log(response);
@@ -1011,17 +1022,17 @@ include("cabecera.php");
                         });
                     }
 
-                }).fail(function (error) {
+                }).fail(function(error) {
                     console.error("Error:", error.responseText);
                     alert("Error al registrar el usuario.");
                 });
-                            
-                
+
+
             }
         });
     }
 
-    function fn_eliminar_usuario(datosUsuario){
+    function fn_eliminar_usuario(datosUsuario) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -1033,7 +1044,7 @@ include("cabecera.php");
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                
+
                 $.ajax({
                     method: "POST",
                     url: "logica/clssUsuario.php",
@@ -1041,7 +1052,7 @@ include("cabecera.php");
                         "accion": "ELIMINARUSUARIO",
                         "id": datosUsuario
                     }
-                }).done(function (response) {
+                }).done(function(response) {
 
                     var result = JSON.parse(response);
                     console.log(response);
@@ -1061,14 +1072,13 @@ include("cabecera.php");
                         });
                     }
 
-                }).fail(function (error) {
+                }).fail(function(error) {
                     console.error("Error:", error.responseText);
                     alert("Error al registrar el usuario.");
                 });
             }
         });
     }
-
 </script>
 
 <?php

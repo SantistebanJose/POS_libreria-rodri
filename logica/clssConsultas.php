@@ -135,8 +135,9 @@ function listarPersonas(): array
         direccion,
         nombre_comercial, 
         razon_social ,deleted_at
-        from persona
-                order BY id;
+        from persona 
+        where deleted_at is null   
+        order BY id;
     ";
     return executeQuery($query);
 }
@@ -205,7 +206,7 @@ function listarVentaReservaCorte(): array
         INNER JOIN persona AS usua ON us.persona_id = usua.id
         INNER JOIN persona AS p ON v.cliente_id = p.id
         WHERE v.deleted_at IS NULL
-          AND v.estado_venta <> 'VR';
+        AND v.estado_venta <> 'VR';
     ";
     return executeQuery($query);
 }
@@ -213,6 +214,26 @@ function listarVentaReservaCorte(): array
 function listarFormaPago(): array
 {
     $query = "SELECT id, nombre FROM forma_pago WHERE deleted_at IS NULL order by id";
+    return executeQuery($query);
+}
+function listarEmpleados(): array
+{
+    $query = "
+    SELECT 
+        p.id, 
+        p.numero_documento, 
+        CASE 
+            WHEN p.nombres IS NOT NULL AND p.apellidos IS NOT NULL THEN CONCAT(nombres, ' ', apellidos)
+            WHEN p.razon_social IS NOT NULL THEN p.razon_social
+            ELSE '-'
+        END AS empleado, 
+        COALESCE(p.condicion, '-') AS condicion, 
+        COALESCE(p.telefonomovil, COALESCE(p.telefonofijo, '-')) AS telefono, 
+        p.deleted_at 
+    FROM persona p
+    JOIN usuario u on p.id = u.persona_id
+    WHERE p.deleted_at IS NULL AND u.deleted_at is null;
+    ";
     return executeQuery($query);
 }
 

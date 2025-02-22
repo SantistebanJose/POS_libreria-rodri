@@ -1462,7 +1462,7 @@ include("cabecera.php");
                     ////////////////////////////////////////////////////////
                     var btnEliminar = document.createElement("button");
                     //btn btn-success btn-round
-                    btnEliminar.innerHTML = 'X';
+                    btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
                     btnEliminar.classList.add("btn", "btn-danger", "btn-round", "btn-sm");
 
                     // Cambiar la forma en que se llama a la función eliminarFilaDeMrd
@@ -1616,7 +1616,7 @@ include("cabecera.php");
                 ////////////////////////////////////////////////////////
                 var btnEliminar = document.createElement("button");
                 //btn btn-success btn-round
-                btnEliminar.innerHTML = 'X';
+                btnEliminar.innerHTML = '<i class="fas fa-trash"></i>';
                 btnEliminar.classList.add("btn", "btn-danger", "btn-round", "btn-sm");
 
                 // Cambiar la forma en que se llama a la función eliminarFilaDeMrd

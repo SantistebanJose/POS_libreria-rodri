@@ -271,6 +271,7 @@ include("cabecera.php");
     }
 </style>
 
+
 <div
     class="modal fade"
     id="modalAperturarCaja"
@@ -280,8 +281,6 @@ include("cabecera.php");
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
-
-
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="card-body">
                 <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-box-open"></i> Apertura de Caja Chica</h4>
