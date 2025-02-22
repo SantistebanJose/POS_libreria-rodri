@@ -13,7 +13,15 @@ function controladorLogin($accion){
             $pass = $_POST["password"];
             login($user, $pass);
             break;
-        case 'CAMBIARCONTRASEÑA':
+        case 'ALTERCONTRASEÑA':
+            $dni = $_POST["dni"];
+            $pass = $_POST["password"];
+            alter_contraseña($dni, $pass);
+            break;
+        case 'CAMBIARCONTRASEÑAUSURIO':
+            $id = $_POST["dni"];
+            $newpass = $_POST["password"];
+            cambiar_contraseña_usuario($id, $newpass);
             break;
         case 'VALIDAR':
 
@@ -59,6 +67,94 @@ function login($user, $pass){
         echo json_encode(["error" => $th->getMessage()]);  // Captura cualquier error y lo devuelve
     }
 }
+
+function cambiar_contraseña_usuario($id, $newpass) {
+    global $conectar;
+
+    try {
+        // Verificar si el usuario existe
+        $verificarUsuario = $conectar->prepare("SELECT COUNT(*) FROM usuario WHERE id = :id");
+        $verificarUsuario->bindParam(":id", $id);
+        $verificarUsuario->execute();
+        $usuarioExistente = $verificarUsuario->fetchColumn();
+
+        if ($usuarioExistente == 0) {
+            // Si no existe el usuario, retornar un error
+            echo json_encode(["error" => true, "message" => "Usuario no encontrado."]);
+            return;
+        }
+
+        // Iniciar transacción
+        $conectar->beginTransaction();
+        $hashedPassword = password_hash($newpass, PASSWORD_BCRYPT);
+
+        // Preparar la consulta para actualizar los datos
+        $sql = "UPDATE usuario SET password = :password WHERE id = :id";
+        $orden->bindParam(":password", $hashedPassword);
+        $orden->bindParam(":id", $id);
+        
+        // Si se proporciona una nueva contraseña, se agrega
+        if (!empty($datos['contraseña'])) {
+            $orden->bindParam(":password", $hashedPassword);
+        }
+
+        $orden->execute();
+        $conectar->commit();
+
+        echo json_encode(["success" => true, "message" => "Usuario actualizado con éxito."]);
+
+    } catch (\Throwable $th) {
+        $conectar->rollBack();
+        error_log("Error en editar_usuario: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+function alter_contraseña($dni, $newpass) {
+    global $conectar;
+
+    try {
+        // Buscar el ID del usuario basado en el DNI de la tabla persona
+        $buscarUsuario = $conectar->prepare("
+            SELECT u.id FROM usuario u
+            INNER JOIN persona p ON u.persona_id = p.id
+            WHERE p.numero_documento = :dni
+        ");
+        $buscarUsuario->bindParam(":dni", $dni, PDO::PARAM_STR);
+        $buscarUsuario->execute();
+        $usuario = $buscarUsuario->fetch(PDO::FETCH_ASSOC);
+
+        if (!$usuario) {
+            echo json_encode(["error" => true, "message" => "Usuario no encontrado."]);
+            return;
+        }
+
+        $id_usuario = $usuario['id'];
+
+        // Iniciar transacción
+        $conectar->beginTransaction();
+        $hashedPassword = password_hash($newpass, PASSWORD_BCRYPT);
+
+        // Actualizar la contraseña del usuario
+        $actualizarPass = $conectar->prepare("
+            UPDATE usuario SET password = :password WHERE id = :id
+        ");
+        $actualizarPass->bindParam(":password", $hashedPassword, PDO::PARAM_STR);
+        $actualizarPass->bindParam(":id", $id_usuario, PDO::PARAM_INT);
+        $actualizarPass->execute();
+
+        // Confirmar cambios
+        $conectar->commit();
+        echo json_encode(["success" => true, "message" => "Contraseña actualizada con éxito."]);
+
+    } catch (Exception $e) {
+        $conectar->rollBack();
+        error_log("Error en alter_contraseña: " . $e->getMessage());
+        echo json_encode(["error" => true, "message" => "Error al actualizar la contraseña."]);
+    }
+}
+
+
 
 
 ?>

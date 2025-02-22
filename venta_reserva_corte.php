@@ -39,7 +39,10 @@ if (isset($_GET['id'])) {
     #modalCliente {
     z-index: 1060 !important; /* Asegúrate de que sea más alto que el de los demás modales */
 }
-
+.modal-header {
+    background-color:rgb(255, 255, 255);  /* Fondo azul */
+    color: #2a2f5b; /* Texto blanco */
+}
 /* Estilo para cambiar el color de fondo y bordes del modal */
 #modalCliente .modal-content {
     background-color: #f0f8ff;  /* Color de fondo claro (puedes cambiarlo) */
@@ -60,6 +63,60 @@ if (isset($_GET['id'])) {
 #modalCliente .btn-close {
     background-color: #f0f8ff;  /* Botón de cerrar rojo */
 }
+.pagination {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            color: #333;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .pagination a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Hacer que la paginación se ajuste en pantallas pequeñas */
+        @media (max-width: 768px) {
+            .pagination {
+                font-size: 12px;
+            }
+
+            .pagination a {
+                padding: 6px 10px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pagination {
+                font-size: 10px;
+            }
+
+            .pagination a {
+                padding: 5px 8px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+        }
    
 </style>
 
@@ -181,8 +238,7 @@ if (isset($_GET['id'])) {
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title mx-auto fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
                         </div>
                         <div class="modal-body">
                             <div class="col-12 p-4 bg-light rounded">
@@ -218,7 +274,8 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="btn_agregar_solocorte">Agregar</button>
+                            <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocorte">Agregar</button>
                         </div>
                         </div>
                     </div>
@@ -230,8 +287,7 @@ if (isset($_GET['id'])) {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title mx-auto fw-bold" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
@@ -284,7 +340,8 @@ if (isset($_GET['id'])) {
 
             <div class="modal-footer">
                 <!-- Botón Confirmar a la izquierda -->
-                <button id="btnConfirmarCantidad" class="btn btn-primary" style="width: 120px;">Confirmar</button>
+                <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
+                <button id="btnConfirmarCantidad" class="btn btn-primary rounded-5" style="width: 120px;">Confirmar</button>
             </div>
         </div>
     </div>
@@ -541,13 +598,14 @@ if (isset($_GET['id'])) {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalGenericoLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title mx-auto fw-bold" id="modalGenericoLabel"></h5>
       </div>
       <div class="modal-body" id="modalContent">
         <!-- Contenido dinámico se cargará aquí -->
       </div>
-
+      <div class="modal-footer">
+            <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+        </div>
     </div>
   </div>
 </div>
@@ -597,7 +655,7 @@ if (isset($_GET['id'])) {
                                     id="nombreCliente"
                                     placeholder="AGREGAR EL NOMBRE DEL CLIENTE O DNI" />
                                 <!-- Botón "+" al lado del input -->
-                                <button type="button" class="btn btn-primary ms-2" id="btnAbrirModalCliente">
+                                <button type="button" class="btn btn-primary ms-2 rounded-5" id="btnAbrirModalCliente">
                                     <i class="fas fa-plus"></i> <!-- Ícono "+" -->
                                 </button>
                             </div>
@@ -620,7 +678,7 @@ if (isset($_GET['id'])) {
 
                       
                         <div class="text-center">
-                            <a class="btn btn-success" id="Reservar" role="button">Reservar</a>
+                            <a class="btn btn-success rounded-5" id="Reservar" role="button">Reservar</a>
                         </div>
 
 
@@ -631,7 +689,7 @@ if (isset($_GET['id'])) {
             <div class="modal-footer">
                 <button
                     type="button"
-                    class="btn btn-danger"
+                    class="btn btn-danger rounded-5"
                     data-bs-dismiss="modal">
                     Salir
                 </button>
@@ -1600,7 +1658,7 @@ if (isset($_GET['id'])) {
     document.addEventListener('DOMContentLoaded', function () {
         let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
         document.getElementById('btnAbrirModalPloteo').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Ploteo';
+            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Ploteo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -1698,11 +1756,11 @@ if (isset($_GET['id'])) {
                         </div>
 
                        
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-secondary rounded-5" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
+
                         </div>
-                        
-                        <br>
+              
                     </div>
                 </div>
             `;
@@ -1918,8 +1976,8 @@ if (isset($_GET['id'])) {
                                     <p class="card-text">Monto (S/)</p>
                                     <input type="number" id="monto_ploteoeditar" class="form-control" value="${ploteo.subtotal}">
                                 </div>
-                                <div class="text-center">
-                                    <button class="btn btn-secondary" id="btnAgregarploteoEditar" role="button">Actualizar</button>
+                                <div class="text-center mb-3">
+                                    <button class="btn btn-secondary rounded-5" id="btnAgregarploteoEditar" role="button">Actualizar</button>
                                 </div>
                             </div>
                        </div>
@@ -2056,7 +2114,7 @@ if (isset($_GET['id'])) {
         let impresionEditando = null; // Variable para guardar la impresión que se está editando
 
         document.getElementById('btnAbrirModalImprimir').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Impresión';
+            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Impresión';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -2152,8 +2210,8 @@ if (isset($_GET['id'])) {
                             <p class="card-text">Monto (S/)</p>
                             <input type="number" id="monto_impresion" class="form-control" placeholder="Monto (S/)">
                         </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-secondary rounded-5" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
                         </div>
                         <br>
                     </div>
@@ -2364,8 +2422,8 @@ if (isset($_GET['id'])) {
                                     <p class="card-text">Monto (S/)</p>
                                     <input type="number" id="monto_impresionEditar" class="form-control" value="${impresion.subtotal}">
                                 </div>
-                                <div class="text-center">
-                                    <button class="btn btn-secondary" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
+                                <div class="text-center mb-3">
+                                    <button class="btn btn-secondary rounded-5" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
                                 </div>
                             </div>
                         </div>
@@ -2498,7 +2556,7 @@ if (isset($_GET['id'])) {
 
          // Abrir modal con el contenido específico para Escaneo
          document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Servicio de Escaneo';
+            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Escaneo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -2520,7 +2578,7 @@ if (isset($_GET['id'])) {
                             <input type="number" id="monto_escaneo" class="form-control" placeholder="Monto (S/)">
                         </div>
                         <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
+                            <button class="btn btn-secondary rounded-5" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
                         </div>
                         <br>
                     </div>
@@ -2631,7 +2689,8 @@ if (isset($_GET['id'])) {
                     
                     document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
                     document.getElementById('modalContent').innerHTML = `
-                        <div class="card">
+                        <div class="text-center">
+                            <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Servicio de Escaneo</h4>
                             <div>ID: <span id="id_mov_escaneoEditar">${escaneo.idmovimiento}</span></div>
@@ -2649,8 +2708,9 @@ if (isset($_GET['id'])) {
                             <p class="card-text">Monto (S/)</p>
                             <input type="number" id="monto_escaneoEditar" class="form-control" value="${escaneo.subtotal}">
                         </div>
-                        <div class="text-center">
-                            <button class="btn btn-secondary" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-secondary rounded-5" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
+                        </div>
                         </div>
                         </div>
                     `;
@@ -2836,10 +2896,14 @@ if (isset($_GET['id'])) {
             // Validar el número de documento (solo si tiene datos)
             const numeroDocumentoPersona = document.getElementById('numeroDocumentoPersona');
             const errorNumeroDocumentoPersona = document.getElementById('error-numeroDocumentoPersona');
-            if (numeroDocumentoPersona.value.trim() !== '' && !/^\d{8,12}$/.test(numeroDocumentoPersona.value)) {
+            if (numeroDocumentoPersona.value.trim() === '') {
                 valid = false;
                 numeroDocumentoPersona.classList.add('is-invalid');
-                errorNumeroDocumentoPersona.textContent = 'Debe ser un número de documento válido (8 a 12 dígitos).';
+                errorNumeroDocumentoPersona.textContent = 'El DNI es obligatorio.';
+            } else if (!/^\d{8}$/.test(numeroDocumentoPersona.value)) {
+                valid = false;
+                numeroDocumentoPersona.classList.add('is-invalid');
+                errorNumeroDocumentoPersona.textContent = 'Debe ser un DNI válido (11 dígitos).';
             } else {
                 numeroDocumentoPersona.classList.remove('is-invalid');
                 errorNumeroDocumentoPersona.textContent = '';
@@ -2848,11 +2912,16 @@ if (isset($_GET['id'])) {
             // Validar los nombres (solo si tiene datos y sin números)
             const nombresPersona = document.getElementById('nombresPersona');
             const errorNombresPersona = document.getElementById('error-nombresPersona');
-            if (nombresPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(nombresPersona.value)) {
+            if (nombresPersona.value.trim() == '') {
+                valid = false;
+                nombresPersona.classList.add('is-invalid');
+                errorNombresPersona.textContent = 'Los nombres es obligatorio.';
+            }else if(/[^a-zA-Z\s]/.test(nombresPersona.value)){
                 valid = false;
                 nombresPersona.classList.add('is-invalid');
                 errorNombresPersona.textContent = 'Los nombres no pueden contener números.';
-            } else {
+            } 
+            else {
                 nombresPersona.classList.remove('is-invalid');
                 errorNombresPersona.textContent = '';
             }
@@ -2860,11 +2929,15 @@ if (isset($_GET['id'])) {
             // Validar los apellidos (solo si tiene datos y sin números)
             const apellidosPersona = document.getElementById('apellidosPersona');
             const errorApellidosPersona = document.getElementById('error-apellidosPersona');
-            if (apellidosPersona.value.trim() !== '' && /[^a-zA-Z\s]/.test(apellidosPersona.value)) {
+            if (apellidosPersona.value.trim() == '' ) {
+                valid = false;
+                apellidosPersona.classList.add('is-invalid');
+                errorApellidosPersona.textContent = 'Los apellidos es obligatorio.';
+            } else if(/[^a-zA-Z\s]/.test(apellidosPersona.value)){
                 valid = false;
                 apellidosPersona.classList.add('is-invalid');
                 errorApellidosPersona.textContent = 'Los apellidos no pueden contener números.';
-            } else {
+            }else {
                 apellidosPersona.classList.remove('is-invalid');
                 errorApellidosPersona.textContent = '';
             }
@@ -2896,14 +2969,17 @@ if (isset($_GET['id'])) {
             return valid;
         }
 
-
         function validarCamposEmpresa() {
             let valid = true;
 
             // Validar RUC (solo si tiene datos)
             const numeroDocumentoEmpresa = document.getElementById('numeroDocumentoEmpresa');
             const errorNumeroDocumentoEmpresa = document.getElementById('error-numeroDocumentoEmpresa');
-            if (numeroDocumentoEmpresa.value.trim() !== '' && !/^\d{11}$/.test(numeroDocumentoEmpresa.value)) {
+            if (numeroDocumentoEmpresa.value.trim() === '') {
+                valid = false;
+                numeroDocumentoEmpresa.classList.add('is-invalid');
+                errorNumeroDocumentoEmpresa.textContent = 'El RUC es obligatorio.';
+            } else if (!/^\d{11}$/.test(numeroDocumentoEmpresa.value)) {
                 valid = false;
                 numeroDocumentoEmpresa.classList.add('is-invalid');
                 errorNumeroDocumentoEmpresa.textContent = 'Debe ser un RUC válido (11 dígitos).';
@@ -2915,7 +2991,7 @@ if (isset($_GET['id'])) {
             // Validar nombre comercial (solo si tiene datos)
             const nombreComercial = document.getElementById('nombreComercial');
             const errorNombreComercial = document.getElementById('error-nombreComercial');
-            if (nombreComercial.value.trim() !== '' && nombreComercial.value.trim() === '') {
+            if (nombreComercial.value.trim() == '' ) {
                 valid = false;
                 nombreComercial.classList.add('is-invalid');
                 errorNombreComercial.textContent = 'Este campo es obligatorio.';
@@ -2927,7 +3003,7 @@ if (isset($_GET['id'])) {
             // Validar razón social (solo si tiene datos)
             const razonSocial = document.getElementById('razonSocial');
             const errorRazonSocial = document.getElementById('error-razonSocial');
-            if (razonSocial.value.trim() !== '' && razonSocial.value.trim() === '') {
+            if (razonSocial.value.trim() == '' ) {
                 valid = false;
                 razonSocial.classList.add('is-invalid');
                 errorRazonSocial.textContent = 'Este campo es obligatorio.';
