@@ -351,12 +351,13 @@ include('logica/clssConsultas.php');
                                 id=""
                                 class="btn"
                                 href="index.php"
-                                role="button"><i class="fas fa-home"></i></a>
+                                role="button"><i class="fas fa-home"></i>
+                            </a>
                             <li class="nav-item topbar-icon dropdown hidden-caret">
                                 <a
                                     class="nav-link"
                                     data-bs-toggle="dropdown"
-                                    href="#"
+                                    href=""
                                     aria-expanded="false">
                                     <i class="fas fa-layer-group"></i>
                                 </a>
@@ -442,7 +443,7 @@ include('logica/clssConsultas.php');
                                     aria-expanded="false">
                                     <div class="avatar-sm">
                                         <img
-                                            src="assets/img/profile.jpg"
+                                            src="assets/img/usuario.png"
                                             alt="..."
                                             class="avatar-img rounded-circle" />
                                     </div>

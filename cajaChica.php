@@ -63,11 +63,11 @@ include("cabecera.php");
                                             <div class="d-flex justify-content-between">
                                                 <div>
                                                     <h4 class="text-dark fw-bold">Caja Chica</h4>
-                                                    <h6 class="text-secondary fw-bold">Saldo de <?php echo "S/" . fnListadoCajaChica()[0]["saldo_v2"] ?> </h6>
+                                                    <h6 class="text-secondary fw-bold">Monto Inicial fue de <?php echo "S/" . fnListadoCajaChica()[0]["monto"] ?> </h6>
                                                     <p class="text-muted">Esta caja se encuentra aperturada</p>
                                                     <p class="text-muted">Aperturada por <strong><?php echo  fnListadoCajaChica()[0]["responsable"] ?></strong></p>
                                                 </div>
-                                                <h3 class="text-success fw-bold"> <?php echo "S/" . fnListadoCajaChica()[0]["monto"] ?> </h3>
+                                                <h3 class="text-success fw-bold"> <?php echo "S/" . fnListadoCajaChica()[0]["saldo_v2"] ?> </h3>
                                                 <div class="dropdown-secondary">
                                                     <button
                                                         class="btn btn-icon btn-clean"
@@ -81,7 +81,7 @@ include("cabecera.php");
                                                     <div
                                                         class="dropdown-menu"
                                                         aria-labelledby="dropdownMenuButton">
-                                                        <a class="dropdown-item" href="#">Registro de Egreso de caja</a>
+                                                        <a class="dropdown-item" href="#" onclick="fnAbrirModalRegistroDeEgresoCajaChica()">Registro de Egreso de caja</a>
                                                         <a class="dropdown-item" href="#">Registro de Ingreso de caja</a>
                                                         <a class="dropdown-item" href="#">Cierre de Caja</a>
                                                     </div>
@@ -194,13 +194,13 @@ include("cabecera.php");
                                                     <td><?php echo $datos["id"] ?></td>
                                                     <td><?php echo $datos["responsable"] ?></td>
                                                     <td><?php echo $datos["dia_semana"] ?></td>
-                                                    
+
                                                     <td><?php echo $datos["fecha_apertura"] ?></td>
                                                     <td><?php echo $datos["hora_apertura"] ?></td>
-                                                    
-                                                    <td><?php echo "S/ ".$datos["monto"] ?></td>
+
+                                                    <td><?php echo "S/ " . $datos["monto"] ?></td>
                                                     <td><?php echo $datos["hora_cierre"] ?></td>
-                                                    <td><?php echo "S/ ".$datos["saldo"] ?></td>
+                                                    <td><?php echo "S/ " . $datos["saldo"] ?></td>
 
                                                     <td>
                                                         <div class="mt-2 text-center">
@@ -248,7 +248,7 @@ include("cabecera.php");
     }
 
     /* Tamaño para pantallas pequeñas (teléfonos móviles) */
-    @media (max-width: 576px) {
+    @media (max-width: 500px) {
         .modal-dialog-custom {
             width: 100%;
             /* Asegura que el modal ocupe todo el ancho disponible en móviles */
@@ -324,14 +324,72 @@ include("cabecera.php");
     </div>
 </div>
 
+<div
+    class="modal fade"
+    id="modalRegistrarEgresoDeCajaCHica"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
+        <div class="modal-content">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h6 class="card-title text-center" style="font-size: 20px;"><i class="fas fa-boxes"></i> Registro de Egreso de Caja Chica</h6>
+                
+                <div class="card-sub text-center">
+                    Aquí podrás Registrar la apertura de caja. Ten en cuenta el monto correspondiente.
+                </div>
+                <div class="row justify-content-center align-items-center sm-2">
+                    <div class="col-sm-12">
+                        <div class="card text-start">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Selccione Concepto de Egreso</label>
+                                    <select
+                                        class="form-select form-select-sm"
+                                        name=""
+                                        id="idSelectConceptoEgreso">
+                                        <option selected>Seleccione Concepto</option>
+    
+                                        <option value="">New Delhi</option>
+                                        <option value="">Istanbul</option>
+                                        <option value="">Jakarta</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="card-sub text-center">
+                                    Recuerda que el monto máximo para cada adquisición con cargo a la Caja Chica no debe exceder del diez por ciento (10%) de una UIT,
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <a
+                            name=""
+                            id=""
+                            class="btn btn-success btn-round"
+                            onclick='fnRegistrarAperturaDeCaja()'
+                            role="button">Aperturar Caja <i class="fas fa-plus"> </i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <?php
 include("pie.php")
 ?>
 
 <script>
     function fnAbrirModalAperturaCaja() {
-
         $('#modalAperturarCaja').modal('show');
+    }
+
+    function fnAbrirModalRegistroDeEgresoCajaChica() {
+        $('#modalRegistrarEgresoDeCajaCHica').modal('show');
     }
 
     function fnRegistrarAperturaDeCaja() {
