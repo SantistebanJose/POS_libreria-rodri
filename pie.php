@@ -21,13 +21,7 @@
 
       </ul>
     </nav>
-    <div class="copyright">
-      2025, Caracol Soft <i class="fa fa-desktop text-muted"></i>
-      <a href=""></a>
-    </div>
-    <div>
-      Distributed by
-      <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
+    <div class="text-center"><i class="fa fa-desktop text-muted"></i> 2025, Caracol Soft</div>
     </div>
   </div>
 </footer>
@@ -196,7 +190,14 @@
 <!-- End Custom template -->
 </div>
 <!--   Core JS Files   -->
+<!-- Incluir el CSS de DataTables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
 
+<!-- Incluir jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Incluir el JS de DataTables -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/core/jquery-3.7.1.min.js"></script>
 <script src="assets/js/core/popper.min.js"></script>
 <script src="assets/js/core/bootstrap.min.js"></script>

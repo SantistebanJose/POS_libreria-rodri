@@ -58,16 +58,31 @@ function controladorClssInsertPA($accion)
             break;
         case 'APERTURACAJA':
             //fnAperturaDeCajaChica
-            // Otros casos si los necesitas
+            
             if (isset($_POST["jsDatoCaja"])) {
                 $jsDatos = $_POST["jsDatoCaja"];
                 fnAperturaDeCajaChica($jsDatos);
             }
             break;
+        case 'INSERTDETALLECAJACHICA':
+            //fnInsertDetalleCajaChica
+            
+            if (isset($_POST["jsDetalleCaja"])) {
+                $jsDatos = $_POST["jsDetalleCaja"];
+                fnInsertDetalleCajaChica($jsDatos);
+            }
+            break;
+        case 'CIERREDECAJACHICA':
+            //fnCierreCajaChica
+            
+            if (isset($_POST["caja_id"])) {
+                $caja_id = $_POST["caja_id"];
+                fnCierreCajaChica($caja_id);
+            }
+            break;
         case 'CAMBIARCONTRASEÑA':
             // Otros casos si los necesitas
             break;
-            
     }
 }
 
@@ -362,5 +377,90 @@ function fnAperturaDeCajaChica($jsDatoCaja)
         echo json_encode($response);
     } catch (Exception $e) {
         echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas.' . $e]);
+    }
+}
+
+function fnInsertDetalleCajaChica($jsDatosDetalleCaja)
+{
+    global $conectar;
+
+    try {
+
+        $data = json_decode($jsDatosDetalleCaja, true);
+
+        $caja_id = $data['caja_id'];
+        $responsable_id = $data['responsable_id'];
+        $responsable = $data['responsable'];
+        $tipo_movimiento = $data['tipo_movimiento'];
+        $monto_caja_chica = $data['monto_caja_chica'];
+        $concepto_id = $data['concepto_id'];
+        $concepto_egreso = $data['concepto_egreso'];
+        $nota_caja_chica = $data['nota_caja_chica'];
+
+
+        $conectar->beginTransaction();
+
+
+        $sql = "
+            INSERT INTO detalle_caja_chica
+            (caja_id, concepto_id, monto, responsable_id, responsable, tipo_movimiento, concepto_egreso, nota)
+            VALUES
+            (:caja_id, :concepto_id, :monto_caja_chica, :responsable_id, :responsable, :tipo_movimiento, :concepto_egreso, :nota_caja_chica)
+        ";
+
+
+        $stmt = $conectar->prepare($sql);
+
+
+        $stmt->bindParam(':caja_id', $caja_id);
+        $stmt->bindParam(':responsable_id', $responsable_id);
+        $stmt->bindParam(':responsable', $responsable);
+        $stmt->bindParam(':tipo_movimiento', $tipo_movimiento);
+        $stmt->bindParam(':monto_caja_chica', $monto_caja_chica);
+        $stmt->bindParam(':concepto_id', $concepto_id);
+        $stmt->bindParam(':concepto_egreso', $concepto_egreso);
+        $stmt->bindParam(':nota_caja_chica', $nota_caja_chica, PDO::PARAM_STR); // Usar PDO::PARAM_STR para las notas, en caso de que sea null
+
+
+        $stmt->execute();
+
+
+        $conectar->commit();
+
+
+        echo json_encode(['estado' => true, 'mensaje' => 'Egreso Registrado']);
+    } catch (Exception $e) {
+
+        $conectar->rollBack();
+
+
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
+    }
+}
+function fnCierreCajaChica($idCaja)
+{
+    global $conectar;
+
+    try {
+
+        $conectar->beginTransaction();
+
+        $sql = " UPDATE caja set cierre=CURRENT_TIMESTAMP where id = :idCaja ;";
+
+        $stmt = $conectar->prepare($sql);
+        $stmt->bindParam(':idCaja', $idCaja, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $conectar->commit();
+
+
+        echo json_encode(['estado' => true, 'mensaje' => 'Caja Chica CERRADA!!!']);
+    } catch (Exception $e) {
+
+        $conectar->rollBack();
+
+
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
     }
 }

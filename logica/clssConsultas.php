@@ -1076,7 +1076,7 @@ function fnListadoCajaChicaCerradas(): array
             json_agg(
                 json_build_object(
                     'detalle_caja_id',d.detalle_caja_id,
-                    'caja_id', d.detalle_caja_id,
+                    'caja_id', d.caja_id,
                     'responsable', d.responsable,
                     'concepto', d.concepto,
                     'monto', d.monto,
@@ -1097,4 +1097,20 @@ function fnListadoCajaChicaCerradas(): array
 
     // Ejecuta la consulta con el parámetro de búsqueda
     return executeQuery($query);
+}
+
+function fnListadoConceptosEgresos($tipoCaja): array
+{
+    // tipoCaja: C: chica | G: Grande
+    $query = "     
+    SELECT 
+    * 
+    FROM 
+    concepto 
+    WHERE id NOT IN (1) AND tipo_caja IN (:tipo_caja,'A')
+    ORDER BY 1
+    ";
+
+    // Ejecuta la consulta con el parámetro de búsqueda
+    return executeQuery($query,params:["tipo_caja"=>$tipoCaja]);
 }
