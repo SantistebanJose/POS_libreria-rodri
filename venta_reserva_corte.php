@@ -237,45 +237,50 @@ if (isset($_GET['id'])) {
                 <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title mx-auto fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
-                        </div>
+ 
                         <div class="modal-body">
                             <div class="col-12 p-4 bg-light rounded">
-                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
-                            <div class="mb-4">
-                                <!-- Minutos Corte -->
-                                <div class="text-center" style="flex: 1;">
-                                <p class="mb-1">Minutos Corte</p>
-                                <div class="d-flex justify-content-center align-items-center mb-2">
-                                    <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
-                                    <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
-                                    <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                                <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
+
+                                    <div class="card-sub text-center">
+                                Aqui podras agregar los minutos y el precio del servicio solo corte.
                                 </div>
+                                <div class="mb-4">
+                                    <!-- Minutos Corte -->
+                                    <div class="text-center" style="flex: 1;">
+                                    <p class="mb-1"><b>Minutos Corte</b></p>
+                                    <div class="d-flex justify-content-center align-items-center mb-2">
+                                        <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
+                                        <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
+                                        <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                                    </div>
+                                    </div>
+                                    
+                                    <!-- Línea divisoria -->
+                                    <hr>
+                                    
+                                    <!-- Precio Corte -->
+                                    <div class="text-center" style="flex: 1;">
+                                        <p class="mb-1"><b>Precio Corte</b></p>
+                                        <div class="w-100 d-flex justify-content-center mb-1">
+                                            <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                            <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                            <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                            <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center mt-3">
+                                        <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocorte">Agregar</button>
+                                    </div>
                                 </div>
-                                
-                                <!-- Línea divisoria -->
-                                <hr>
-                                
-                                <!-- Precio Corte -->
-                                <div class="text-center" style="flex: 1;">
-                                <p class="mb-1">Precio Corte</p>
-                                <div class="w-100 d-flex justify-content-center mb-1">
-                                    <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
-                                </div>
-                                <div class="d-flex justify-content-center">
-                                    <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
-                                    <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
-                                    <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
-                                    <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
-                                </div>
-                                </div>
-                            </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocorte">Agregar</button>
                         </div>
                         </div>
                     </div>
@@ -286,10 +291,13 @@ if (isset($_GET['id'])) {
 <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title mx-auto fw-bold" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
-            </div>
+ 
             <div class="modal-body">
+                <h4 class="card-title text-center" id="modalCantidadCorteLabel">Configurar Cantidad o Corte</h4>
+
+                <div class="card-sub text-center">
+                    Aquí ingresa la cantidad y/o corte del articulo
+                </div>
                 <div class="container-fluid">
                     <!-- Sección de cantidad -->
                     <div class="row mb-3">
@@ -332,16 +340,19 @@ if (isset($_GET['id'])) {
                                         <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
+                    <div class="text-center mb-3">
+                                    <button id="btnConfirmarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
+                                </div>
                 </div>
             </div>
 
             <div class="modal-footer">
                 <!-- Botón Confirmar a la izquierda -->
                 <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
-                <button id="btnConfirmarCantidad" class="btn btn-primary rounded-5" style="width: 120px;">Confirmar</button>
             </div>
         </div>
     </div>
@@ -597,9 +608,7 @@ if (isset($_GET['id'])) {
 <div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalGenericoLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title mx-auto fw-bold" id="modalGenericoLabel"></h5>
-      </div>
+
       <div class="modal-body" id="modalContent">
         <!-- Contenido dinámico se cargará aquí -->
       </div>
@@ -1658,7 +1667,6 @@ if (isset($_GET['id'])) {
     document.addEventListener('DOMContentLoaded', function () {
         let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
         document.getElementById('btnAbrirModalPloteo').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Ploteo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -1668,7 +1676,7 @@ if (isset($_GET['id'])) {
                             <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">Cantidad de Ploteo</p>
+                            <p class="card-text"><b> Cantidad de Ploteo </b> </p>
                             <div class="d-flex align-items-center justify-content-center">
                                 <button id="btn_menos_ploteo" class="btn btn-danger btn-round me-2">-</button>
                                 <input id="input_cantidad_ploteo" class="text-center" type="text" value="1" style="width: 50px;height: 40px;" oninput="validarNumero(event)">
@@ -1677,7 +1685,7 @@ if (isset($_GET['id'])) {
                         </div>
 
                         <div class="card-body">
-                            <p class="card-text">Dimensión</p>
+                            <p class="card-text"><b> Dimensión </b> </p>
                             <div class="selectgroup selectgroup-pills" >
                                 <label class="selectgroup-item">
                                     <input
@@ -1751,7 +1759,7 @@ if (isset($_GET['id'])) {
                         </div>
                         
                         <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
+                            <p class="card-text"><b> Monto (S/) </b> </p>
                             <input type="number" id="monto_ploteo" class="form-control" placeholder="Monto (S/)">
                         </div>
 
@@ -1880,7 +1888,6 @@ if (isset($_GET['id'])) {
 
                 botonEditar.addEventListener("click", () => {
 
-                    document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
                     document.getElementById('modalContent').innerHTML = `
                        <div class="text-center">
                             <div class="card">
@@ -2114,7 +2121,6 @@ if (isset($_GET['id'])) {
         let impresionEditando = null; // Variable para guardar la impresión que se está editando
 
         document.getElementById('btnAbrirModalImprimir').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Impresión';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -2124,7 +2130,7 @@ if (isset($_GET['id'])) {
                             <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">Cantidad a Imprimir</p>
+                            <p class="card-text"><b>Cantidad a Imprimir</b></p>
                             <div class="d-flex align-items-center justify-content-center">
                                 <button id="btn_menos_impresion" class="btn btn-danger btn-round me-2">-</button>
                                 <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
@@ -2133,7 +2139,7 @@ if (isset($_GET['id'])) {
                         </div>
 
                          <div class="card-body">
-                            <p class="card-text">Dimensión</p>
+                            <p class="card-text"><b>Dimensión</b></p>
                             <div class="selectgroup selectgroup-pills" >
                                 <label class="selectgroup-item">
                                     <input
@@ -2207,7 +2213,7 @@ if (isset($_GET['id'])) {
                         </div>
 
                         <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
+                            <p class="card-text"><b>Monto (S/)</b></p>
                             <input type="number" id="monto_impresion" class="form-control" placeholder="Monto (S/)">
                         </div>
                         <div class="text-center mb-3">
@@ -2326,7 +2332,6 @@ if (isset($_GET['id'])) {
                 accionCell.appendChild(botonEliminar);
 
                 botonEditar.addEventListener("click", () => {             
-                    document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
                     document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -2556,7 +2561,6 @@ if (isset($_GET['id'])) {
 
          // Abrir modal con el contenido específico para Escaneo
          document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Escaneo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -2566,7 +2570,7 @@ if (isset($_GET['id'])) {
                             <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">Cantidad de Escaneo</p>
+                            <p class="card-text"><b>Cantidad de Escaneo</b></p>
                             <div class="d-flex align-items-center justify-content-center">
                                 <button id="btn_menos_escaneo" class="btn btn-danger btn-round me-2">-</button>
                                 <input id="input_numero_escaneo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
@@ -2574,7 +2578,7 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
+                            <p class="card-text"><b>Monto (S/)</b></p>
                             <input type="number" id="monto_escaneo" class="form-control" placeholder="Monto (S/)">
                         </div>
                         <div class="text-center">
@@ -2687,7 +2691,6 @@ if (isset($_GET['id'])) {
 
                 botonEditar.addEventListener("click", () => {
                     
-                    document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
                     document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">

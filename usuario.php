@@ -140,11 +140,13 @@ include("cabecera.php");
                                                         </a>
                                                     <?php } ?>
 
-                                                    <!-- Botón de Eliminar -->
-                                                    <a name="delete" id="delete" class="btn btn-danger btn-round ml-2"
+                                                    <!-- Botón de Eliminar 
+                                                       <a name="delete" id="delete" class="btn btn-danger btn-round ml-2"
                                                         onclick='fn_eliminar_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
                                                         <i class="fa fa-trash"></i>
                                                     </a>
+                                                    -->
+                                                  
                                                 </div>
                                             </th>
                                         </tr>
@@ -378,7 +380,7 @@ include("cabecera.php");
                             <div class="card-sub text-center">
                                 Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
                             </div>
-                            <div class="mb-3">
+                        <div class="mb-3">
                         <label class="form-label"><b> Persona <span class="fw-bold text-danger">*</span></b></label>
                         <span id="idPersona">#</span>
                         <div class="d-flex align-items-center">
@@ -394,7 +396,7 @@ include("cabecera.php");
                     <div class="row justify-content-center align-items-center sm-2">
                         <div class="col-sm-12 mb-3">
                                 <label for="nombreUsuario"><b> Nombre de Usuario <span class="fw-bold text-danger">*</span></b></label>
-                                <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" />
+                                <input type="text" class="form-control required" id="nombreUsuario" placeholder="vysam2025" />
                                 <div id="error-nombreUsuario" class="error-message"></div>
                           
                         </div>
@@ -806,27 +808,32 @@ include("cabecera.php");
 <script>
     function fn_editar_usuario(datosUsuario) {
         document.getElementById("contenidoUsuario").innerHTML = `
-            <div class="modal-header">
-                <h5 class="modal-title mx-auto fw-bold">Editar Usuario</h5>
-            </div>
+           
             <div class="modal-body">
+                <div class="card text-start">
+                    <div class="card-body">
+                     <h4 class="card-title text-center"><i class="fas fa-user"></i> Editar Usuario</h4>
+                        <div class="card-sub text-center">
+                            Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                        </div>
+
                 <div class="row justify-content-center align-items-center sm-2">
                     <div class="col-sm-12 mb-3">
 
-                        <label for="nombreUsuario"> Nombre de Usuario <span class="fw-bold text-danger">*</span></label>
+                        <label for="nombreUsuario"> <b> Nombre de Usuario <span class="fw-bold text-danger">*</span></b> </label>
                         <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" value="${datosUsuario.username}" />
                         <div id="error-nombreUsuario" class="error-message"></div>
                 
                     </div>
                     <div class="col-sm-12 mb-3">
-                            <label for="cambiarContrasena">Cambiar Contraseña</label>
+                            <label for="cambiarContrasena"><b> Cambiar Contraseña </b> </label>
                             <input type="password" class="form-control" id="cambiarContrasena" placeholder="********" />
                             <div id="error-cambiarContrasena" class="error-message"></div>
                      
                     </div>
                     <div class="col-sm-12 mb-3">
                         <div class="mb-3">
-                            <label class="form-label">Rol <span class="fw-bold text-danger">*</span></label>
+                            <label class="form-label"><b> Rol <span class="fw-bold text-danger">*</span></b> </label>
                             <select class="form-select required" id="rol">
                                 <option value="">Seleccione una opción</option>
                                 <option value="1" ${datosUsuario.rol === "ADMINISTRADOR" ? 'selected' : ''}>Administrador</option>
@@ -836,8 +843,8 @@ include("cabecera.php");
                         </div>
                     </div>
                 </div>
-                <div class="alert alert-light p-3" role="alert">
-                    <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
+                
+                </div>
                 </div>
             </div>
             <div class="modal-footer">

@@ -126,48 +126,52 @@ include("cabecera.php");
 
 
                 <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="card-title">Personas</h4>
+                    <h4 class="card-title">Trabajadores</h4>
                     <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico">Agregar Persona <i class="fas fa-plus"> </i></button>
                 </div>
                 <hr>
                 <div
                     class="row justify-content-center align-items-center md-2">
 
-                    <div class="card text-start">
-                        <div class="card-body">
+                    <div class="col-sm-12">
+                      
                             <div class="table-responsive">
                                 <table
-                                    id="TablaVentaDiaria"
-                                    class="dataTable display table table-striped table-hover">
+                                    id="multi-filter-select"
+                                    class="display table table-striped table-hover">
                                     <thead>
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Empleado</th>
                                                 <th>N° de Documento</th>
                                                 <th>Condicion</th>
-                                                <th></th>
+                                                <th>Accion</th>
                                             </tr>
                                         </thead>
+                                        
                                         <tbody>
                                             <?php
                                             foreach (listarEmpleados() as $datos) {
                                                 $datosJSON = json_encode($datos);
                                             ?>
-                                                <tr>
+                                            <tr>
                                                     <td><?php echo $datos["id"] ?></td>
                                                     <td><?php echo $datos["empleado"] ?></td>
+                                                    <td><?php echo $datos["numero_documento"] ?></td>
                                                     <td><?php echo $datos["condicion"] ?></td>
-                                                <td>
-                                                    <div class="mt-2 text-center">
-                                                        <a
-                                                            onclick=''
-                                                            class="btn btn-secondary btn-round btn-sm"
-                                                            role="button">
-                                                            <i class="fas fa-external-link-square-alt"></i>
+                                                    <td>
+                                                        <div class="mt-2 text-center">
+                                                        <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                            onclick='fn_editar_usuario(<?php echo $datosJSON; ?>)' role="button">
+                                                            <i class="fa fa-edit"></i>
                                                         </a>
+                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                                onclick='fn_bloquear_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
+                                                                <i class="fa fa-lock"></i>
+                                                            </a>
 
-                                                    </div>
-                                                </td>
+                                                        </div>
+                                                    </td>
                                             </tr>
 
                                         <?php
@@ -175,7 +179,7 @@ include("cabecera.php");
                                         ?>
                                     </tbody>
                                 </table>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -204,125 +208,185 @@ include("cabecera.php");
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="assets/js/scriptNotify.js"></script>
 
+<script>
+    $(document).ready(function() {
+        // Inicialización de DataTables en español
+        $("#basic-datatables").DataTable({
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+
+        $("#multi-filter-select").DataTable({
+            pageLength: 5,
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            initComplete: function() {
+                this.api()
+                    .columns()
+                    .every(function() {
+                        var column = this;
+                        var select = $('<select class="form-select"><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on("change", function() {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? "^" + val + "$" : "", true, false).draw();
+                            });
+
+                        column.data().unique().sort().each(function(d, j) {
+                            select.append('<option value="' + d + '">' + d + "</option>");
+                        });
+                    });
+            }
+        });
+
+        // Agregar fila en español
+        $("#add-row").DataTable({
+            pageLength: 5,
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+
+        var action =
+            '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Editar tarea"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Eliminar"> <i class="fa fa-times"></i> </button> </div> </td>';
+
+        $("#addRowButton").click(function() {
+            $("#add-row")
+                .dataTable()
+                .fnAddData([
+                    $("#addName").val(),
+                    $("#addPosition").val(),
+                    $("#addOffice").val(),
+                    action,
+                ]);
+            $("#addRowModal").modal("hide");
+        });
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
         document.getElementById("btnAbrirModalGenerico").addEventListener("click", function() {
             document.getElementById("contenidoUsuario").innerHTML = `
-                    <div class="modal-header">
-                        <h5 class="modal-title mx-auto fw-bold" id="modalClienteLabel">Registrar Persona</h5>
-                    </div>
+
                     <div class="modal-body">
-                        <!-- Pils para seleccionar entre Persona y Empresa -->
-                        <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">Cliente | Empleado</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="pills-empresa-tab" data-bs-toggle="pill" data-bs-target="#pills-empresa" type="button" role="tab" aria-controls="pills-empresa" aria-selected="false">Empresa | Proveedor</button>
-                            </li>
-                        </ul>
-                        <hr>
+                        <div class="card text-start">
+                        <div class="card-body">
+                        <h5 class="card-title text-center" id="modalClienteLabel"> <i class="fas fa-user"></i> Registrar Empleado</h5>
+                        <div class="card-sub text-center">
+                         Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                        </div>
+
                         <div class="tab-content mt-3" id="pills-tabContent">
                             <!-- Formulario Persona -->
                             <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
                                 <div class="mb-3">
-                                    <label for="numeroDocumentoPersona" class="form-label">Número de Documento  <span class="fw-bold text-danger">*</span></label>
+                                    <label for="numeroDocumentoPersona" class="form-label"><b>Número de Documento  <span class="fw-bold text-danger">*</span></b></label>
                                     <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
                                     <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="nombresPersona" class="form-label">Nombres  <span class="fw-bold text-danger">*</span></label>
+                                    <label for="nombresPersona" class="form-label"><b>Nombres  <span class="fw-bold text-danger">*</span></b></label>
                                     <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
                                     <div class="invalid-feedback" id="error-nombresPersona"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="apellidosPersona" class="form-label">Apellidos  <span class="fw-bold text-danger">*</span></label>
+                                    <label for="apellidosPersona" class="form-label"><b>Apellidos  <b><span class="fw-bold text-danger">*</span></b></label>
                                     <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
                                     <div class="invalid-feedback" id="error-apellidosPersona"></div>
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label class="form-label">Condición <span class="fw-bold text-danger">*</span></label>
-                                    <select class="form-select required" id="condicionPersona">
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="CLIENTE">CLIENTE</option>
-                                        <option value="EMPLEADO">EMPLEADO</option>
-                                    </select>
+                                    <label class="form-label"><b>Condición <span class="fw-bold text-danger">*</span></b></label>
+                                    <input readonly  type="text" class="form-control" id="condicionPersona" value="EMPLEADO">
                                     <div id="error-condicionPersona" class="error-message"></div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="telefonoPersona" class="form-label">Teléfono Móvil</label>
+                                    <label for="telefonoPersona" class="form-label"><b>Teléfono Móvil</b></label>
                                     <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
                                     <div class="invalid-feedback" id="error-telefonoPersona"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="emailPersona" class="form-label">Email</label>
+                                    <label for="emailPersona" class="form-label"><b>Email</b></label>
                                     <input type="email" class="form-control" id="emailPersona" placeholder="Email">
                                     <div class="invalid-feedback" id="error-emailPersona"></div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="direccionPersona" class="form-label">Direccion</label>
+                                    <label for="direccionPersona" class="form-label"><b>Direccion</b></label>
                                     <input type="text" class="form-control" id="direccionPersona" placeholder="Direccion">
                                     <div class="invalid-feedback" id="error-direccionPersona"></div>
                                 </div>
 
                             </div>
 
-                            <!-- Formulario Empresa -->
-                            <div class="tab-pane fade" id="pills-empresa" role="tabpanel" aria-labelledby="pills-empresa-tab">
-                                <div class="mb-3">
-                                    <label for="numeroDocumentoEmpresa" class="form-label">Número de Ruc  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Número de Documento">
-                                    <div class="invalid-feedback" id="error-numeroDocumentoEmpresa"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="nombreComercial" class="form-label">Nombre Comercial  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nombreComercial" placeholder="Nombre Comercial">
-                                    <div class="invalid-feedback" id="error-nombreComercial"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="razonSocial" class="form-label">Razón Social  <span class="fw-bold text-danger">*</span> </label>
-                                    <input type="text" class="form-control" id="razonSocial" placeholder="Razón Social">
-                                    <div class="invalid-feedback" id="error-razonSocial"></div>
-                                </div>
-
-                                 <div class="mb-3">
-                                    <label class="form-label">Condición <span class="fw-bold text-danger">*</span></label>
-                                    <select class="form-select required" id="condicionEmpresa">
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="EMPRESA">EMPRESA</option>
-                                        <option value="PROVEEDOR">PROVEEDOR</option>
-                                    </select>
-                                    <div id="error-condicionEmpresa" class="error-message"></div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="emailEmpresa" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="emailEmpresa" placeholder="Email">
-                                    <div class="invalid-feedback" id="error-emailEmpresa"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="telefonoEmpresa" class="form-label">Teléfono Móvil</label>
-                                    <input type="text" class="form-control" id="telefonoEmpresa" placeholder="Teléfono Móvil">
-                                    <div class="invalid-feedback" id="error-telefonoEmpresa"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="direccionEmpresa" class="form-label">Direccion</label>
-                                    <input type="text" class="form-control" id="direccionEmpresa" placeholder="Direccion">
-                                    <div class="invalid-feedback" id="error-direccionEmpresa"></div>
-                                </div>
-
-                               
-
+                     </div>
                             </div>
-                        </div>
-
-                        <div class="alert alert-light p-3" role="alert">
-                            <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -334,66 +398,8 @@ include("cabecera.php");
             const modal = new bootstrap.Modal(document.getElementById("modalCliente"));
             modal.show();
 
-            const personaTab = document.getElementById("pills-persona-tab");
-            const empresaTab = document.getElementById("pills-empresa-tab");
 
-            personaTab.addEventListener('click', () => {
-                // Limpiar datos de la pestaña Empresa
-                document.getElementById('numeroDocumentoEmpresa').value = '';
-                document.getElementById('nombreComercial').value = '';
-                document.getElementById('razonSocial').value = '';
-                document.getElementById('telefonoEmpresa').value = '';
-                document.getElementById('emailEmpresa').value = '';
-                document.getElementById('direccionEmpresa').value = '';
-                document.getElementById('condicionEmpresa').selectedIndex = 0;
-
-                resetErrors();
-            });
-
-            empresaTab.addEventListener('click', () => {
-                // Limpiar datos de la pestaña Persona
-                document.getElementById('numeroDocumentoPersona').value = '';
-                document.getElementById('nombresPersona').value = '';
-                document.getElementById('apellidosPersona').value = '';
-                document.getElementById('telefonoPersona').value = '';
-                document.getElementById('emailPersona').value = '';
-                document.getElementById('direccionPersona').value = '';
-                document.getElementById('condicionPersona').selectedIndex = 0;
-
-                resetErrors();
-            });
-
-            function resetErrors() {
-                // Limpiar las clases 'is-invalid' y los mensajes de error
-                const inputs = document.querySelectorAll('.form-control');
-                const errorMessages = document.querySelectorAll('.invalid-feedback');
-
-                inputs.forEach(input => {
-                    input.classList.remove('is-invalid');
-                });
-
-                errorMessages.forEach(message => {
-                    message.textContent = '';
-                });
-            }
-
-            function limpiarcampos() {
-                document.getElementById('numeroDocumentoEmpresa').value = '';
-                document.getElementById('nombreComercial').value = '';
-                document.getElementById('razonSocial').value = '';
-                document.getElementById('telefonoEmpresa').value = '';
-                document.getElementById('emailEmpresa').value = '';
-                document.getElementById('numeroDocumentoPersona').value = '';
-                document.getElementById('nombresPersona').value = '';
-                document.getElementById('apellidosPersona').value = '';
-                document.getElementById('telefonoPersona').value = '';
-                document.getElementById('emailPersona').value = '';
-            }
-
-            // Seleccionando los elementos de los formularios
-            const formPersona = document.getElementById('pills-persona');
-            const formEmpresa = document.getElementById('pills-empresa');
-
+         
             const btnRegistrarCliente = document.getElementById('btnRegistrarCliente');
 
             // Función para validar los campos
@@ -490,93 +496,11 @@ include("cabecera.php");
             }
 
 
-            function validarCamposEmpresa() {
-                let valid = true;
-
-                // Validar RUC (solo si tiene datos)
-                const numeroDocumentoEmpresa = document.getElementById('numeroDocumentoEmpresa');
-                const errorNumeroDocumentoEmpresa = document.getElementById('error-numeroDocumentoEmpresa');
-                if (numeroDocumentoEmpresa.value.trim() === '') {
-                    valid = false;
-                    numeroDocumentoEmpresa.classList.add('is-invalid');
-                    errorNumeroDocumentoEmpresa.textContent = 'El RUC es obligatorio.';
-                } else if (!/^\d{11}$/.test(numeroDocumentoEmpresa.value)) {
-                    valid = false;
-                    numeroDocumentoEmpresa.classList.add('is-invalid');
-                    errorNumeroDocumentoEmpresa.textContent = 'Debe ser un RUC válido (11 dígitos).';
-                } else {
-                    numeroDocumentoEmpresa.classList.remove('is-invalid');
-                    errorNumeroDocumentoEmpresa.textContent = '';
-                }
-
-                // Validar nombre comercial (solo si tiene datos)
-                const nombreComercial = document.getElementById('nombreComercial');
-                const errorNombreComercial = document.getElementById('error-nombreComercial');
-                if (nombreComercial.value.trim() == '') {
-                    valid = false;
-                    nombreComercial.classList.add('is-invalid');
-                    errorNombreComercial.textContent = 'Este campo es obligatorio.';
-                } else {
-                    nombreComercial.classList.remove('is-invalid');
-                    errorNombreComercial.textContent = '';
-                }
-
-                // Validar razón social (solo si tiene datos)
-                const razonSocial = document.getElementById('razonSocial');
-                const errorRazonSocial = document.getElementById('error-razonSocial');
-                if (razonSocial.value.trim() == '') {
-                    valid = false;
-                    razonSocial.classList.add('is-invalid');
-                    errorRazonSocial.textContent = 'Este campo es obligatorio.';
-                } else {
-                    razonSocial.classList.remove('is-invalid');
-                    errorRazonSocial.textContent = '';
-                }
-
-                // Validar teléfono (solo si tiene datos)
-                const telefonoEmpresa = document.getElementById('telefonoEmpresa');
-                const errorTelefonoEmpresa = document.getElementById('error-telefonoEmpresa');
-                if (telefonoEmpresa.value.trim() !== '' && !/^\d{9}$/.test(telefonoEmpresa.value)) {
-                    valid = false;
-                    telefonoEmpresa.classList.add('is-invalid');
-                    errorTelefonoEmpresa.textContent = 'El teléfono debe tener 9 dígitos.';
-                } else {
-                    telefonoEmpresa.classList.remove('is-invalid');
-                    errorTelefonoEmpresa.textContent = '';
-                }
-
-                // Validar email (solo si tiene datos)
-                const emailEmpresa = document.getElementById('emailEmpresa');
-                const errorEmailEmpresa = document.getElementById('error-emailEmpresa');
-                if (emailEmpresa.value.trim() !== '' && !/\S+@\S+\.\S+/.test(emailEmpresa.value)) {
-                    valid = false;
-                    emailEmpresa.classList.add('is-invalid');
-                    errorEmailEmpresa.textContent = 'Debe ser un correo electrónico válido.';
-                } else {
-                    emailEmpresa.classList.remove('is-invalid');
-                    errorEmailEmpresa.textContent = '';
-                }
-
-                const condicion = document.getElementById('condicionEmpresa');
-                const errorCondicion = document.getElementById('error-condicionEmpresa');
-
-                // Verificar si la opción seleccionada es válida
-                if (condicion.value === '') {
-                    valid = false; // La variable valid debe ser parte de tu lógica de validación general
-                    condicion.classList.add('is-invalid');
-                    errorCondicion.textContent = 'Debe seleccionar una opción válida.';
-                } else {
-                    condicion.classList.remove('is-invalid');
-                    errorCondicion.textContent = '';
-                }
-
-                return valid;
-            }
+            
 
             btnRegistrarCliente.addEventListener('click', async function() {
                 let datos = {};
 
-                if (document.getElementById('pills-persona-tab').classList.contains('active')) {
                     // Recolectar los datos del formulario Persona
                     if (validarCamposPersona()) {
                         datos = {
@@ -599,7 +523,7 @@ include("cabecera.php");
                         if (response.success === true) {
                             swal({
                                 title: "Registro con Exito!",
-                                text: 'Usuario actualizado  correctamente',
+                                text: 'Usuario Registrado  correctamente',
                                 icon: "success",
                                 buttons: false,
                                 timer: 1500
@@ -622,48 +546,7 @@ include("cabecera.php");
 
 
                     }
-                } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {
-                    // Recolectar los datos del formulario Empresa
-                    if (validarCamposEmpresa()) {
-                        datos = {
-                            "numero_documento": document.getElementById('numeroDocumentoEmpresa').value,
-                            "nombre_comercial": document.getElementById('nombreComercial').value,
-                            "razon_social": document.getElementById('razonSocial').value,
-                            "telefono_movil": document.getElementById('telefonoEmpresa').value,
-                            "email": document.getElementById('emailEmpresa').value,
-                            "condicion": document.getElementById('condicionEmpresa').value
-
-                        };
-
-                        console.log(datos);
-                        // Llamar a la función AJAX para registrar la empresa
-                        const response = await fnRegistrarEmpresa(datos);
-                        console.log("Empresa insertado con éxito:", response);
-                        if (response.success === true) {
-                            swal({
-                                title: "Registro con Exito!",
-                                text: 'Usuario actualizado  correctamente',
-                                icon: "success",
-                                buttons: false,
-                                timer: 1500
-                            }).then(() => {
-                                location.reload();
-                            });
-
-                        } else if (response.error === true) {
-                            // Si existe un error, mostrar el mensaje devuelto por el servidor
-                            swal("Error", result.message, {
-                                icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
-                            });
-                        }
-
-                    }
-                }
+            
             });
 
 
@@ -691,30 +574,7 @@ include("cabecera.php");
                 });
             }
 
-            function fnRegistrarEmpresa(datos) {
-                return new Promise((resolve, reject) => {
-                    $.ajax({
-                        method: "POST",
-                        url: "logica/clssPersona.php", // El archivo PHP donde se maneja el registro de empresa
-                        data: {
-                            "accion": "REGISTRARPERSONA", // Acción que se realiza en el backend
-                            "data": JSON.stringify(datos) // Los datos de la empresa como JSON
-                        }
-                    }).done(function(response) {
-                        console.log(response);
-                        const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
-                        if (jsonResponse.success) {
-
-                            resolve(jsonResponse); // Resolvemos la promesa en caso de éxito
-                        } else {
-                            reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Si hay error en la respuesta del servidor
-                        }
-                    }).fail(function(error) {
-                        console.error("Error:", error.responseText);
-                        reject(error); // Rechazamos la promesa si ocurre un error en la solicitud AJAX
-                    });
-                });
-            }
+         
         });
     });
 </script>
@@ -723,115 +583,66 @@ include("cabecera.php");
 <script>
     function fn_editar_usuario(datosUsuario) {
         document.getElementById("contenidoUsuario").innerHTML = `
-           <div class="modal-header">
-                        <h5 class="modal-title mx-auto fw-bold" id="modalClienteLabel">Editar Persona</h5>
-                    </div>
+
                     <div class="modal-body">
-                        <!-- Pils para seleccionar entre Persona y Empresa -->
-                        <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">Cliente | Empleado</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="pills-empresa-tab" data-bs-toggle="pill" data-bs-target="#pills-empresa" type="button" role="tab" aria-controls="pills-empresa" aria-selected="false">Empresa | Proveedor</button>
-                            </li>
-                        </ul>
-                        <hr>
-                        <div class="tab-content mt-3" id="pills-tabContent">
-                            <!-- Formulario Persona -->
-                            <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
-                                <div class="mb-3">
-                                    <label for="numeroDocumentoPersona" class="form-label">Número de Documento  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
-                                    <div class="error-message" id="error-numeroDocumentoPersona"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="nombresPersona" class="form-label">Nombres  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
-                                    <div class="error-message" id="error-nombresPersona"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="apellidosPersona" class="form-label">Apellidos  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
-                                    <div class="error-message" id="error-apellidosPersona"></div>
+                        <div class="card text-start">
+                            <div class="card-body">
+                                    <h5 class="card-title text-center" id="modalClienteLabel"> <i class="fas fa-user"></i> Editar Empleado</h5>
+                                    <div class="card-sub text-center">
+                                    Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                                    </div>
+
+
+                                <div class="tab-content mt-3" id="pills-tabContent">
+                                    <!-- Formulario Persona -->
+                                    <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
+                                        <div class="mb-3">
+                                            <label for="numeroDocumentoPersona" class="form-label"><b>Número de Documento  <span class="fw-bold text-danger">*</span></b></label>
+                                            <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
+                                            <div class="error-message" id="error-numeroDocumentoPersona"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nombresPersona" class="form-label"><b>Nombres  <span class="fw-bold text-danger">*</span></b></label>
+                                            <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
+                                            <div class="error-message" id="error-nombresPersona"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="apellidosPersona" class="form-label"><b>Apellidos  <span class="fw-bold text-danger">*</span></b></label>
+                                            <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
+                                            <div class="error-message" id="error-apellidosPersona"></div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label"><b>Condición <span class="fw-bold text-danger">*</span></b></label>
+                                            <input readonly  type="text" class="form-control" id="condicionPersona" value="EMPLEADO">
+
+                                            <div id="error-condicionPersona" class="error-message"></div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="telefonoPersona" class="form-label"><b>Teléfono Móvil</b></label>
+                                            <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="emailPersona" class="form-label"><b>Email</b></label>
+                                            <input type="email" class="form-control" id="emailPersona" placeholder="Email">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="direccionPersona" class="form-label"><b>Direccion</b></label>
+                                            <input type="text" class="form-control" id="direccionPersona" placeholder="Direccion">
+                                        </div>
+
+                                    </div>
+
+                                    
+                                    <p id="txtcondicion" style="display: none;"></p>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Condición <span class="fw-bold text-danger">*</span></label>
-                                    <select class="form-select required" id="condicionPersona">
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="CLIENTE">CLIENTE</option>
-                                        <option value="EMPLEADO">EMPLEADO</option>
-                                    </select>
-                                    <div id="error-condicionPersona" class="error-message"></div>
+                                <div class="alert alert-light p-3" role="alert">
+                                    <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
                                 </div>
-
-                                <div class="mb-3">
-                                    <label for="telefonoPersona" class="form-label">Teléfono Móvil</label>
-                                    <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="emailPersona" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="emailPersona" placeholder="Email">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="direccionPersona" class="form-label">Direccion</label>
-                                    <input type="text" class="form-control" id="direccionPersona" placeholder="Direccion">
-                                </div>
-
                             </div>
-
-                            <!-- Formulario Empresa -->
-                            <div class="tab-pane fade" id="pills-empresa" role="tabpanel" aria-labelledby="pills-empresa-tab">
-                                <div class="mb-3">
-                                    <label for="numeroDocumentoEmpresa" class="form-label">Número de Ruc  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Número de Documento">
-                                    <div class="error-message" id="error-numeroDocumentoEmpresa"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="nombreComercial" class="form-label">Nombre Comercial  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nombreComercial" placeholder="Nombre Comercial">
-                                    <div class="error-message" id="error-nombreComercial"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="razonSocial" class="form-label">Razón Social  <span class="fw-bold text-danger">*</span> </label>
-                                    <input type="text" class="form-control" id="razonSocial" placeholder="Razón Social">
-                                    <div class="error-message" id="error-razonSocial"></div>
-                                </div>
-
-                                 <div class="mb-3">
-                                    <label class="form-label">Condición <span class="fw-bold text-danger">*</span></label>
-                                    <select class="form-select required" id="condicionEmpresa">
-                                        <option value="">Seleccione una opción</option>
-                                        <option value="EMPRESA">EMPRESA</option>
-                                        <option value="PROVEEDOR">PROVEEDOR</option>
-                                    </select>
-                                    <div id="error-condicionEmpresa" class="error-message"></div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="emailEmpresa" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="emailEmpresa" placeholder="Email">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="telefonoEmpresa" class="form-label">Teléfono Móvil</label>
-                                    <input type="text" class="form-control" id="telefonoEmpresa" placeholder="Teléfono Móvil">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="direccionEmpresa" class="form-label">Direccion</label>
-                                    <input type="text" class="form-control" id="direccionEmpresa" placeholder="Direccion">
-
-                                </div>
-
-                               
-
-                            </div>
-                            <p id="txtcondicion" style="display: none;"></p>
-                        </div>
-
-                        <div class="alert alert-light p-3" role="alert">
-                            <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -869,12 +680,7 @@ include("cabecera.php");
 
                         // Mostrar y ocultar formularios según la condición
                         if (usuario.condicion === "CLIENTE" || usuario.condicion === "EMPLEADO") {
-                            // Mostrar pestaña de Persona
-                            document.getElementById("pills-persona-tab").classList.add("active");
-                            document.getElementById("pills-empresa-tab").classList.remove("active");
-                            document.getElementById("pills-persona").classList.add("show", "active");
-                            document.getElementById("pills-empresa").classList.remove("show", "active");
-
+   
                             // Llenar campos de Persona
                             document.getElementById("numeroDocumentoPersona").value = usuario.numero_documento;
                             document.getElementById("nombresPersona").value = usuario.nombres;
@@ -893,33 +699,7 @@ include("cabecera.php");
                             document.getElementById("pills-empresa-tab").style.display = "none";
                             document.getElementById("pills-empresa").style.display = "none";
 
-                        } else if (usuario.condicion === "PROVEEDOR" || usuario.condicion === "EMPRESA") {
-                            // Mostrar pestaña de Empresa
-                            document.getElementById("pills-empresa-tab").classList.add("active");
-                            document.getElementById("pills-persona-tab").classList.remove("active");
-                            document.getElementById("pills-empresa").classList.add("show", "active");
-                            document.getElementById("pills-persona").classList.remove("show", "active");
-
-                            // Llenar campos de Empresa
-                            document.getElementById("numeroDocumentoEmpresa").value = usuario.numero_documento;
-                            document.getElementById("nombreComercial").value = usuario.nombre_comercial;
-                            document.getElementById("razonSocial").value = usuario.razon_social;
-                            document.getElementById("emailEmpresa").value = usuario.email;
-                            document.getElementById("telefonoEmpresa").value = usuario.telefonomovil;
-                            document.getElementById("direccionEmpresa").value = usuario.direccion;
-                            document.getElementById("condicionEmpresa").value = usuario.condicion;
-
-                            document.getElementById("numeroDocumentoEmpresa").classList.add("required");
-                            document.getElementById("nombreComercial").classList.add("required");
-                            document.getElementById("razonSocial").classList.add("required");
-
-
-                            document.getElementById("pills-persona-tab").style.display = "none";
-                            document.getElementById("pills-persona").style.display = "none";
-
-                            // Mostrar el botón para cambiar a la pestaña de Empresa
-                            document.getElementById("pills-empresa-tab").style.display = "block";
-                        }
+                        } 
                     } else {
                         swal("Error", result.message, {
                             icon: "error",
@@ -963,26 +743,7 @@ include("cabecera.php");
                 fnRegistrarPersona(datos);
 
 
-            } else if (condicion === "PROVEEDOR" || condicion === "EMPRESA") {
-                datos = {
-                    "id": datosUsuario.id,
-                    "numero_documento": document.getElementById('numeroDocumentoEmpresa').value,
-                    "nombre_comercial": document.getElementById('nombreComercial').value,
-                    "razon_social": document.getElementById('razonSocial').value,
-                    "telefono_movil": document.getElementById('telefonoEmpresa').value,
-                    "email": document.getElementById('emailEmpresa').value,
-                    "direccion": document.getElementById('direccionEmpresa').value,
-                    "condicion": document.getElementById('condicionEmpresa').value
-
-
-                };
-
-                console.log(datos);
-                // Llamar a la función AJAX para registrar la empresa
-                fnRegistrarEmpresa(datos);
-
-
-            }
+            } 
 
 
         });
@@ -1048,44 +809,7 @@ include("cabecera.php");
 
         }
 
-        function fnRegistrarEmpresa(datos) {
-            return new Promise((resolve, reject) => {
-                $.ajax({
-                    method: "POST",
-                    url: "logica/clssPersona.php", // El archivo PHP donde se maneja el registro de empresa
-                    data: {
-                        "accion": "ACTUALIZARPERSONA", // Acción que se realiza en el backend
-                        "data": JSON.stringify(datos) // Los datos de la empresa como JSON
-                    }
-                }).done(function(response) {
-                    console.log(response);
-                    const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
-                    if (jsonResponse.success) {
-                        swal({
-                            title: "Registro con Exito!",
-                            text: 'Persona actualizado  correctamente',
-                            icon: "success",
-                            buttons: false,
-                            timer: 1500
-                        }).then(() => {
-                            location.reload();
-                        }); // Resolvemos la promesa en caso de éxito
-                    } else {
-                        swal("Error", result.message, {
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                    }
-                }).fail(function(error) {
-                    console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
-                });
-            });
-        }
+       
 
 
 

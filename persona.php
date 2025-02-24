@@ -14,7 +14,9 @@ include("cabecera.php");
     #sugerencias .list-group-item {
         cursor: pointer;
     }
-  
+    label {
+  font-weight: bold;
+}
 .error-input {
         border: 2px solid red;
     }
@@ -316,10 +318,14 @@ include("cabecera.php");
 
         document.getElementById("btnAbrirModalGenerico").addEventListener("click", function () {
             document.getElementById("contenidoUsuario").innerHTML = `
-                    <div class="modal-header">
-                        <h5 class="modal-title mx-auto fw-bold" id="modalClienteLabel">Registrar Persona</h5>
-                    </div>
+
                     <div class="modal-body">
+                     <div class="card text-start">
+                        <div class="card-body">
+                            <h4 class="card-title text-center"><i class="fas fa-user"></i> Registrar Persona</h4>
+                            <div class="card-sub text-center">
+                                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                            </div>
                         <!-- Pils para seleccionar entre Persona y Empresa -->
                         <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
                             <li class="nav-item">
@@ -334,23 +340,23 @@ include("cabecera.php");
                             <!-- Formulario Persona -->
                             <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
                                 <div class="mb-3">
-                                    <label for="numeroDocumentoPersona" class="form-label">Número de Documento  <span class="fw-bold text-danger">*</span></label>
+                                    <label for="numeroDocumentoPersona" class="form-label"><b>Número de Documento  <span class="fw-bold text-danger">*</span></b></label>
                                     <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
                                     <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="nombresPersona" class="form-label">Nombres  <span class="fw-bold text-danger">*</span></label>
+                                    <label for="nombresPersona" class="form-label"><b>Nombres  <span class="fw-bold text-danger">*</span></b></label>
                                     <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
                                     <div class="invalid-feedback" id="error-nombresPersona"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="apellidosPersona" class="form-label">Apellidos  <span class="fw-bold text-danger">*</span></label>
+                                    <label for="apellidosPersona" class="form-label"><b>Apellidos  <span class="fw-bold text-danger">*</span></b></label>
                                     <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
                                     <div class="invalid-feedback" id="error-apellidosPersona"></div>
                                 </div>
                                 
                                 <div class="mb-3">
-                                    <label class="form-label">Condición <span class="fw-bold text-danger">*</span></label>
+                                    <label class="form-label"><b>Condición <span class="fw-bold text-danger">*</span></b></label>
                                     <select class="form-select required" id="condicionPersona">
                                         <option value="">Seleccione una opción</option>
                                         <option value="CLIENTE">CLIENTE</option>
@@ -360,18 +366,18 @@ include("cabecera.php");
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="telefonoPersona" class="form-label">Teléfono Móvil</label>
+                                    <label for="telefonoPersona" class="form-label"><b>Teléfono Móvil</b></label>
                                     <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
                                     <div class="invalid-feedback" id="error-telefonoPersona"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="emailPersona" class="form-label">Email</label>
+                                    <label for="emailPersona" class="form-label"><b>Email</b></label>
                                     <input type="email" class="form-control" id="emailPersona" placeholder="Email">
                                     <div class="invalid-feedback" id="error-emailPersona"></div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="direccionPersona" class="form-label">Direccion</label>
+                                    <label for="direccionPersona" class="form-label"><b>Direccion</b></label>
                                     <input type="text" class="form-control" id="direccionPersona" placeholder="Direccion">
                                     <div class="invalid-feedback" id="error-direccionPersona"></div>
                                 </div>
@@ -426,10 +432,9 @@ include("cabecera.php");
 
                             </div>
                         </div>
-
-                        <div class="alert alert-light p-3" role="alert">
-                            <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
                         </div>
+                        </div>
+                    
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Salir</button>
@@ -831,10 +836,15 @@ include("cabecera.php");
 <script>
     function fn_editar_usuario(datosUsuario) {
         document.getElementById("contenidoUsuario").innerHTML = `
-           <div class="modal-header">
-                        <h5 class="modal-title mx-auto fw-bold" id="modalClienteLabel">Editar Persona</h5>
-                    </div>
+
                     <div class="modal-body">
+                      <div class="card text-start">
+                        <div class="card-body">
+                            <h4 class="card-title text-center"><i class="fas fa-user"></i> Editar Persona</h4>
+
+                            <div class="card-sub text-center">
+                                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                            </div>
                         <!-- Pils para seleccionar entre Persona y Empresa -->
                         <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
                             <li class="nav-item">
@@ -937,10 +947,10 @@ include("cabecera.php");
                             </div>
                             <p id="txtcondicion" style="display: none;"></p>
                         </div>
+</div>
+</div>
 
-                        <div class="alert alert-light p-3" role="alert">
-                            <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
-                        </div>
+                       
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>

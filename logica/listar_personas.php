@@ -72,9 +72,7 @@ foreach ($personas as &$persona) {
         '.($persona["deleted_at"] == null ? 
         '<a class="btn btn-dark btn-round ml-2" onclick="fn_bloquear_usuario('.$id.')"><i class="fa fa-lock"></i></a>' :
         '<a class="btn btn-secondary btn-round ml-2" onclick="fn_desbloquear_usuario('.$id.')"><i class="fa fa-unlock"></i></a>').'
-        <a class="btn btn-danger btn-round ml-2" onclick="fn_eliminar_usuario('.$id.')">
-            <i class="fa fa-trash"></i>
-        </a>';
+      ';
 }
 
 // Formato de salida compatible con DataTables
