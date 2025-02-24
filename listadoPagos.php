@@ -49,6 +49,7 @@ if (isset($_GET['id'])) {
                                                 <?php
                                                 foreach (fnListForPagos() as $datos) {
                                                     $datosJSON = json_encode($datos);
+                                                    
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>

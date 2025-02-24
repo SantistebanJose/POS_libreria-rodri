@@ -142,7 +142,7 @@ include("cabecera.php");
                                     <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Empleado</th>
+                                                <th>Trabajador</th>
                                                 <th>N° de Documento</th>
                                                 <th>Condicion</th>
                                                 <th>Accion</th>
@@ -336,7 +336,7 @@ include("cabecera.php");
                     <div class="modal-body">
                         <div class="card text-start">
                         <div class="card-body">
-                        <h5 class="card-title text-center" id="modalClienteLabel"> <i class="fas fa-user"></i> Registrar Empleado</h5>
+                        <h5 class="card-title text-center" id="modalClienteLabel"> <i class="fas fa-user"></i> Registrar Trabajador</h5>
                         <div class="card-sub text-center">
                          Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
                         </div>
@@ -587,7 +587,7 @@ include("cabecera.php");
                     <div class="modal-body">
                         <div class="card text-start">
                             <div class="card-body">
-                                    <h5 class="card-title text-center" id="modalClienteLabel"> <i class="fas fa-user"></i> Editar Empleado</h5>
+                                    <h5 class="card-title text-center" id="modalClienteLabel"> <i class="fas fa-user"></i> Editar Trabajador</h5>
                                     <div class="card-sub text-center">
                                     Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
                                     </div>

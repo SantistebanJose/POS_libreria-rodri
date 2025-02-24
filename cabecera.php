@@ -461,7 +461,7 @@ include('logica/clssConsultas.php');
                                             <div class="user-box">
                                                 <div class="avatar-lg">
                                                     <img
-                                                        src="assets/img/profile.jpg"
+                                                        src="assets/img/usuario.png"
                                                         alt="image profile"
                                                         class="avatar-img rounded" />
                                                 </div>

@@ -134,7 +134,14 @@ include("cabecera.php");
                                             </div>
                                             <ol class="activity-feed">
                                                 <?php
-                                                $datosDetalleCaja = json_decode(fnListadoCajaChica()[0]["js_detalle_caja"], true);
+                                                    #$datosDetalleCaja = json_decode(fnListadoCajaChica()[0]["js_detalle_caja"], true);
+                                                    if (fnListadoCajaChica()[0]["js_detalle_caja"] !== null) {
+                                                        $datosDetalleCaja = json_decode(fnListadoCajaChica()[0]["js_detalle_caja"], true);
+                                                    } else {
+                                                        $datosDetalleCaja = null;
+                                                        #echo "Error: La variable JSON es null.";
+                                                    }
+                                                    
                                                 if (empty($datosDetalleCaja)) {
                                                 ?>
                                                     <div>Sin Registros de caja</div>

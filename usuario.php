@@ -848,8 +848,8 @@ include("cabecera.php");
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success rounded-5" id="btnEditarUsuario">Editar</button>
+                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal"><i class="fas fa-window-close"></i> Cerrar</button>
+                <button type="button" class="btn btn-success rounded-5" id="btnEditarUsuario"><i class="fas fa-save"></i> Guardar </button>
             </div>
         `;
 
