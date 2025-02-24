@@ -237,12 +237,14 @@ if (isset($_GET['id'])) {
                 <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title mx-auto fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
-                        </div>
+             
                         <div class="modal-body">
                             <div class="col-12 p-4 bg-light rounded">
-                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                            <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
+
+                            <div class="card-sub text-center">
+                            Aqui podras agregar los minutos y el precio del servicio solo corte.
+                            </div>                            
                             <div class="mb-4">
                                 <!-- Minutos Corte -->
                                 <div class="text-center" style="flex: 1;">
@@ -270,13 +272,16 @@ if (isset($_GET['id'])) {
                                     <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
                                 </div>
                                 </div>
+                                <div class="text-center mt-3">
+                                        <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocorte">Agregar</button>
+                                    </div>
                             </div>
+
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
 
-                            <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocorte">Agregar</button>
                         </div>
                         </div>
                     </div>
@@ -287,10 +292,13 @@ if (isset($_GET['id'])) {
 <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title mx-auto fw-bold" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
-            </div>
+
             <div class="modal-body">
+                <h4 class="card-title text-center" id="modalCantidadCorteLabel">Configurar Cantidad o Corte</h4>
+
+                <div class="card-sub text-center">
+                    Aquí ingresa la cantidad y/o corte del articulo
+                </div>
                 <div class="container-fluid">
                     <!-- Sección de cantidad -->
                     <div class="row mb-3">
@@ -336,6 +344,9 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
                     </div>
+                    <div class="text-center mb-3">
+                        <button id="btnConfirmarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
+                    </div>
                 </div>
             </div>
 
@@ -343,7 +354,6 @@ if (isset($_GET['id'])) {
                 <!-- Botón Confirmar a la izquierda -->
                 <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
 
-                <button id="btnConfirmarCantidad" class="btn btn-primary rounded-5" style="width: 120px;">Confirmar</button>
             </div>
         </div>
     </div>
@@ -868,9 +878,7 @@ if (isset($_GET['id'])) {
 <div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalGenericoLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title mx-auto fw-bold" id="modalGenericoLabel"></h5>
-      </div>
+
       <div class="modal-body" id="modalContent">
         <!-- Contenido dinámico se cargará aquí -->
       </div>
@@ -1766,7 +1774,6 @@ if (isset($_GET['id'])) {
     document.addEventListener('DOMContentLoaded', function () {
         let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
         document.getElementById('btnAbrirModalPloteo').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Ploteo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -1988,7 +1995,6 @@ if (isset($_GET['id'])) {
 
                 botonEditar.addEventListener("click", () => {
 
-                    document.getElementById('modalGenericoLabel').textContent='Editar Ploteo';
                     document.getElementById('modalContent').innerHTML = `
                        <div class="text-center">
                             <div class="card">
@@ -2222,7 +2228,6 @@ if (isset($_GET['id'])) {
         let impresionEditando = null; // Variable para guardar la impresión que se está editando
 
         document.getElementById('btnAbrirModalImprimir').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Impresión';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -2434,7 +2439,6 @@ if (isset($_GET['id'])) {
                 accionCell.appendChild(botonEliminar);
 
                 botonEditar.addEventListener("click", () => {             
-                    document.getElementById('modalGenericoLabel').textContent='Editar Impresión';
                     document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -2664,7 +2668,6 @@ if (isset($_GET['id'])) {
 
          // Abrir modal con el contenido específico para Escaneo
          document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function () {
-            document.getElementById('modalGenericoLabel').textContent = 'Agregar Servicio de Escaneo';
             document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -2795,7 +2798,6 @@ if (isset($_GET['id'])) {
 
                 botonEditar.addEventListener("click", () => {
                     
-                    document.getElementById('modalGenericoLabel').textContent='Editar Escaneo';
                     document.getElementById('modalContent').innerHTML = `
                     <div class="text-center">
                                             <div class="card">

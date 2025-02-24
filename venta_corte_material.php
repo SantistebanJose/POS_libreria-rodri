@@ -180,24 +180,12 @@ if (isset($_GET['id'])) {
                 <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <<<<<<< HEAD
-                                <div class="modal-header">
-                                <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
+                           
+                                
                         <div class="modal-body" id="contenido_solo_corte">
 
                         </div>
 
-                        =======
-                        <div class="modal-header">
-                            <h5 class="modal-title fw-bold" id="modalSoloCorteLabel">Opciones de Corte</h5>
-                        </div>
-                        <div class="modal-body" id="contenido_solo_corte">
-
-                        </div>
-
-                        >>>>>>> acf5d42de998c599e4c0679123e5e7aff8c2592a
                     </div>
                 </div>
             </div>
@@ -439,49 +427,35 @@ if (isset($_GET['id'])) {
 <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title mx-auto fw-bold" id="modalCantidadCorteLabel">Configurar Cantidad y Corte</h5>
-            </div>
+           
             <div class="modal-body" id="contenid_cantidad">
 
             </div>
 
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+            </div>
         </div>
+
     </div>
 </div>
 
 
-<!-- Modal trigger button -->
 <!-- Modal  -->
-<div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalGenericoLabel" aria-hidden="true">
-    <<<<<<< HEAD
+    <div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalGenericoLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalGenericoLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modalContent">
-                <!-- Contenido dinámico se cargará aquí -->
-            </div>
-
-            =======
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title mx-auto fw-bold" id="modalGenericoLabel"></h5>
-                    </div>
-                    <div class="modal-body" id="modalContent">
-                        <!-- Contenido dinámico se cargará aquí -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
-                        >>>>>>> acf5d42de998c599e4c0679123e5e7aff8c2592a
-                    </div>
+            <div class="modal-content">
+ 
+                <div class="modal-body" id="modalContent">
+                    <!-- Contenido dinámico se cargará aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                
                 </div>
             </div>
-
+        </div>
+    </div>
             <!-- Modal Body -->
             <div
                 class="modal fade"
@@ -1391,8 +1365,11 @@ if (isset($_GET['id'])) {
                         // Generar el contenido dinámico, incluyendo el botón "Agregar"
                         contenidoCorte.innerHTML = `
                 <div class="col-12  bg-light rounded">
-                    <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
-                    <div class="mb-4">
+ <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
+
+                                    <div class="card-sub text-center">
+                                Aqui podras agregar los minutos y el precio del servicio solo corte.
+                                </div>                    <div class="mb-4">
                         <!-- Minutos Corte -->
                         <div class="text-center" style="flex: 1;">
                             <p class="mb-1">Minutos Corte</p>
@@ -1420,10 +1397,12 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
                     </div>
+                    <div class="text-center mb-3 mt-3">
+                                        <button type="button" class="btn btn-secondary rounded-5" id="btnAgregarSoloCorte">Agregar</button>
+                                    </div>
                     <!-- Botón Agregar -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
-                        <button id="btnAgregarSoloCorte" class="btn btn-secondary rounded-5">Agregar</button>
                     </div>
 
                 </div>
@@ -1705,6 +1684,11 @@ if (isset($_GET['id'])) {
                                 const modalCantidad = new bootstrap.Modal(document.getElementById('modalCantidad'));
                                 const contenidoModal = `
                         <div class="container-fluid">
+                            <h4 class="card-title text-center" id="modalCantidadCorteLabel">Configurar Cantidad o Corte</h4>
+
+                                <div class="card-sub text-center">
+                                    Aquí ingresa la cantidad y/o corte del articulo
+                                </div>
                             <!-- Sección de cantidad -->
                             <div class="row mb-3">
                                 <div class="col-12 p-3 bg-light rounded">
@@ -1749,12 +1733,14 @@ if (isset($_GET['id'])) {
                                     </div>
                                 </div>
                             </div>
+                              <div class="text-center mb-3">
+                        <button id="btnConfirmarEditarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
+                    </div>
 
                             <!-- Botón Confirmar -->
                               <div class="modal-footer">
                                 <!-- Botón Confirmar a la izquierda -->
                                 <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
-                                <button id="btnConfirmarEditarCantidad" class="btn btn-primary rounded-5">Confirmar</button> 
 
                             </div>
                             
@@ -1888,7 +1874,6 @@ if (isset($_GET['id'])) {
                             break;
                         case 2:
                             botonEditar.addEventListener("click", () => {
-                                document.getElementById('modalGenericoLabel').textContent = 'Editar Ploteo';
                                 document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -2051,7 +2036,6 @@ if (isset($_GET['id'])) {
                             break;
                         case 3:
                             botonEditar.addEventListener("click", () => {
-                                document.getElementById('modalGenericoLabel').textContent = 'Editar Impresión';
                                 document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -2213,7 +2197,6 @@ if (isset($_GET['id'])) {
                         case 5:
                             botonEditar.addEventListener("click", () => {
 
-                                document.getElementById('modalGenericoLabel').textContent = 'Editar Escaneo';
                                 document.getElementById('modalContent').innerHTML = `
                         <div class="text-center">
                             <div class="card">
@@ -2296,8 +2279,11 @@ if (isset($_GET['id'])) {
                                 // Generamos el contenido dinámico para mostrar el formulario de corte
                                 contenidoCorte.innerHTML = `
                         <div class="col-12  bg-light rounded">
-                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
-                            <div class="mb-4">
+                                <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
+
+                                                                    <div class="card-sub text-center">
+                                                                Aqui podras agregar los minutos y el precio del servicio solo corte.
+                                                                </div>                            <div class="mb-4">
                                 <!-- Minutos Corte -->
                                 <div class="text-center" style="flex: 1;">
                                     <p class="mb-1">Minutos Corte</p>
@@ -2325,11 +2311,13 @@ if (isset($_GET['id'])) {
                                     </div>
                                 </div>
                             </div>
-                            
+                            <div class="text-center mt-3 mb-3">
+                                <button id="btnActualizarSoloCorte" class="btn btn-secondary rounded-5">Actualizar</button>
+                            </div>
+
                        
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
-                                <button id="btnActualizarSoloCorte" class="btn btn-secondary rounded-5">Actualizar</button>
                             </div>
                         </div>
                     `;
@@ -2470,6 +2458,11 @@ if (isset($_GET['id'])) {
                     // Crear el contenido como un string HTML
                     const contenidoModal = `
         <div class="container-fluid">
+            <h4 class="card-title text-center" id="modalCantidadCorteLabel">Configurar Cantidad o Corte</h4>
+
+                                <div class="card-sub text-center">
+                                    Aquí ingresa la cantidad y/o corte del articulo
+                                </div>
             <!-- Sección de cantidad -->
             <div class="row mb-3">
                 <div class="col-12 p-3 bg-light rounded">
@@ -2485,7 +2478,7 @@ if (isset($_GET['id'])) {
             <!-- Sección de corte (solo visible si cantidad = 1 y corte es true) -->
             <div id="seccionCorte" class="row mb-3" style="display: ${datosArticulo.corte ? 'block' : 'none'};">
                 <div class="col-12 p-4 bg-light rounded">
-                    <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                   
                     <div class="mb-4">
                         <div class="text-center" style="flex: 1;">
                             <p class="mb-1">Minutos Corte</p>
@@ -2514,12 +2507,13 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
-
+            <div class="text-center mb-3">
+                <button id="btnConfirmar" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
+            </div>
             <!-- Botón Confirmar -->
             <div class="modal-footer">
                 <!-- Botón Confirmar a la izquierda -->
                 <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
-                <button id="btnConfirmar" class="btn btn-primary rounded-5">Confirmar</button>
             </div>
            
         </div>
@@ -2651,7 +2645,6 @@ if (isset($_GET['id'])) {
                 document.addEventListener('DOMContentLoaded', function() {
                     let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
                     document.getElementById('btnAbrirModalPloteo').addEventListener('click', function() {
-                        document.getElementById('modalGenericoLabel').textContent = 'Servicio de Ploteo';
                         document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -2859,7 +2852,6 @@ if (isset($_GET['id'])) {
                     let impresionEditando = null; // Variable para guardar la impresión que se está editando
 
                     document.getElementById('btnAbrirModalImprimir').addEventListener('click', function() {
-                        document.getElementById('modalGenericoLabel').textContent = 'Servicio de Impresión';
                         document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">
@@ -3069,7 +3061,6 @@ if (isset($_GET['id'])) {
 
                     // Abrir modal con el contenido específico para Escaneo
                     document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function() {
-                        document.getElementById('modalGenericoLabel').textContent = 'Servicio de Escaneo';
                         document.getElementById('modalContent').innerHTML = `
                 <div class="text-center">
                     <div class="card">

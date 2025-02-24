@@ -345,8 +345,8 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                     <div class="text-center mb-3">
-                                    <button id="btnConfirmarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
-                                </div>
+                        <button id="btnConfirmarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
+                    </div>
                 </div>
             </div>
 
