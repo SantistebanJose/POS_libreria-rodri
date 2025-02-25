@@ -177,7 +177,7 @@ function listarMovimientos(): array
 
 function listarProductosVenta1(): array
 {
-    $query = "SELECT * FROM view_articulos";
+    $query = "SELECT * FROM view_articulos WHERE precio_venta is not null;";
     return executeQuery($query);
 }
 
@@ -213,7 +213,7 @@ function listarVentaReservaCorte(): array
 
 function listarFormaPago(): array
 {
-    $query = "SELECT id, nombre FROM forma_pago WHERE deleted_at IS NULL order by id";
+    $query = "SELECT * FROM forma_pago WHERE deleted_at IS NULL order by id";
     return executeQuery($query);
 }
 function listarEmpleados(): array
@@ -265,7 +265,7 @@ function fnListForVentasDiarias(): array
             v.usuario_id,
             v.monto_venta_final,
             v.total, 
-            (v.monto_venta_final-v.total)as perdida_utilidad,
+            (v.total - v.monto_venta_final)as perdida_utilidad,
             CASE 
                 WHEN v.estado_pago = 'P' THEN 'PAGADO'
                 WHEN v.estado_pago = 'C' THEN 'CREDITO'
@@ -316,7 +316,7 @@ function fnListForVentasSemanales(): array
             v.usuario_id,
             v.monto_venta_final,
             v.total, 
-            (v.monto_venta_final-v.total)as perdida_utilidad,
+            (v.total - v.monto_venta_final)as perdida_utilidad,
             CASE 
                 WHEN v.estado_pago = 'P' THEN 'PAGADO'
                 WHEN v.estado_pago = 'C' THEN 'CREDITO'
@@ -364,7 +364,7 @@ function fnListForVentasTodasLasVentas(): array
             v.usuario_id,
             v.monto_venta_final,
             v.total, 
-            (v.monto_venta_final-v.total)as perdida_utilidad,
+            (v.total - v.monto_venta_final)as perdida_utilidad,
             CASE 
                 WHEN v.estado_pago = 'P' THEN 'PAGADO'
                 WHEN v.estado_pago = 'C' THEN 'CREDITO'
@@ -1162,3 +1162,4 @@ function fnListadoConceptosEgresos($tipoCaja): array
     // Ejecuta la consulta con el parámetro de búsqueda
     return executeQuery($query,params:["tipo_caja"=>$tipoCaja]);
 }
+
