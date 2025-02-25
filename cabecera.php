@@ -135,21 +135,12 @@ include('logica/clssConsultas.php');
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="../demo1/index.html">
+                                            <a href="mantenimiento.php">
                                                 <span class="sub-item">Mantenimientos</span>
                                             </a>
                                         </li>
 
-                                        <li>
-                                            <a href="#">
-                                                <span class="sub-item">Artículos</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="../demo1/index.html">
-                                                <span class="sub-item">Mantenimientos</span>
-                                            </a>
-                                        </li>
+                                       
 
                                     </ul>
                                 </div>

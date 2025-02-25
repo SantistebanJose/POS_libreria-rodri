@@ -235,8 +235,7 @@ if (isset($_GET['id'])) {
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
                                 <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
-                                    <div class="table-responsive">
-                                        <div class="table-filters mb-3">
+                                <div class="table-filters mb-3">
                                             <div class="row justify-content-center align-items-center g-2">
                                                 <div class="col-md-3">
                                                     <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
@@ -265,6 +264,8 @@ if (isset($_GET['id'])) {
                                                 </div>
                                             </div>
                                         </div>
+                                <div class="table-responsive">
+                                       
                                         <table
                                             id="multi-filter-select2"
                                             class="display table table-striped table-hover">
@@ -301,10 +302,10 @@ if (isset($_GET['id'])) {
                                                                 <a
                                                                     name=""
                                                                     id=""
-                                                                    class="btn btn-secondary btn-round"
+                                                                    class="btn btn-secondary btn-round btn-sm"
 
                                                                     onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                                    role="button">Agregar</a>
+                                                                    role="button"><i class="fas fa-plus"></i></a>
                                                             </div>
                                                         </th>
                                                     </tr>
@@ -335,18 +336,18 @@ if (isset($_GET['id'])) {
                             </div>
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    CLIENTE
+                                <i class="fas fa-user-tie"></i> CLIENTE
                                     <div class="card-title" id="idClienteReservaDetalle"></div>
                                     <hr>
-                                    <div><strong>Número de Celular:</strong> <span id="idNumCelClienteReserva">942781324</span> </div>
-                                    <div><strong>Correo Cliente:</strong> <span id="idCorreoClienteReserva">frvf2000@gmail.com</span> </div>
-                                    <div><strong>N° de Documento:</strong> <span id="idNumDocClienteReserva">73578005</span> </div>
+                                    <div><i class="fas fa-user-tie"></i><strong> Número de Celular:</strong> <span id="idNumCelClienteReserva">942781324</span> </div>
+                                    <div><i class="fas fa-envelope"></i><strong> Correo Cliente:</strong> <span id="idCorreoClienteReserva">frvf2000@gmail.com</span> </div>
+                                    <div><i class="fas fa-address-card"></i><strong> N° de Documento:</strong> <span id="idNumDocClienteReserva">73578005</span> </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6" style="border-left: 0.5px solid #6e6e6e; padding-left: 10px;">
                                 <div class="card-body">
-                                    ATENDIDO POR
+                                 <i class="fas fa-user-clock"></i> ATENDIDO POR
                                     <h4 class="card-title" id="idUsuarioReservaDetalle"></h4>
                                     <div>ID VENTA: <span id="idVentaReserva"></span></div>
                                     <hr>
@@ -722,7 +723,7 @@ if (isset($_GET['id'])) {
 
                                         <!-- Botón para realizar el pago -->
                                         <div class="text-center">
-                                            <a class="btn btn-secondary btn-round ms-2" href="#" role="button" onclick="fn_pagar_credito()"> <i class="fas fa-hands-helping"></i> Realizar Pago a Credito</a>
+                                            <a class="btn btn-success btn-round ms-2" href="#" role="button" onclick="fn_pagar_credito()"> <i class="fas fa-hands-helping"></i> Realizar Pago a Credito</a>
                                         </div>
                                     </form>
                                 </div>

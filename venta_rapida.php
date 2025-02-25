@@ -140,7 +140,40 @@ if (isset($_GET['id'])) {
   
                         </div>
                             <div class="card-body">
+                            <div class="table-filters mb-3">
+                                    <div class="row justify-content-center align-items-center g-2">
+                                        <div class="col-md-3">
+                                            <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                                <option value="">Filtrar por Categoría</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                                <option value="">Filtrar por Tipo</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                                <option value="">Filtrar por Dimensión</option>
+
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button
+                                                name=""
+                                                id="clearFilters"
+                                                class="btn btn-secondary btn-round btn-round btn-md"
+                                                href="#"
+                                                role="button"><i class="fas fa-broom"></i> Limpiar Filtros</b>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div class="table-responsive">
+                                
                                     <table
                                         id="multi-filter-select"
                                         class="display table table-striped table-hover">
@@ -155,16 +188,7 @@ if (isset($_GET['id'])) {
                                                 <th>Accion</th>
                                             </tr>
                                         </thead>
-                                        <tfoot>
-                                            <tr>
-                                                <th>Articulo</th>
-                                                <th>Categoria</th>
-                                                <th>Tipo</th>
-                                                <th>Dimension</th>
-                                                <th>Stock</th>
-                                                <th>Precio de Venta</th>
-                                            </tr>
-                                        </tfoot>
+                                       
                                         <tbody>
 
                                             <?php
@@ -186,10 +210,10 @@ if (isset($_GET['id'])) {
                                                             <a
                                                                 name=""
                                                                 id=""
-                                                                class="btn btn-secondary btn-round"
+                                                                class="btn btn-secondary btn-round btn-sm"
 
                                                                 onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                                role="button">Agregar</a>
+                                                                role="button"> <i class="fas fa-plus"></i></a>
                                                         </div>
                                                     </th>
                                                 </tr>
@@ -472,7 +496,7 @@ if (isset($_GET['id'])) {
                     <div class="card-body">
 
                         <div class="card-body text-center">
-                            <h4 class="card-title fs-1 fw-bold">Realizar Pago </h4>
+                            <h4 class="card-title fs-1 fw-bold"><i class="fas fa-credit-card"></i> Realizar Pago </h4>
                             <h1 class="card-title fw-bold" style="font-size: 3rem;"> S/ <span id="idMontoVentaTitulo">#</span></h1>
                         </div>
                         <!--<div class="card-body text-center">
@@ -491,7 +515,7 @@ if (isset($_GET['id'])) {
                         </div>
                         <hr>
                         <div class="mb-3">
-                            <label for="" class="form-label"><strong>Cliente</strong></label>
+                            <label for="" class="form-label"><strong><i class="fas fa-user-tie"></i> Cliente</strong></label>
                             <div class="d-flex align-items-center">
                                 <input
                                     type="text"
@@ -500,7 +524,7 @@ if (isset($_GET['id'])) {
                                     placeholder="AGREGAR EL NOMBRE DEL CLIENTE O DNI" />
                                 <!-- Botón "+" al lado del input -->
                                 <button type="button" class="btn btn-primary ms-2 rounded-5" id="btnAbrirModalCliente">
-                                    <i class="fas fa-plus"></i> <!-- Ícono "+" -->
+                                <i class="fas fa-user-plus"></i> <!-- Ícono "+" -->
                                 </button>
                             </div>
                             <!-- Contenedor para las sugerencias -->
@@ -509,7 +533,7 @@ if (isset($_GET['id'])) {
                         <div class="row justify-content-center align-items-center g-2">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Número de Telefono</strong></label>
+                                    <label for="" class="form-label"><i class="fas fa-phone-square"></i><strong>Número de Telefono</strong></label>
                                     <input
                                         type="number"
                                         class="form-control"
@@ -521,7 +545,7 @@ if (isset($_GET['id'])) {
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Correo Electronico</strong></label>
+                                    <label for="" class="form-label"><i class="fas fa-envelope"></i> <strong>Correo Electronico</strong></label>
                                     <input
                                         type="email"
                                         class="form-control"
@@ -591,9 +615,12 @@ if (isset($_GET['id'])) {
                                                 </div>
                                             </div>
 
-                                            <label for="" class="form-label"><strong>Forma de Pago</strong></label>
+                                            <!--<label for="" class="form-label"><strong>Forma de Pago</strong></label> -->
+                                            <div class="text-center">
+                                                <button id="btnAgregarPago" class="btn btn-secondary btn-sm" type="button"> <i class="fas fa-plus"></i> Agregar Monto (S/) Forma de Pago</button>
+                                            </div>
+                                            <br>
                                             <!-- Botón de agregar más formas de pago -->
-                                            <button id="btnAgregarPago" class="btn btn-secondary btn-round ms-2" type="button">+</button>
 
                                             <div class="d-flex align-items-center">
                                                 <!-- Select de formas de pago -->
@@ -647,7 +674,7 @@ if (isset($_GET['id'])) {
                                         -->
                                     </form>
                                     <div class="text-center">
-                                        <a class="btn btn-success rounded-5" href="#" role="button" onclick="fn_pagar_directo()">Pagar</a>
+                                        <a class="btn btn-success rounded-5" href="#" role="button" onclick="fn_pagar_directo()"><i class="fas fa-hand-holding-usd"></i> Pagar</a>
                                     </div>
                                 </div>
 
@@ -671,11 +698,11 @@ if (isset($_GET['id'])) {
 
                                     <!-- Formulario para el pago a crédito -->
                                     <form id="form-pago-credito">
-                                        <!-- Monto Total -->
-                                        <label for="" class="form-label"><strong>Forma de Pago</strong></label>
-
-                                        <!-- Botón de agregar más formas de pago -->
-                                        <button id="btnAgregarPagoCredito" class="btn btn-secondary btn-round ms-2" type="button">+</button>
+                   <!-- Botón de agregar más formas de pago -->
+                                        <div class="text-center">
+                                            <button id="btnAgregarPagoCredito" class="btn btn-secondary btn-sm" type="button"> <i class="fas fa-plus"></i> Agregar Monto (S/) Forma de Pago</button>
+                                        </div>
+                                        <br>
 
                                         <!-- Primer campo de pago -->
                                         <div class="d-flex align-items-center" id="pagoCredito_0">
@@ -698,7 +725,7 @@ if (isset($_GET['id'])) {
                                         <br>
                                         <!-- Botón para realizar el pago -->
                                         <div class="text-center">
-                                            <a class="btn btn-secondary rounded-5" href="#" role="button" onclick="fn_pagar_credito()">Realizar Pago a Credito</a>
+                                            <a class="btn btn-success rounded-5" href="#" role="button" onclick="fn_pagar_credito()"><i class="fas fa-hands-helping"></i> Realizar Pago a Credito</a>
                                         </div>
                                     </form>
                                 </div>
@@ -836,8 +863,9 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                 </div>
-        <div class="row">
-            <div class="col-md-3">
+                <div class="card p-2">
+                <div class="row mt-2">
+            <div class="col-md-4">
                 <div class="card card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_cortes" class="card-title">Total Cortes S/:</h5>
@@ -845,7 +873,7 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>  
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                     <div class="card card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_articulos" class="card-title">Total Artículos S/:</h5>
@@ -853,7 +881,7 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                     <div class="card card-primary card-stats card-round">
                     <div class="card-body text-center">
                         <h5 id="label_total_general" class="card-title">Total S/:</h5>
@@ -861,14 +889,14 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <button id="btnRealizarPago" disabled="true" type="button" class="btn btn-success btn-block card card-stats card-round">
-                    <div class="card-body text-center">
-                        <h5 id="label_total_general" class="card-title">Realizar Venta</h5>
-                    </div>
-                </button>
+            <div class="card-body text-center">
+                        <button id="btnRealizarPago" disabled="true" type="button" class="btn btn-success btn-round" style="width: 50%; height: 50px; font-size: 15px;">
+                            <i class="fas fa-shopping-basket"></i> Realizar Venta
+                        </button>
             </div>
+           
         </div>
+                </div>
         </div>
 
 
@@ -903,80 +931,7 @@ if (isset($_GET['id'])) {
 
 <script>
     $(document).ready(function() {
-        // Inicialización de DataTables en español
-        $("#basic-datatables").DataTable({
-            language: {
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sSearch": "Buscar:",
-                "sUrl": "",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando...",
-                "oPaginate": {
-                    "sFirst": "Primero",
-                    "sPrevious": "Anterior",
-                    "sNext": "Siguiente",
-                    "sLast": "Último"
-                },
-                "oAria": {
-                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                }
-            }
-        });
-
-        $("#multi-filter-select").DataTable({
-            pageLength: 5,
-            language: {
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sSearch": "Buscar:",
-                "sUrl": "",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando...",
-                "oPaginate": {
-                    "sFirst": "Primero",
-                    "sPrevious": "Anterior",
-                    "sNext": "Siguiente",
-                    "sLast": "Último"
-                },
-                "oAria": {
-                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                }
-            },
-            initComplete: function() {
-                this.api()
-                    .columns()
-                    .every(function() {
-                        var column = this;
-                        var select = $('<select class="form-select"><option value=""></option></select>')
-                            .appendTo($(column.footer()).empty())
-                            .on("change", function() {
-                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                                column.search(val ? "^" + val + "$" : "", true, false).draw();
-                            });
-
-                        column.data().unique().sort().each(function(d, j) {
-                            select.append('<option value="' + d + '">' + d + "</option>");
-                        });
-                    });
-            }
-        });
-
-        // Agregar fila en español
-        $("#add-row").DataTable({
+        var table = $("#multi-filter-select").DataTable({
             pageLength: 5,
             language: {
                 "sProcessing": "Procesando...",
@@ -1003,23 +958,57 @@ if (isset($_GET['id'])) {
             }
         });
 
-        var action =
-            '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Editar tarea"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Eliminar"> <i class="fa fa-times"></i> </button> </div> </td>';
+        // Llenar el filtro de Categoría con valores únicos
+        table.column(1).data().unique().sort().each(function(d, j) {
+            if (d !== "") {
+                $('#filterCategoria').append('<option value="' + d + '">' + d + '</option>');
+            }
+        });
 
-        $("#addRowButton").click(function() {
-            $("#add-row")
-                .dataTable()
-                .fnAddData([
-                    $("#addName").val(),
-                    $("#addPosition").val(),
-                    $("#addOffice").val(),
-                    action,
-                ]);
-            $("#addRowModal").modal("hide");
+        // Llenar el filtro de Dimensión con valores únicos
+        table.column(3).data().unique().sort().each(function(d, j) {
+            if (d !== "") {
+                $('#filterDimension').append('<option value="' + d + '">' + d + '</option>');
+            }
+        });
+
+        // Llenar el filtro de Tipo con valores únicos
+        table.column(2).data().unique().sort().each(function(d, j) {
+            if (d !== "") {
+                $('#filterTipo').append('<option value="' + d + '">' + d + '</option>');
+            }
+        });
+
+        // Filtrar por Categoría
+        $('#filterCategoria').on('change', function() {
+            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+            table.column(1).search(val ? "^" + val + "$" : "", true, false).draw();
+        });
+
+        // Filtrar por Tipo
+        $('#filterTipo').on('change', function() {
+            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+            table.column(2).search(val ? "^" + val + "$" : "", true, false).draw();
+        });
+
+        // Filtrar por Dimensión
+        $('#filterDimension').on('change', function() {
+            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+            table.column(3).search(val ? "^" + val + "$" : "", true, false).draw();
+        });
+
+        // Limpiar los filtros al hacer clic en el botón
+        $('#clearFilters').on('click', function() {
+            // Limpiar las selecciones de los filtros
+            $('#filterCategoria').val('');
+            $('#filterTipo').val('');
+            $('#filterDimension').val('');
+
+            // Restablecer los filtros de la tabla
+            table.columns().search('').draw();
         });
     });
 </script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 

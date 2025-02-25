@@ -155,8 +155,7 @@ if (isset($_GET['id'])) {
 
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <div class="table-filters mb-3">
+                        <div class="table-filters mb-3">
                                     <div class="row justify-content-center align-items-center g-2">
                                         <div class="col-md-3">
                                             <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
@@ -188,6 +187,8 @@ if (isset($_GET['id'])) {
                                     </div>
 
                                 </div>
+                            <div class="table-responsive">
+                                
 
                                 <table id="multi-filter-select" class="display table table-striped table-hover">
                                     <thead>
@@ -597,7 +598,7 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card card-stats card-round">
                 <div class="card-body text-center">
                     <h5 id="label_total_cortes" class="card-title">Total Cortes S/:</h5>
@@ -605,7 +606,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card card-stats card-round">
                 <div class="card-body text-center">
                     <h5 id="label_total_articulos" class="card-title">Total Artículos S/:</h5>
@@ -613,7 +614,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card card-primary card-stats card-round">
                 <div class="card-body text-center">
                     <h5 id="label_total_general" class="card-title">Total S/:</h5>
@@ -621,13 +622,12 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <button id="btnRealizarReserva" disabled="true" type="button" class="btn btn-success btn-block card card-stats card-round">
-                <div class="card-body text-center">
-                    <h5 id="label_total_general" class="card-title" style="font-size: 18px;"><i class="fas fa-save"></i> Realizar Reserva</h5>
-                </div>
+        <div class="card-body text-center">
+            <button id="btnRealizarReserva" disabled="true" type="button" class="btn btn-success btn-round" style="width: 50%; height: 50px; font-size: 15px;">
+            <i class="fas fa-save"></i> Realizar Reserva
             </button>
         </div>
+       
     </div>
 </div>
 
