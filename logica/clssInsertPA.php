@@ -159,7 +159,7 @@ function finalizarVentaReservaRapido($jsDatosVenta, $js_articulos, $js_detalle_p
         echo json_encode($response);
     } catch (Exception $e) {
 
-        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas']);
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas','detalles'=>$js_articulos]);
     }
 }
 

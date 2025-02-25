@@ -49,7 +49,7 @@ if (isset($_GET['id'])) {
                                                 <?php
                                                 foreach (fnListForPagos() as $datos) {
                                                     $datosJSON = json_encode($datos);
-                                                    
+
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
@@ -61,13 +61,13 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["utilidad"] ?></td>
                                                         <td>
                                                             <div class="mt-2 text-center">
-                                                                
+
                                                                 <a
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
                                                                     class="btn btn-success btn-round btn-round btn-sm"
-                                                                    role="button">  <i class="fas fa-external-link-alt"></i> </a>
+                                                                    role="button"> <i class="fas fa-external-link-alt"></i> </a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -135,53 +135,55 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
                         <div class="tab-pane fade" id="pills-todosLosPagos" role="tabpanel" aria-labelledby="pills-contact-tab-nobd">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table
-                                        id="TablaVentaSemanal"
-                                        class="dataTable display table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>DÍA</th>
-                                                <th>FECHA</th>
-                                                <th>HORA</th>
-                                                <th>TOTAL Original(S/)</th>
-                                                <th>TOTAL FINAL (S/)</th>
-                                                <th>pérdida</th>
-                                                <th>Accion</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            foreach (fnListForAllPagos() as $datos) {
-                                                $datosJSON = json_encode($datos);
-                                            ?>
+                            <div class="card text-start">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table
+                                            id="TablaVentaSemanal"
+                                            class="dataTable display table table-striped table-hover">
+                                            <thead>
                                                 <tr>
-                                                    <td><?php echo $datos["pago_id"] ?></td>
-                                                    <td><?php echo $datos["dia_nombre"] ?></td>
-                                                    <td><?php echo $datos["fecha"] ?></td>
-                                                    <td><?php echo $datos["hora"] ?></td>
-                                                    <td><?php echo "S/ " . $datos["monto_venta_original"] ?></td>
-                                                    <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
-                                                    <td><?php echo "S/ " . $datos["utilidad"] ?></td>
-                                                    <td>
-                                                        <div class="mt-2 text-center">
-                                                            <a
-                                                                name=""
-                                                                id=""
-                                                                onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
-                                                                class="btn btn-success btn-round btn-sm"
-                                                                role="button"> <i class="fas fa-external-link-alt"></i> </a>
-                                                        </div>
-                                                    </td>
+                                                    <th>ID</th>
+                                                    <th>DÍA</th>
+                                                    <th>FECHA</th>
+                                                    <th>HORA</th>
+                                                    <th>TOTAL Original(S/)</th>
+                                                    <th>TOTAL FINAL (S/)</th>
+                                                    <th>pérdida</th>
+                                                    <th>Accion</th>
                                                 </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                foreach (fnListForAllPagos() as $datos) {
+                                                    $datosJSON = json_encode($datos);
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $datos["pago_id"] ?></td>
+                                                        <td><?php echo $datos["dia_nombre"] ?></td>
+                                                        <td><?php echo $datos["fecha"] ?></td>
+                                                        <td><?php echo $datos["hora"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["monto_venta_original"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["utilidad"] ?></td>
+                                                        <td>
+                                                            <div class="mt-2 text-center">
+                                                                <a
+                                                                    name=""
+                                                                    id=""
+                                                                    onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
+                                                                    class="btn btn-success btn-round btn-sm"
+                                                                    role="button"> <i class="fas fa-external-link-alt"></i> </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                            <?php
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                                <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -267,7 +269,7 @@ if (isset($_GET['id'])) {
                     </div>
                     <div class="col-sm-6">
                         <div class="card text-start">
-                            <div class="card-body" >
+                            <div class="card-body">
                                 <h4 class="card-text"><i class="fas fa-credit-card"> </i> Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
                                 <p>La venta real fue de <strong id="idTotalOriginal"></strong></p>
                                 <div><strong>Atendido Por: </strong> <span id="idUsuario">3- USUARIO</span></div>

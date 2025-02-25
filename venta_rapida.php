@@ -3412,7 +3412,7 @@ if (isset($_GET['id'])) {
                 "precio_unitario": isNaN(parseFloat(row.cells[6].textContent)) ? null : parseFloat(row.cells[6].textContent),
                 "cantidad": isNaN(parseInt(row.cells[5].textContent)) ? null : parseInt(row.cells[5].textContent),
                 "sub_total": isNaN(parseFloat(row.cells[7].textContent)) ? null : parseFloat(row.cells[7].textContent),
-                "movimiento_id": isNaN(parseFloat(row.cells[9].textContent)) ? null : parseFloat(row.cells[9].textContent),
+                "movimiento_id": isNaN(parseInt(row.cells[9].textContent)) ? null : parseInt(row.cells[9].textContent),
                 "nota_archivo": row.cells[10] ? row.cells[10].textContent.trim() || "Sin nota" : "Sin nota"
             };
 

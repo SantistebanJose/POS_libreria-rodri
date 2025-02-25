@@ -55,7 +55,7 @@
                             </a>
                         </div>
                         <div class="col-sm-6 col-md-4">
-                            <a href="venta_reserva_corte.php">
+                            <a href="manejoCaja.php">
                                 <button class="btn btn-warning btn-lg w-100">
                                     <div class="icon-big text-center">
                                         <i class="fas fa-toolbox"></i>

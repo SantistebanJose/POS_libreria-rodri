@@ -176,7 +176,7 @@ include('logica/clssConsultas.php');
                                         </li>
 
                                         <li>
-                                            <a href="">
+                                            <a href="manejoCaja.php">
                                                 <span class="sub-item">Manejo de Caja</span>
                                             </a>
                                         </li>
@@ -404,7 +404,7 @@ include('logica/clssConsultas.php');
                                                             <span class="text">Caja Chica</span>
                                                         </div>
                                                     </a>
-                                                    <a class="col-6 col-md-4 p-0" href="">
+                                                    <a class="col-6 col-md-4 p-0" href="manejoCaja.php">
                                                         <div class="quick-actions-item">
                                                             <div
                                                                 class="avatar-item bg-warning rounded-circle">

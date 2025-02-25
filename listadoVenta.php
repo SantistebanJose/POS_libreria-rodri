@@ -22,7 +22,7 @@ if (isset($_GET['id'])) {
                             <a class="nav-link" id="ventaSemanal" data-bs-toggle="pill" href="#pills-ventaSemanal" role="tab" aria-controls="pills-ventaSemanal" aria-selected="false">Ventas de la Semana</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Filtros</a>
+                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Todas las Ventas</a>
                         </li>
                     </ul>
                     <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
@@ -35,7 +35,6 @@ if (isset($_GET['id'])) {
                                             class="dataTable display table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>ID</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
@@ -55,7 +54,6 @@ if (isset($_GET['id'])) {
                                                     $datosJSON = json_encode($datos);
                                                 ?>
                                                     <tr>
-                                                        <td><?php echo $datos["fecha_fin_transaccion"] ?></td>
                                                         <td><?php echo $datos["venta_id"] ?></td>
                                                         <td><?php echo $datos["cliente"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
@@ -95,7 +93,6 @@ if (isset($_GET['id'])) {
                                             class="dataTable display table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>ID</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
@@ -115,7 +112,6 @@ if (isset($_GET['id'])) {
                                                     $datosJSON = json_encode($datos);
                                                 ?>
                                                     <tr>
-                                                        <td><?php echo $datos["fecha_fin_transaccion"] ?></td>
                                                         <td><?php echo $datos["venta_id"] ?></td>
                                                         <td><?php echo $datos["cliente"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
@@ -147,7 +143,62 @@ if (isset($_GET['id'])) {
                             </div>
                         </div>
                         <div class="tab-pane fade" id="pills-contact-nobd" role="tabpanel" aria-labelledby="pills-contact-tab-nobd">
-                            <p>Contact</p>
+                            <div class="card text-start">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table
+                                            id="TablaVentaDiaria"
+                                            class="dataTable display table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Cliente</th>
+                                                    <th>DÍA</th>
+                                                    <th>FECHA</th>
+                                                    <th>HORA</th>
+                                                    <th>TOTAL(S/)</th>
+                                                    <th>TOTAL FINAL (S/)</th>
+                                                    <th>pérdida</th>
+                                                    <th>ESTADO</th>
+                                                    <th>Accion</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                foreach (fnListForVentasTodasLasVentas() as $datos) {
+                                                    $datos['accion_ajax'] = 'DETALLEVENTA_VENTA_ID';
+                                                    $datosJSON = json_encode($datos);
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo $datos["venta_id"] ?></td>
+                                                        <td><?php echo $datos["cliente"] ?></td>
+                                                        <td><?php echo $datos["dia_nombre"] ?></td>
+                                                        <td><?php echo $datos["fecha"] ?></td>
+                                                        <td><?php echo $datos["hora"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["total"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
+                                                        <td><?php echo "S/ " . $datos["perdida_utilidad"] ?></td>
+                                                        <td><?php echo $datos["estado_pago"] ?></td>
+                                                        <td>
+                                                            <div class="mt-2 text-center">
+                                                                <a
+                                                                    name=""
+                                                                    id=""
+                                                                    onclick='abrirModalDetalle(<?php echo $datosJSON ?>)'
+                                                                    class="btn btn-success btn-round"
+                                                                    role="button">Ver</a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -237,7 +288,7 @@ if (isset($_GET['id'])) {
                     <div class="col-sm-6">
                         <div class="card text-start">
                             <div class="card-body">
-                                <h4 class="card-text"  style="color:green"><i class="fas fa-credit-card"> </i> Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
+                                <h4 class="card-text" style="color:green"><i class="fas fa-credit-card"> </i> Monto Final: S/ <strong id="idMontoFinalVenta"></strong> </h4>
                                 <p>La venta real fue de <strong id="idTotalOriginal"></strong></p>
                                 <div><strong>Atendido Por: </strong> <span id="idUsuario">3- FRANCO RODRIGO VALDIVIESO FIGUEROA</span></div>
                                 <div><strong>Fecha:</strong> <span id="idFechaVenta"></span></div>
