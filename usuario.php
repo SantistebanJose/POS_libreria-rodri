@@ -490,7 +490,6 @@ include("cabecera.php");
 
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
                 });
 
 
@@ -509,16 +508,15 @@ include("cabecera.php");
                     campo.classList.add("error-input");
                     errorMensaje.textContent = "Este campo es obligatorio.";
                     formularioValido = false;
-                    return false;
                 } else {
                     campo.classList.remove("error-input");
                     errorMensaje.textContent = "";
-                    return false;
                 }
             });
 
-            return true;
+            return formularioValido; // Retorna false si hubo errores
         }
+
     });
 </script>
 
@@ -762,9 +760,7 @@ include("cabecera.php");
 
                     modalCliente.hide();
 
-                } else {
-                    alert('Por favor, corrige los errores antes de registrar.');
-                }
+                } 
             }
         });
 
@@ -913,7 +909,6 @@ include("cabecera.php");
 
             }).fail(function(error) {
                 console.error("Error:", error.responseText);
-                alert("Error al registrar el usuario.");
             });
 
 
@@ -984,7 +979,6 @@ include("cabecera.php");
 
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
                 });
             }
         });
@@ -1031,7 +1025,6 @@ include("cabecera.php");
 
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
                 });
 
 
@@ -1081,7 +1074,6 @@ include("cabecera.php");
 
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
                 });
             }
         });
