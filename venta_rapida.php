@@ -514,7 +514,16 @@ if (isset($_GET['id'])) {
                                 <span><strong>Atendiendo la Transacción:</strong> <span id="idAtencionFinal"><?php echo $id_usuario_s . "-" . $nombre . ", " . $ape_usuario ?></span></span>
                         </div>
                         <hr>
-                        <div class="mb-3">
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Datos del Cliente
+                                </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                <div class="mb-3">
                             <label for="" class="form-label"><strong><i class="fas fa-user-tie"></i> Cliente</strong></label>
                             <div class="d-flex align-items-center">
                                 <input
@@ -555,6 +564,11 @@ if (isset($_GET['id'])) {
                                         placeholder="" />
                                 </div>
                             </div>
+                        </div>
+                                </div>
+                                </div>
+                            </div>
+                           
                         </div>
                         <hr>
 
@@ -927,6 +941,45 @@ if (isset($_GET['id'])) {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="assets/js/scriptNotify.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Obtener elementos de los tabs
+    const pagoDirectoTab = document.getElementById("pills-home-tab-icon");
+    const pagoCreditoTab = document.getElementById("pills-profile-tab-icon");
+
+    // Obtener elementos del acordeón
+    const collapseOne = document.getElementById("collapseOne");
+    const accordionButton = document.querySelector(".accordion-button"); // Botón del acordeón
+    const nombreCliente = document.getElementById("nombreCliente");
+    const telefonoCliente = document.getElementById("idUpdateNumTelefonoCliente");
+    const correoCliente = document.getElementById("idUpdateCorreoCliente");
+    const idPersona = document.getElementById("idPersona");
+    // Función para resetear los valores del formulario
+    function resetearValores() {
+        nombreCliente.value = "";
+        telefonoCliente.value = "";
+        correoCliente.value = "";
+        idPersona.textContent="#";
+    }
+
+    // Evento cuando se selecciona "Pago Directo"
+    pagoDirectoTab.addEventListener("click", function () {
+        resetearValores(); // Reiniciar valores
+        collapseOne.classList.remove("show"); // Ocultar acordeón
+        accordionButton.classList.add("collapsed"); // Agregar clase "collapsed"
+        accordionButton.setAttribute("aria-expanded", "false"); // Cambiar atributo
+    });
+
+    // Evento cuando se selecciona "Pago Crédito"
+    pagoCreditoTab.addEventListener("click", function () {
+        resetearValores(); // Reiniciar valores
+        collapseOne.classList.add("show"); // Mostrar acordeón
+        accordionButton.classList.remove("collapsed"); // Quitar clase "collapsed"
+        accordionButton.setAttribute("aria-expanded", "true"); // Cambiar atributo
+    });
+});
+</script>
 
 
 <script>
@@ -3079,7 +3132,7 @@ if (isset($_GET['id'])) {
             //////////////////////////////////////////////////////////////////////////
             var idVenta = 0
 
-            var idPersona = document.getElementById('idPersona').textContent;
+            var idPersona = document.getElementById('idPersona').textContent.trim() === "#" ? "9897" : document.getElementById('idPersona').textContent.trim();
             var idUsuario = document.getElementById('idUsuario').textContent;
             var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
             var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
@@ -3251,10 +3304,12 @@ if (isset($_GET['id'])) {
 
 
         //////////////////////////////////////////////////////
+        if (document.getElementById('idPersona').textContent.trim() === "#") return Swal.fire("Error", "Debe ingresar un cliente", "warning");
+
         var numTelefonoUpdate = document.getElementById('idUpdateNumTelefonoCliente').value;
         //////////////////////////////////////////////////////////////////////////
         var idVenta = document.getElementById('idVenta').textContent;
-        var idPersona = document.getElementById('idPersona').textContent;
+        var idPersona = document.getElementById('idPersona').textContent.trim();
         var idUsuario = document.getElementById('idUsuario').textContent;
         var idAtencionFinal = document.getElementById('idAtencionFinal').textContent;
         var numUpdateTelefonoPersona = document.getElementById('idUpdateNumTelefonoCliente').value;
@@ -3696,9 +3751,7 @@ if (isset($_GET['id'])) {
 
                     modalCliente.hide();
 
-                } else {
-                    alert('Por favor, corrige los errores antes de registrar.');
-                }
+                } 
             } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {
                 // Recolectar los datos del formulario Empresa
                 if (validarCamposEmpresa()) {
@@ -3725,9 +3778,7 @@ if (isset($_GET['id'])) {
                     modalCliente.hide();
 
 
-                } else {
-                    alert('Por favor, corrige los errores antes de registrar.');
-                }
+                } 
             }
         });
 
@@ -3775,10 +3826,8 @@ if (isset($_GET['id'])) {
                     console.log(response);
                     const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
                     if (jsonResponse.success) {
-                        alert("Empresa registrada con éxito");
                         resolve(jsonResponse);  // Resolvemos la promesa en caso de éxito
                     } else {
-                        alert("Error al registrar empresa");
                         reject(new Error(jsonResponse.mensaje || "Error desconocido"));  // Si hay error en la respuesta del servidor
                     }
                 }).fail(function (error) {

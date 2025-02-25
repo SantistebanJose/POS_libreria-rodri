@@ -713,7 +713,6 @@ include("cabecera.php");
                 },
                 error: function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al obtener los datos del usuario.");
                 }
             });
         }
@@ -804,7 +803,6 @@ include("cabecera.php");
                 }
             }).fail(function(error) {
                 console.error("Error:", error.responseText);
-                alert("Error al registrar el usuario.");
             });
 
         }
@@ -858,7 +856,6 @@ include("cabecera.php");
 
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
                 });
             }
         });
@@ -905,7 +902,6 @@ include("cabecera.php");
 
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
                 });
 
 
@@ -955,7 +951,6 @@ include("cabecera.php");
 
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
-                    alert("Error al registrar el usuario.");
                 });
             }
         });

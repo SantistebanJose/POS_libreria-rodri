@@ -1604,7 +1604,6 @@ if (isset($_GET['id'])) {
             }]);
         } catch (error) {
             console.error("Error al insertar movimiento:", error.message);
-            alert("Error al procesar el movimiento: " + error.message);
         }
     }
 </script>
@@ -2695,7 +2694,6 @@ if (isset($_GET['id'])) {
 
             } catch (error) {
                 console.error("Error al confirmar cantidad:", error);
-                alert("Ocurrió un error al agregar el artículo.");
             }
         });
 
@@ -2901,7 +2899,6 @@ if (isset($_GET['id'])) {
                 } catch (error) {
                     // Manejar el error
                     console.error("Error al insertar movimiento:", error.message);
-                    alert("Error al procesar el movimiento: " + error.message);
                 }
 
 
@@ -3110,7 +3107,6 @@ if (isset($_GET['id'])) {
                 } catch (error) {
                     // Manejar el error
                     console.error("Error al insertar movimiento:", error.message);
-                    alert("Error al procesar el movimiento: " + error.message);
                 }
 
 
@@ -3233,7 +3229,6 @@ if (isset($_GET['id'])) {
                 } catch (error) {
                     // Manejar el error
                     console.error("Error al insertar movimiento:", error.message);
-                    alert("Error al procesar el movimiento: " + error.message);
                 }
 
             });

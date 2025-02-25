@@ -1641,7 +1641,6 @@ if (isset($_GET['id'])) {
 
             }).fail(function(error) {
                 console.error("Error:", error.responseText);
-                alert("Error al registrar la reserva.");
             });
 
 
@@ -3053,9 +3052,7 @@ if (isset($_GET['id'])) {
 
                     modalCliente.hide();
 
-                } else {
-                    alert('Por favor, corrige los errores antes de registrar.');
-                }
+                } 
             } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {
                 // Recolectar los datos del formulario Empresa
                 if (validarCamposEmpresa()) {
@@ -3082,9 +3079,7 @@ if (isset($_GET['id'])) {
                     modalCliente.hide();
 
 
-                } else {
-                    alert('Por favor, corrige los errores antes de registrar.');
-                }
+                } 
             }
         });
 
@@ -3131,10 +3126,8 @@ if (isset($_GET['id'])) {
                     console.log(response);
                     const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
                     if (jsonResponse.success) {
-                        alert("Empresa registrada con éxito");
                         resolve(jsonResponse); // Resolvemos la promesa en caso de éxito
                     } else {
-                        alert("Error al registrar empresa");
                         reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Si hay error en la respuesta del servidor
                     }
                 }).fail(function(error) {
