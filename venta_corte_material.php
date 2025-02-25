@@ -1809,12 +1809,6 @@ if (isset($_GET['id'])) {
                         <button id="btnConfirmarEditarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
                     </div>
 
-                            <!-- Botón Confirmar -->
-                              <div class="modal-footer">
-                                <!-- Botón Confirmar a la izquierda -->
-                                <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
-
-                            </div>
                             
                         </div>
                     `;
@@ -2582,11 +2576,7 @@ if (isset($_GET['id'])) {
             <div class="text-center mb-3">
                 <button id="btnConfirmar" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
             </div>
-            <!-- Botón Confirmar -->
-            <div class="modal-footer">
-                <!-- Botón Confirmar a la izquierda -->
-                <button type="button"  class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
-            </div>
+          
            
         </div>
         `;

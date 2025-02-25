@@ -542,7 +542,7 @@ if (isset($_GET['id'])) {
                         <div class="row justify-content-center align-items-center g-2">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="" class="form-label"><i class="fas fa-phone-square"></i><strong>Número de Telefono</strong></label>
+                                    <label for="" class="form-label"><i class="fas fa-phone-square"></i><strong> Número de Telefono</strong></label>
                                     <input
                                         type="number"
                                         class="form-control"
@@ -3249,15 +3249,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         try {
                             var result = JSON.parse(response);
                             if (result.estado === true) {
-                                swal({
-                                    title: "Pagado con Exito!",
-                                    text: result.mensaje,
+                                Swal.fire({
+                                    title: "Pagado con Éxito!",
+                                    html: `<p style="text-align: center;">${result.mensaje}</p>`, // Usa "html" en lugar de "text"
                                     icon: "success",
                                     buttons: false,
                                     timer: 1500
                                 }).then(() => {
                                     location.reload();
-                                });;
+                                });
                             } else {
                                 swal("Error", result.mensaje, {
                                     icon: "error",
@@ -3387,15 +3387,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 try {
                     var result = JSON.parse(response);
                     if (result.estado === true) {
-                        swal({
-                            title: "Pagado con Exito!",
-                            text: result.mensaje,
+                        Swal.fire({
+                            title: "Pagado con Éxito!",
+                            html: `<div style="text-align: center;">${result.mensaje}</div>`, // Se usa "html" en lugar de "text"
                             icon: "success",
                             buttons: false,
                             timer: 1500
                         }).then(() => {
                             location.reload();
-                        });;
+                        });
                     } else {
                         swal("Error", result.mensaje, {
                             icon: "error",
