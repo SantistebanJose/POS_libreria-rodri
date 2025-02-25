@@ -176,12 +176,12 @@ if (isset($_GET['id'])) {
                                             </select>
                                         </div>
                                         <div class="col-md-3">
-                                            <a
+                                            <button
                                                 name=""
                                                 id="clearFilters"
                                                 class="btn btn-secondary btn-round btn-round btn-md"
                                                 href="#"
-                                                role="button"><i class="fas fa-broom"></i> Limpiar Filtros</a>
+                                                role="button"><i class="fas fa-broom"></i> Limpiar Filtros</b>
 
 
                                         </div>
