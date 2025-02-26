@@ -252,44 +252,48 @@ include("cabecera.php");
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="card-body">
-                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-box-open"></i> Apertura de Caja Chica</h4>
-                <hr>
-                <div class="card-sub text-center">
-                    Aquí podrás Registrar la apertura de caja. Ten en cuenta el monto correspondiente.
-                </div>
-                <div class="row justify-content-center align-items-center sm-2">
-                    <div class="col-sm-12">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <h4 class="card-title">Monto</h4>
-                                <div class="mb-3">
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        name=""
-                                        id="idMontoAperturaCajaChica"
-                                        aria-describedby="helpId"
-                                        placeholder="" />
-                                    <small id="helpId" class="form-text text-muted">Este será el monto para tu caja chica.</small>
-                                </div>
-                                <div class="card-sub text-center">
-                                    Recuerda que el monto máximo para cada adquisición con cargo a la Caja Chica no debe exceder del diez por ciento (10%) de una UIT,
+
+            <div class="modal-body">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="card-body">
+                    <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-box-open"></i> Apertura de Caja Chica</h4>
+                    <hr>
+                    <div class="card-sub text-center">
+                        Aquí podrás Registrar la apertura de caja. Ten en cuenta el monto correspondiente.
+                    </div>
+                    <div class="row justify-content-center align-items-center sm-2">
+                        <div class="col-sm-12">
+                            <div class="card text-start">
+                                <div class="card-body">
+                                    <h4 class="card-title">Monto</h4>
+                                    <div class="mb-3">
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name=""
+                                            id="idMontoAperturaCajaChica"
+                                            aria-describedby="helpId"
+                                            placeholder="" />
+                                        <small id="helpId" class="form-text text-muted">Este será el monto para tu caja chica.</small>
+                                    </div>
+                                    <div class="card-sub text-center">
+                                        Recuerda que el monto máximo para cada adquisición con cargo a la Caja Chica no debe exceder del diez por ciento (10%) de una UIT,
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="text-center">
-                        <a
-                            name=""
-                            id=""
-                            class="btn btn-success btn-round"
-                            onclick='fnRegistrarAperturaDeCaja()'
-                            role="button">Aperturar Caja <i class="fas fa-plus"> </i></a>
+                        <div class="text-center">
+                            <a
+                                name=""
+                                id=""
+                                class="btn btn-success btn-round"
+                                onclick='fnRegistrarAperturaDeCaja()'
+                                role="button">Aperturar Caja <i class="fas fa-plus"> </i></a>
+                        </div>
                     </div>
                 </div>
             </div>
+
 
         </div>
     </div>
@@ -497,7 +501,7 @@ include("cabecera.php");
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -786,7 +790,7 @@ include("pie.php")
                 "caja_id": parseInt(document.getElementById("idCaja_id").innerText),
                 "tipo_movimiento": "EGRESO",
                 "responsable_id": <?php echo $id_usuario_s; ?>,
-                "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>", 
+                "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>",
                 "monto_caja_chica": monto_caja_chica,
                 "nota_caja_chica": (nota_cajaChica.length) === 0 ? null : nota_cajaChica,
                 "concepto_id": concepto,

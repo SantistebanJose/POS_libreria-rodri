@@ -12,33 +12,6 @@ include("cabecera.php");
             <?php foreach (listarFormaPago() as $datos) {
                 $datosJSON = json_encode($datos);
             ?>
-                <div class="col-sm-6 col-md-3">
-                    <div class="card card-stats card-round">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-5">
-                                    <div class="icon-big text-center">
-                                        <i class="<?php echo $datos["icon"] ?>"></i>
-                                    </div>
-                                </div>
-                                <div class="col-7 col-stats">
-                                    <div class="numbers">
-                                        <p class="card-category"><?php echo $datos["nombre"] ?></p>
-                                        <h4 class="card-title">S/ <?php echo $datos["monto"] ?></h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php
-            } ?>
-        </div>
-
-        <div class="row">
-            <?php foreach (listarFormaPago() as $datos) {
-                $datosJSON = json_encode($datos);
-            ?>
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-header">
@@ -66,6 +39,7 @@ include("cabecera.php");
                                             aria-labelledby="dropdownMenuButton">
                                             <button class="dropdown-item" href="#" onclick='fnAbrirSwalRegistroEgreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Registrar Egreso</button>
                                             <button class="dropdown-item" href="#"><i class="fas fa-caret-right"></i> Registrar Ingreso</button>
+                                            <button class="dropdown-item" href="#"><i class="fas fa-caret-right"></i> Actualizar Monto</button>
                                         </div>
                                     </div>
                                 </div>
@@ -87,6 +61,33 @@ include("cabecera.php");
 
             <div class="card-body">
                 <h4 class="card-title"><i class="fas fa-briefcase"></i> Flujo de Caja</h4>
+                <hr>
+                <div class="row">
+                    <?php foreach (listarFormaPago() as $datos) {
+                        $datosJSON = json_encode($datos);
+                    ?>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="icon-big text-center">
+                                                <i class="<?php echo $datos["icon"] ?>"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 col-stats">
+                                            <div class="numbers">
+                                                <p class="card-category"><?php echo $datos["nombre"] ?></p>
+                                                <h4 class="card-title">S/ <?php echo $datos["monto"] ?></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php
+                    } ?>
+                </div>
                 <hr>
                 <div class="card text-start">
                     <div class="card-body">
