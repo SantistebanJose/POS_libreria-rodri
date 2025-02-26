@@ -58,6 +58,61 @@ include("cabecera.php");
         background-color: #f0f8ff;
         /* Botón de cerrar rojo */
     }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin: 10px 0;
+    }
+
+    .pagination a {
+        text-decoration: none;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        color: #333;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #f0f0f0;
+    }
+
+    .pagination a.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Hacer que la paginación se ajuste en pantallas pequeñas */
+    @media (max-width: 768px) {
+        .pagination {
+            font-size: 12px;
+        }
+
+        .pagination a {
+            padding: 6px 10px;
+        }
+
+        table {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .pagination {
+            font-size: 10px;
+        }
+
+        .pagination a {
+            padding: 5px 8px;
+        }
+
+        table {
+            font-size: 12px;
+        }
+    }
 </style>
 
 <div

@@ -23,6 +23,46 @@ include("cabecera.php");
         font-size: 0.9em;
         margin-top: 5px;
     }
+ 
+    /* Tamaño por defecto para pantallas grandes (computadoras) */
+    .modal-dialog-custom {
+        max-width: 50%;
+        /* Este sería el tamaño 'normal' para computadoras */
+        margin: 0 auto;
+        /* Centra el modal */
+    }
+
+    /* Tamaño para pantallas medianas (tabletas) */
+    @media (max-width: 768px) {
+        .modal-dialog-custom {
+            max-width: 80%;
+            /* 80% del ancho de la pantalla en tabletas */
+        }
+    }
+
+    /* Tamaño para pantallas pequeñas (teléfonos móviles) */
+    @media (max-width: 576px) {
+        .modal-dialog-custom {
+            width: 100%;
+            /* Asegura que el modal ocupe todo el ancho disponible en móviles */
+            margin: 0 10px;
+            /* Da un poco de espacio a los lados en móviles */
+            max-width: 100%;
+            /* No permite que el modal se haga más grande que el 100% */
+        }
+    }
+
+    /* Asegura que el contenido del modal no se desborde */
+    .modal-content {
+        padding: 15px;
+        /* Espaciado dentro del modal para que el contenido no esté pegado a los bordes */
+    }
+
+    .dataTable {
+        overflow-x: auto;
+        /* Para permitir desplazamiento horizontal si es necesario */
+    }
+
 
 
     

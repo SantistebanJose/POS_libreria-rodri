@@ -181,6 +181,30 @@ function listarProductosVenta1(): array
     return executeQuery($query);
 }
 
+function listarTipoArticuloMantenimiento(): array
+{
+    $query = "select * from tipo";
+    return executeQuery($query);
+}
+
+function listarDimensionArticuloMantenimiento(): array
+{
+    $query = "select * from dimension";
+    return executeQuery($query);
+}
+
+function listarEscalaArticuloMantenimiento(): array
+{
+    $query = "select * from escala";
+    return executeQuery($query);
+}
+
+function listarCategoriaArticuloMantenimiento(): array
+{
+    $query = "select * from categoria";
+    return executeQuery($query);
+}
+
 function listarArticuloSinview(): array
 {
     $query = "SELECT 
