@@ -604,7 +604,7 @@ include("cabecera.php");
     function fn_editar_articulo(datosArticulo) {
         console.log(datosArticulo);
         document.getElementById("contenidoArticulo").innerHTML = `
-            
+        <div class="card border-primary">
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
 
            <div class="card-body">
@@ -815,7 +815,7 @@ include("cabecera.php");
 
                 </div>
                 </div>
-            
+            </div>
         `;
         const setSelectValue = (elementId, text) => {
             const select = document.getElementById(elementId);

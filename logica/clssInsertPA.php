@@ -349,7 +349,7 @@ function paEditarArticuloCompleto($jsDatosArticulo)
     global $conectar;
 
     $data = json_decode($jsDatosArticulo, true);
-
+    $id = $data['id'];
     $categoria_id = $data['categoria_id'];
     $color = $data['color'];
     $corte = false;
@@ -362,10 +362,10 @@ function paEditarArticuloCompleto($jsDatosArticulo)
     $tipo_id = $data['tipo_id'];
 
     try {
-        $sql = "SELECT fn_editar_articulo_completo(:nombre, :categoria_id, :tipo_id, :dimension_id, :escala_id,:stock,:precio_venta, :corte, :color, :marca)";
+        $sql = "SELECT fn_editar_articulo_completo(:id,:nombre, :categoria_id, :tipo_id, :dimension_id, :escala_id,:stock,:precio_venta, :corte, :color, :marca)";
 
         $stmt = $conectar->prepare($sql);
-
+        $stmt->bindParam(':id', $id);
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':categoria_id', $categoria_id);
         $stmt->bindParam(':tipo_id', $tipo_id);
