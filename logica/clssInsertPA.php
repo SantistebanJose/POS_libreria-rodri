@@ -50,6 +50,26 @@ function controladorClssInsertPA($accion)
                 paRegistrarArticulo($jsDatos);
             }
             break;
+        case 'REGISTAR_ARTICULO_COMPLETO':
+            if (isset($_POST["jsDatosArticulo"])) {
+                $jsDatos = $_POST["jsDatosArticulo"];
+                paRegistrarArticuloCompleto($jsDatos);
+            }
+            break;
+        case 'EDITAR_ARTICULO_COMPLETO':
+            if (isset($_POST["jsDatosArticulo"])) {
+                $jsDatos = $_POST["jsDatosArticulo"];
+                paEditarArticuloCompleto($jsDatos);
+            }
+            break;
+        case 'BLOQUEAR_ARTICULO':
+            $id = $_POST["id"]; // Decodificar JSON
+            toggle_estado_articulo_completo($id, $accion);
+            break;
+        case 'DESBLOQUEAR_ARTICULO':
+            $id = $_POST["id"]; // Decodificar JSON
+            toggle_estado_articulo_completo($id, $accion);
+            break;
         case 'REGISTRAR_COMPRA':
             if (isset($_POST["jsDatosCompra"])) {
                 $jsDatos = $_POST["jsDatosCompra"];
@@ -277,6 +297,136 @@ function paRegistrarArticulo($jsDatosArticulo)
         echo json_encode($response);
     } catch (Exception $e) {
         echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.' . $e, 'jsonEntrada' => $data, 'SQL' => $stmt]);
+    }
+}
+
+function paRegistrarArticuloCompleto($jsDatosArticulo)
+{
+    global $conectar;
+
+    $data = json_decode($jsDatosArticulo, true);
+
+    $categoria_id = $data['categoria_id'];
+    $color = $data['color'];
+    $corte = false;
+    $dimension_id = $data['dimension_id'];
+    $escala_id = $data['escala_id'];
+    $stock = $data['stock'];
+    $precio_venta = $data['precio_venta'];
+    $marca = $data['marca'];
+    $nombre = $data['nombre'];
+    $tipo_id = $data['tipo_id'];
+
+    try {
+        $sql = "SELECT fn_registrar_articulo_completo(:nombre, :categoria_id, :tipo_id, :dimension_id, :escala_id,:stock,:precio_venta, :corte, :color, :marca)";
+
+        $stmt = $conectar->prepare($sql);
+
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':categoria_id', $categoria_id);
+        $stmt->bindParam(':tipo_id', $tipo_id);
+        $stmt->bindParam(':dimension_id', $dimension_id);
+        $stmt->bindParam(':escala_id', $escala_id);
+        $stmt->bindParam(':stock', $stock);
+        $stmt->bindParam(':precio_venta', $precio_venta);
+        $stmt->bindParam(':corte', $corte, PDO::PARAM_BOOL); // Usando PDO::PARAM_BOOL para asegurarse que se trata como booleano
+        $stmt->bindParam(':color', $color);
+        $stmt->bindParam(':marca', $marca);
+
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $jsonResponse = $row['fn_registrar_articulo_completo'];
+
+        $response = json_decode($jsonResponse, true);
+        echo json_encode($response);
+    } catch (Exception $e) {
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.' . $e, 'jsonEntrada' => $data, 'SQL' => $stmt]);
+    }
+}
+function paEditarArticuloCompleto($jsDatosArticulo)
+{
+    global $conectar;
+
+    $data = json_decode($jsDatosArticulo, true);
+
+    $categoria_id = $data['categoria_id'];
+    $color = $data['color'];
+    $corte = false;
+    $dimension_id = $data['dimension_id'];
+    $escala_id = $data['escala_id'];
+    $stock = $data['stock'];
+    $precio_venta = $data['precio_venta'];
+    $marca = $data['marca'];
+    $nombre = $data['nombre'];
+    $tipo_id = $data['tipo_id'];
+
+    try {
+        $sql = "SELECT fn_editar_articulo_completo(:nombre, :categoria_id, :tipo_id, :dimension_id, :escala_id,:stock,:precio_venta, :corte, :color, :marca)";
+
+        $stmt = $conectar->prepare($sql);
+
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':categoria_id', $categoria_id);
+        $stmt->bindParam(':tipo_id', $tipo_id);
+        $stmt->bindParam(':dimension_id', $dimension_id);
+        $stmt->bindParam(':escala_id', $escala_id);
+        $stmt->bindParam(':stock', $stock);
+        $stmt->bindParam(':precio_venta', $precio_venta);
+        $stmt->bindParam(':corte', $corte, PDO::PARAM_BOOL); // Usando PDO::PARAM_BOOL para asegurarse que se trata como booleano
+        $stmt->bindParam(':color', $color);
+        $stmt->bindParam(':marca', $marca);
+
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $jsonResponse = $row['fn_editar_articulo_completo'];
+
+        $response = json_decode($jsonResponse, true);
+        echo json_encode($response);
+    } catch (Exception $e) {
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.' . $e, 'jsonEntrada' => $data, 'SQL' => $stmt]);
+    }
+}
+
+function toggle_estado_articulo_completo($id, $accion) {
+    global $conectar;
+
+    try {
+        // Verificar si el usuario existe
+        $verificarUsuario = $conectar->prepare("SELECT COUNT(*) FROM articulo WHERE id = :id");
+        $verificarUsuario->bindParam(":id", $id);
+        $verificarUsuario->execute();
+        $usuarioExistente = $verificarUsuario->fetchColumn();
+
+        if ($usuarioExistente == 0) {
+            // Si no existe el usuario, retornar un error
+            echo json_encode(["error" => true, "message" => "Articulo no encontrado."]);
+            return;
+        }
+
+        // Determinar la acción
+        if ($accion == "BLOQUEAR_ARTICULO") {
+            // Bloquear usuario (poner deleted_at)
+            $sql = "UPDATE articulo SET deleted_at = NOW() WHERE id = :id";
+        } elseif ($accion == "DESBLOQUEAR_ARTICULO") {
+            // Desbloquear usuario (eliminar deleted_at)
+            $sql = "UPDATE articulo SET deleted_at = NULL WHERE id = :id";
+        } else {
+            echo json_encode(["error" => true, "message" => "Acción no válida."]);
+            return;
+        }
+
+        // Ejecutar la actualización
+        $orden = $conectar->prepare($sql);
+        $orden->bindParam(":id", $id);
+        $orden->execute();
+
+        echo json_encode(["success" => true, "message" => "Estado del articulo actualizado."]);
+
+    } catch (\Throwable $th) {
+        error_log("Error en toggle_estado_articulo: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
     }
 }
 

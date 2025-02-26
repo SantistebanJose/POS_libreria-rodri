@@ -125,7 +125,7 @@ if (isset($_GET['id'])) {
     <div class="page-inner">
         <div
             class="card"
-        ">
+        >
 
             <div class="card-body">
                 <h4 class="card-title">Venta</h4>
@@ -140,7 +140,7 @@ if (isset($_GET['id'])) {
   
                         </div>
                             <div class="card-body">
-                            <div class="table-filters mb-3">
+                                <div class="table-filters mb-3">
                                     <div class="row justify-content-center align-items-center g-2">
                                         <div class="col-md-3">
                                             <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
@@ -166,8 +166,6 @@ if (isset($_GET['id'])) {
                                                 class="btn btn-secondary btn-round btn-round btn-md"
                                                 href="#"
                                                 role="button"><i class="fas fa-broom"></i> Limpiar Filtros</b>
-
-
                                         </div>
                                     </div>
 
