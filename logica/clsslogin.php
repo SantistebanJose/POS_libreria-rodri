@@ -36,7 +36,7 @@ function login($user, $pass){
         $orden = $conectar->prepare("SELECT u.id, u.username, u.rol, p.nombres, p.apellidos, p.email, u.password 
                                      FROM usuario AS u 
                                      INNER JOIN persona AS p ON u.persona_id = p.id 
-                                     WHERE u.deleted_at IS NULL AND u.username = :user;");
+                                     WHERE u.deleted_at IS NULL AND UPPER(u.username) = UPPER(:user);");
         $orden->bindParam(":user", $user);
         $orden->execute();
 

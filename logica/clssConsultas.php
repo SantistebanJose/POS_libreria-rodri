@@ -1233,16 +1233,25 @@ function fnListadoMovimientoCajaGrande(): array
 }
 
 
-function fnVerificarUsarioSession($id): array
+function fnVerificarUsarioSession($id): int
 {
-    
     $query = "     
     SELECT 
-    COUNT(*) 
+    COUNT(*) as cantidad
     FROM usuario
-    where id =:idUsuario and deleted_at is null
+    WHERE id = :idUsuario AND deleted_at IS NULL
     ";
     
-    return executeQuery($query,params:["idUsuario"=>$id]);
+    // Ejecutar la consulta
+    $result = executeQuery($query, ['idUsuario' => $id]);
+    
+    // Verificar si el usuario existe
+    if ($result[0]['cantidad'] > 0) {
+        // Si el usuario existe y no está eliminado, devolver 1
+        return 1;
+    } else {
+        // Si el usuario no existe o está eliminado, devolver 0
+        return 0;
+    }
 }
 

@@ -1,22 +1,45 @@
 <?php
 
-session_start(); // Iniciar la sesión, necesario para usar $_SESSION
+include('logica/clssConsultas.php');
 
+session_start();
 
-// Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['id'])) {
-    // Si no ha iniciado sesión, redirigir a login.php
-    
+
     header("Location: login.php");
-    
     exit();
 }
-$ape_usuario = $_SESSION['ape'];
-$id_usuario_s = $_SESSION['id'];
-$rol =  $_SESSION['rol'];
-$nombre =  $_SESSION['nombre'];
-$correo =  $_SESSION['correo'];
-include('logica/clssConsultas.php');
+
+
+$flagRespuesta = fnVerificarUsarioSession($_SESSION['id']);
+if ($flagRespuesta == 0) {
+    $ape_usuario = $_SESSION['ape'];
+    $id_usuario_s = $_SESSION['id'];
+    $rol = $_SESSION['rol'];
+    $usuario = $_SESSION['usuario'];
+    $nombre = $_SESSION['nombre'];
+    $correo = $_SESSION['correo'];
+    echo '<div style="text-align: center; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 20px; border-radius: 10px; font-size: 18px; font-weight: bold;">
+        <i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i> 
+        Usuario BLOQUEADO - '.strtoupper($nombre).' '.strtoupper($ape_usuario).' ['.strtoupper($usuario).'] 😞 ❌
+      </div>
+      <br>
+      <div style="text-align: center;">
+        <img src="assets/img/mebloqueaste.png" alt="Usuario Bloqueado" />
+        </div>
+     <br>
+    <div style="text-align: center;"> <b>Comunicate con los dueños para que te den acceso</b> </div>
+
+      ';
+    exit();
+} else {
+    $ape_usuario = $_SESSION['ape'];
+    $id_usuario_s = $_SESSION['id'];
+    $rol = $_SESSION['rol'];
+    $nombre = $_SESSION['nombre'];
+    $correo = $_SESSION['correo'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -143,7 +166,7 @@ include('logica/clssConsultas.php');
                                             </a>
                                         </li>
 
-                                       
+
 
                                     </ul>
                                 </div>
