@@ -21,7 +21,7 @@ if ($flagRespuesta == 0) {
     $correo = $_SESSION['correo'];
     echo '<div style="text-align: center; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 20px; border-radius: 10px; font-size: 18px; font-weight: bold;">
         <i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i> 
-        Usuario BLOQUEADO - '.strtoupper($nombre).' '.strtoupper($ape_usuario).' ['.strtoupper($usuario).'] 😞 ❌
+        Usuario BLOQUEADO - ' . strtoupper($nombre) . ' ' . strtoupper($ape_usuario) . ' [' . strtoupper($usuario) . '] 😞 ❌
       </div>
       <br>
       <div style="text-align: center;">
@@ -210,7 +210,27 @@ if ($flagRespuesta == 0) {
                                 </div>
                             </li>
 
+                            <li class="nav-item">
+                                <a
+                                    data-bs-toggle="collapse"
+                                    href="#etl"
+                                    class="collapsed"
+                                    aria-expanded="false">
+                                    <i class="fas fa-file-powerpoint"></i>
+                                    <p>Datos</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="etl">
+                                    <ul class="nav nav-collapse">
+                                        <li>
 
+                                            <a href="">
+                                                <span class="sub-item">ETL para Power BI</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                         <?php } ?>
 
                         <li class="nav-item">
@@ -321,6 +341,7 @@ if ($flagRespuesta == 0) {
                                 </ul>
                             </div>
                         </li>
+
                     </ul>
                 </div>
             </div>
