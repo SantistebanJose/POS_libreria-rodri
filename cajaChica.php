@@ -134,14 +134,14 @@ include("cabecera.php");
                                             </div>
                                             <ol class="activity-feed">
                                                 <?php
-                                                    #$datosDetalleCaja = json_decode(fnListadoCajaChica()[0]["js_detalle_caja"], true);
-                                                    if (fnListadoCajaChica()[0]["js_detalle_caja"] !== null) {
-                                                        $datosDetalleCaja = json_decode(fnListadoCajaChica()[0]["js_detalle_caja"], true);
-                                                    } else {
-                                                        $datosDetalleCaja = null;
-                                                        #echo "Error: La variable JSON es null.";
-                                                    }
-                                                    
+                                                #$datosDetalleCaja = json_decode(fnListadoCajaChica()[0]["js_detalle_caja"], true);
+                                                if (fnListadoCajaChica()[0]["js_detalle_caja"] !== null) {
+                                                    $datosDetalleCaja = json_decode(fnListadoCajaChica()[0]["js_detalle_caja"], true);
+                                                } else {
+                                                    $datosDetalleCaja = null;
+                                                    #echo "Error: La variable JSON es null.";
+                                                }
+
                                                 if (empty($datosDetalleCaja)) {
                                                 ?>
                                                     <div>Sin Registros de caja</div>
@@ -240,46 +240,7 @@ include("cabecera.php");
 
     </div>
 </div>
-<style>
-    /* Tamaño por defecto para pantallas grandes (computadoras) */
-    .modal-dialog-custom {
-        max-width: 50%;
-        /* Este sería el tamaño 'normal' para computadoras */
-        margin: 0 auto;
-        /* Centra el modal */
-    }
 
-    /* Tamaño para pantallas medianas (tabletas) */
-    @media (max-width: 768px) {
-        .modal-dialog-custom {
-            max-width: 80%;
-            /* 80% del ancho de la pantalla en tabletas */
-        }
-    }
-
-    /* Tamaño para pantallas pequeñas (teléfonos móviles) */
-    @media (max-width: 500px) {
-        .modal-dialog-custom {
-            width: 100%;
-            /* Asegura que el modal ocupe todo el ancho disponible en móviles */
-            margin: 0 10px;
-            /* Da un poco de espacio a los lados en móviles */
-            max-width: 100%;
-            /* No permite que el modal se haga más grande que el 100% */
-        }
-    }
-
-    /* Asegura que el contenido del modal no se desborde */
-    .modal-content {
-        padding: 15px;
-        /* Espaciado dentro del modal para que el contenido no esté pegado a los bordes */
-    }
-
-    .dataTable {
-        overflow-x: auto;
-        /* Para permitir desplazamiento horizontal si es necesario */
-    }
-</style>
 
 
 <div
@@ -343,65 +304,69 @@ include("cabecera.php");
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="card-body">
-                <h6 class="card-title text-center" style="font-size: 20px;"><i class="fas fa-boxes"></i> Registro de Egreso de Caja Chica</h6>
 
-                <div class="card-sub text-center">
-                    Aquí podrás Registrar los <strong>EGRESOS</strong> de caja Chica.
-                </div>
+            <div class="modal-body">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="card-body">
+                    <h6 class="card-title text-center" style="font-size: 20px;"><i class="fas fa-boxes"></i> Registro de Egreso de Caja Chica</h6>
 
-                <div class="row justify-content-center align-items-center sm-2">
+                    <div class="card-sub text-center">
+                        Aquí podrás Registrar los <strong>EGRESOS</strong> de caja Chica.
+                    </div>
 
-                    <div class="card-title text-center" style="color: green;"> Saldo de caja Disponible: S/ <span id="montoSaldoDisponible">100.00</span> </div>
+                    <div class="row justify-content-center align-items-center sm-2">
 
-                    <div class="col-sm-12">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <div class="row justify-content-center align-items-center g-2">
-                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="mb-3">
+                        <div class="card-title text-center" style="color: green;"> Saldo de caja Disponible: S/ <span id="montoSaldoDisponible">100.00</span> </div>
 
-                                            <label for="idSelectConceptoEgreso" class="form-label"><strong> <i class="fas fa-angle-down"></i> Concepto</strong></label>
-                                            <select class="form-select form-select-md w-100" aria-label="Default select example" id="idSelectConceptoEgreso">
-                                                <option selected>Seleccione Concepto</option>
-                                                <?php foreach (fnListadoConceptosEgresos("C") as $datos) { ?>
-                                                    <option value="<?php echo $datos["id"] ?>"><?php echo $datos["titulo"] ?></option>
-                                                <?php } ?>
-                                            </select>
+                        <div class="col-sm-12">
+                            <div class="card text-start">
+                                <div class="card-body">
+                                    <div class="row justify-content-center align-items-center g-2">
+                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="mb-3">
+
+                                                <label for="idSelectConceptoEgreso" class="form-label"><strong> <i class="fas fa-angle-down"></i> Concepto</strong></label>
+                                                <select class="form-select form-select-md w-100" aria-label="Default select example" id="idSelectConceptoEgreso">
+                                                    <option selected>Seleccione Concepto</option>
+                                                    <?php foreach (fnListadoConceptosEgresos("C") as $datos) { ?>
+                                                        <option value="<?php echo $datos["id"] ?>"><?php echo $datos["titulo"] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="mb-3">
+                                                <label for="idMontoCajaChica" class="form-label"><strong>Ingresa Monto (S/) de Egreso</strong></label>
+                                                <input type="number" class="form-control form-control-md w-100" id="idMontoCajaChica" placeholder="" />
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="mb-3">
 
-                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="mb-3">
-                                            <label for="idMontoCajaChica" class="form-label"><strong>Ingresa Monto (S/) de Egreso</strong></label>
-                                            <input type="number" class="form-control form-control-md w-100" id="idMontoCajaChica" placeholder="" />
-                                        </div>
+                                        <label for="" class="form-label"><strong><i class="fas fa-sticky-note"></i> Nota</strong></label>
+                                        <textarea class="form-control" name="" id="idDetalleNotaCajaChica" rows="3" placeholder="Puedes escribir algo como Pago de Luz o Agua por corte, Pasajes Tatiana, etc."></textarea>
                                     </div>
-                                </div>
-                                <div class="mb-3">
+                                    <div class="card-sub text-center">
+                                        Recuerda que el monto máximo para cada adquisición con cargo a la Caja Chica no debe exceder del diez por ciento (10%) de una UIT,
+                                    </div>
 
-                                    <label for="" class="form-label"><strong><i class="fas fa-sticky-note"></i> Nota</strong></label>
-                                    <textarea class="form-control" name="" id="idDetalleNotaCajaChica" rows="3" placeholder="Puedes escribir algo como Pago de Luz o Agua por corte, Pasajes Tatiana, etc."></textarea>
-                                </div>
-                                <div class="card-sub text-center">
-                                    Recuerda que el monto máximo para cada adquisición con cargo a la Caja Chica no debe exceder del diez por ciento (10%) de una UIT,
                                 </div>
 
                             </div>
-
                         </div>
                     </div>
-                </div>
-                <div class="text-center">
-                    <a
-                        name=""
-                        id=""
-                        class="btn btn-success btn-round"
-                        onclick='fnRegistrarEgresoCajaChica()'
-                        role="button">Registrar Egreso de Caja <i class="fas fa-plus"> </i></a>
+                    <div class="text-center">
+                        <a
+                            name=""
+                            id=""
+                            class="btn btn-success btn-round"
+                            onclick='fnRegistrarEgresoCajaChica()'
+                            role="button">Registrar Egreso de Caja <i class="fas fa-plus"> </i></a>
+                    </div>
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -418,50 +383,53 @@ include("cabecera.php");
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="card-body">
-                <h6 class="card-title text-center" style="font-size: 20px;"><i class="fas fa-boxes"></i> Registro de Ingresos de Caja Chica</h6>
+            <div class="modal-body">
 
-                <div class="card-sub text-center">
-                    Aquí podrás Registrar los <strong>INGRESOS</strong> de caja Chica.
-                </div>
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="card-body">
+                    <h6 class="card-title text-center" style="font-size: 20px;"><i class="fas fa-boxes"></i> Registro de Ingresos de Caja Chica</h6>
 
-                <div class="row justify-content-center align-items-center sm-2">
+                    <div class="card-sub text-center">
+                        Aquí podrás Registrar los <strong>INGRESOS</strong> de caja Chica.
+                    </div>
 
-                    <div class="card-title text-center" style="color: green;"> Saldo de caja Disponible: S/ <span id="montoSaldoDisponibleIngreso">100.00</span> </div>
+                    <div class="row justify-content-center align-items-center sm-2">
 
-                    <div class="col-sm-12">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="idMontoIngresoCajaChica" class="form-label"><strong>Ingresa Monto (S/) de Ingreso a Caja</strong></label>
-                                    <input type="number" class="form-control form-control-md w-100" id="idMontoIngresoCajaChica" placeholder="" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="" class="form-label"><strong><i class="fas fa-sticky-note"></i> Nota</strong></label>
-                                    <textarea class="form-control" name="" id="idIngresoDetalleNotaCajaChica" rows="3" placeholder="Puedes escribir algo como Ingresos por vuelto en tienda, sencillo, etc."></textarea>
-                                </div>
+                        <div class="card-title text-center" style="color: green;"> Saldo de caja Disponible: S/ <span id="montoSaldoDisponibleIngreso">100.00</span> </div>
 
-                                <div class="card-sub text-center">
-                                    Recuerda que el monto máximo para cada adquisición con cargo a la Caja Chica no debe exceder del diez por ciento (10%) de una UIT,
+                        <div class="col-sm-12">
+                            <div class="card text-start">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="idMontoIngresoCajaChica" class="form-label"><strong>Ingresa Monto (S/) de Ingreso a Caja</strong></label>
+                                        <input type="number" class="form-control form-control-md w-100" id="idMontoIngresoCajaChica" placeholder="" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="" class="form-label"><strong><i class="fas fa-sticky-note"></i> Nota</strong></label>
+                                        <textarea class="form-control" name="" id="idIngresoDetalleNotaCajaChica" rows="3" placeholder="Puedes escribir algo como Ingresos por vuelto en tienda, sencillo, etc."></textarea>
+                                    </div>
+
+                                    <div class="card-sub text-center">
+                                        Recuerda que el monto máximo para cada adquisición con cargo a la Caja Chica no debe exceder del diez por ciento (10%) de una UIT,
+                                    </div>
+
                                 </div>
 
                             </div>
-
                         </div>
                     </div>
-                </div>
-                <div class="text-center">
-                    <a
-                        name=""
-                        id=""
-                        class="btn btn-success btn-round"
-                        onclick='fnRegistrarIngresoDeCaja()'
-                        role="button">Registrar Ingreso de Caja <i class="fas fa-plus"> </i></a>
+                    <div class="text-center">
+                        <a
+                            name=""
+                            id=""
+                            class="btn btn-success btn-round"
+                            onclick='fnRegistrarIngresoDeCaja()'
+                            role="button">Registrar Ingreso de Caja <i class="fas fa-plus"> </i></a>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
 
@@ -472,77 +440,66 @@ include("cabecera.php");
     role="dialog"
     aria-labelledby="modalTitleId"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-custom" role="document">
         <div class="modal-content">
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="card-body">
-                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-box-open"></i> Caja Chica <strong id="idMontoVenta"></strong></h4>
-                <hr>
-                <div class="card-sub text-center">
-                    Aquí podrás revisar los datos de la caja chica. Revisa el detalle de la movimientos de caja.
-                </div>
-                <div class="row justify-content-center align-items-center sm-2">
-                    <div class="col-sm-12">
-                        <div
-                            class="row justify-content-center align-items-center g-2">
-                            <div class="col-sm-6">
-                                <div class="card text-start">
+            <div class="modal-body">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="card-body">
+                    <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-box-open"></i> Caja Chica <strong id="idMontoVenta"></strong></h4>
+                    <hr>
+                    <div class="card-sub text-center">
+                        Aquí podrás revisar los datos de la caja chica. Revisa el detalle de la movimientos de caja.
+                    </div>
+                    <div class="card text-start">
 
-                                    <div class="card-body">
-                                        <h6 class="card-title"> <i class="fas fa-box-open"></i> Caja Aperturada con <span style="color: green;" id="idDetMontoApertura"></span></h6>
-                                        <hr>
-                                        <div><strong>Apertura Por: </strong> <span id="idResponsable"></span></div>
-                                        <div><strong>Fecha de Apertura: </strong> <span id="idDetFechaApertura"></span></div>
-                                        <div><strong>Hora de Apertura: </strong> <span id="idDetidHoraApertura"></span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="card text-start">
-                                    <div class="card-body">
-                                        <h6 class="card-title"><i class="fas fa-box"></i> Saldo de caja <span style="color: orange;" id="idDetSaldoCaja"></span> </h6>
-                                        <hr>
-                                        <div><strong>Fecha de Cierre: </strong> <span id="idDetFechaCierre"></span></div>
-                                        <div><strong>Hora de Cierre:</strong> <span id="idDetHoraCierre"></span></div>
-
-                                        <div><strong>Egresos de Caja: </strong> S/ <span id="idDetEgresosCaja"></span></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="card-body">
+                            <h6 class="card-title"> <i class="fas fa-box-open"></i> Caja Aperturada con <span style="color: green;" id="idDetMontoApertura"></span></h6>
+                            <hr>
+                            <div><strong>Apertura Por: </strong> <span id="idResponsable"></span></div>
+                            <div><strong>Fecha de Apertura: </strong> <span id="idDetFechaApertura"></span></div>
+                            <div><strong>Hora de Apertura: </strong> <span id="idDetidHoraApertura"></span></div>
                         </div>
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <div class="accordion accordion-flush" id="accordionFlushExample">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="flush-headingOne">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                                <strong><i class="fas fa-book-reader"></i> Detalle de los Egresos de Caja</strong>
-                                            </button>
-                                        </h2>
-                                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                            <div class="accordion-body">
+                    </div>
+                    <div class="card text-start">
+                        <div class="card-body">
+                            <h6 class="card-title"><i class="fas fa-box"></i> Saldo de caja <span style="color: orange;" id="idDetSaldoCaja"></span> </h6>
+                            <hr>
+                            <div><strong>Fecha de Cierre: </strong> <span id="idDetFechaCierre"></span></div>
+                            <div><strong>Hora de Cierre:</strong> <span id="idDetHoraCierre"></span></div>
 
-                                                <div class="card-sub">
-                                                    Revisa los <strong>EGRESOS</strong> registrados en caja :)
-                                                </div>
-                                                <div>
-                                                    <ul id="idContenidoUlDetalleCaja">
+                            <div><strong>Egresos de Caja: </strong> S/ <span id="idDetEgresosCaja"></span></div>
+                        </div>
+                    </div>
+                    <div class="card text-start">
+                        <div class="card-body">
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="flush-headingOne">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                            <strong><i class="fas fa-book-reader"></i> Detalle de los Egresos de Caja</strong>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body">
 
-                                                    </ul>
-                                                </div>
-
+                                            <div class="card-sub">
+                                                Revisa los <strong>EGRESOS</strong> registrados en caja :)
                                             </div>
+                                            <div>
+                                                <ul id="idContenidoUlDetalleCaja">
+
+                                                </ul>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
+                    
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -829,7 +786,7 @@ include("pie.php")
                 "caja_id": parseInt(document.getElementById("idCaja_id").innerText),
                 "tipo_movimiento": "EGRESO",
                 "responsable_id": <?php echo $id_usuario_s; ?>,
-                "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>", // Asegúrate de poner comillas aquí
+                "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>", 
                 "monto_caja_chica": monto_caja_chica,
                 "nota_caja_chica": (nota_cajaChica.length) === 0 ? null : nota_cajaChica,
                 "concepto_id": concepto,

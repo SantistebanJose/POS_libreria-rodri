@@ -213,7 +213,7 @@ function listarVentaReservaCorte(): array
 
 function listarFormaPago(): array
 {
-    $query = "SELECT * FROM forma_pago WHERE deleted_at IS NULL order by id";
+    $query = "SELECT *,updated_at::date as fecha, TO_CHAR(updated_at, 'HH12:MI:SS AM') as hora FROM forma_pago WHERE deleted_at IS NULL order by id";
     return executeQuery($query);
 }
 function listarEmpleados(): array
@@ -1149,17 +1149,50 @@ function fnListadoCajaChicaCerradas(): array
 
 function fnListadoConceptosEgresos($tipoCaja): array
 {
-    // tipoCaja: C: chica | G: Grande
+    
     $query = "     
     SELECT 
     * 
     FROM 
     concepto 
     WHERE id NOT IN (1) AND tipo_caja IN (:tipo_caja,'A')
-    ORDER BY 1
+    AND deleted_at IS null
+    ORDER BY orden
     ";
-
-    // Ejecuta la consulta con el parámetro de búsqueda
+    
     return executeQuery($query,params:["tipo_caja"=>$tipoCaja]);
+}
+function fnListadoMovimientoCajaGrande(): array
+{
+    
+    $query = "     
+    SELECT 
+    dc.*,
+    case 
+        when dc.responsable is null then
+            dc.movimiento_caja_v2
+        else
+            dc.responsable
+    end accionado,
+    fp.nombre forma_pago,
+    CASE 
+        WHEN EXTRACT(DOW FROM dc.created_at) = 0 THEN UPPER('Domingo')
+        WHEN EXTRACT(DOW FROM dc.created_at) = 1 THEN UPPER('Lunes')
+        WHEN EXTRACT(DOW FROM dc.created_at) = 2 THEN UPPER('Martes')
+        WHEN EXTRACT(DOW FROM dc.created_at) = 3 THEN UPPER('Miércoles')
+        WHEN EXTRACT(DOW FROM dc.created_at) = 4 THEN UPPER('Jueves')
+        WHEN EXTRACT(DOW FROM dc.created_at) = 5 THEN UPPER('Viernes')
+        WHEN EXTRACT(DOW FROM dc.created_at) = 6 THEN UPPER('Sábado')
+    END dia_semana,
+    dc.created_at::date as fecha,
+    TO_CHAR(dc.created_at, 'HH12:MI:SS AM') as hora
+    FROM 
+    detalle_caja_grande dc 
+    JOIN forma_pago fp ON fp.id=dc.forma_pago_id
+    where dc.deleted_at is null -- and dc.tipo_movimiento = 'EGRESO'
+    ORDER by 1;
+    ";
+    
+    return executeQuery($query);
 }
 
