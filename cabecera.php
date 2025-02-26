@@ -2,10 +2,13 @@
 
 session_start(); // Iniciar la sesión, necesario para usar $_SESSION
 
+
 // Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['id'])) {
     // Si no ha iniciado sesión, redirigir a login.php
+    
     header("Location: login.php");
+    
     exit();
 }
 $ape_usuario = $_SESSION['ape'];

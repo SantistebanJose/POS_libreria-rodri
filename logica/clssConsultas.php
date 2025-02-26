@@ -1232,3 +1232,17 @@ function fnListadoMovimientoCajaGrande(): array
     return executeQuery($query);
 }
 
+
+function fnVerificarUsarioSession($id): array
+{
+    
+    $query = "     
+    SELECT 
+    COUNT(*) 
+    FROM usuario
+    where id =:idUsuario and deleted_at is null
+    ";
+    
+    return executeQuery($query,params:["idUsuario"=>$id]);
+}
+

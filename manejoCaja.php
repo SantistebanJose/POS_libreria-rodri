@@ -162,8 +162,7 @@ include("cabecera.php");
 
             <div class="modal-body">
 
-                <div
-                    class="card border-primary">
+                <div class="card border-primary">
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="card-body">
 
