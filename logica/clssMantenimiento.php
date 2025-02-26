@@ -10,35 +10,35 @@ function controladorMantenimiento($accion)
 {
     switch ($accion) {
         case 'REGISTAR_TIPO_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             registrar_tipo($data);
             break;
         case 'REGISTAR_CATEGORIA_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             registrar_categoria($data);
             break;
         case 'REGISTAR_ESCALA_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             registrar_escala($data);
             break;
         case 'REGISTAR_DIMENSION_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             registrar_dimension($data);
             break;
         case 'EDITAR_TIPO_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             editar_tipo($data);
             break;
         case 'EDITAR_CATEGORIA_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             editar_categoria($data);
             break;
         case 'EDITAR_ESCALA_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             editar_escala($data);
             break;
         case 'EDITAR_DIMENSION_ARTICULO':
-            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            $data = json_decode($_POST["jsDatos"], true); // Decodificar JSON
             editar_dimension($data);
             break;
         case 'BLOQUEAR_TIPO':
@@ -86,7 +86,7 @@ function registrar_tipo($datos = array()) {
         // Insertar en la tabla usuario
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO tipo (abreviatura, descripcion)
-                                     VALUES (:abreviatura, :descripcion);");
+                                     VALUES (UPPER(:abreviatura), :descripcion);");
         $orden->bindParam(":abreviatura", $datos['nombre']);
         $orden->bindParam(":descripcion", $datos['descripcion']);
 
@@ -95,12 +95,12 @@ function registrar_tipo($datos = array()) {
         $orden->closeCursor();
 
         $conectar->commit();
-        echo json_encode(["success" => true, "tipo_id" => $usuario_id]);
+        echo json_encode(["estado" => true, "mensaje" => "Operación realizada con éxito", "tipo_id" => $usuario_id]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en registrar_usuario: " . $th->getMessage());
-        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+        echo json_encode(["error" => true, "mensaje" => $th->getMessage()]);
     }
 }
 
@@ -112,7 +112,7 @@ function registrar_categoria($datos = array()) {
         // Insertar en la tabla usuario
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO categoria (abreviatura, descripcion)
-                                     VALUES (:abreviatura, :descripcion);");
+                                     VALUES (UPPER(:abreviatura), :descripcion);");
         $orden->bindParam(":abreviatura", $datos['nombre']);
         $orden->bindParam(":descripcion", $datos['descripcion']);
 
@@ -121,12 +121,12 @@ function registrar_categoria($datos = array()) {
         $orden->closeCursor();
 
         $conectar->commit();
-        echo json_encode(["success" => true, "categoria_id" => $usuario_id]);
+        echo json_encode(["estado" => true, "mensaje" => "Operación realizada con éxito", "categoria_id" => $usuario_id]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en registrar_usuario: " . $th->getMessage());
-        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+        echo json_encode(["error" => true, "mensaje" => $th->getMessage()]);
     }
 }
 
@@ -139,7 +139,7 @@ function registrar_escala($datos = array()) {
         // Insertar en la tabla usuario
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO escala (abreviatura, descripcion)
-                                     VALUES (:abreviatura, :descripcion);");
+                                     VALUES (UPPER(:abreviatura), :descripcion);");
         $orden->bindParam(":abreviatura", $datos['nombre']);
         $orden->bindParam(":descripcion", $datos['descripcion']);
 
@@ -148,12 +148,12 @@ function registrar_escala($datos = array()) {
         $orden->closeCursor();
 
         $conectar->commit();
-        echo json_encode(["success" => true, "escala_id" => $usuario_id]);
+        echo json_encode(["estado" => true, "mensaje" => "Operación realizada con éxito", "escala_id" => $usuario_id]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en registrar_usuario: " . $th->getMessage());
-        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+        echo json_encode(["error" => true, "mensaje" => $th->getMessage()]);
     }
 }
 
@@ -165,7 +165,7 @@ function registrar_dimension($datos = array()) {
         // Insertar en la tabla usuario
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO dimension (medida, descripcion)
-                                     VALUES (:medida, :descripcion);");
+                                     VALUES (UPPER(:medida), :descripcion);");
         $orden->bindParam(":medida", $datos['nombre']);
         $orden->bindParam(":descripcion", $datos['descripcion']);
 
@@ -174,12 +174,12 @@ function registrar_dimension($datos = array()) {
         $orden->closeCursor();
 
         $conectar->commit();
-        echo json_encode(["success" => true, "dimension_id" => $usuario_id]);
+        echo json_encode(["estado" => true, "mensaje" => "Operación realizada con éxito", "dimension_id" => $usuario_id]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en registrar_usuario: " . $th->getMessage());
-        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+        echo json_encode(["error" => true, "mensaje" => $th->getMessage()]);
     }
 }
 
@@ -196,7 +196,7 @@ function editar_tipo($datos = array()) {
 
         if ($Existente == 0) {
             // Si no existe el usuario, retornar un error
-            echo json_encode(["error" => true, "message" => "Tipo no encontrado."]);
+            echo json_encode(["error" => true, "mensaje" => "Tipo no encontrado"]);
             return;
         }
 
@@ -204,7 +204,7 @@ function editar_tipo($datos = array()) {
         $conectar->beginTransaction();
         
         // Preparar la consulta para actualizar los datos
-        $sql = "UPDATE tipo SET abreviatura = :abreviatura, descripcion = :descripcion";
+        $sql = "UPDATE tipo SET abreviatura = UPPER(:abreviatura), descripcion = :descripcion";
         $sql .= " WHERE id = :id";
         
         $orden = $conectar->prepare($sql);
@@ -216,12 +216,12 @@ function editar_tipo($datos = array()) {
         $orden->execute();
         $conectar->commit();
 
-        echo json_encode(["success" => true, "message" => "Usuario actualizado con éxito."]);
+        echo json_encode(["estado" => true, "mensaje" => "Operación realizada con éxito"]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en editar_usuario: " . $th->getMessage());
-        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+        echo json_encode(["error" => true, "mensaje" => $th->getMessage()]);
     }
 }
 
@@ -237,7 +237,7 @@ function editar_categoria($datos = array()) {
 
         if ($Existente == 0) {
             // Si no existe el usuario, retornar un error
-            echo json_encode(["error" => true, "message" => "Categoria no encontrado."]);
+            echo json_encode(["error" => true,  "mensaje" => "Categoria no encontrada"]);
             return;
         }
 
@@ -245,7 +245,7 @@ function editar_categoria($datos = array()) {
         $conectar->beginTransaction();
         
         // Preparar la consulta para actualizar los datos
-        $sql = "UPDATE categoria SET abreviatura = :abreviatura, descripcion = :descripcion";
+        $sql = "UPDATE categoria SET abreviatura = UPPER(:abreviatura), descripcion = :descripcion";
         $sql .= " WHERE id = :id";
         
         $orden = $conectar->prepare($sql);
@@ -257,12 +257,12 @@ function editar_categoria($datos = array()) {
         $orden->execute();
         $conectar->commit();
 
-        echo json_encode(["success" => true, "message" => "Usuario actualizado con éxito."]);
+        echo json_encode(["estado" => true,  "mensaje" => "Operación realizada con éxito"]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en editar_usuario: " . $th->getMessage());
-        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+        echo json_encode(["error" => true, "mensaje" => $th->getMessage()]);
     }
 }
 
@@ -278,7 +278,7 @@ function editar_escala($datos = array()) {
 
         if ($Existente == 0) {
             // Si no existe el usuario, retornar un error
-            echo json_encode(["error" => true, "message" => "Escala no encontrado."]);
+            echo json_encode(["error" => true, "mensaje" => "Escala no encontrado."]);
             return;
         }
 
@@ -286,7 +286,7 @@ function editar_escala($datos = array()) {
         $conectar->beginTransaction();
         
         // Preparar la consulta para actualizar los datos
-        $sql = "UPDATE escala SET abreviatura = :abreviatura, descripcion = :descripcion";
+        $sql = "UPDATE escala SET abreviatura = UPPER(:abreviatura), descripcion = :descripcion";
         $sql .= " WHERE id = :id";
         
         $orden = $conectar->prepare($sql);
@@ -298,12 +298,12 @@ function editar_escala($datos = array()) {
         $orden->execute();
         $conectar->commit();
 
-        echo json_encode(["success" => true, "message" => "Usuario actualizado con éxito."]);
+        echo json_encode(["estado" => true,  "mensaje" => "Operación realizada con éxito"]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en editar_usuario: " . $th->getMessage());
-        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+        echo json_encode(["error" => true, "mensaje" => $th->getMessage()]);
     }
 }
 
@@ -319,7 +319,7 @@ function editar_dimension($datos = array()) {
 
         if ($Existente == 0) {
             // Si no existe el usuario, retornar un error
-            echo json_encode(["error" => true, "message" => "Dimension no encontrado."]);
+            echo json_encode(["error" => true, "mensaje" => "Dimension no encontrado."]);
             return;
         }
 
@@ -327,11 +327,11 @@ function editar_dimension($datos = array()) {
         $conectar->beginTransaction();
         
         // Preparar la consulta para actualizar los datos
-        $sql = "UPDATE dimension SET medida = :abreviatura, descripcion = :descripcion";
+        $sql = "UPDATE dimension SET medida = UPPER(:medida), descripcion = :descripcion";
         $sql .= " WHERE id = :id";
         
         $orden = $conectar->prepare($sql);
-        $orden->bindParam(":abreviatura", $datos['nombre']);
+        $orden->bindParam(":medida", $datos['nombre']);
         $orden->bindParam(":descripcion", $datos['descripcion']);
         $orden->bindParam(":id", $datos['id']);
         
@@ -339,7 +339,7 @@ function editar_dimension($datos = array()) {
         $orden->execute();
         $conectar->commit();
 
-        echo json_encode(["success" => true, "message" => "Usuario actualizado con éxito."]);
+        echo json_encode(["estado" => true,  "mensaje" => "Operación realizada con éxito"]);
 
     } catch (\Throwable $th) {
         $conectar->rollBack();
