@@ -23,33 +23,7 @@ include("cabecera.php");
         margin-top: 5px;
     }
  
-    /* Tamaño por defecto para pantallas grandes (computadoras) */
-    .modal-dialog-custom {
-        max-width: 50%;
-        /* Este sería el tamaño 'normal' para computadoras */
-        margin: 0 auto;
-        /* Centra el modal */
-    }
-
-    /* Tamaño para pantallas medianas (tabletas) */
-    @media (max-width: 768px) {
-        .modal-dialog-custom {
-            max-width: 80%;
-            /* 80% del ancho de la pantalla en tabletas */
-        }
-    }
-
-    /* Tamaño para pantallas pequeñas (teléfonos móviles) */
-    @media (max-width: 576px) {
-        .modal-dialog-custom {
-            width: 100%;
-            /* Asegura que el modal ocupe todo el ancho disponible en móviles */
-            margin: 0 10px;
-            /* Da un poco de espacio a los lados en móviles */
-            max-width: 100%;
-            /* No permite que el modal se haga más grande que el 100% */
-        }
-    }
+   
 
     /* Asegura que el contenido del modal no se desborde */
     .modal-content {
@@ -693,129 +667,106 @@ include("cabecera.php");
 
 <script>
     document.getElementById("btnAgregarTipo").addEventListener("click", function() {
-                document.getElementById("contenidoGenerico").innerHTML = `
-                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="card-body">
-                        <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-cogs"></i> Registro de Tipo</h4>
-                    <div class="card-sub text-center">
-                        Aquí podrás <strong>registrar</strong> los tipos de Artículos <strong>NUEVOS.</strong>
-                    </div>
-                    <div class="card-sub text-center">
-                        Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
-                    </div>
-                    <div class="card text-start">
+        document.getElementById("contenidoGenerico").innerHTML = `
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-cogs"></i> Registro de Tipo</h4>
+            <div class="card-sub text-center">
+                Aquí podrás <strong>registrar</strong> los tipos de Artículos <strong>NUEVOS.</strong>
+            </div>
+            <div class="card-sub text-center">
+                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+            </div>
+            <div class="card text-start">
 
-                        <div class="card-body">
-                            <div
-                                class="row justify-content-center align-items-center g-2">
+                <div class="card-body">
+                    <div
+                        class="row justify-content-center align-items-center g-2">
 
-                                <div class="col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="" class="form-label"><strong>Ingrese Nombre de Tipo <span class="fw-bold text-danger">*</span></strong> </label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="idRegistroNombreTipo"
-                                            id="idRegistroNombreTipo"
-                                            aria-describedby="helpId"
-                                            placeholder="Articulo 1" />
-                                    </div>
-
-                                </div>
-
-                                <div class="col-sm-12">
-                                    <div class="mb-3">
-                                        <label for="" class="form-label"> <strong>Descripcion</strong></label>
-                                        <textarea
-                                            type="text"
-                                            class="form-control"
-                                            name="idRegistroDescripcion"
-                                            id="idRegistroDescripcion"
-                                            > </textarea>
-                                    </div>
-
-                                </div>
-                                <div class="text-center">
-                                    <a
-                                        name=""
-                                        id="btnRegistrarTipo"
-                                        class="btn btn-success btn-round"
-
-                                        role="button">Registrar <i class="fas fa-check"> </i></a>
-                                </div>
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><strong>Ingrese Nombre de Tipo <span class="fw-bold text-danger">*</span></strong> </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="idRegistroNombreTipo"
+                                    id="idRegistroNombreTipo"
+                                    aria-describedby="helpId"
+                                    placeholder="Articulo 1" />
                             </div>
+
                         </div>
 
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"> <strong>Descripcion</strong></label>
+                                <textarea
+                                    type="text"
+                                    class="form-control"
+                                    name="idRegistroDescripcion"
+                                    id="idRegistroDescripcion"
+                                    > </textarea>
+                            </div>
 
+                        </div>
+                        <div class="text-center">
+                            <a
+                                name=""
+                                id="btnRegistrarTipo"
+                                class="btn btn-success btn-round"
+
+                                role="button">Registrar <i class="fas fa-check"> </i></a>
+                        </div>
                     </div>
-                    </div>
-                        
-                        
-                        
-            
-                `;
+                </div>
 
-                const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
-                modal.show();
 
-                // Agregar evento de validación al botón "Registrar"
+            </div>
+            </div>
+                
+                
+                
+    
+        `;
 
-                document.getElementById("btnRegistrarTipo").addEventListener("click", async function() {
-                    if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
-                        
-                        var jsDatos = {
-                            "nombre": document.getElementById("idRegistroNombreTipo").value,
-                            "descripcion": document.getElementById("idRegistroDescripcion").value
-                        };
-                        console.log(jsDatos);
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
 
-                        $.ajax({
-                            url: 'logica/clssMantenimiento.php',
-                            type: 'POST',
-                            data: {
-                                accion: 'REGISTAR_TIPO_ARTICULO',
-                                jsDatos: JSON.stringify(jsDatos)
-                            },
-                            success: function(response) {
-                                console.log("Respuesta del servidor : ", response);
-                                try {
-                                    var result = JSON.parse(response);
-                                    if (result.estado === true) {
-                                        swal({
-                                            title: "Registrado con Exito!",
-                                            text: result.mensaje,
-                                            icon: "success",
-                                            buttons: false,
-                                            timer: 1500
-                                        }).then(() => {
-                                            location.reload();
+        // Agregar evento de validación al botón "Registrar"
 
-                                        });;
-                                    } else {
-                                        swal("Error", result.mensaje, {
-                                            icon: "error",
-                                            buttons: {
-                                                confirm: {
-                                                    className: "btn btn-danger",
-                                                },
-                                            },
-                                        });
-                                    }
-                                } catch (e) {
-                                    console.log("Error al parsear el JSON: ", e);
-                                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                        icon: "error",
-                                        buttons: {
-                                            confirm: {
-                                                className: "btn btn-danger",
-                                            },
-                                        },
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.log("Error: " + error);
-                                swal("Error", "Hubo un problema con la solicitud.", {
+        document.getElementById("btnRegistrarTipo").addEventListener("click", async function() {
+            if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
+                
+                var jsDatos = {
+                    "nombre": document.getElementById("idRegistroNombreTipo").value,
+                    "descripcion": document.getElementById("idRegistroDescripcion").value
+                };
+                console.log(jsDatos);
+
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'REGISTAR_TIPO_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
                                     icon: "error",
                                     buttons: {
                                         confirm: {
@@ -824,11 +775,21 @@ include("cabecera.php");
                                     },
                                 });
                             }
-                        });
-
-
-                        } else {
-                        swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
                             icon: "error",
                             buttons: {
                                 confirm: {
@@ -836,10 +797,23 @@ include("cabecera.php");
                                 },
                             },
                         });
-                        }
-
-
+                    }
                 });
+
+
+                } else {
+                swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+                }
+
+
+        });
 
     });
 
@@ -1299,19 +1273,615 @@ include("cabecera.php");
 
 <script>
     function fn_editar_tipo(datosTipo){
+        document.getElementById("contenidoGenerico").innerHTML = `
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-cogs"></i> Editar Tipo</h4>
+            <div class="card-sub text-center">
+                Aquí podrás <strong>editar</strong> los tipos de Artículos <strong>NUEVOS.</strong>
+            </div>
+            <div class="card-sub text-center">
+                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+            </div>
+            <div class="card text-start">
 
+                <div class="card-body">
+                    <div
+                        class="row justify-content-center align-items-center g-2">
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><strong>Ingrese Nombre de Tipo <span class="fw-bold text-danger">*</span></strong> </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarNombreTipo"
+                                    id="idEditarNombreTipo"
+                                    aria-describedby="helpId"
+                                    value="${datosTipo.abreviatura}"
+                                    placeholder="Articulo 1" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"> <strong>Descripcion</strong></label>
+                                <textarea
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarDescripcion"
+                                    id="idEditarDescripcion"
+                                    value="${datosTipo.descripcion}"
+                                    > </textarea>
+                            </div>
+
+                        </div>
+                        <div class="text-center">
+                            <a
+                                name=""
+                                id="btnEditarTipo"
+                                class="btn btn-success btn-round"
+
+                                role="button">Actualizar <i class="fas fa-check"> </i></a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            </div>
+                
+                
+                
+    
+        `;
+
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
+
+        // Agregar evento de validación al botón "Registrar"
+
+        document.getElementById("btnEditarTipo").addEventListener("click", async function() {
+            if ((document.getElementById("idEditarNombreTipo").value).length > 0) {
+                
+                var jsDatos = {
+                    "id": datosTipo.id,
+                    "nombre": document.getElementById("idEditarNombreTipo").value,
+                    "descripcion": document.getElementById("idEditarDescripcion").value
+                };
+                console.log(jsDatos);
+
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'EDITAR_TIPO_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger",
+                                        },
+                                    },
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                });
+
+
+                } else {
+                swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+                }
+
+
+        });
     }
 
     function fn_editar_categoria(datosCategoria){
+        document.getElementById("contenidoGenerico").innerHTML = `
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-cogs"></i> Editar Categoria</h4>
+            <div class="card-sub text-center">
+                Aquí podrás <strong>editar</strong> las categorias de Artículos <strong>NUEVOS.</strong>
+            </div>
+            <div class="card-sub text-center">
+                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+            </div>
+            <div class="card text-start">
 
+                <div class="card-body">
+                    <div
+                        class="row justify-content-center align-items-center g-2">
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><strong>Ingrese Nombre de Tipo <span class="fw-bold text-danger">*</span></strong> </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarNombreCategoria"
+                                    id="idEditarNombreCategoria"
+                                    aria-describedby="helpId"
+                                    value="${datosCategoria.abreviatura}"
+                                    placeholder="Articulo 1" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"> <strong>Descripcion</strong></label>
+                                <textarea
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarDescripcion"
+                                    id="idEditarDescripcion"
+                                    value="${datosCategoria.descripcion}"
+                                    > </textarea>
+                            </div>
+
+                        </div>
+                        <div class="text-center">
+                            <a
+                                name=""
+                                id="btnEditarCategoria"
+                                class="btn btn-success btn-round"
+
+                                role="button">Actualizar <i class="fas fa-check"> </i></a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            </div>
+                
+                
+                
+    
+        `;
+
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
+
+        // Agregar evento de validación al botón "Registrar"
+
+        document.getElementById("btnEditarCategoria").addEventListener("click", async function() {
+            if ((document.getElementById("idEditarNombreCategoria").value).length > 0) {
+                
+                var jsDatos = {
+                    "id": datosCategoria.id,
+                    "nombre": document.getElementById("idEditarNombreCategoria").value,
+                    "descripcion": document.getElementById("idEditarDescripcion").value
+                };
+                console.log(jsDatos);
+
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'EDITAR_CATEGORIA_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger",
+                                        },
+                                    },
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                });
+
+
+                } else {
+                swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+                }
+
+
+        });
     }
 
     function fn_editar_escala(datosEscala){
+        document.getElementById("contenidoGenerico").innerHTML = `
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-cogs"></i> Editar Escala</h4>
+            <div class="card-sub text-center">
+                Aquí podrás <strong>editar</strong> las escalas de Artículos <strong>NUEVOS.</strong>
+            </div>
+            <div class="card-sub text-center">
+                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+            </div>
+            <div class="card text-start">
 
+                <div class="card-body">
+                    <div
+                        class="row justify-content-center align-items-center g-2">
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><strong>Ingrese Nombre de Tipo <span class="fw-bold text-danger">*</span></strong> </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarNombreEscala"
+                                    id="idEditarNombreEscala"
+                                    aria-describedby="helpId"
+                                    value="${datosEscala.abreviatura}"
+                                    placeholder="Articulo 1" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"> <strong>Descripcion</strong></label>
+                                <textarea
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarDescripcion"
+                                    id="idEditarDescripcion"
+                                    value="${datosEscala.descripcion}"
+                                    > </textarea>
+                            </div>
+
+                        </div>
+                        <div class="text-center">
+                            <a
+                                name=""
+                                id="btnEditarEscala"
+                                class="btn btn-success btn-round"
+
+                                role="button">Actualizar <i class="fas fa-check"> </i></a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            </div>
+                
+                
+                
+    
+        `;
+
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
+
+        // Agregar evento de validación al botón "Registrar"
+
+        document.getElementById("btnEditarEscala").addEventListener("click", async function() {
+            if ((document.getElementById("idEditarNombreEscala").value).length > 0) {
+                
+                var jsDatos = {
+                    "id": datosEscala.id,
+                    "nombre": document.getElementById("idEditarNombreEscala").value,
+                    "descripcion": document.getElementById("idEditarDescripcion").value
+                };
+                console.log(jsDatos);
+
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'EDITAR_ESCALA_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger",
+                                        },
+                                    },
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                });
+
+
+                } else {
+                swal("Ups!, Debes de ingresar el nombre de la Escala 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+                }
+
+
+        });
     }
 
-    function fn_editar_Dimension(datosdimension){
+    function fn_editar_dimension(datosdimension){
+        document.getElementById("contenidoGenerico").innerHTML = `
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card-body">
+                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-cogs"></i> Editar Dimensión</h4>
+            <div class="card-sub text-center">
+                Aquí podrás <strong>editar</strong> las dimensiones de Artículos <strong>NUEVOS.</strong>
+            </div>
+            <div class="card-sub text-center">
+                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+            </div>
+            <div class="card text-start">
 
+                <div class="card-body">
+                    <div
+                        class="row justify-content-center align-items-center g-2">
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><strong>Ingrese Nombre de Tipo <span class="fw-bold text-danger">*</span></strong> </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarNombreDimension"
+                                    id="idEditarNombreDimension"
+                                    aria-describedby="helpId"
+                                    value="${datosdimension.medida}"
+                                    placeholder="Articulo 1" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"> <strong>Descripcion</strong></label>
+                                <textarea
+                                    type="text"
+                                    class="form-control"
+                                    name="idEditarDescripcion"
+                                    id="idEditarDescripcion"
+                                    value="${datosdimension.descripcion}"
+                                    > </textarea>
+                            </div>
+
+                        </div>
+                        <div class="text-center">
+                            <a
+                                name=""
+                                id="btnEditarDimension"
+                                class="btn btn-success btn-round"
+
+                                role="button">Actualizar <i class="fas fa-check"> </i></a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            </div>
+                
+                
+                
+    
+        `;
+
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
+
+        // Agregar evento de validación al botón "Registrar"
+
+        document.getElementById("btnEditarDimension").addEventListener("click", async function() {
+            if ((document.getElementById("idEditarNombreDimension").value).length > 0) {
+                
+                var jsDatos = {
+                    "id": datosdimension.id,
+                    "nombre": document.getElementById("idEditarNombreDimension").value,
+                    "descripcion": document.getElementById("idEditarDescripcion").value
+                };
+                console.log(jsDatos);
+
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'EDITAR_DIMENSION_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger",
+                                        },
+                                    },
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                });
+
+
+                } else {
+                swal("Ups!, Debes de ingresar el nombre de la Dimensión 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+                }
+
+
+        });
     }
 
 
