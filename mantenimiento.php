@@ -73,78 +73,78 @@ include("cabecera.php");
                 </ul>
                 <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
                     <div class="tab-pane fade show active" id="pills-tipo-articulo" role="tabpanel" aria-labelledby="pills-tipo-articulo-tab">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="card-title">Tipo de Articulo</h4>
-                        <button class="btn btn-success rounded-5" id="btnAgregarTipo"> Agregar Tipo <i class="fas fa-plus"> </i></button>
-                    </div>
-                    <hr>
-                    <div
-                        class="row justify-content-center align-items-center md-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h4 class="card-title"><i class="fas fa-cogs"></i> Tipo de Articulo</h4>
+                            <button class="btn btn-success rounded-5" id="btnAgregarTipo"> Agregar Tipo <i class="fas fa-plus"> </i></button>
+                        </div>
+                        <hr>
+                        <div
+                            class="row justify-content-center align-items-center md-2">
 
-                        <div class="col-sm-12">
-                            <div class="table-responsive">
-                                <table
-                                    id="multi-filter-select"
-                                    class="display table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Descripción</th>
-                                            <th>Accion</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-
-                                        <?php
-                                        foreach (listarTipoArticuloMantenimiento() as $datosTipo) {
-                                            $datosTipoJSON = json_encode($datosTipo);
-
-
-                                        ?>
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table
+                                        id="multi-filter-select"
+                                        class="display table table-striped table-hover">
+                                        <thead>
                                             <tr>
-                                                <td><?php echo $datosTipo["id"] ?></td>
-                                                <td><?php echo $datosTipo["abreviatura"] ?? '-'; ?></td>
-                                                <td><?php echo $datosTipo["descripcion"] ?? '-'; ?></td>
-                                                <td>
-                                                    <div class="mt-2 text-center">
-                                                            <!-- Botón de Editar (con ícono amarillo) -->
-                                                        <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
-                                                            onclick='fn_editar_tipo(<?php echo $datosTipoJSON; ?>)' role="button">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
-
-                                                        <!-- Botón de Activar/Bloquear -->
-                                                        <?php if (is_null($datosTipo["deleted_at"])) { ?>
-                                                            <!-- Botón para bloquear -->
-                                                            <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                onclick='fn_bloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
-                                                                <i class="fa fa-lock"></i>
-                                                            </a>
-                                                        <?php } else { ?>
-                                                            <!-- Botón para activar -->
-                                                            <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
-                                                                onclick='fn_desbloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
-                                                                <i class="fa fa-unlock"></i>
-                                                            </a>
-                                                        <?php } ?>
-                                                    </div>
-                                                </td>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>Descripción</th>
+                                                <th>Accion</th>
                                             </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        
+                                        <tbody>
+
+                                            <?php
+                                            foreach (listarTipoArticuloMantenimiento() as $datosTipo) {
+                                                $datosTipoJSON = json_encode($datosTipo);
+
+
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $datosTipo["id"] ?></td>
+                                                    <td><?php echo $datosTipo["abreviatura"] ?? '-'; ?></td>
+                                                    <td><?php echo $datosTipo["descripcion"] ?? '-'; ?></td>
+                                                    <td>
+                                                        <div class="mt-2 text-center">
+                                                                <!-- Botón de Editar (con ícono amarillo) -->
+                                                            <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                                onclick='fn_editar_tipo(<?php echo $datosTipoJSON; ?>)' role="button">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+
+                                                            <!-- Botón de Activar/Bloquear -->
+                                                            <?php if (is_null($datosTipo["deleted_at"])) { ?>
+                                                                <!-- Botón para bloquear -->
+                                                                <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                                    onclick='fn_bloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
+                                                                    <i class="fa fa-lock"></i>
+                                                                </a>
+                                                            <?php } else { ?>
+                                                                <!-- Botón para activar -->
+                                                                <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
+                                                                    onclick='fn_desbloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
+                                                                    <i class="fa fa-unlock"></i>
+                                                                </a>
+                                                            <?php } ?>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
 
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="pills-categoria-articulo" role="tabpanel" aria-labelledby="pills-categoria-articulo-tab">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="card-title">Categoria de Articulo</h4>
+                        <h4 class="card-title"><i class="fas fa-tag"></i> Categoria de Articulo</h4>
                         <button class="btn btn-success rounded-5" id="btnAgregarCategoria"> Agregar Categoria <i class="fas fa-plus"> </i></button>
                     </div>
                     <hr>
@@ -175,8 +175,8 @@ include("cabecera.php");
                                         ?>
                                             <tr>
                                                 <td><?php echo $datosCategoria["id"] ?></td>
-                                                <td><?php echo $datosCategoria["abreviatura"] ?? '-'; ?></td>
-                                                <td><?php echo $datosCategoria["descripcion"] ?? '-'; ?></td>
+                                                <td><?php echo $datosCategoria["abreviatura"] ?></td>
+                                                <td><?php echo $datosCategoria["descripcion"] ?></td>
                                                 <td>
                                                     <div class="mt-2 text-center">
                                                             <!-- Botón de Editar (con ícono amarillo) -->
@@ -214,7 +214,7 @@ include("cabecera.php");
                 </div>
                 <div class="tab-pane fade" id="pills-escala-articulo" role="tabpanel" aria-labelledby="pills-escala-articulo-tab">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="card-title">Escala de Articulo</h4>
+                        <h4 class="card-title"><i class="fas fa-sort"></i> Escala de Articulo</h4>
                         <button class="btn btn-success rounded-5" id="btnAgregarEscala"> Agregar Escala <i class="fas fa-plus"> </i></button>
                     </div>
                     <hr>
@@ -284,7 +284,7 @@ include("cabecera.php");
                 </div>
                 <div class="tab-pane fade" id="pills-dimension-articulo" role="tabpanel" aria-labelledby="pills-dimension-articulo-tab">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="card-title">Dimensión de Articulo</h4>
+                        <h4 class="card-title"><i class="fas fa-ruler"></i> Dimensión de Articulo</h4>
                         <button class="btn btn-success rounded-5" id="btnAgregarDimension"> Agregar Dimensión <i class="fas fa-plus"> </i></button>
                     </div>
                     <hr>
@@ -1312,8 +1312,7 @@ include("cabecera.php");
                                     class="form-control"
                                     name="idEditarDescripcion"
                                     id="idEditarDescripcion"
-                                    value="${datosTipo.descripcion}"
-                                    > </textarea>
+                                    ></textarea>
                             </div>
 
                         </div>
@@ -1339,6 +1338,7 @@ include("cabecera.php");
 
         const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
         modal.show();
+        document.getElementById("idEditarDescripcion").value=datosTipo.descripcion;
 
         // Agregar evento de validación al botón "Registrar"
 
@@ -1426,6 +1426,7 @@ include("cabecera.php");
     }
 
     function fn_editar_categoria(datosCategoria){
+        console.log(datosCategoria)
         document.getElementById("contenidoGenerico").innerHTML = `
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="card-body">
@@ -1465,8 +1466,7 @@ include("cabecera.php");
                                     class="form-control"
                                     name="idEditarDescripcion"
                                     id="idEditarDescripcion"
-                                    value="${datosCategoria.descripcion}"
-                                    > </textarea>
+                                    ></textarea>
                             </div>
 
                         </div>
@@ -1492,6 +1492,7 @@ include("cabecera.php");
 
         const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
         modal.show();
+        document.getElementById("idEditarDescripcion").value=datosCategoria.descripcion;
 
         // Agregar evento de validación al botón "Registrar"
 
@@ -1618,7 +1619,6 @@ include("cabecera.php");
                                     class="form-control"
                                     name="idEditarDescripcion"
                                     id="idEditarDescripcion"
-                                    value="${datosEscala.descripcion}"
                                     > </textarea>
                             </div>
 
@@ -1645,7 +1645,7 @@ include("cabecera.php");
 
         const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
         modal.show();
-
+        document.getElementById("idEditarDescripcion").value= datosEscala.descripcion;
         // Agregar evento de validación al botón "Registrar"
 
         document.getElementById("btnEditarEscala").addEventListener("click", async function() {
@@ -1771,7 +1771,7 @@ include("cabecera.php");
                                     class="form-control"
                                     name="idEditarDescripcion"
                                     id="idEditarDescripcion"
-                                    value="${datosdimension.descripcion}"
+                                   
                                     > </textarea>
                             </div>
 
@@ -1800,6 +1800,7 @@ include("cabecera.php");
         modal.show();
 
         // Agregar evento de validación al botón "Registrar"
+        document.getElementById("idEditarDescripcion").value=datosdimension.descripcion;
 
         document.getElementById("btnEditarDimension").addEventListener("click", async function() {
             if ((document.getElementById("idEditarNombreDimension").value).length > 0) {
