@@ -207,14 +207,16 @@ function listarCategoriaArticuloMantenimiento(): array
 
 function listarArticuloSinview(): array
 {
-    $query = "SELECT 
-   a.id,a.nombre as articulo,a.precio_venta,a.stock,a.deleted_at,a.corte,a.color,a.marca, d.medida as dimension, t.abreviatura as tipo,e.abreviatura as escala,c.abreviatura as categoria
-FROM articulo a
-LEFT JOIN dimension d ON d.id = a.dimension_id 
-LEFT JOIN tipo t ON t.id = a.tipo_id
-LEFT JOIN escala e ON e.id = a.escala_id
-LEFT JOIN categoria c ON c.id = a.categoria_id
-order by a.id";
+    $query = "
+    SELECT 
+    a.id,a.nombre as articulo,a.precio_venta,a.stock,a.deleted_at,a.corte,a.color,a.marca, d.medida as dimension, t.abreviatura as tipo,e.abreviatura as escala,c.abreviatura as categoria, a.disponibilidad_venta_fh
+    FROM articulo a
+    JOIN categoria c ON c.id = a.categoria_id AND a.deleted_at is null
+    LEFT JOIN dimension d ON d.id = a.dimension_id 
+    LEFT JOIN tipo t ON t.id = a.tipo_id
+    LEFT JOIN escala e ON e.id = a.escala_id
+    
+    order by a.id";
     return executeQuery($query);
 }
 function listarVentaReservaCorte(): array

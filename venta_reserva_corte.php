@@ -140,10 +140,10 @@ if (isset($_GET['id'])) {
     class="container">
     <div class="page-inner">
         <div
-            class="card" ">
+            class="card" >
 
             <div class=" card-body">
-            <h4 class="card-title">Venta</h4>
+            <h4 class="card-title"><i class="fas fa-weight-hanging"></i> Venta</h4>
             <div class="mb-3">
                 <div class="card-sub">
                     Aquí podrás realizar ventas de cuando un cliente viene a realizar corte y/o compra de materiales.
@@ -151,7 +151,7 @@ if (isset($_GET['id'])) {
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h4 class="card-title">Artículos</h4>
+                            <h4 class="card-title"> <i class="fas fa-chess-queen"></i> Artículos</h4>
 
                         </div>
                         <div class="card-body">

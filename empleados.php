@@ -124,9 +124,8 @@ include("cabecera.php");
 
             <div class="card-body">
 
-
                 <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="card-title">Trabajadores</h4>
+                    <h4 class="card-title"><i class="fas fa-users"></i> Trabajadores</h4>
                     <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico">Agregar Persona <i class="fas fa-plus"> </i></button>
                 </div>
                 <hr>

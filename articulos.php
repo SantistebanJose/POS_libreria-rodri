@@ -12,10 +12,10 @@ include("cabecera.php");
 
             <div class="card-body">
 
-
+                
                 <div class="d-flex align-items-center justify-content-between">
-                    <h4 class="card-title">Articulos</h4>
-                    <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico"> Agregar Articulo <i class="fas fa-plus"> </i></button>
+                    <h4 class="card-title"><i class="fas fa-chess-queen"> </i> Articulos</h4>
+                    <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico"> <i class="fas fa-plus-circle"> </i> Agregar Articulo </button>
                 </div>
                 <hr>
                 <div
@@ -93,7 +93,7 @@ include("cabecera.php");
                                                     </a>
 
                                                     <!-- Botón de Activar/Bloquear -->
-                                                    <?php if (is_null($datosArticulo["disponibilidad_venta  "])) { ?>
+                                                    <?php if (is_null($datosArticulo["disponibilidad_venta_fh"])) { ?>
                                                         <!-- Botón para bloquear -->
                                                         <a name="block" id="block" class="btn btn-dark btn-round ml-2"
                                                             onclick='fn_bloquear_articulo(<?php echo $datosArticulo["id"]; ?>)' role="button">
