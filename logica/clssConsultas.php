@@ -269,7 +269,8 @@ function listarEmpleados(): array
         COALESCE(p.telefonomovil, COALESCE(p.telefonofijo, '-')) AS telefono, 
         p.deleted_at 
     FROM persona p
-    JOIN usuario u on p.id = u.persona_id
+    JOIN usuario u on p.id = u.persona_id 
+    
     WHERE p.deleted_at IS NULL AND u.deleted_at is null;
     ";
     return executeQuery($query);
