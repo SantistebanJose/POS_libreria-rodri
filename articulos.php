@@ -93,7 +93,7 @@ include("cabecera.php");
                                                     </a>
 
                                                     <!-- Botón de Activar/Bloquear -->
-                                                    <?php if (is_null($datosArticulo["deleted_at"])) { ?>
+                                                    <?php if (is_null($datosArticulo["disponibilidad_venta  "])) { ?>
                                                         <!-- Botón para bloquear -->
                                                         <a name="block" id="block" class="btn btn-dark btn-round ml-2"
                                                             onclick='fn_bloquear_articulo(<?php echo $datosArticulo["id"]; ?>)' role="button">
@@ -996,12 +996,12 @@ include("cabecera.php");
     function fn_bloquear_articulo(datosArticulo) {
         Swal.fire({
             title: '¿Estás seguro?',
-            text: "Esta acción no se puede deshacer.",
+            text: "Esta acción quitara la disponibilidad para venta del articulo.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, bloquear',
+            confirmButtonText: 'Sí, Quitar',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -1043,12 +1043,12 @@ include("cabecera.php");
     function fn_desbloquear_articulo(datosArticulo) {
         Swal.fire({
             title: '¿Estás seguro?',
-            text: "Esta acción no se puede deshacer.",
+            text: "Esta acción habilitara la disponibilidad para venta del articulo.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, desbloquear',
+            confirmButtonText: 'Sí, habilitar',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
