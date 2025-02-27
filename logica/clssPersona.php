@@ -41,6 +41,18 @@ function controladorVentaCorte($accion)
                 registrar_empresa($data); // Si tiene 'nombre_comercial' y 'razon_social', es empresa
             }
             break;
+        case 'REGISTRAREMPLEADO':
+            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            if (isset($data['nombres']) && isset($data['apellidos'])) {
+                registrar_empleado($data); // Si tiene 'nombres' y 'apellidos', es persona
+            } 
+            break;
+        case 'ACTUALIZAREMPLEADO':
+            $data = json_decode($_POST["data"], true); // Decodificar JSON
+            if (isset($data['nombres']) && isset($data['apellidos'])) {
+                actualizar_empleado($data); // Si tiene 'nombres' y 'apellidos', es persona
+            } 
+            break;
         case 'ACTUALIZARPERSONA':
             $data = json_decode($_POST["data"], true); // Decodificar JSON
             if (isset($data['nombres']) && isset($data['apellidos'])) {
@@ -71,22 +83,27 @@ function consultarPersona($id)
 
     try {
         $orden = $conectar->prepare("
-        select id,
-        numero_documento, 
-        tipo_persona,
-        condicion, 
-        nombres ,
-        apellidos,
-        fecha_nacimiento,
-        telefonofijo,
-        telefonomovil,
-        email,
-        direccion,
-        nombre_comercial, 
-        razon_social,
-        deleted_at
-        from persona
-        where id = :id ;");
+        select p.id,
+        p.numero_documento, 
+        p.tipo_persona,
+        p.condicion, 
+        p.nombres ,
+        p.apellidos,
+        p.fecha_nacimiento,
+        p.telefonofijo,
+        p.telefonomovil,
+        p.email,
+        p.direccion,
+        p.nombre_comercial, 
+        p.razon_social,
+        p.deleted_at,
+		u.username,
+		u.sueldo,
+		u.cantidad_horas_trabajo as horas,
+		u.cantidad_dias_semana as dias
+        from persona p
+		inner join usuario u on u.persona_id = p.id
+        where p.id = :id ;");
         $orden->bindParam(":id", $id);
         $orden->execute();
 
@@ -110,6 +127,71 @@ function consultarPersona($id)
         "success" => false,
         "error" => $th->getMessage()
          ]);
+    }
+}
+
+function registrar_empleado($datos = array()) {
+    global $conectar;
+
+    try {
+        // Iniciar la transacción
+        $conectar->beginTransaction();
+
+        // Insertar en la tabla persona
+        $orden = $conectar->prepare("INSERT INTO persona (numero_documento, nombres, apellidos, telefonomovil, email, tipo_persona, direccion, condicion)
+                                     VALUES (:numero_documento, :nombres, :apellidos, :telefono_movil, :email, 'NATURAL', :direccion, :condicion);");
+        $orden->bindParam(":numero_documento", $datos['numero_documento']);
+        $orden->bindParam(":nombres", $datos['nombres']);
+        $orden->bindParam(":apellidos", $datos['apellidos']);
+        $orden->bindParam(":condicion", $datos['condicion']);
+
+        $direccion = empty($datos['direccion']) ? null : $datos['direccion'];
+        $orden->bindParam(":direccion", $direccion, is_null($direccion) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        $telefonoMovil = empty($datos['telefono_movil']) ? null : $datos['telefono_movil'];
+        $email = empty($datos['email']) ? null : $datos['email'];
+
+        $orden->bindParam(":telefono_movil", $telefonoMovil, is_null($telefonoMovil) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden->bindParam(":email", $email, is_null($email) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        $orden->execute();
+        $persona_id = $conectar->lastInsertId(); // Obtener el ID de la persona recién insertada
+        $orden->closeCursor();
+
+        // Verificar si username y password tienen valor
+        $username = !empty($datos['username']) ? $datos['username'] : null;
+        $password = !empty($datos['password']) ? password_hash($datos['password'], PASSWORD_BCRYPT) : null;
+
+        // Asignar rol predeterminado solo si username y password existen
+        $rol = ($username && $password) ? "empleado" : null;
+
+        // Insertar en la tabla usuario con sueldo, horas y días
+        $orden_usuario = $conectar->prepare("INSERT INTO usuario (persona_id, username, password, rol, sueldo, cantidad_horas_trabajo, cantidad_dias_semana)
+                                             VALUES (:persona_id, :username, :password, :rol, :sueldo, :horas, :dias);");
+        $orden_usuario->bindParam(":persona_id", $persona_id);
+        $orden_usuario->bindParam(":username", $username, is_null($username) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden_usuario->bindParam(":password", $password, is_null($password) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden_usuario->bindParam(":rol", $rol, is_null($rol) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        $sueldo = empty($datos['sueldo']) ? null : $datos['sueldo'];
+        $horas = empty($datos['horas']) ? null : $datos['horas'];
+        $dias = empty($datos['dias']) ? null : $datos['dias'];
+
+        $orden_usuario->bindParam(":sueldo", $sueldo, is_null($sueldo) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden_usuario->bindParam(":horas", $horas, is_null($horas) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $orden_usuario->bindParam(":dias", $dias, is_null($dias) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        
+        $orden_usuario->execute();
+        $orden_usuario->closeCursor();
+
+        // Confirmar la transacción
+        $conectar->commit();
+        echo json_encode(["success" => true, "persona_id" => $persona_id]);
+
+    } catch (\Throwable $th) {
+        $conectar->rollBack();
+        error_log("Error en registrar_persona: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
     }
 }
 
@@ -181,6 +263,87 @@ function registrar_empresa($datos = array()) {
     } catch (\Throwable $th) {
         $conectar->rollBack();
         error_log("Error en registrar_empresa: " . $th->getMessage());
+        echo json_encode(["error" => true, "message" => $th->getMessage()]);
+    }
+}
+
+function actualizar_empleado($datos = array()) {
+    global $conectar;
+
+    try {
+        $conectar->beginTransaction();
+
+        // Actualizar datos en la tabla persona
+        $orden = $conectar->prepare("UPDATE persona SET 
+            numero_documento = :numero_documento, 
+            nombres = :nombres, 
+            apellidos = :apellidos, 
+            telefonomovil = :telefono_movil, 
+            email = :email, 
+            direccion = :direccion, 
+            condicion = :condicion
+            WHERE id = :id");
+
+        $orden->bindParam(":id", $datos['id']);
+        $orden->bindParam(":numero_documento", $datos['numero_documento']);
+        $orden->bindParam(":nombres", $datos['nombres']);
+        $orden->bindParam(":apellidos", $datos['apellidos']);
+        $orden->bindParam(":condicion", $datos['condicion']);
+
+        $direccion = empty($datos['direccion']) ? null : $datos['direccion'];
+        $orden->bindParam(":direccion", $direccion, is_null($direccion) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        $telefonoMovil = empty($datos['telefono_movil']) ? null : $datos['telefono_movil'];
+        $email = empty($datos['email']) ? null : $datos['email'];
+
+        $orden->bindParam(":telefono_movil", $telefonoMovil, is_null($telefonoMovil) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden->bindParam(":email", $email, is_null($email) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        $orden->execute();
+        $orden->closeCursor();
+
+        // Actualizar datos en la tabla usuario
+        $orden_usuario = $conectar->prepare("UPDATE usuario SET 
+            username = :username, 
+            password = COALESCE(:password, password), 
+            rol = :rol, 
+            sueldo = :sueldo, 
+            horas = :horas, 
+            dias = :dias
+            WHERE persona_id = :persona_id");
+
+        $orden_usuario->bindParam(":persona_id", $datos['id']);
+
+        // Verificar si username y password tienen valor
+        $username = !empty($datos['username']) ? $datos['username'] : null;
+        $password = !empty($datos['password']) ? password_hash($datos['password'], PASSWORD_BCRYPT) : null;
+
+        // Asignar rol predeterminado solo si username y password existen
+        $rol = ($username && $password) ? "empleado" : null;
+
+        $orden_usuario->bindParam(":username", $username, is_null($username) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden_usuario->bindParam(":password", $password, is_null($password) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden_usuario->bindParam(":rol", $rol, is_null($rol) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        // Actualizar sueldo, horas y días
+        $sueldo = empty($datos['sueldo']) ? null : $datos['sueldo'];
+        $horas = empty($datos['horas']) ? null : $datos['horas'];
+        $dias = empty($datos['dias']) ? null : $datos['dias'];
+
+        $orden_usuario->bindParam(":sueldo", $sueldo, is_null($sueldo) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $orden_usuario->bindParam(":horas", $horas, is_null($horas) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $orden_usuario->bindParam(":dias", $dias, is_null($dias) ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        
+        $orden_usuario->execute();
+        $orden_usuario->closeCursor();
+
+        // Confirmar la transacción
+        $conectar->commit();
+        echo json_encode(["success" => true, "message" => "Persona y usuario actualizados correctamente"]);
+
+    } catch (\Throwable $th) {
+        $conectar->rollBack();
+        error_log("Error en actualizar_persona: " . $th->getMessage());
         echo json_encode(["error" => true, "message" => $th->getMessage()]);
     }
 }

@@ -872,7 +872,7 @@ include("cabecera.php");
                     <div class="col-sm-12 mb-3">
 
                         <label for="nombreUsuario"> <b> Nombre de Usuario <span class="fw-bold text-danger">*</span></b> </label>
-                        <input type="text" class="form-control required" id="nombreUsuario" placeholder="name@example.com" value="${datosUsuario.username}" />
+                        <input type="text" class="form-control required" id="nombreUsuario" placeholder="vysam2025" value="${datosUsuario.username}" />
                         <div id="error-nombreUsuario" class="error-message"></div>
                 
                     </div>
