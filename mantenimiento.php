@@ -22,8 +22,8 @@ include("cabecera.php");
         font-size: 0.9em;
         margin-top: 5px;
     }
- 
-   
+
+
 
     /* Asegura que el contenido del modal no se desborde */
     .modal-content {
@@ -35,10 +35,6 @@ include("cabecera.php");
         overflow-x: auto;
         /* Para permitir desplazamiento horizontal si es necesario */
     }
-
-
-
-    
 </style>
 <div
     class="container">
@@ -65,7 +61,7 @@ include("cabecera.php");
                         <a class="nav-link" id="pills-categoria-articulo-tab" data-bs-toggle="pill" href="#pills-categoria-articulo" role="tab" aria-controls="pills-categoria-articulo" aria-selected="false"><i class="fas fa-tag"></i> Categoría de Articulo</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-escala-articulo-tab" data-bs-toggle="pill" href="#pills-escala-articulo" role="tab" aria-controls="pills-escala-articulo" aria-selected="false"><i class="fas fa-sort"></i> Escala de Articulo</a>
+                        <a class="nav-link" id="pills-escala-articulo-tab" data-bs-toggle="pill" href="#pills-escala-articulo" role="tab" aria-controls="pills-escala-articulo" aria-selected="false"><i class="fas fa-sort-amount-up"></i> Escala de Articulo</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="pills-dimension-articulo-tab" data-bs-toggle="pill" href="#pills-dimension-articulo" role="tab" aria-controls="pills-dimension-articulo" aria-selected="false"><i class="fas fa-ruler"></i> Dimensión de Articulo</a>
@@ -73,287 +69,302 @@ include("cabecera.php");
                 </ul>
                 <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
                     <div class="tab-pane fade show active" id="pills-tipo-articulo" role="tabpanel" aria-labelledby="pills-tipo-articulo-tab">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="card-title"><i class="fas fa-cogs"></i> Tipo de Articulo</h4>
-                            <button class="btn btn-success rounded-5" id="btnAgregarTipo"> Agregar Tipo <i class="fas fa-plus"> </i></button>
-                        </div>
-                        <hr>
-                        <div
-                            class="row justify-content-center align-items-center md-2">
-
-                            <div class="col-sm-12">
-                                <div class="table-responsive">
-                                    <table
-                                        id="multi-filter-select"
-                                        class="display table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Nombre</th>
-                                                <th>Descripción</th>
-                                                <th>Accion</th>
-                                            </tr>
-                                        </thead>
-                                        
-                                        <tbody>
-
-                                            <?php
-                                            foreach (listarTipoArticuloMantenimiento() as $datosTipo) {
-                                                $datosTipoJSON = json_encode($datosTipo);
-
-
-                                            ?>
-                                                <tr>
-                                                    <td><?php echo $datosTipo["id"] ?></td>
-                                                    <td><?php echo $datosTipo["abreviatura"] ?? '-'; ?></td>
-                                                    <td><?php echo $datosTipo["descripcion"] ?? '-'; ?></td>
-                                                    <td>
-                                                        <div class="mt-2 text-center">
-                                                                <!-- Botón de Editar (con ícono amarillo) -->
-                                                            <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
-                                                                onclick='fn_editar_tipo(<?php echo $datosTipoJSON; ?>)' role="button">
-                                                                <i class="fa fa-edit"></i>
-                                                            </a>
-
-                                                            <!-- Botón de Activar/Bloquear -->
-                                                            <?php if (is_null($datosTipo["deleted_at"])) { ?>
-                                                                <!-- Botón para bloquear -->
-                                                                <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                    onclick='fn_bloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
-                                                                    <i class="fa fa-lock"></i>
-                                                                </a>
-                                                            <?php } else { ?>
-                                                                <!-- Botón para activar -->
-                                                                <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
-                                                                    onclick='fn_desbloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
-                                                                    <i class="fa fa-unlock"></i>
-                                                                </a>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                        <div class="card text-start">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h4 class="card-title"><i class="fas fa-cogs"></i> Tipo de Articulo</h4>
+                                    <button class="btn btn-success rounded-5" id="btnAgregarTipo"> <i class="fas fa-plus-circle"> </i> Agregar Tipo </button>
                                 </div>
+                                <hr>
+                                <div
+                                    class="row justify-content-center align-items-center md-2">
 
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="pills-categoria-articulo" role="tabpanel" aria-labelledby="pills-categoria-articulo-tab">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="card-title"><i class="fas fa-tag"></i> Categoria de Articulo</h4>
-                        <button class="btn btn-success rounded-5" id="btnAgregarCategoria"> Agregar Categoria <i class="fas fa-plus"> </i></button>
-                    </div>
-                    <hr>
-                    <div
-                        class="row justify-content-center align-items-center md-2">
+                                    <div class="col-sm-12">
+                                        <div class="table-responsive">
+                                            <table
+                                                id="multi-filter-select"
+                                                class="display table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Nombre</th>
+                                                        <th>Descripción</th>
+                                                        <th>Accion</th>
+                                                    </tr>
+                                                </thead>
 
-                        <div class="col-sm-12">
-                            <div class="table-responsive">
-                                <table
-                                    id="multi-filter-select2"
-                                    class="display table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Descripción</th>
-                                            <th>Accion</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
+                                                <tbody>
 
-                                        <?php
-                                        foreach (listarCategoriaArticuloMantenimiento() as $datosCategoria) {
-                                            $datosCategoriaJSON = json_encode($datosCategoria);
+                                                    <?php
+                                                    foreach (listarTipoArticuloMantenimiento() as $datosTipo) {
+                                                        $datosTipoJSON = json_encode($datosTipo);
 
 
-                                        ?>
-                                            <tr>
-                                                <td><?php echo $datosCategoria["id"] ?></td>
-                                                <td><?php echo $datosCategoria["abreviatura"] ?></td>
-                                                <td><?php echo $datosCategoria["descripcion"] ?></td>
-                                                <td>
-                                                    <div class="mt-2 text-center">
-                                                            <!-- Botón de Editar (con ícono amarillo) -->
-                                                        <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
-                                                            onclick='fn_editar_categoria(<?php echo $datosCategoriaJSON; ?>)' role="button">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $datosTipo["id"] ?></td>
+                                                            <td><?php echo $datosTipo["abreviatura"] ?? '-'; ?></td>
+                                                            <td><?php echo $datosTipo["descripcion"] ?? '-'; ?></td>
+                                                            <td>
+                                                                <div class="mt-2 text-center">
+                                                                    <!-- Botón de Editar (con ícono amarillo) -->
+                                                                    <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                                        onclick='fn_editar_tipo(<?php echo $datosTipoJSON; ?>)' role="button">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </a>
 
-                                                        <!-- Botón de Activar/Bloquear -->
-                                                        <?php if (is_null($datosCategoria["deleted_at"])) { ?>
-                                                            <!-- Botón para bloquear -->
-                                                            <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                onclick='fn_bloquear_categoria(<?php echo $datosCategoria["id"]; ?>)' role="button">
-                                                                <i class="fa fa-lock"></i>
-                                                            </a>
-                                                        <?php } else { ?>
-                                                            <!-- Botón para activar -->
-                                                            <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
-                                                                onclick='fn_desbloquear_categoria(<?php echo $datosCategoria["id"]; ?>)' role="button">
-                                                                <i class="fa fa-unlock"></i>
-                                                            </a>
-                                                        <?php } ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                                                    <!-- Botón de Activar/Bloquear -->
+                                                                    <?php if (is_null($datosTipo["deleted_at"])) { ?>
+                                                                        <!-- Botón para bloquear -->
+                                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                                            onclick='fn_bloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-lock"></i>
+                                                                        </a>
+                                                                    <?php } else { ?>
+                                                                        <!-- Botón para activar -->
+                                                                        <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
+                                                                            onclick='fn_desbloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-unlock"></i>
+                                                                        </a>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="pills-escala-articulo" role="tabpanel" aria-labelledby="pills-escala-articulo-tab">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="card-title"><i class="fas fa-sort"></i> Escala de Articulo</h4>
-                        <button class="btn btn-success rounded-5" id="btnAgregarEscala"> Agregar Escala <i class="fas fa-plus"> </i></button>
-                    </div>
-                    <hr>
-                    <div
-                        class="row justify-content-center align-items-center md-2">
+                    <div class="tab-pane fade" id="pills-categoria-articulo" role="tabpanel" aria-labelledby="pills-categoria-articulo-tab">
+                        <div class="card text-start">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h4 class="card-title"><i class="fas fa-tag"></i> Categoria de Articulo</h4>
+                                    <button class="btn btn-success rounded-5" id="btnAgregarCategoria"> <i class="fas fa-plus-circle"> </i> Agregar Categoria</button>
+                                </div>
+                                <hr>
+                                <div
+                                    class="row justify-content-center align-items-center md-2">
 
-                        <div class="col-sm-12">
-                            <div class="table-responsive">
-                                <table
-                                    id="multi-filter-select3"
-                                    class="display table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Descripción</th>
-                                            <th>Accion</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
+                                    <div class="col-sm-12">
+                                        <div class="table-responsive">
+                                            <table
+                                                id="multi-filter-select2"
+                                                class="display table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Nombre</th>
+                                                        <th>Descripción</th>
+                                                        <th>Accion</th>
+                                                    </tr>
+                                                </thead>
 
-                                        <?php
-                                        foreach (listarEscalaArticuloMantenimiento() as $datosEscala) {
-                                            $datosEscalaJSON = json_encode($datosEscala);
+                                                <tbody>
+
+                                                    <?php
+                                                    foreach (listarCategoriaArticuloMantenimiento() as $datosCategoria) {
+                                                        $datosCategoriaJSON = json_encode($datosCategoria);
 
 
-                                        ?>
-                                            <tr>
-                                                <td><?php echo $datosEscala["id"] ?></td>
-                                                <td><?php echo $datosEscala["abreviatura"] ?? '-'; ?></td>
-                                                <td><?php echo $datosEscala["descripcion"] ?? '-'; ?></td>
-                                                <td>
-                                                    <div class="mt-2 text-center">
-                                                            <!-- Botón de Editar (con ícono amarillo) -->
-                                                        <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
-                                                            onclick='fn_editar_escala(<?php echo $datosEscalaJSON; ?>)' role="button">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $datosCategoria["id"] ?></td>
+                                                            <td><?php echo $datosCategoria["abreviatura"] ?></td>
+                                                            <td><?php echo $datosCategoria["descripcion"] ?></td>
+                                                            <td>
+                                                                <div class="mt-2 text-center">
+                                                                    <!-- Botón de Editar (con ícono amarillo) -->
+                                                                    <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                                        onclick='fn_editar_categoria(<?php echo $datosCategoriaJSON; ?>)' role="button">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </a>
 
-                                                        <!-- Botón de Activar/Bloquear -->
-                                                        <?php if (is_null($datosEscala["deleted_at"])) { ?>
-                                                            <!-- Botón para bloquear -->
-                                                            <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                onclick='fn_bloquear_escala(<?php echo $datosEscala["id"]; ?>)' role="button">
-                                                                <i class="fa fa-lock"></i>
-                                                            </a>
-                                                        <?php } else { ?>
-                                                            <!-- Botón para activar -->
-                                                            <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
-                                                                onclick='fn_desbloquear_escala(<?php echo $datosEscala["id"]; ?>)' role="button">
-                                                                <i class="fa fa-unlock"></i>
-                                                            </a>
-                                                        <?php } ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                                                    <!-- Botón de Activar/Bloquear -->
+                                                                    <?php if (is_null($datosCategoria["deleted_at"])) { ?>
+                                                                        <!-- Botón para bloquear -->
+                                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                                            onclick='fn_bloquear_categoria(<?php echo $datosCategoria["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-lock"></i>
+                                                                        </a>
+                                                                    <?php } else { ?>
+                                                                        <!-- Botón para activar -->
+                                                                        <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
+                                                                            onclick='fn_desbloquear_categoria(<?php echo $datosCategoria["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-unlock"></i>
+                                                                        </a>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="pills-dimension-articulo" role="tabpanel" aria-labelledby="pills-dimension-articulo-tab">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h4 class="card-title"><i class="fas fa-ruler"></i> Dimensión de Articulo</h4>
-                        <button class="btn btn-success rounded-5" id="btnAgregarDimension"> Agregar Dimensión <i class="fas fa-plus"> </i></button>
-                    </div>
-                    <hr>
-                    <div
-                        class="row justify-content-center align-items-center md-2">
+                    <div class="tab-pane fade" id="pills-escala-articulo" role="tabpanel" aria-labelledby="pills-escala-articulo-tab">
+                        <div class="card text-start">
 
-                        <div class="col-sm-12">
-                            <div class="table-responsive">
-                                <table
-                                    id="multi-filter-select4"
-                                    class="display table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Descripción</th>
-                                            <th>Accion</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h4 class="card-title"><i class="fas fa-sort-amount-up"></i> Escala de Articulo</h4>
+                                    <button class="btn btn-success rounded-5" id="btnAgregarEscala"><i class="fas fa-plus-circle"> </i> Agregar Escala </button>
+                                </div>
+                                <hr>
+                                <div
+                                    class="row justify-content-center align-items-center md-2">
 
-                                        <?php
-                                        foreach (listarDimensionArticuloMantenimiento() as $datosDimension) {
-                                            $datosDimensionJSON = json_encode($datosDimension);
+                                    <div class="col-sm-12">
+                                        <div class="table-responsive">
+                                            <table
+                                                id="multi-filter-select3"
+                                                class="display table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Nombre</th>
+                                                        <th>Descripción</th>
+                                                        <th>Accion</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                    <?php
+                                                    foreach (listarEscalaArticuloMantenimiento() as $datosEscala) {
+                                                        $datosEscalaJSON = json_encode($datosEscala);
 
 
-                                        ?>
-                                            <tr>
-                                                <td><?php echo $datosDimension["id"] ?></td>
-                                                <td><?php echo $datosDimension["medida"] ?? '-'; ?></td>
-                                                <td><?php echo $datosDimension["descripcion"] ?? '-'; ?></td>
-                                                <td>
-                                                    <div class="mt-2 text-center">
-                                                            <!-- Botón de Editar (con ícono amarillo) -->
-                                                        <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
-                                                            onclick='fn_editar_dimension(<?php echo $datosDimensionJSON; ?>)' role="button">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $datosEscala["id"] ?></td>
+                                                            <td><?php echo $datosEscala["abreviatura"] ?? '-'; ?></td>
+                                                            <td><?php echo $datosEscala["descripcion"] ?? '-'; ?></td>
+                                                            <td>
+                                                                <div class="mt-2 text-center">
+                                                                    <!-- Botón de Editar (con ícono amarillo) -->
+                                                                    <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                                        onclick='fn_editar_escala(<?php echo $datosEscalaJSON; ?>)' role="button">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </a>
 
-                                                        <!-- Botón de Activar/Bloquear -->
-                                                        <?php if (is_null($datosDimension["deleted_at"])) { ?>
-                                                            <!-- Botón para bloquear -->
-                                                            <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                onclick='fn_bloquear_dimension(<?php echo $datosDimension["id"]; ?>)' role="button">
-                                                                <i class="fa fa-lock"></i>
-                                                            </a>
-                                                        <?php } else { ?>
-                                                            <!-- Botón para activar -->
-                                                            <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
-                                                                onclick='fn_desbloquear_dimension(<?php echo $datosDimension["id"]; ?>)' role="button">
-                                                                <i class="fa fa-unlock"></i>
-                                                            </a>
-                                                        <?php } ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                                                    <!-- Botón de Activar/Bloquear -->
+                                                                    <?php if (is_null($datosEscala["deleted_at"])) { ?>
+                                                                        <!-- Botón para bloquear -->
+                                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                                            onclick='fn_bloquear_escala(<?php echo $datosEscala["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-lock"></i>
+                                                                        </a>
+                                                                    <?php } else { ?>
+                                                                        <!-- Botón para activar -->
+                                                                        <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
+                                                                            onclick='fn_desbloquear_escala(<?php echo $datosEscala["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-unlock"></i>
+                                                                        </a>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
                     </div>
-                </div>
+                    <div class="tab-pane fade" id="pills-dimension-articulo" role="tabpanel" aria-labelledby="pills-dimension-articulo-tab">
+                        <div class="card text-start">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h4 class="card-title"><i class="fas fa-ruler"></i> Dimensión de Articulo</h4>
+                                    <button class="btn btn-success rounded-5" id="btnAgregarDimension"> <i class="fas fa-plus-circle"> </i> Agregar Dimensión</button>
+                                </div>
+                                <hr>
+                                <div
+                                    class="row justify-content-center align-items-center md-2">
+
+                                    <div class="col-sm-12">
+                                        <div class="table-responsive">
+                                            <table
+                                                id="multi-filter-select4"
+                                                class="display table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Nombre</th>
+                                                        <th>Descripción</th>
+                                                        <th>Accion</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                    <?php
+                                                    foreach (listarDimensionArticuloMantenimiento() as $datosDimension) {
+                                                        $datosDimensionJSON = json_encode($datosDimension);
 
 
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $datosDimension["id"] ?></td>
+                                                            <td><?php echo $datosDimension["medida"] ?? '-'; ?></td>
+                                                            <td><?php echo $datosDimension["descripcion"] ?? '-'; ?></td>
+                                                            <td>
+                                                                <div class="mt-2 text-center">
+                                                                    <!-- Botón de Editar (con ícono amarillo) -->
+                                                                    <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                                        onclick='fn_editar_dimension(<?php echo $datosDimensionJSON; ?>)' role="button">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </a>
+
+                                                                    <!-- Botón de Activar/Bloquear -->
+                                                                    <?php if (is_null($datosDimension["deleted_at"])) { ?>
+                                                                        <!-- Botón para bloquear -->
+                                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                                            onclick='fn_bloquear_dimension(<?php echo $datosDimension["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-lock"></i>
+                                                                        </a>
+                                                                    <?php } else { ?>
+                                                                        <!-- Botón para activar -->
+                                                                        <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
+                                                                            onclick='fn_desbloquear_dimension(<?php echo $datosDimension["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-unlock"></i>
+                                                                        </a>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -363,8 +374,8 @@ include("cabecera.php");
 </div>
 
 <div class="modal fade" id="modalGenerico" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalArticuloLabel" aria-hidden="true">
-    
-    <div  class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
+
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
 
 
         <div class="modal-content" id="contenidoGenerico">
@@ -487,7 +498,7 @@ include("cabecera.php");
             }
         });
 
-        
+
 
         $("#multi-filter-select2").DataTable({
             pageLength: 5,
@@ -736,7 +747,7 @@ include("cabecera.php");
 
         document.getElementById("btnRegistrarTipo").addEventListener("click", async function() {
             if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
-                
+
                 var jsDatos = {
                     "nombre": document.getElementById("idRegistroNombreTipo").value,
                     "descripcion": document.getElementById("idRegistroDescripcion").value
@@ -801,7 +812,7 @@ include("cabecera.php");
                 });
 
 
-                } else {
+            } else {
                 swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
                     icon: "error",
                     buttons: {
@@ -810,7 +821,7 @@ include("cabecera.php");
                         },
                     },
                 });
-                }
+            }
 
 
         });
@@ -818,7 +829,7 @@ include("cabecera.php");
     });
 
     document.getElementById("btnAgregarCategoria").addEventListener("click", function() {
-                document.getElementById("contenidoGenerico").innerHTML = `
+        document.getElementById("contenidoGenerico").innerHTML = `
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="card-body">
                         <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-tag"></i> Registro de Categoria</h4>
@@ -880,67 +891,44 @@ include("cabecera.php");
             
                 `;
 
-                const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
-                modal.show();
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
 
-                // Agregar evento de validación al botón "Registrar"
+        // Agregar evento de validación al botón "Registrar"
 
-                document.getElementById("btnRegistrarCategoria").addEventListener("click", async function() {
-                    if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
-                        
-                        var jsDatos = {
-                            "nombre": document.getElementById("idRegistroNombreTipo").value,
-                            "descripcion": document.getElementById("idRegistroDescripcion").value
-                        };
-                        console.log(jsDatos);
+        document.getElementById("btnRegistrarCategoria").addEventListener("click", async function() {
+            if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
 
-                        $.ajax({
-                            url: 'logica/clssMantenimiento.php',
-                            type: 'POST',
-                            data: {
-                                accion: 'REGISTAR_CATEGORIA_ARTICULO',
-                                jsDatos: JSON.stringify(jsDatos)
-                            },
-                            success: function(response) {
-                                console.log("Respuesta del servidor : ", response);
-                                try {
-                                    var result = JSON.parse(response);
-                                    if (result.estado === true) {
-                                        swal({
-                                            title: "Registrado con Exito!",
-                                            text: result.mensaje,
-                                            icon: "success",
-                                            buttons: false,
-                                            timer: 1500
-                                        }).then(() => {
-                                            location.reload();
+                var jsDatos = {
+                    "nombre": document.getElementById("idRegistroNombreTipo").value,
+                    "descripcion": document.getElementById("idRegistroDescripcion").value
+                };
+                console.log(jsDatos);
 
-                                        });;
-                                    } else {
-                                        swal("Error", result.mensaje, {
-                                            icon: "error",
-                                            buttons: {
-                                                confirm: {
-                                                    className: "btn btn-danger",
-                                                },
-                                            },
-                                        });
-                                    }
-                                } catch (e) {
-                                    console.log("Error al parsear el JSON: ", e);
-                                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                        icon: "error",
-                                        buttons: {
-                                            confirm: {
-                                                className: "btn btn-danger",
-                                            },
-                                        },
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.log("Error: " + error);
-                                swal("Error", "Hubo un problema con la solicitud.", {
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'REGISTAR_CATEGORIA_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
                                     icon: "error",
                                     buttons: {
                                         confirm: {
@@ -949,11 +937,21 @@ include("cabecera.php");
                                     },
                                 });
                             }
-                        });
-
-
-                        } else {
-                        swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
                             icon: "error",
                             buttons: {
                                 confirm: {
@@ -961,15 +959,28 @@ include("cabecera.php");
                                 },
                             },
                         });
-                        }
-
-
+                    }
                 });
+
+
+            } else {
+                swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+
+
+        });
 
     });
 
     document.getElementById("btnAgregarEscala").addEventListener("click", function() {
-                document.getElementById("contenidoGenerico").innerHTML = `
+        document.getElementById("contenidoGenerico").innerHTML = `
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="card-body">
                         <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-sort"></i> Registro de Escala</h4>
@@ -1031,67 +1042,44 @@ include("cabecera.php");
             
                 `;
 
-                const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
-                modal.show();
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
 
-                // Agregar evento de validación al botón "Registrar"
+        // Agregar evento de validación al botón "Registrar"
 
-                document.getElementById("btnRegistrarEscala").addEventListener("click", async function() {
-                    if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
-                        
-                        var jsDatos = {
-                            "nombre": document.getElementById("idRegistroNombreTipo").value,
-                            "descripcion": document.getElementById("idRegistroDescripcion").value
-                        };
-                        console.log(jsDatos);
+        document.getElementById("btnRegistrarEscala").addEventListener("click", async function() {
+            if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
 
-                        $.ajax({
-                            url: 'logica/clssMantenimiento.php',
-                            type: 'POST',
-                            data: {
-                                accion: 'REGISTAR_ESCALA_ARTICULO',
-                                jsDatos: JSON.stringify(jsDatos)
-                            },
-                            success: function(response) {
-                                console.log("Respuesta del servidor : ", response);
-                                try {
-                                    var result = JSON.parse(response);
-                                    if (result.estado === true) {
-                                        swal({
-                                            title: "Registrado con Exito!",
-                                            text: result.mensaje,
-                                            icon: "success",
-                                            buttons: false,
-                                            timer: 1500
-                                        }).then(() => {
-                                            location.reload();
+                var jsDatos = {
+                    "nombre": document.getElementById("idRegistroNombreTipo").value,
+                    "descripcion": document.getElementById("idRegistroDescripcion").value
+                };
+                console.log(jsDatos);
 
-                                        });;
-                                    } else {
-                                        swal("Error", result.mensaje, {
-                                            icon: "error",
-                                            buttons: {
-                                                confirm: {
-                                                    className: "btn btn-danger",
-                                                },
-                                            },
-                                        });
-                                    }
-                                } catch (e) {
-                                    console.log("Error al parsear el JSON: ", e);
-                                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                        icon: "error",
-                                        buttons: {
-                                            confirm: {
-                                                className: "btn btn-danger",
-                                            },
-                                        },
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.log("Error: " + error);
-                                swal("Error", "Hubo un problema con la solicitud.", {
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'REGISTAR_ESCALA_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
                                     icon: "error",
                                     buttons: {
                                         confirm: {
@@ -1100,11 +1088,21 @@ include("cabecera.php");
                                     },
                                 });
                             }
-                        });
-
-
-                        } else {
-                        swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
                             icon: "error",
                             buttons: {
                                 confirm: {
@@ -1112,15 +1110,28 @@ include("cabecera.php");
                                 },
                             },
                         });
-                        }
-
-
+                    }
                 });
+
+
+            } else {
+                swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+
+
+        });
 
     });
 
     document.getElementById("btnAgregarDimension").addEventListener("click", function() {
-                document.getElementById("contenidoGenerico").innerHTML = `
+        document.getElementById("contenidoGenerico").innerHTML = `
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="card-body">
                         <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-ruler"></i> Registro de Dimensión</h4>
@@ -1182,67 +1193,44 @@ include("cabecera.php");
             
                 `;
 
-                const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
-                modal.show();
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
 
-                // Agregar evento de validación al botón "Registrar"
+        // Agregar evento de validación al botón "Registrar"
 
-                document.getElementById("btnRegistrarTipo").addEventListener("click", async function() {
-                    if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
-                        
-                        var jsDatos = {
-                            "nombre": document.getElementById("idRegistroNombreTipo").value,
-                            "descripcion": document.getElementById("idRegistroDescripcion").value
-                        };
-                        console.log(jsDatos);
+        document.getElementById("btnRegistrarTipo").addEventListener("click", async function() {
+            if ((document.getElementById("idRegistroNombreTipo").value).length > 0) {
 
-                        $.ajax({
-                            url: 'logica/clssMantenimiento.php',
-                            type: 'POST',
-                            data: {
-                                accion: 'REGISTAR_DIMENSION_ARTICULO',
-                                jsDatos: JSON.stringify(jsDatos)
-                            },
-                            success: function(response) {
-                                console.log("Respuesta del servidor : ", response);
-                                try {
-                                    var result = JSON.parse(response);
-                                    if (result.estado === true) {
-                                        swal({
-                                            title: "Registrado con Exito!",
-                                            text: result.mensaje,
-                                            icon: "success",
-                                            buttons: false,
-                                            timer: 1500
-                                        }).then(() => {
-                                            location.reload();
+                var jsDatos = {
+                    "nombre": document.getElementById("idRegistroNombreTipo").value,
+                    "descripcion": document.getElementById("idRegistroDescripcion").value
+                };
+                console.log(jsDatos);
 
-                                        });;
-                                    } else {
-                                        swal("Error", result.mensaje, {
-                                            icon: "error",
-                                            buttons: {
-                                                confirm: {
-                                                    className: "btn btn-danger",
-                                                },
-                                            },
-                                        });
-                                    }
-                                } catch (e) {
-                                    console.log("Error al parsear el JSON: ", e);
-                                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                        icon: "error",
-                                        buttons: {
-                                            confirm: {
-                                                className: "btn btn-danger",
-                                            },
-                                        },
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.log("Error: " + error);
-                                swal("Error", "Hubo un problema con la solicitud.", {
+                $.ajax({
+                    url: 'logica/clssMantenimiento.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'REGISTAR_DIMENSION_ARTICULO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Exito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+
+                                });;
+                            } else {
+                                swal("Error", result.mensaje, {
                                     icon: "error",
                                     buttons: {
                                         confirm: {
@@ -1251,11 +1239,21 @@ include("cabecera.php");
                                     },
                                 });
                             }
-                        });
-
-
-                        } else {
-                        swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
                             icon: "error",
                             buttons: {
                                 confirm: {
@@ -1263,16 +1261,29 @@ include("cabecera.php");
                                 },
                             },
                         });
-                        }
-
-
+                    }
                 });
+
+
+            } else {
+                swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+
+
+        });
 
     });
 </script>
 
 <script>
-    function fn_editar_tipo(datosTipo){
+    function fn_editar_tipo(datosTipo) {
         document.getElementById("contenidoGenerico").innerHTML = `
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="card-body">
@@ -1338,13 +1349,13 @@ include("cabecera.php");
 
         const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
         modal.show();
-        document.getElementById("idEditarDescripcion").value=datosTipo.descripcion;
+        document.getElementById("idEditarDescripcion").value = datosTipo.descripcion;
 
         // Agregar evento de validación al botón "Registrar"
 
         document.getElementById("btnEditarTipo").addEventListener("click", async function() {
             if ((document.getElementById("idEditarNombreTipo").value).length > 0) {
-                
+
                 var jsDatos = {
                     "id": datosTipo.id,
                     "nombre": document.getElementById("idEditarNombreTipo").value,
@@ -1410,7 +1421,7 @@ include("cabecera.php");
                 });
 
 
-                } else {
+            } else {
                 swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
                     icon: "error",
                     buttons: {
@@ -1419,13 +1430,13 @@ include("cabecera.php");
                         },
                     },
                 });
-                }
+            }
 
 
         });
     }
 
-    function fn_editar_categoria(datosCategoria){
+    function fn_editar_categoria(datosCategoria) {
         console.log(datosCategoria)
         document.getElementById("contenidoGenerico").innerHTML = `
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1492,13 +1503,13 @@ include("cabecera.php");
 
         const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
         modal.show();
-        document.getElementById("idEditarDescripcion").value=datosCategoria.descripcion;
+        document.getElementById("idEditarDescripcion").value = datosCategoria.descripcion;
 
         // Agregar evento de validación al botón "Registrar"
 
         document.getElementById("btnEditarCategoria").addEventListener("click", async function() {
             if ((document.getElementById("idEditarNombreCategoria").value).length > 0) {
-                
+
                 var jsDatos = {
                     "id": datosCategoria.id,
                     "nombre": document.getElementById("idEditarNombreCategoria").value,
@@ -1564,7 +1575,7 @@ include("cabecera.php");
                 });
 
 
-                } else {
+            } else {
                 swal("Ups!, Debes de ingresar el nombre del Tipo 😩", {
                     icon: "error",
                     buttons: {
@@ -1573,13 +1584,13 @@ include("cabecera.php");
                         },
                     },
                 });
-                }
+            }
 
 
         });
     }
 
-    function fn_editar_escala(datosEscala){
+    function fn_editar_escala(datosEscala) {
         document.getElementById("contenidoGenerico").innerHTML = `
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="card-body">
@@ -1645,12 +1656,12 @@ include("cabecera.php");
 
         const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
         modal.show();
-        document.getElementById("idEditarDescripcion").value= datosEscala.descripcion;
+        document.getElementById("idEditarDescripcion").value = datosEscala.descripcion;
         // Agregar evento de validación al botón "Registrar"
 
         document.getElementById("btnEditarEscala").addEventListener("click", async function() {
             if ((document.getElementById("idEditarNombreEscala").value).length > 0) {
-                
+
                 var jsDatos = {
                     "id": datosEscala.id,
                     "nombre": document.getElementById("idEditarNombreEscala").value,
@@ -1716,7 +1727,7 @@ include("cabecera.php");
                 });
 
 
-                } else {
+            } else {
                 swal("Ups!, Debes de ingresar el nombre de la Escala 😩", {
                     icon: "error",
                     buttons: {
@@ -1725,13 +1736,13 @@ include("cabecera.php");
                         },
                     },
                 });
-                }
+            }
 
 
         });
     }
 
-    function fn_editar_dimension(datosdimension){
+    function fn_editar_dimension(datosdimension) {
         document.getElementById("contenidoGenerico").innerHTML = `
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="card-body">
@@ -1800,11 +1811,11 @@ include("cabecera.php");
         modal.show();
 
         // Agregar evento de validación al botón "Registrar"
-        document.getElementById("idEditarDescripcion").value=datosdimension.descripcion;
+        document.getElementById("idEditarDescripcion").value = datosdimension.descripcion;
 
         document.getElementById("btnEditarDimension").addEventListener("click", async function() {
             if ((document.getElementById("idEditarNombreDimension").value).length > 0) {
-                
+
                 var jsDatos = {
                     "id": datosdimension.id,
                     "nombre": document.getElementById("idEditarNombreDimension").value,
@@ -1870,7 +1881,7 @@ include("cabecera.php");
                 });
 
 
-                } else {
+            } else {
                 swal("Ups!, Debes de ingresar el nombre de la Dimensión 😩", {
                     icon: "error",
                     buttons: {
@@ -1879,18 +1890,16 @@ include("cabecera.php");
                         },
                     },
                 });
-                }
+            }
 
 
         });
     }
-
-
 </script>
 
 
 <script>
-    function fn_bloquear_tipo(datosTipo){
+    function fn_bloquear_tipo(datosTipo) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -1935,9 +1944,9 @@ include("cabecera.php");
                 });
             }
         });
-    }    
-    
-    function fn_desbloquear_tipo(datosTipo){
+    }
+
+    function fn_desbloquear_tipo(datosTipo) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -1985,7 +1994,7 @@ include("cabecera.php");
         });
     }
 
-    function fn_bloquear_categoria(datosCategoria){
+    function fn_bloquear_categoria(datosCategoria) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -2030,9 +2039,9 @@ include("cabecera.php");
                 });
             }
         });
-    }    
-    
-    function fn_desbloquear_categoria(datosCategoria){
+    }
+
+    function fn_desbloquear_categoria(datosCategoria) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -2080,7 +2089,7 @@ include("cabecera.php");
         });
     }
 
-    function fn_bloquear_escala(datosEscala){
+    function fn_bloquear_escala(datosEscala) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -2125,9 +2134,9 @@ include("cabecera.php");
                 });
             }
         });
-    }    
-    
-    function fn_desbloquear_escala(datosEscala){
+    }
+
+    function fn_desbloquear_escala(datosEscala) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -2175,7 +2184,7 @@ include("cabecera.php");
         });
     }
 
-    function fn_bloquear_dimension(datosdimension){
+    function fn_bloquear_dimension(datosdimension) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",
@@ -2222,7 +2231,7 @@ include("cabecera.php");
         });
     }
 
-    function fn_desbloquear_dimension(datosdimension){
+    function fn_desbloquear_dimension(datosdimension) {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "Esta acción no se puede deshacer.",

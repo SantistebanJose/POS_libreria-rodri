@@ -373,7 +373,7 @@ include("cabecera.php");
                                         <div class="mb-3">
                                             <label for="" class="form-label"> <strong>Stock</strong></label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 class="form-control"
                                                 name="idRegistrarStock"
                                                 id="idRegistrarStock"
@@ -387,7 +387,7 @@ include("cabecera.php");
                                         <div class="mb-3">
                                             <label for="" class="form-label"> <strong>Precio Venta</strong></label>
                                             <input
-                                                type="text"
+                                                type="number"
                                                 class="form-control"
                                                 name="idRegistrarPrecioVenta"
                                                 id="idRegistrarPrecioVenta"
@@ -739,7 +739,7 @@ include("cabecera.php");
                                 <div class="mb-3">
                                     <label for="" class="form-label"> <strong>Stock</strong></label>
                                     <input
-                                        type="text"
+                                        type="number"
                                         class="form-control"
                                         name="idRegistrarStock"
                                         id="idRegistrarStock"
@@ -753,7 +753,7 @@ include("cabecera.php");
                                 <div class="mb-3">
                                     <label for="" class="form-label"> <strong>Precio Venta</strong></label>
                                     <input
-                                        type="text"
+                                        type="number"
                                         class="form-control"
                                         name="idRegistrarPrecioVenta"
                                         id="idRegistrarPrecioVenta"
@@ -894,10 +894,10 @@ include("cabecera.php");
                 let marcaEscrita = document.getElementById("idRegistroMarca").value;
                 let marca = (marcaEscrita).length > 0 ? marcaEscrita : null;
 
-                let stockEscrito = document.getElementById("idRegistrarStock").value.trim();
+                let stockEscrito = parseInt(document.getElementById("idRegistrarStock").value.trim());
 
                 // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                let stock = stockEscrito !== "" && /^\d+$/.test(stockEscrito) ? parseInt(stockEscrito, 10) : 0;
+                let stock = isNaN(stockEscrito)? 0 : stockEscrito;
 
                 let precioventaEscrito = document.getElementById("idRegistrarStock").value.trim();
 

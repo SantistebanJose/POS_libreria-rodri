@@ -408,10 +408,10 @@ function toggle_estado_articulo_completo($id, $accion) {
         // Determinar la acción
         if ($accion == "BLOQUEAR_ARTICULO") {
             // Bloquear usuario (poner deleted_at)
-            $sql = "UPDATE articulo SET deleted_at = NOW() WHERE id = :id";
+            $sql = "UPDATE articulo SET disponibilidad_venta_fh = NOW(), disponibilidad_venta = TRUE WHERE id = :id";
         } elseif ($accion == "DESBLOQUEAR_ARTICULO") {
             // Desbloquear usuario (eliminar deleted_at)
-            $sql = "UPDATE articulo SET deleted_at = NULL WHERE id = :id";
+            $sql = "UPDATE articulo SET disponibilidad_venta_fh = NULL,  disponibilidad_venta = FALSE WHERE id = :id";
         } else {
             echo json_encode(["error" => true, "message" => "Acción no válida."]);
             return;

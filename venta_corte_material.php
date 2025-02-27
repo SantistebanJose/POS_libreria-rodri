@@ -235,37 +235,37 @@ if (isset($_GET['id'])) {
                         <div>
                             <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
                                 <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
-                                <div class="table-filters mb-3">
-                                            <div class="row justify-content-center align-items-center g-2">
-                                                <div class="col-md-3">
-                                                    <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
-                                                        <option value="">Filtrar por Categoría</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
-                                                        <option value="">Filtrar por Tipo</option>
+                                    <div class="table-filters mb-3">
+                                        <div class="row justify-content-center align-items-center g-2">
+                                            <div class="col-md-3">
+                                                <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                                    <option value="">Filtrar por Categoría</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                                    <option value="">Filtrar por Tipo</option>
 
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
-                                                        <option value="">Filtrar por Dimensión</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                                    <option value="">Filtrar por Dimensión</option>
 
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <button id="clearFilters" class="btn btn-secondary btn-round btn-round btn-md">
-                                                        <i class="fas fa-broom"></i> Limpiar Filtros
-                                                    </button>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button id="clearFilters" class="btn btn-secondary btn-round btn-round btn-md">
+                                                    <i class="fas fa-broom"></i> Limpiar Filtros
+                                                </button>
 
 
 
-                                                </div>
                                             </div>
                                         </div>
-                                <div class="table-responsive">
-                                       
+                                    </div>
+                                    <div class="table-responsive">
+
                                         <table
                                             id="multi-filter-select2"
                                             class="display table table-striped table-hover">
@@ -336,7 +336,7 @@ if (isset($_GET['id'])) {
                             </div>
                             <div class="col-md-6">
                                 <div class="card-body">
-                                <i class="fas fa-user-tie"></i> CLIENTE
+                                    <i class="fas fa-user-tie"></i> CLIENTE
                                     <div class="card-title" id="idClienteReservaDetalle"></div>
                                     <hr>
                                     <div><i class="fas fa-user-tie"></i><strong> Número de Celular:</strong> <span id="idNumCelClienteReserva">942781324</span> </div>
@@ -347,7 +347,7 @@ if (isset($_GET['id'])) {
 
                             <div class="col-md-6" style="border-left: 0.5px solid #6e6e6e; padding-left: 10px;">
                                 <div class="card-body">
-                                 <i class="fas fa-user-clock"></i> ATENDIDO POR
+                                    <i class="fas fa-user-clock"></i> ATENDIDO POR
                                     <h4 class="card-title" id="idUsuarioReservaDetalle"></h4>
                                     <div>ID VENTA: <span id="idVentaReserva"></span></div>
                                     <hr>
@@ -1055,7 +1055,7 @@ if (isset($_GET['id'])) {
         // Crear un botón de eliminación pequeño
         const btnEliminar = document.createElement('button');
         btnEliminar.type = 'button';
-        btnEliminar.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2','btn-round'); // Clase btn-sm para hacerlo más pequeño
+        btnEliminar.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2', 'btn-round'); // Clase btn-sm para hacerlo más pequeño
         btnEliminar.innerHTML = '<i class="fas fa-times"></i>'; // Texto del botón
         btnEliminar.addEventListener('click', function() {
             contenedorPagos.removeChild(nuevoContenedor); // Eliminar el contenedor
@@ -1108,7 +1108,7 @@ if (isset($_GET['id'])) {
         // Crear un botón de eliminación pequeño
         const btnEliminarCredito = document.createElement('button');
         btnEliminarCredito.type = 'button';
-        btnEliminarCredito.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2','btn-round'); // Clase btn-sm para hacerlo más pequeño
+        btnEliminarCredito.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2', 'btn-round'); // Clase btn-sm para hacerlo más pequeño
         btnEliminarCredito.innerHTML = '<i class="fas fa-times"></i>'; // Texto del botón
         btnEliminarCredito.addEventListener('click', function() {
             contenedorPagosCredito.removeChild(nuevoContenedorCredito); // Eliminar el contenedor
@@ -3298,12 +3298,22 @@ if (isset($_GET['id'])) {
                 }
             }).done(function(response) {
                 const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
+                console.log(jsonResponse)
                 if (jsonResponse.success) {
                     showNotification("success");
                     resolve(jsonResponse); // Éxito: Resuelve la promesa
                 } else {
                     showNotification("error");
-                    reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Error del servidor
+                    swal("Upps", jsonResponse.message, {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+
+                    reject(new Error(jsonResponse.message || "Error desconocido")); // Error del servidor
                 }
 
             }).fail(function(error) {

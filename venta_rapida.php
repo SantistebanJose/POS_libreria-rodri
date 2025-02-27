@@ -3249,7 +3249,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (result.estado === true) {
                                 Swal.fire({
                                     title: "Pagado con Éxito!",
-                                    html: `<p style="text-align: center;">${result.mensaje}</p>`, // Usa "html" en lugar de "text"
+                                    html: `<p style="text-align: center;"> ${result.mensaje}</p>`, // Usa "html" en lugar de "text"
                                     icon: "success",
                                     buttons: false,
                                     timer: 1500

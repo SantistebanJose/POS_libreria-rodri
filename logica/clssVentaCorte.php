@@ -25,7 +25,7 @@ function controladorVentaCorte($accion)
         case 'ADICIONARARTICULO':
             $data = json_decode($_POST["data"], true); // Decodificar JSON
             fn_adicionar_articulo($data);
-        break;
+            break;
         case 'ELIMINARARTICULO':
             $id_rel_articulo = $_POST["id_rel_articulo"];
             fn_eliminar_articulo($id_rel_articulo);
@@ -114,8 +114,8 @@ function registrar_reserva($datos = array())
                                          VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto, :precio_unitario, :cantidad, :sub_total, :movimiento_id,:nota_archivo)");
             $orden->bindParam(":venta_id", $venta_id);
 
-            $articuloId = ($articulo['articulo_id'] === 0 || (int)$articulo['articulo_id'] === 0) 
-                ? null 
+            $articuloId = ($articulo['articulo_id'] === 0 || (int)$articulo['articulo_id'] === 0)
+                ? null
                 : (int)$articulo['articulo_id'];
 
             // Asociar el parámetro con el valor validado
@@ -136,14 +136,15 @@ function registrar_reserva($datos = array())
 
             $orden->execute();
             $orden->closeCursor();
-
+            /*
             $orden = $conectar->prepare("UPDATE articulo 
                                          SET stock = stock - :cantidad 
                                          WHERE id = :articulo_id;");
             $orden->bindParam(":cantidad", $articulo['cantidad']);
             $orden->bindParam(":articulo_id", $articulo['articulo_id']);
             $orden->execute();
-            $orden->closeCursor();
+            $orden->closeCursor(); 
+             */
         }
 
         $conectar->commit();
@@ -167,12 +168,12 @@ function fn_insert_movimiento($datos = array())
         $orden->bindParam(":cantidad", $datos['cantidad']);
         $orden->bindParam(":nota_archivo", $datos['nota_archivo']);
         $orden->bindParam(":sub_total", $datos['sub_total']);
-        
+
         $orden->execute();
-        
+
         $resultado = $orden->fetch(PDO::FETCH_ASSOC);
         $orden->closeCursor();
-        
+
         $respuesta = json_decode($resultado['respuesta'], true);
 
         if ($respuesta['estado'] === true) {
@@ -198,21 +199,21 @@ function fn_adicionar_articulo($datos = array())
         $orden = $conectar->prepare("INSERT INTO rel_venta_articulo(venta_id, articulo_id, minutos, costo_por_minuto,precio_unitario_articulo , cantidad, sub_total,movimiento_id,nota_archivo) 
                                      VALUES (:venta_id, :articulo_id, :minutos, :costo_por_minuto,:precio_unitario, :cantidad, :sub_total, :movimiento_id,'Sin nota');");
         $orden->bindParam(":venta_id", $datos['venta_id']);
-        
-        $articuloId = ($datos['articulo_id'] === 0 || (int)$datos['articulo_id'] === 0) 
-        ? null 
-        : (int)$datos['articulo_id'];
 
-    // Asociar el parámetro con el valor validado
+        $articuloId = ($datos['articulo_id'] === 0 || (int)$datos['articulo_id'] === 0)
+            ? null
+            : (int)$datos['articulo_id'];
+
+        // Asociar el parámetro con el valor validado
         $orden->bindParam(":articulo_id", $articuloId, is_null($articuloId) ? PDO::PARAM_NULL : PDO::PARAM_INT);
-        
+
         $orden->bindParam(":cantidad", $datos['cantidad']);
-        
+
         // Convertir valores "-" a NULL
         $minutos = ($datos['minutos'] === '-' || $datos['minutos'] === null) ? null : intval($datos['minutos']);
         $costo_por_minuto = ($datos['costoxminuto'] === '-' || $datos['costoxminuto'] === null) ? null : floatval($datos['costoxminuto']);
         $precioUnitario = $datos['precio_unitario'] === '-' ? null : $datos['precio_unitario'];
-        
+
         $orden->bindParam(":precio_unitario", $precioUnitario, PDO::PARAM_STR);
         $orden->bindValue(":minutos", $minutos, $minutos === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
         $orden->bindValue(":costo_por_minuto", $costo_por_minuto, $costo_por_minuto === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
@@ -224,6 +225,7 @@ function fn_adicionar_articulo($datos = array())
         $orden->closeCursor();
 
         // Actualizar el stock del artículo
+        /*
         $orden = $conectar->prepare("UPDATE articulo 
                                      SET stock = stock - :cantidad 
                                      WHERE id = :articulo_id;");
@@ -231,6 +233,8 @@ function fn_adicionar_articulo($datos = array())
         $orden->bindParam(":articulo_id", $datos['articulo_id']);
         $orden->execute();
         $orden->closeCursor();
+         */
+
 
         $orden = $conectar->prepare("UPDATE venta 
                                     SET total = total + :sub_total 
@@ -244,7 +248,6 @@ function fn_adicionar_articulo($datos = array())
         $conectar->commit();
 
         echo json_encode(["success" => true, "id_rel_articulo" => $id_rel_articulo]);
-
     } catch (\Throwable $th) {
         // Si hay un error, hacer rollback de la transacción
         $conectar->rollBack();
@@ -254,7 +257,8 @@ function fn_adicionar_articulo($datos = array())
 }
 
 
-function fn_eliminar_articulo($id_rel_articulo) {
+function fn_eliminar_articulo($id_rel_articulo)
+{
     global $conectar;
     try {
         // Iniciar la transacción
@@ -283,11 +287,15 @@ function fn_eliminar_articulo($id_rel_articulo) {
         $orden->closeCursor();
 
         // Actualizar el stock del artículo
-        $orden = $conectar->prepare("UPDATE articulo SET stock = stock + :cantidad WHERE id = :articulo_id");
+        /*
+         $orden = $conectar->prepare("UPDATE articulo SET stock = stock + :cantidad WHERE id = :articulo_id");
         $orden->bindParam(":cantidad", $cantidad, PDO::PARAM_INT);
         $orden->bindParam(":articulo_id", $articulo_id, PDO::PARAM_INT);
         $orden->execute();
         $orden->closeCursor();
+         * 
+         */
+
 
         // Actualizar el total de la venta (restando el sub_total eliminado)
         $orden = $conectar->prepare("UPDATE venta SET total = total - :sub_total WHERE id = :venta_id");
@@ -301,7 +309,6 @@ function fn_eliminar_articulo($id_rel_articulo) {
         $conectar->commit();
 
         echo json_encode(["success" => true, "message" => "Artículo eliminado exitosamente."]);
-
     } catch (\Throwable $th) {
         // Si hay un error, hacer rollback de la transacción
         $conectar->rollBack();
@@ -311,7 +318,8 @@ function fn_eliminar_articulo($id_rel_articulo) {
 }
 
 
-function fn_eliminar_movimiento($id_rel_articulo) {
+function fn_eliminar_movimiento($id_rel_articulo)
+{
     global $conectar;
     try {
         // Iniciar la transacción
@@ -349,7 +357,6 @@ function fn_eliminar_movimiento($id_rel_articulo) {
         $conectar->commit();
 
         echo json_encode(["success" => true, "message" => "Movimiento eliminado exitosamente."]);
-
     } catch (\Throwable $th) {
         // Si hay un error, hacer rollback de la transacción
         $conectar->rollBack();
@@ -382,7 +389,9 @@ function fn_editar_articulo($datos = array())
         if (!is_null($datos['cantidad'])) {
             $diferencia_cantidad = $datos['cantidad'] - $cantidad_actual;
         }
-
+        /**
+         * 
+         */
         // Actualizar los datos del artículo
         $orden = $conectar->prepare("UPDATE rel_venta_articulo 
                                      SET minutos = :minutos,
@@ -407,9 +416,8 @@ function fn_editar_articulo($datos = array())
 
         $orden->execute();
         $orden->closeCursor();
-
-        // Si hay diferencia en la cantidad, ajustar el stock del artículo
-        if (!is_null($diferencia_cantidad)) {
+        /*
+         if (!is_null($diferencia_cantidad)) {
             $orden = $conectar->prepare("UPDATE articulo 
                                          SET stock = stock - :diferencia_cantidad 
                                          WHERE id = :articulo_id");
@@ -418,6 +426,9 @@ function fn_editar_articulo($datos = array())
             $orden->execute();
             $orden->closeCursor();
         }
+         */
+        // Si hay diferencia en la cantidad, ajustar el stock del artículo
+
 
         // Actualizar el total de la venta
         $diferencia_sub_total = $datos['sub_total'] - $sub_total_anterior;
@@ -433,7 +444,6 @@ function fn_editar_articulo($datos = array())
         $conectar->commit();
 
         echo json_encode(["success" => true]);
-
     } catch (\Throwable $th) {
         // Rollback si hay un error
         $conectar->rollBack();
@@ -487,7 +497,6 @@ function fn_editar_movimiento($datos = array())
         $conectar->commit();
 
         echo json_encode(["success" => true]);
-
     } catch (\Throwable $th) {
         // Rollback si hay un error
         $conectar->rollBack();
