@@ -2599,10 +2599,24 @@ if (isset($_GET['id'])) {
         });
 
         document.getElementById('btnSumarCantidad').addEventListener('click', function() {
+            let cantidad = parseInt(document.getElementById('inputCantidad').value, 10) + 1; // Aumentar primero
+            let cantidadStock = datosArticulo.stock; // Stock disponible
+
             let inputCantidad = document.getElementById('inputCantidad');
-            inputCantidad.value++;
+            if (cantidad > cantidadStock) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stock insuficiente',
+                    text: `No puedes agregar más de ${cantidadStock} unidades.`,
+                    confirmButtonText: 'Entendido'
+                });
+            } else {
+                inputCantidad.value++;
+                actualizarVisibilidadCorte(datosArticulo);
+            }
+          
             // Actualizar la visibilidad de la sección de corte
-            actualizarVisibilidadCorte(datosArticulo);
+           
         });
 
         document.getElementById('btnRestarCorte').addEventListener('click', function() {
@@ -2644,6 +2658,20 @@ if (isset($_GET['id'])) {
 
         // Función para confirmar cantidad (se ejecuta al hacer click en el botón Confirmar)
         document.getElementById('btnConfirmar').addEventListener('click', async function() {
+            let cantidadSeleccionada = parseInt(document.getElementById('inputCantidad').value, 10);
+            let cantidadStock = datosArticulo.stock;
+
+            // Validar que la cantidad no supere el stock
+            if (cantidadSeleccionada > cantidadStock) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stock insuficiente',
+                    text: `Solo hay ${cantidadStock} unidades disponibles.`,
+                    confirmButtonText: 'Entendido'
+                });
+                return; // Detener ejecución
+            }
+            
             try {
                 const inputCantidad = document.getElementById('inputCantidad');
 

@@ -343,6 +343,33 @@ include("cabecera.php");
                         <div class="tab-content mt-3" id="pills-tabContent">
                             <!-- Formulario Persona -->
                             <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Datos Usuario
+                                        </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div class="col-sm-12 mb-3">
+                                                <label for="nombreUsuario"> <b> Nombre de Usuario </b> </label>
+                                                <input type="text" class="form-control required" id="userPersona" placeholder="vysam2025" value="" />
+                                                <div id="error-nombreUsuario" class="error-message"></div>
+                                        
+                                            </div>
+                                            <div class="col-sm-12 mb-3">
+                                                    <label for="cambiarContrasena"><b> Contraseña </b> </label>
+                                                    <input type="password" class="form-control" id="passPersona" placeholder="********" />
+                                                    <div id="error-cambiarContrasena" class="error-message"></div>
+                                            
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                
                                 <div class="mb-3">
                                     <label for="numeroDocumentoPersona" class="form-label"><b>Número de Documento  <span class="fw-bold text-danger">*</span></b></label>
                                     <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
@@ -380,6 +407,24 @@ include("cabecera.php");
                                     <label for="direccionPersona" class="form-label"><b>Direccion</b></label>
                                     <input type="text" class="form-control" id="direccionPersona" placeholder="Direccion">
                                     <div class="invalid-feedback" id="error-direccionPersona"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="sueldoPersona" class="form-label"><b>Sueldo</b></label>
+                                    <input type="number" class="form-control" id="sueldoPersona" placeholder="00.00">
+                                    <div class="invalid-feedback" id="error-sueldoPersona"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="horasPersona" class="form-label"><b>Horas de trabajo</b></label>
+                                    <input type="number" class="form-control" id="horasPersona" placeholder="00">
+                                    <div class="invalid-feedback" id="error-horasPersona"></div>
+                                </div>
+
+                                 <div class="mb-3">
+                                    <label for="diasPersona" class="form-label"><b>Dias de trabajo a la semana</b></label>
+                                    <input type="number" class="form-control" id="diasPersona" placeholder="00">
+                                    <div class="invalid-feedback" id="error-diasPersona"></div>
                                 </div>
 
                             </div>
@@ -509,7 +554,13 @@ include("cabecera.php");
                             "telefono_movil": document.getElementById('telefonoPersona').value || null,
                             "email": document.getElementById('emailPersona').value,
                             "direccion": document.getElementById('direccionPersona').value,
-                            "condicion": document.getElementById('condicionPersona').value
+                            "condicion": document.getElementById('condicionPersona').value,
+                            "sueldo": document.getElementById('sueldoPersona').value,
+                            "horas": document.getElementById('horasPersona').value,
+                            "dias": document.getElementById('diasPersona').value,
+                            "username": document.getElementById('userPersona').value,
+                            "password": document.getElementById('passPersona').value
+
 
                         };
 
@@ -555,7 +606,7 @@ include("cabecera.php");
                         method: "POST",
                         url: "logica/clssPersona.php", // El archivo PHP donde se maneja el registro de persona
                         data: {
-                            "accion": "REGISTRARPERSONA", // Acción que se realiza en el backend
+                            "accion": "REGISTRAREMPLEADO", // Acción que se realiza en el backend
                             "data": JSON.stringify(datos) // Los datos de la persona como JSON
                         }
                     }).done(function(response) {
@@ -595,6 +646,33 @@ include("cabecera.php");
                                 <div class="tab-content mt-3" id="pills-tabContent">
                                     <!-- Formulario Persona -->
                                     <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
+                                        <div class="accordion" id="accordionExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingTwo">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                    Datos Usuario
+                                                </button>
+                                                </h2>
+                                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <div class="col-sm-12 mb-3">
+                                                        <label for="nombreUsuario"> <b> Nombre de Usuario </b> </label>
+                                                        <input type="text" class="form-control required" id="userPersona" placeholder="vysam2025" value="" />
+                                                        <div id="error-nombreUsuario" class="error-message"></div>
+                                                
+                                                    </div>
+                                                    <div class="col-sm-12 mb-3">
+                                                            <label for="cambiarContrasena"><b>Cambiar Contraseña </b> </label>
+                                                            <input type="password" class="form-control" id="passPersona" placeholder="********" />
+                                                            <div id="error-cambiarContrasena" class="error-message"></div>
+                                                    
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    
                                         <div class="mb-3">
                                             <label for="numeroDocumentoPersona" class="form-label"><b>Número de Documento  <span class="fw-bold text-danger">*</span></b></label>
                                             <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
@@ -630,6 +708,24 @@ include("cabecera.php");
                                         <div class="mb-3">
                                             <label for="direccionPersona" class="form-label"><b>Direccion</b></label>
                                             <input type="text" class="form-control" id="direccionPersona" placeholder="Direccion">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="sueldoPersona" class="form-label"><b>Sueldo</b></label>
+                                            <input type="number" class="form-control" id="sueldoPersona" placeholder="00.00">
+                                            <div class="invalid-feedback" id="error-sueldoPersona"></div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="horasPersona" class="form-label"><b>Horas de trabajo</b></label>
+                                            <input type="number" class="form-control" id="horasPersona" placeholder="00">
+                                            <div class="invalid-feedback" id="error-horasPersona"></div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="diasPersona" class="form-label"><b>Dias de trabajo a la semana</b></label>
+                                            <input type="number" class="form-control" id="diasPersona" placeholder="00">
+                                            <div class="invalid-feedback" id="error-diasPersona"></div>
                                         </div>
 
                                     </div>
@@ -687,6 +783,10 @@ include("cabecera.php");
                             document.getElementById("telefonoPersona").value = usuario.telefonomovil;
                             document.getElementById("emailPersona").value = usuario.email;
                             document.getElementById("direccionPersona").value = usuario.direccion;
+                            document.getElementById("diasPersona").value = usuario.dias;
+                            document.getElementById("horasPersona").value = usuario.horas;
+                            document.getElementById("sueldoPersona").value = usuario.sueldo;
+                            document.getElementById("userPersona").value = usuario.username;
 
 
                             document.getElementById("numeroDocumentoPersona").classList.add("required");
@@ -732,7 +832,12 @@ include("cabecera.php");
                     "telefono_movil": document.getElementById('telefonoPersona').value || null,
                     "email": document.getElementById('emailPersona').value,
                     "direccion": document.getElementById('direccionPersona').value,
-                    "condicion": document.getElementById('condicionPersona').value
+                    "condicion": document.getElementById('condicionPersona').value,
+                    "sueldo": document.getElementById('sueldoPersona').value,
+                    "horas": document.getElementById('horasPersona').value,
+                    "dias": document.getElementById('diasPersona').value,
+                    "username": document.getElementById('userPersona').value,
+                    "password": document.getElementById('passPersona').value
 
                 };
 
@@ -774,7 +879,7 @@ include("cabecera.php");
                 method: "POST",
                 url: "logica/clssPersona.php", // El archivo PHP donde se maneja el registro de persona
                 data: {
-                    "accion": "ACTUALIZARPERSONA", // Acción que se realiza en el backend
+                    "accion": "ACTUALIZAREMPLEADO", // Acción que se realiza en el backend
                     "data": JSON.stringify(datos) // Los datos de la persona como JSON
                 }
             }).done(function(response) {

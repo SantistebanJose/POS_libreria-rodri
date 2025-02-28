@@ -1348,7 +1348,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Configurar el nombre del artículo
                 const nombreArticulo = document.getElementById('nombreArticulo');
                 nombreArticulo.textContent = `Artículo: ${datosArticulo.articulo || "Sin nombre"}`;
-
                 // Resetear valores del modal
                 const inputCantidad = document.getElementById('inputCantidad');
                 const seccionCorte = document.getElementById('seccionCorte');
@@ -1394,15 +1393,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 };
 
                 document.getElementById('btnSumarCantidad').onclick = () => {
-                    let cantidad = parseInt(inputCantidad.value, 10);
-                    inputCantidad.value = cantidad + 1;
-                    if (cantidad + 1 === 1 && datosArticulo.corte) {
-                        precioCorte.value = 1.5;
-                        seccionCorte.style.display = 'block';
+                    let cantidad = parseInt(inputCantidad.value, 10) + 1; // Aumentar primero
+                    let cantidadStock = datosArticulo.stock; // Stock disponible
+
+                    if (cantidad > cantidadStock) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Stock insuficiente',
+                            text: `No puedes agregar más de ${cantidadStock} unidades.`,
+                            confirmButtonText: 'Entendido'
+                        });
                     } else {
-                        precioCorte.value = 0;
-                        cantidadCorte.value = 0;
-                        seccionCorte.style.display = 'none';
+                        inputCantidad.value = cantidad; // Solo actualiza si es válido
+
+                        if (cantidad === 1 && datosArticulo.corte) {
+                            precioCorte.value = 1.5;
+                            seccionCorte.style.display = 'block';
+                        } else {
+                            precioCorte.value = 0;
+                            cantidadCorte.value = 0;
+                            seccionCorte.style.display = 'none';
+                        }
                     }
                 };
 
@@ -1437,6 +1448,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Confirmar cantidad y agregar a la tabla
                 document.getElementById('btnConfirmarCantidad').onclick = () => {
+                    let cantidadSeleccionada = parseInt(inputCantidad.value, 10);
+                    let cantidadStock = datosArticulo.stock;
+
+                    // Validar que la cantidad no supere el stock
+                    if (cantidadSeleccionada > cantidadStock) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Stock insuficiente',
+                            text: `Solo hay ${cantidadStock} unidades disponibles.`,
+                            confirmButtonText: 'Entendido'
+                        });
+                        return; // Detener ejecución
+                    }
+                    
                     datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
                     datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
                     datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
