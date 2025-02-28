@@ -134,6 +134,16 @@ function registrar_empleado_trabajador($datos = array()) {
     global $conectar;
 
     try {
+
+        $verificar = $conectar->prepare("SELECT COUNT(*) FROM persona WHERE numero_documento = :numero_documento");
+        $verificar->bindParam(":numero_documento", $datos['numero_documento']);
+        $verificar->execute();
+        $existe = $verificar->fetchColumn();
+
+        if ($existe > 0) {
+            echo json_encode(["error" => true, "message" => "El número de documento ya está registrado."]);
+            return;
+        }
         // Iniciar la transacción
         $conectar->beginTransaction();
 
@@ -199,6 +209,15 @@ function registrar_persona($datos = array()) {
     global $conectar;
 
     try {
+        $verificar = $conectar->prepare("SELECT COUNT(*) FROM persona WHERE numero_documento = :numero_documento");
+        $verificar->bindParam(":numero_documento", $datos['numero_documento']);
+        $verificar->execute();
+        $existe = $verificar->fetchColumn();
+
+        if ($existe > 0) {
+            echo json_encode(["error" => true, "message" => "El número de documento ya está registrado."]);
+            return;
+        }
         // Insertar en la tabla persona
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO persona (numero_documento, nombres, apellidos, telefonomovil, email,tipo_persona,direccion,condicion)
@@ -236,6 +255,15 @@ function registrar_empresa($datos = array()) {
     global $conectar;
 
     try {
+        $verificar = $conectar->prepare("SELECT COUNT(*) FROM persona WHERE numero_documento = :numero_documento");
+        $verificar->bindParam(":numero_documento", $datos['numero_documento']);
+        $verificar->execute();
+        $existe = $verificar->fetchColumn();
+
+        if ($existe > 0) {
+            echo json_encode(["error" => true, "message" => "El número de documento ya está registrado."]);
+            return;
+        }
         // Insertar en la tabla persona (aunque sea empresa, también se inserta en persona)
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO persona (numero_documento, nombre_comercial, razon_social, telefonomovil, email,tipo_persona,direccion,condicion)
@@ -442,6 +470,16 @@ function registrar_persona_rapido($datos = array()) {
     global $conectar;
 
     try {
+        $verificar = $conectar->prepare("SELECT COUNT(*) FROM persona WHERE numero_documento = :numero_documento");
+        $verificar->bindParam(":numero_documento", $datos['numero_documento']);
+        $verificar->execute();
+        $existe = $verificar->fetchColumn();
+
+        if ($existe > 0) {
+            echo json_encode(["error" => true, "message" => "El número de documento ya está registrado."]);
+            return;
+        }
+
         // Insertar en la tabla persona
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO persona (numero_documento, nombres, apellidos, telefonomovil, email,tipo_persona,condicion)
@@ -473,6 +511,15 @@ function registrar_empleado($datos = array()) {
     global $conectar;
 
     try {
+        $verificar = $conectar->prepare("SELECT COUNT(*) FROM persona WHERE numero_documento = :numero_documento");
+        $verificar->bindParam(":numero_documento", $datos['numero_documento']);
+        $verificar->execute();
+        $existe = $verificar->fetchColumn();
+
+        if ($existe > 0) {
+            echo json_encode(["error" => true, "message" => "El número de documento ya está registrado."]);
+            return;
+        }
         // Insertar en la tabla persona
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO persona (numero_documento, nombres, apellidos, telefonomovil, email,tipo_persona,condicion)
@@ -505,6 +552,15 @@ function registrar_empresa_rapido($datos = array()) {
     global $conectar;
 
     try {
+        $verificar = $conectar->prepare("SELECT COUNT(*) FROM persona WHERE numero_documento = :numero_documento");
+        $verificar->bindParam(":numero_documento", $datos['numero_documento']);
+        $verificar->execute();
+        $existe = $verificar->fetchColumn();
+
+        if ($existe > 0) {
+            echo json_encode(["error" => true, "message" => "El número de documento ya está registrado."]);
+            return;
+        }
         // Insertar en la tabla persona (aunque sea empresa, también se inserta en persona)
         $conectar->beginTransaction();
         $orden = $conectar->prepare("INSERT INTO persona (numero_documento, nombre_comercial, razon_social, telefonomovil, email,tipo_persona,condicion)
