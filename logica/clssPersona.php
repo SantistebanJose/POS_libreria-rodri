@@ -44,13 +44,13 @@ function controladorVentaCorte($accion)
         case 'REGISTRAREMPLEADO':
             $data = json_decode($_POST["data"], true); // Decodificar JSON
             if (isset($data['nombres']) && isset($data['apellidos'])) {
-                registrar_empleado($data); // Si tiene 'nombres' y 'apellidos', es persona
+                registrar_empleado_trabajador($data); // Si tiene 'nombres' y 'apellidos', es persona
             } 
             break;
         case 'ACTUALIZAREMPLEADO':
             $data = json_decode($_POST["data"], true); // Decodificar JSON
             if (isset($data['nombres']) && isset($data['apellidos'])) {
-                actualizar_empleado($data); // Si tiene 'nombres' y 'apellidos', es persona
+                actualizar_empleado_trabajador($data); // Si tiene 'nombres' y 'apellidos', es persona
             } 
             break;
         case 'ACTUALIZARPERSONA':
@@ -130,7 +130,7 @@ function consultarPersona($id)
     }
 }
 
-function registrar_empleado($datos = array()) {
+function registrar_empleado_trabajador($datos = array()) {
     global $conectar;
 
     try {
@@ -267,7 +267,7 @@ function registrar_empresa($datos = array()) {
     }
 }
 
-function actualizar_empleado($datos = array()) {
+function actualizar_empleado_trabajador($datos = array()) {
     global $conectar;
 
     try {

@@ -78,7 +78,7 @@ function consultapersonaempleado($data): void
                 COALESCE(NULLIF(telefonomovil, ''), 'Sin número') AS telefonomovil,
                 COALESCE(NULLIF(email, ''), 'Sin correo') AS email
             FROM persona
-            WHERE condicion = 'EMPLEADO' 
+            WHERE tipo_persona = 'NATURAL' 
             AND (LOWER(numero_documento) LIKE LOWER(:data)
                 OR LOWER(nombres) LIKE LOWER(:data)
                 OR LOWER(apellidos) LIKE LOWER(:data))
