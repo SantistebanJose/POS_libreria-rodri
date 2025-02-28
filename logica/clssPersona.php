@@ -336,8 +336,8 @@ function actualizar_empleado_trabajador($datos = array()) {
             password = COALESCE(:password, password), 
             rol = :rol, 
             sueldo = :sueldo, 
-            horas = :horas, 
-            dias = :dias
+            cantidad_horas_trabajo = :horas, 
+            cantidad_dias_semanas = :dias
             WHERE persona_id = :persona_id");
 
         $orden_usuario->bindParam(":persona_id", $datos['id']);

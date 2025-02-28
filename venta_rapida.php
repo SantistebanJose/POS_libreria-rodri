@@ -3736,21 +3736,34 @@ if (isset($_GET['id'])) {
                     };
 
                     // Llamar a la función AJAX para registrar la persona
-                    console.log(datos);
-                    const response = await fnRegistrarPersona(datos);
-                    console.log("Persona insertado con éxito:", response);
-                    const nombreencadenado = `${document.getElementById('numeroDocumentoPersona').value} - ${document.getElementById('nombresPersona').value} ${document.getElementById('apellidosPersona').value}`;
-                    console.log(nombreencadenado);
-                    console.log(response.persona_id);
+                    try {
+                        console.log(datos);
+                        const response = await fnRegistrarPersona(datos);
+                        console.log("Persona insertado con éxito:", response);
+                        const nombreencadenado = `${document.getElementById('numeroDocumentoPersona').value} - ${document.getElementById('nombresPersona').value} ${document.getElementById('apellidosPersona').value}`;
+                        console.log(nombreencadenado);
+                        console.log(response.persona_id);
 
 
 
-                    enviardatos(response.persona_id, nombreencadenado, document.getElementById('telefonoPersona').value || 'Sin numero', document.getElementById('emailPersona').value || 'Sin Correo');
-                    limpiarcampos();
-                    showNotification("success");
+                        enviardatos(response.persona_id, nombreencadenado, document.getElementById('telefonoPersona').value || 'Sin numero', document.getElementById('emailPersona').value || 'Sin Correo');
+                        limpiarcampos();
+                        showNotification("success");
 
 
-                    modalCliente.hide();
+                        modalCliente.hide();
+                    } catch (error) {
+                        console.error("Error en el registro:", error.message);
+                        swal("Error", error.message || "Ocurrió un error inesperado", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                   
 
                 }
             } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {
@@ -3764,20 +3777,33 @@ if (isset($_GET['id'])) {
                         "email": document.getElementById('emailEmpresa').value
                     };
 
-                    console.log(datos);
-                    // Llamar a la función AJAX para registrar la empresa
-                    const response = await fnRegistrarEmpresa(datos);
-                    console.log("Empresa insertado con éxito:", response);
-                    const nombreencadenado = `${document.getElementById('numeroDocumentoEmpresa').value} - ${document.getElementById('razonSocial').value}`;
-                    console.log(nombreencadenado);
-                    console.log(response.empresa_id);
+                    try {
+                        console.log(datos);
+                        // Llamar a la función AJAX para registrar la empresa
+                        const response = await fnRegistrarEmpresa(datos);
+                        console.log("Empresa insertado con éxito:", response);
+                        const nombreencadenado = `${document.getElementById('numeroDocumentoEmpresa').value} - ${document.getElementById('razonSocial').value}`;
+                        console.log(nombreencadenado);
+                        console.log(response.empresa_id);
 
-                    enviardatos(response.empresa_id, nombreencadenado);
-                    limpiarcampos();
-                    showNotification("success");
+                        enviardatos(response.empresa_id, nombreencadenado);
+                        limpiarcampos();
+                        showNotification("success");
 
-                    modalCliente.hide();
+                        modalCliente.hide();
 
+                    } catch (error) {
+                        console.error("Error en el registro:", error.message);
+
+                        swal("Error", error.message || "Ocurrió un error inesperado", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
 
                 }
             }
@@ -3805,7 +3831,7 @@ if (isset($_GET['id'])) {
                     if (jsonResponse.success) {
                         resolve(jsonResponse); // Resolvemos la promesa en caso de éxito
                     } else {
-                        reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Si hay error en la respuesta del servidor
+                        reject(new Error(jsonResponse.message || "Error desconocido")); // Si hay error en la respuesta del servidor
                     }
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
@@ -3829,7 +3855,7 @@ if (isset($_GET['id'])) {
                     if (jsonResponse.success) {
                         resolve(jsonResponse); // Resolvemos la promesa en caso de éxito
                     } else {
-                        reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Si hay error en la respuesta del servidor
+                        reject(new Error(jsonResponse.message || "Error desconocido")); // Si hay error en la respuesta del servidor
                     }
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);

@@ -276,8 +276,8 @@ include("cabecera.php");
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
+                <button type="button" class="btn btn-danger btn-round" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success btn-round" id="btnRegistrarCliente">Registrar</button>
             </div>
         </div>
     </div>
@@ -798,22 +798,38 @@ include("cabecera.php");
                         "email": document.getElementById('emailPersona').value
                     };
 
+                    try {
+                        console.log(datos);
+                        const response = await fnRegistrarPersona(datos);
+                        console.log("Persona insertado con éxito:", response);
+                        const nombreencadenado = `${document.getElementById('numeroDocumentoPersona').value} - ${document.getElementById('nombresPersona').value} ${document.getElementById('apellidosPersona').value}`;
+                        console.log(nombreencadenado);
+                        console.log(response.persona_id);
+                        enviardatos(response.persona_id, nombreencadenado);
+                        limpiarcampos();
+                        showNotification("success");
+
+
+                        modalCliente.hide();
+                    } catch (error) {
+                        console.error("Error en el registro:", error.message);
+
+                        swal("Error", error.message || "Ocurrió un error inesperado", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+
                     // Llamar a la función AJAX para registrar la persona
-                    console.log(datos);
-                    const response = await fnRegistrarPersona(datos);
-                    console.log("Persona insertado con éxito:", response);
-                    const nombreencadenado = `${document.getElementById('numeroDocumentoPersona').value} - ${document.getElementById('nombresPersona').value} ${document.getElementById('apellidosPersona').value}`;
-                    console.log(nombreencadenado);
-                    console.log(response.persona_id);
+                   
 
 
 
-                    enviardatos(response.persona_id, nombreencadenado);
-                    limpiarcampos();
-                    showNotification("success");
-
-
-                    modalCliente.hide();
+                    
 
                 } 
             }
@@ -840,7 +856,7 @@ include("cabecera.php");
                     if (jsonResponse.success) {
                         resolve(jsonResponse); // Resolvemos la promesa en caso de éxito
                     } else {
-                        reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Si hay error en la respuesta del servidor
+                        reject(new Error(jsonResponse.message || "Error desconocido")); // Si hay error en la respuesta del servidor
                     }
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);

@@ -601,28 +601,66 @@ include("cabecera.php");
 
 
             function fnRegistrarPersona(datos) {
-                return new Promise((resolve, reject) => {
-                    $.ajax({
-                        method: "POST",
-                        url: "logica/clssPersona.php", // El archivo PHP donde se maneja el registro de persona
-                        data: {
-                            "accion": "REGISTRAREMPLEADO", // Acción que se realiza en el backend
-                            "data": JSON.stringify(datos) // Los datos de la persona como JSON
-                        }
-                    }).done(function(response) {
-                        console.log(response);
-                        const jsonResponse = JSON.parse(response); // Convertir la respuesta a JSON
-                        if (jsonResponse.success) {
-                            resolve(jsonResponse); // Resolvemos la promesa en caso de éxito
-                        } else {
-                            reject(new Error(jsonResponse.mensaje || "Error desconocido")); // Si hay error en la respuesta del servidor
-                        }
-                    }).fail(function(error) {
-                        console.error("Error:", error.responseText);
-                        reject(error); // Rechazamos la promesa si ocurre un error en la solicitud AJAX
-                    });
+    $.ajax({
+        method: "POST",
+        url: "logica/clssPersona.php",
+        data: {
+            "accion": "REGISTRAREMPLEADO",
+            "data": JSON.stringify(datos)
+        }
+    }).done(function(response) {
+        console.log("Respuesta del servidor:", response);
+
+        try {
+            const jsonResponse = JSON.parse(response); // Intentamos convertir la respuesta a JSON
+            console.log("JSON procesado:", jsonResponse);
+
+            if (jsonResponse.success) {
+                // Si la respuesta es exitosa
+                swal({
+                    title: "Registro con Éxito!",
+                    text: "Persona actualizada correctamente",
+                    icon: "success",
+                    buttons: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload();
                 });
+
+            } else {
+                // Si la respuesta no es exitosa
+                throw new Error(jsonResponse.message || "Error desconocido en la respuesta del servidor");
             }
+
+        } catch (error) {
+            console.error("Error al procesar JSON:", error); // Imprimir el error en la consola para diagnóstico
+
+            // Mostrar un mensaje más detallado de error
+            swal("Error", error.message || "Respuesta del servidor no válida", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        }
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Error en AJAX:", textStatus, errorThrown, jqXHR.responseText);
+
+        // Manejar el error en la solicitud AJAX
+        swal("Error", jqXHR.responseText || "Ocurrió un error en la solicitud", {
+            icon: "error",
+            buttons: {
+                confirm: {
+                    className: "btn btn-danger",
+                },
+            },
+        });
+    });
+}
+
+
 
          
         });
@@ -843,7 +881,7 @@ include("cabecera.php");
 
                 // Llamar a la función AJAX para registrar la persona
                 console.log(datos);
-                fnRegistrarPersona(datos);
+                fnActualizarPersona(datos);
 
 
             } 
@@ -873,7 +911,7 @@ include("cabecera.php");
             return true;
         }
 
-        function fnRegistrarPersona(datos) {
+        function fnActualizarPersona(datos) {
 
             $.ajax({
                 method: "POST",
@@ -896,7 +934,7 @@ include("cabecera.php");
                         location.reload();
                     }); // Resolvemos la promesa en caso de éxito
                 } else {
-                    swal("Error", result.message, {
+                    swal("Error", jsonResponse.message, {
                         icon: "error",
                         buttons: {
                             confirm: {

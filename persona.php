@@ -703,15 +703,14 @@ include("cabecera.php");
                         };
 
                         // Llamar a la función AJAX para registrar la persona
-                        console.log(datos);
-                        const response = await fnRegistrarPersona(datos);
-                        console.log("Persona insertado con éxito:", response);
-                        console.log(response.persona_id);
+                        try {
+                            console.log("Enviando datos:", datos);
+                            const response = await fnRegistrarPersona(datos);
+                            console.log("Persona insertada con éxito:", response);
 
-                        if (response.success === true) {
                             swal({
-                                title: "Registro con Exito!",
-                                text: 'Usuario actualizado  correctamente',
+                                title: "Registro con Éxito!",
+                                text: "Persona registrada correctamente",
                                 icon: "success",
                                 buttons: false,
                                 timer: 1500
@@ -719,9 +718,10 @@ include("cabecera.php");
                                 location.reload();
                             });
 
-                        } else if (response.error === true) {
-                            // Si existe un error, mostrar el mensaje devuelto por el servidor
-                            swal("Error", result.message, {
+                        } catch (error) {
+                            console.error("Error en el registro:", error.message);
+
+                            swal("Error", error.message || "Ocurrió un error inesperado", {
                                 icon: "error",
                                 buttons: {
                                     confirm: {
@@ -749,12 +749,13 @@ include("cabecera.php");
 
                         console.log(datos);
                         // Llamar a la función AJAX para registrar la empresa
-                        const response = await fnRegistrarEmpresa(datos);
-                        console.log("Empresa insertado con éxito:", response);
-                        if (response.success === true) {
+                        try {
+                            const response = await fnRegistrarEmpresa(datos);
+                            console.log("Empresa insertado con éxito:", response);
+        
                             swal({
                                 title: "Registro con Exito!",
-                                text: 'Usuario actualizado  correctamente',
+                                text: 'Empresa registrado correctamente',
                                 icon: "success",
                                 buttons: false,
                                 timer: 1500
@@ -762,9 +763,11 @@ include("cabecera.php");
                                 location.reload();
                             });
 
-                        } else if (response.error === true) {
-                            // Si existe un error, mostrar el mensaje devuelto por el servidor
-                            swal("Error", result.message, {
+                        
+                        } catch (error) {
+                            console.error("Error en el registro:", error.message);
+
+                            swal("Error", error.message || "Ocurrió un error inesperado", {
                                 icon: "error",
                                 buttons: {
                                     confirm: {
@@ -794,7 +797,7 @@ include("cabecera.php");
                         if (jsonResponse.success) {
                             resolve(jsonResponse);  // Resolvemos la promesa en caso de éxito
                         } else {
-                            reject(new Error(jsonResponse.mensaje || "Error desconocido"));  // Si hay error en la respuesta del servidor
+                            reject(new Error(jsonResponse.message || "Error desconocido"));  // Si hay error en la respuesta del servidor
                         }
                     }).fail(function (error) {
                         console.error("Error:", error.responseText);
