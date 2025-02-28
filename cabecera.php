@@ -442,15 +442,6 @@ if ($flagRespuesta == 0) {
                                                             <span class="text">Pagos al Crédito</span>
                                                         </div>
                                                     </a>
-                                                    <a class="col-6 col-md-4 p-0" href="cajaChica.php">
-                                                        <div class="quick-actions-item">
-                                                            <div
-                                                                class="avatar-item bg-success rounded-circle">
-                                                                <i class="fas fa-box-open"></i>
-                                                            </div>
-                                                            <span class="text">Caja Chica</span>
-                                                        </div>
-                                                    </a>
                                                     <a class="col-6 col-md-4 p-0" href="manejoCaja.php">
                                                         <div class="quick-actions-item">
                                                             <div
@@ -460,6 +451,16 @@ if ($flagRespuesta == 0) {
                                                             <span class="text">Manejo de Caja</span>
                                                         </div>
                                                     </a>
+                                                    <a class="col-6 col-md-4 p-0" href="cajaChica.php">
+                                                        <div class="quick-actions-item">
+                                                            <div
+                                                                class="avatar-item bg-success rounded-circle">
+                                                                <i class="fas fa-box-open"></i>
+                                                            </div>
+                                                            <span class="text">Caja Chica</span>
+                                                        </div>
+                                                    </a>
+
                                                 <?php } ?>
 
                                             </div>

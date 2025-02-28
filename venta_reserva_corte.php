@@ -140,22 +140,36 @@ if (isset($_GET['id'])) {
     class="container">
     <div class="page-inner">
         <div
-            class="card" >
+            class="card">
 
             <div class=" card-body">
-            <h4 class="card-title"><i class="fas fa-weight-hanging"></i> Venta</h4>
-            <div class="mb-3">
-                <div class="card-sub">
-                    Aquí podrás realizar ventas de cuando un cliente viene a realizar corte y/o compra de materiales.
-                </div>
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between">
-                            <h4 class="card-title"> <i class="fas fa-chess-queen"></i> Artículos</h4>
+                <h4 class="card-title"><i class="fas fa-weight-hanging"></i> Venta</h4>
+                <div class="mb-3">
+                    <div class="card-sub">
+                        Aquí podrás realizar ventas de cuando un cliente viene a realizar corte y/o compra de materiales.
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <h4 class="card-title"> <i class="fas fa-chess-queen"></i> Artículos</h4>
+                                <ul class="nav d-flex">
+                                    <li class="nav-item me-3">
+                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalPloteo">Ploteo</button>
+                                    </li>
+                                    <li class="nav-item me-3">
+                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalImprimir">Imprimir</button>
+                                    </li>
+                                    <li class="nav-item me-3">
+                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalEscaneo">Escaneo</button>
+                                    </li>
+                                    <li class="nav-item me-3">
+                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalSolo">Solo Corte</button>
+                                    </li>
+                                </ul>
 
-                        </div>
-                        <div class="card-body">
-                        <div class="table-filters mb-3">
+                            </div>
+                            <div class="card-body">
+                                <div class="table-filters mb-3">
                                     <div class="row justify-content-center align-items-center g-2">
                                         <div class="col-md-3">
                                             <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
@@ -178,7 +192,7 @@ if (isset($_GET['id'])) {
                                             <button
                                                 name=""
                                                 id="clearFilters"
-                                                class="btn btn-secondary btn-round btn-round btn-md"
+                                                class="btn btn-warning btn-round btn-round btn-md"
                                                 href="#"
                                                 role="button"><i class="fas fa-broom"></i> Limpiar Filtros</b>
 
@@ -187,54 +201,55 @@ if (isset($_GET['id'])) {
                                     </div>
 
                                 </div>
-                            <div class="table-responsive">
-                                
 
-                                <table id="multi-filter-select" class="display table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Articulo</th>
-                                            <th>Categoria</th>
-                                            <th>Tipo</th>
-                                            <th>Dimension</th>
-                                            <th>Stock</th>
-                                            <th>Precio de Venta</th>
-                                            <th>Accion</th>
-                                        </tr>
-                                    </thead>
+                                <div class="table-responsive">
 
-                                    <tbody>
-                                        <?php
-                                        foreach (listarProductosVenta1() as $datosArticulo) {
-                                            $datosArticuloJSON = json_encode($datosArticulo);
-                                        ?>
+
+                                    <table id="multi-filter-select" class="display table table-striped table-hover">
+                                        <thead>
                                             <tr>
-                                                <td><?php echo $datosArticulo["articulo"] ?></td>
-                                                <td><?php echo $datosArticulo["categoria"] ?></td>
-                                                <td><?php echo $datosArticulo["tipo"] ?></td>
-                                                <td><?php echo $datosArticulo["dimension"] ?></td>
-                                                <td><?php echo $datosArticulo["stock"] ?></td>
-                                                <td><?php echo $datosArticulo["precio_venta"] ?></td>
-                                                <th>
-                                                    <div class="mt-2 text-center">
-                                                        <a name="" id="" class="btn btn-secondary btn-round btn-sm"
-                                                            onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                            role="button"> <i class="fas fa-plus"></i></a>
-                                                    </div>
-                                                </th>
+                                                <th>Articulo</th>
+                                                <th>Categoria</th>
+                                                <th>Tipo</th>
+                                                <th>Dimension</th>
+                                                <th>Stock</th>
+                                                <th>Precio de Venta</th>
+                                                <th>Accion</th>
                                             </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
 
+                                        <tbody>
+                                            <?php
+                                            foreach (listarProductosVenta1() as $datosArticulo) {
+                                                $datosArticuloJSON = json_encode($datosArticulo);
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $datosArticulo["articulo"] ?></td>
+                                                    <td><?php echo $datosArticulo["categoria"] ?></td>
+                                                    <td><?php echo $datosArticulo["tipo"] ?></td>
+                                                    <td><?php echo $datosArticulo["dimension"] ?></td>
+                                                    <td><?php echo $datosArticulo["stock"] ?></td>
+                                                    <td><?php echo $datosArticulo["precio_venta"] ?></td>
+                                                    <th>
+                                                        <div class="mt-2 text-center">
+                                                            <a name="" id="" class="btn btn-secondary btn-round btn-sm"
+                                                                onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
+                                                                role="button"> <i class="fas fa-plus"></i></a>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 
+                    <!-- 
                         <label for="" class="form-label">Movimiento</label>
                         <select
                         class="form-select form-select-md"
@@ -255,9 +270,9 @@ if (isset($_GET['id'])) {
                     </select>
                     -->
 
-            </div>
-            <div
-                class="card" ">
+                </div>
+                <div
+                    class="card" ">
                 </div>
 
 
@@ -265,371 +280,330 @@ if (isset($_GET['id'])) {
 
 
                 <div class=" modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
 
-                        <div class="modal-body">
-                            <div class="col-12 p-4 bg-light rounded">
-                                <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
+                            <div class="modal-body">
+                                <div class="col-12 p-4 bg-light rounded">
+                                    <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
+
+                                    <div class="card-sub text-center">
+                                        Aqui podras agregar los minutos y el precio del servicio solo corte.
+                                    </div>
+                                    <div class="mb-4">
+                                        <!-- Minutos Corte -->
+                                        <div class="text-center" style="flex: 1;">
+                                            <p class="mb-1"><b>Minutos Corte</b></p>
+                                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                                <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
+                                                <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
+                                                <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Línea divisoria -->
+                                        <hr>
+
+                                        <!-- Precio Corte -->
+                                        <div class="text-center" style="flex: 1;">
+                                            <p class="mb-1"><b>Precio Corte</b></p>
+                                            <div class="w-100 d-flex justify-content-center mb-1">
+                                                <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                            </div>
+                                            <div class="d-flex justify-content-center">
+                                                <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                                <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                                <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                                <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mt-3">
+                                            <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocorte">Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal Unificado -->
+                <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-body">
+                                <h4 class="card-title text-center" id="modalCantidadCorteLabel">Configurar Cantidad o Corte</h4>
 
                                 <div class="card-sub text-center">
-                                    Aqui podras agregar los minutos y el precio del servicio solo corte.
+                                    Aquí ingresa la cantidad y/o corte del articulo
                                 </div>
-                                <div class="mb-4">
-                                    <!-- Minutos Corte -->
-                                    <div class="text-center" style="flex: 1;">
-                                        <p class="mb-1"><b>Minutos Corte</b></p>
-                                        <div class="d-flex justify-content-center align-items-center mb-2">
-                                            <button id="btnRestarSoloCorte" class="btn btn-danger btn-round">-</button>
-                                            <input id="cantidad_solocorte" type="number" class="form-control text-center mx-2" value="0" style="width: 80px; font-size: 1.2rem;" />
-                                            <button id="btnSumarSoloCorte" class="btn btn-success btn-round">+</button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Línea divisoria -->
-                                    <hr>
-
-                                    <!-- Precio Corte -->
-                                    <div class="text-center" style="flex: 1;">
-                                        <p class="mb-1"><b>Precio Corte</b></p>
-                                        <div class="w-100 d-flex justify-content-center mb-1">
-                                            <input id="precioSoloCorte" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
-                                        </div>
-                                        <div class="d-flex justify-content-center">
-                                            <button id="btnIncremento05SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
-                                            <button id="btnIncremento1SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
-                                            <button id="btnIncremento2SoloCorte" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
-                                            <button id="btnIncremento5SoloCorte" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center mt-3">
-                                        <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocorte">Agregar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Modal Unificado -->
-            <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-
-                        <div class="modal-body">
-                            <h4 class="card-title text-center" id="modalCantidadCorteLabel">Configurar Cantidad o Corte</h4>
-
-                            <div class="card-sub text-center">
-                                Aquí ingresa la cantidad y/o corte del articulo
-                            </div>
-                            <div class="container-fluid">
-                                <!-- Sección de cantidad -->
-                                <div class="row mb-3">
-                                    <div class="col-12 p-3 bg-light rounded">
-                                        <h6 id="nombreArticulo" class="fw-bold text-center mb-3">Nombre del artículo</h6>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <button id="btnRestarCantidad" class="btn btn-danger btn-round">-</button>
-                                            <input id="inputCantidad" type="number" class="form-control text-center mx-2 " value="1" style="width: 80px; font-size: 1.2rem;" />
-                                            <button id="btnSumarCantidad" class="btn btn-success btn-round">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Sección de corte (solo visible si cantidad = 1) -->
-                                <div id="seccionCorte" class="row mb-3" style="display: none;">
-                                    <div class="col-12 p-4 bg-light rounded">
-                                        <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
-                                        <div class="mb-4">
-                                            <div class="text-center" style="flex: 1;">
-                                                <p class="mb-1">Minutos Corte</p>
-                                                <div class="d-flex justify-content-center align-items-center mb-2">
-                                                    <button id="btnRestarCorte" class="btn btn-danger btn-round">-</button>
-                                                    <input id="cantidadCorte" type="number" class="form-control text-center mx-2 " value="0" style="width: 80px; font-size: 1.2rem;" />
-                                                    <button id="btnSumarCorte" class="btn btn-success btn-round">+</button>
-                                                </div>
+                                <div class="container-fluid">
+                                    <!-- Sección de cantidad -->
+                                    <div class="row mb-3">
+                                        <div class="col-12 p-3 bg-light rounded">
+                                            <h6 id="nombreArticulo" class="fw-bold text-center mb-3">Nombre del artículo</h6>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <button id="btnRestarCantidad" class="btn btn-danger btn-round">-</button>
+                                                <input id="inputCantidad" type="number" class="form-control text-center mx-2 " value="1" style="width: 80px; font-size: 1.2rem;" />
+                                                <button id="btnSumarCantidad" class="btn btn-success btn-round">+</button>
                                             </div>
+                                        </div>
+                                    </div>
 
-                                            <!-- Línea divisoria -->
-                                            <hr>
+                                    <!-- Sección de corte (solo visible si cantidad = 1) -->
+                                    <div id="seccionCorte" class="row mb-3" style="display: none;">
+                                        <div class="col-12 p-4 bg-light rounded">
+                                            <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
+                                            <div class="mb-4">
+                                                <div class="text-center" style="flex: 1;">
+                                                    <p class="mb-1">Minutos Corte</p>
+                                                    <div class="d-flex justify-content-center align-items-center mb-2">
+                                                        <button id="btnRestarCorte" class="btn btn-danger btn-round">-</button>
+                                                        <input id="cantidadCorte" type="number" class="form-control text-center mx-2 " value="0" style="width: 80px; font-size: 1.2rem;" />
+                                                        <button id="btnSumarCorte" class="btn btn-success btn-round">+</button>
+                                                    </div>
+                                                </div>
 
-                                            <div class="text-center" style="flex: 1;">
-                                                <p class="mb-1">Precio Corte</p>
-                                                <div class="w-100 d-flex justify-content-center mb-1">
-                                                    <input id="precioCorte" type="number" class="form-control text-center mx-2 " value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                                <!-- Línea divisoria -->
+                                                <hr>
+
+                                                <div class="text-center" style="flex: 1;">
+                                                    <p class="mb-1">Precio Corte</p>
+                                                    <div class="w-100 d-flex justify-content-center mb-1">
+                                                        <input id="precioCorte" type="number" class="form-control text-center mx-2 " value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                                    </div>
+                                                    <div class="d-flex justify-content-center">
+                                                        <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                                        <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                                        <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                                        <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex justify-content-center">
-                                                    <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
-                                                    <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
-                                                    <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
-                                                    <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
-                                                </div>
+
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mb-3">
+                                        <button id="btnConfirmarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="modal-footer">
+                                <!-- Botón Confirmar a la izquierda -->
+                                <button type="button" class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para registrar Cliente -->
+                <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalClienteLabel">Registrar Cliente</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Pils para seleccionar entre Persona y Empresa -->
+                                <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">Persona</button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" id="pills-empresa-tab" data-bs-toggle="pill" data-bs-target="#pills-empresa" type="button" role="tab" aria-controls="pills-empresa" aria-selected="false">Empresa</button>
+                                    </li>
+                                </ul>
+                                <hr>
+                                <div class="card-sub">
+                                    <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
+                                </div>
+                                <div class="tab-content mt-3" id="pills-tabContent">
+                                    <!-- Formulario Persona -->
+                                    <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
+                                        <div class="mb-3">
+                                            <label for="numeroDocumentoPersona" class="form-label">Número de Documento <span class="fw-bold text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
+                                            <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nombresPersona" class="form-label">Nombres <span class="fw-bold text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
+                                            <div class="invalid-feedback" id="error-nombresPersona"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="apellidosPersona" class="form-label">Apellidos <span class="fw-bold text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
+                                            <div class="invalid-feedback" id="error-apellidosPersona"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="telefonoPersona" class="form-label">Teléfono Móvil</label>
+                                            <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
+                                            <div class="invalid-feedback" id="error-telefonoPersona"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="emailPersona" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="emailPersona" placeholder="Email">
+                                            <div class="invalid-feedback" id="error-emailPersona"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Formulario Empresa -->
+                                    <div class="tab-pane fade" id="pills-empresa" role="tabpanel" aria-labelledby="pills-empresa-tab">
+                                        <div class="mb-3">
+                                            <label for="numeroDocumentoEmpresa" class="form-label">Número de Ruc <span class="fw-bold text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Número de Documento">
+                                            <div class="invalid-feedback" id="error-numeroDocumentoEmpresa"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nombreComercial" class="form-label">Nombre Comercial <span class="fw-bold text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="nombreComercial" placeholder="Nombre Comercial">
+                                            <div class="invalid-feedback" id="error-nombreComercial"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="razonSocial" class="form-label">Razón Social <span class="fw-bold text-danger">*</span> </label>
+                                            <input type="text" class="form-control" id="razonSocial" placeholder="Razón Social">
+                                            <div class="invalid-feedback" id="error-razonSocial"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="emailEmpresa" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="emailEmpresa" placeholder="Email">
+                                            <div class="invalid-feedback" id="error-emailEmpresa"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="telefonoEmpresa" class="form-label">Teléfono Móvil</label>
+                                            <input type="text" class="form-control" id="telefonoEmpresa" placeholder="Teléfono Móvil">
+                                            <div class="invalid-feedback" id="error-telefonoEmpresa"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-center mb-3">
-                                    <button id="btnConfirmarCantidad" class="btn btn-secondary rounded-5" style="width: 120px;">Confirmar</button>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="modal-footer">
-                            <!-- Botón Confirmar a la izquierda -->
-                            <button type="button" class="btn btn-danger rounded-5 " data-bs-dismiss="modal">Cerrar</button>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Modal para registrar Cliente -->
-            <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalClienteLabel">Registrar Cliente</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Pils para seleccionar entre Persona y Empresa -->
-                            <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
-                                <li class="nav-item">
-                                    <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">Persona</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link" id="pills-empresa-tab" data-bs-toggle="pill" data-bs-target="#pills-empresa" type="button" role="tab" aria-controls="pills-empresa" aria-selected="false">Empresa</button>
-                                </li>
-                            </ul>
-                            <hr>
-                            <div class="card-sub">
-                                <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="miModalLabel">Agregar Corte de Material</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="tab-content mt-3" id="pills-tabContent">
-                                <!-- Formulario Persona -->
-                                <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
-                                    <div class="mb-3">
-                                        <label for="numeroDocumentoPersona" class="form-label">Número de Documento <span class="fw-bold text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
-                                        <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="nombresPersona" class="form-label">Nombres <span class="fw-bold text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
-                                        <div class="invalid-feedback" id="error-nombresPersona"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="apellidosPersona" class="form-label">Apellidos <span class="fw-bold text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
-                                        <div class="invalid-feedback" id="error-apellidosPersona"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="telefonoPersona" class="form-label">Teléfono Móvil</label>
-                                        <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
-                                        <div class="invalid-feedback" id="error-telefonoPersona"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="emailPersona" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="emailPersona" placeholder="Email">
-                                        <div class="invalid-feedback" id="error-emailPersona"></div>
-                                    </div>
-                                </div>
 
-                                <!-- Formulario Empresa -->
-                                <div class="tab-pane fade" id="pills-empresa" role="tabpanel" aria-labelledby="pills-empresa-tab">
-                                    <div class="mb-3">
-                                        <label for="numeroDocumentoEmpresa" class="form-label">Número de Ruc <span class="fw-bold text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Número de Documento">
-                                        <div class="invalid-feedback" id="error-numeroDocumentoEmpresa"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="nombreComercial" class="form-label">Nombre Comercial <span class="fw-bold text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="nombreComercial" placeholder="Nombre Comercial">
-                                        <div class="invalid-feedback" id="error-nombreComercial"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="razonSocial" class="form-label">Razón Social <span class="fw-bold text-danger">*</span> </label>
-                                        <input type="text" class="form-control" id="razonSocial" placeholder="Razón Social">
-                                        <div class="invalid-feedback" id="error-razonSocial"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="emailEmpresa" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="emailEmpresa" placeholder="Email">
-                                        <div class="invalid-feedback" id="error-emailEmpresa"></div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="telefonoEmpresa" class="form-label">Teléfono Móvil</label>
-                                        <input type="text" class="form-control" id="telefonoEmpresa" placeholder="Teléfono Móvil">
-                                        <div class="invalid-feedback" id="error-telefonoEmpresa"></div>
-                                    </div>
+                            <!-- Modal Body -->
+                            <div class="modal-body">
+                                <!-- Acordeones dinámicos -->
+                                <div class="accordion" id="acordeonContainer">
+                                    <!-- Se llenará dinámicamente -->
+                                </div>
+                                <!-- Sección global -->
+                                <div id="globalContainer" class="mt-3">
+                                    <!-- Se llenará dinámicamente -->
                                 </div>
                             </div>
 
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <!-- Modal -->
-            <div class="modal fade" id="miModal" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="miModalLabel">Agregar Corte de Material</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <!-- Modal Body -->
-                        <div class="modal-body">
-                            <!-- Acordeones dinámicos -->
-                            <div class="accordion" id="acordeonContainer">
-                                <!-- Se llenará dinámicamente -->
+                            <!-- Modal Footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn_no">No</button>
+                                <button type="button" class="btn btn-primary" id="btn_si">Sí</button>
                             </div>
-                            <!-- Sección global -->
-                            <div id="globalContainer" class="mt-3">
-                                <!-- Se llenará dinámicamente -->
-                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div
+            class="row ">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Detalle Materiales / Corte</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-sub">
+                            Aquí la venta de los materiales
+                        </div>
+                        <div class="table-responsive">
+                            <table id="tabla_articulos" class="table mt-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">MINUTOS</th>
+                                        <th scope="col">Tarifa</th>
+                                        <th scope="col">Total Corte</th>
+                                        <th scope="col">Articulo</th>
+                                        <th scope="col">Cantidad</th>
+                                        <th scope="col">Precio Unitario</th>
+                                        <th scope="col">Sub Total (S/)</th>
+                                        <th scope="col">Accion</th>
+                                        <th scope="col">IDMOVIMIENTO</th>
+                                        <th scope="col">NOTA ARCHIVO</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
 
-                        <!-- Modal Footer -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn_no">No</button>
-                            <button type="button" class="btn btn-primary" id="btn_si">Sí</button>
-                        </div>
-
                     </div>
                 </div>
             </div>
-
-
-
-
-
         </div>
-
-    </div>
-    <hr>
-    <div class="row ">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between">
-
-                    <div class="card-title">Agrega Más Articulos, Impresiones, Escaneos a la Venta</div>
-
-                    <div>
-                        <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
-                            <li class="nav-item">
-                                <button class="nav-link" id="btnAbrirModalPloteo">Ploteo</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="btnAbrirModalImprimir">Imprimir</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="btnAbrirModalEscaneo">Escaneo</button>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" id="btnAbrirModalSolo">Solo Corte</button>
-                            </li>
-                        </ul>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body text-center">
+                        <h5 id="label_total_cortes" class="card-title">Total Cortes S/:</h5>
+                        <span id="id_subtotal_cortes" style="font-size: 1.3rem;" aria-labelledby="label_total_cortes">00.00</span>
                     </div>
-
-                </div>
-
-                <div class="card-body">
-
-
                 </div>
             </div>
-        </div>
-    </div>
-    <hr>
-
-    <div
-        class="row ">
-
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Detalle Materiales / Corte</div>
-                </div>
-                <div class="card-body">
-                    <div class="card-sub">
-                        Aquí la venta de los materiales
+            <div class="col-md-4">
+                <div class="card card-stats card-round">
+                    <div class="card-body text-center">
+                        <h5 id="label_total_articulos" class="card-title">Total Artículos S/:</h5>
+                        <span id="id_subtotal_articulos" style="font-size: 1.3rem;" aria-labelledby="label_total_articulos">00.00</span>
                     </div>
-                    <div class="table-responsive">
-                        <table id="tabla_articulos" class="table mt-3">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">MINUTOS</th>
-                                    <th scope="col">Tarifa</th>
-                                    <th scope="col">Total Corte</th>
-                                    <th scope="col">Articulo</th>
-                                    <th scope="col">Cantidad</th>
-                                    <th scope="col">Precio Unitario</th>
-                                    <th scope="col">Sub Total (S/)</th>
-                                    <th scope="col">Accion</th>
-                                    <th scope="col">IDMOVIMIENTO</th>
-                                    <th scope="col">NOTA ARCHIVO</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-primary card-stats card-round">
+                    <div class="card-body text-center">
+                        <h5 id="label_total_general" class="card-title">Total S/:</h5>
+                        <span id="id_subtotal_general" style="font-size: 1.3rem;" aria-labelledby="label_total_general">00.00</span>
                     </div>
+                </div>
+            </div>
+            <div class="card-body text-center">
+                <button id="btnRealizarReserva" disabled="true" type="button" class="btn btn-success btn-round" style="width: 50%; height: 50px; font-size: 15px;">
+                    <i class="fas fa-save"></i> Realizar Reserva
+                </button>
+            </div>
 
-                </div>
-            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card card-stats card-round">
-                <div class="card-body text-center">
-                    <h5 id="label_total_cortes" class="card-title">Total Cortes S/:</h5>
-                    <span id="id_subtotal_cortes" style="font-size: 1.3rem;" aria-labelledby="label_total_cortes">xx.xx</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card card-stats card-round">
-                <div class="card-body text-center">
-                    <h5 id="label_total_articulos" class="card-title">Total Artículos S/:</h5>
-                    <span id="id_subtotal_articulos" style="font-size: 1.3rem;" aria-labelledby="label_total_articulos">xx.xx</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card card-primary card-stats card-round">
-                <div class="card-body text-center">
-                    <h5 id="label_total_general" class="card-title">Total S/:</h5>
-                    <span id="id_subtotal_general" style="font-size: 1.3rem;" aria-labelledby="label_total_general">xx.xx</span>
-                </div>
-            </div>
-        </div>
-        <div class="card-body text-center">
-            <button id="btnRealizarReserva" disabled="true" type="button" class="btn btn-success btn-round" style="width: 50%; height: 50px; font-size: 15px;">
-            <i class="fas fa-save"></i> Realizar Reserva
-            </button>
-        </div>
-       
-    </div>
-</div>
 
 
 </div>
@@ -686,8 +660,8 @@ if (isset($_GET['id'])) {
                         </div>
                         <hr>
                         <div class="mb-3 position-relative">
-                            
-                            <label for="nombreCliente" class="form-label"> <i class="fas fa-user-tie"></i>  <strong>Cliente</strong></label>
+
+                            <label for="nombreCliente" class="form-label"> <i class="fas fa-user-tie"></i> <strong>Cliente</strong></label>
                             <div class="d-flex align-items-center">
                                 <input
                                     type="text"
@@ -704,7 +678,7 @@ if (isset($_GET['id'])) {
                         </div>
                         <!-- Monto Total -->
                         <div class="mb-3">
-                            
+
                             <label for="montoTotal" class="form-label"><strong>Monto Total (S/)</strong></label>
                             <div class="input-group">
                                 <span class="input-group-text">S/</span>
@@ -3077,7 +3051,7 @@ if (isset($_GET['id'])) {
 
                     modalCliente.hide();
 
-                } 
+                }
             } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {
                 // Recolectar los datos del formulario Empresa
                 if (validarCamposEmpresa()) {
@@ -3104,7 +3078,7 @@ if (isset($_GET['id'])) {
                     modalCliente.hide();
 
 
-                } 
+                }
             }
         });
 
