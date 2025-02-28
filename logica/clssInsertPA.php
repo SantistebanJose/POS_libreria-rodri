@@ -78,7 +78,7 @@ function controladorClssInsertPA($accion)
             break;
         case 'APERTURACAJA':
             //fnAperturaDeCajaChica
-            
+
             if (isset($_POST["jsDatoCaja"])) {
                 $jsDatos = $_POST["jsDatoCaja"];
                 fnAperturaDeCajaChica($jsDatos);
@@ -86,7 +86,7 @@ function controladorClssInsertPA($accion)
             break;
         case 'INSERTDETALLECAJACHICA':
             //fnInsertDetalleCajaChica
-            
+
             if (isset($_POST["jsDetalleCaja"])) {
                 $jsDatos = $_POST["jsDetalleCaja"];
                 fnInsertDetalleCajaChica($jsDatos);
@@ -94,12 +94,29 @@ function controladorClssInsertPA($accion)
             break;
         case 'CIERREDECAJACHICA':
             //fnCierreCajaChica
-            
+
             if (isset($_POST["caja_id"])) {
                 $caja_id = $_POST["caja_id"];
                 fnCierreCajaChica($caja_id);
             }
             break;
+        case 'INSERTTRABAJADORUSUARIO':
+            //fnCierreCajaChica
+
+            if (isset($_POST["jsDatosTrabajador"])) {
+                $jsDatosTrabajador = $_POST["jsDatosTrabajador"];
+                fnInsertPersonaUsurio($jsDatosTrabajador);
+            }
+            break;
+            
+        case 'INSERTDETALLECAJAGRANDE':
+            //fnInsertDetalleCajaGrande
+            if (isset($_POST["jsDetalleCajaGrande"])) {
+                $jsDetalleCajaGrande = $_POST["jsDetalleCajaGrande"];
+                fnInsertDetalleCajaGrande($jsDetalleCajaGrande);
+            }
+            break;
+            //fnInsertPersonaUsurio
         case 'CAMBIARCONTRASEÑA':
             // Otros casos si los necesitas
             break;
@@ -179,7 +196,7 @@ function finalizarVentaReservaRapido($jsDatosVenta, $js_articulos, $js_detalle_p
         echo json_encode($response);
     } catch (Exception $e) {
 
-        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas','detalles'=>$js_articulos]);
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas', 'detalles' => $js_articulos]);
     }
 }
 
@@ -389,7 +406,8 @@ function paEditarArticuloCompleto($jsDatosArticulo)
     }
 }
 
-function toggle_estado_articulo_completo($id, $accion) {
+function toggle_estado_articulo_completo($id, $accion)
+{
     global $conectar;
 
     try {
@@ -423,7 +441,6 @@ function toggle_estado_articulo_completo($id, $accion) {
         $orden->execute();
 
         echo json_encode(["success" => true, "message" => "Estado del articulo actualizado."]);
-
     } catch (\Throwable $th) {
         error_log("Error en toggle_estado_articulo: " . $th->getMessage());
         echo json_encode(["error" => true, "message" => $th->getMessage()]);
@@ -606,6 +623,210 @@ function fnCierreCajaChica($idCaja)
 
 
         echo json_encode(['estado' => true, 'mensaje' => 'Caja Chica CERRADA!!!']);
+    } catch (Exception $e) {
+
+        $conectar->rollBack();
+
+
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
+    }
+}
+
+
+function fnInsertPersonaUsurio($jsDatos)
+{
+    global $conectar;
+
+    try {
+
+        $data = json_decode($jsDatos, true);
+
+
+        $idPersonaEncontrada = $data['idPersonaEncontrada'];
+        $numero_documento = $data['numero_documento'];
+        $tipo_persona = 'NATURAL';
+        $condicion = 'EMPLEADO';
+        $nombres = $data['nombres'];
+        $apellidos = $data['apellidos'];
+        $telefonomovil = $data['numero_telefono_movil'];
+
+        $tipo_empleado = 'VENTA';
+        $rol = '2';
+        $sueldo = $data['sueldo'];
+        $horas_trabajo = $data['horas_trabajo'];
+        $dias_trabajo_semana = $data['dias_trabajo_semana'];
+        $usuario = $data['usuario'];
+        $contrasenia = $data['contrasenia'];
+        $hashedPassword = '';
+        if ($contrasenia !== null && $contrasenia !== '') {
+            $hashedPassword = password_hash($contrasenia, PASSWORD_BCRYPT);
+        } else {
+            $hashedPassword = '';
+        }
+
+
+        $sqlCheck = "SELECT COUNT(*) FROM persona WHERE numero_documento = :numero_documento";
+        $stmtCheck = $conectar->prepare($sqlCheck);
+        $stmtCheck->bindParam(':numero_documento', $numero_documento);
+        $stmtCheck->execute();
+
+        $count = $stmtCheck->fetchColumn();
+
+        if ($count > 0) {
+            echo json_encode(['estado' => false, 'mensaje' => 'El número de documento ya está registrado en el sistema.']);
+            return;
+        } else {
+            $conectar->beginTransaction();
+
+
+            if ($idPersonaEncontrada == "#") {
+
+                $sqlInsert = "
+                INSERT INTO persona
+                (numero_documento, tipo_persona, condicion, nombres, apellidos, telefonomovil)
+                VALUES
+                (:numero_documento, :tipo_persona, :condicion, :nombres, :apellidos, :telefonomovil)
+            ";
+
+                $stmt = $conectar->prepare($sqlInsert);
+
+                $stmt->bindParam(':numero_documento', $numero_documento);
+                $stmt->bindParam(':tipo_persona', $tipo_persona);
+                $stmt->bindParam(':condicion', $condicion);
+                $stmt->bindParam(':nombres', $nombres);
+                $stmt->bindParam(':apellidos', $apellidos);
+                $stmt->bindParam(':telefonomovil', $telefonomovil);
+
+                $stmt->execute();
+
+
+                $ultimoIdPersona = $conectar->lastInsertId();
+
+
+                $sqlInsertUsuario = "
+                INSERT INTO usuario
+                (persona_id, username, password, rol, tipo_empleado, sueldo, cantidad_horas_trabajo, cantidad_dias_semana,deleted_at)
+                VALUES
+                (:persona_id, :username, :password, :rol, :tipo_empleado, :sueldo, :cantidad_horas_trabajo, :cantidad_dias_semana,CURRENT_TIMESTAMP)
+            ";
+                $stmt = $conectar->prepare($sqlInsertUsuario);
+
+                $stmt->bindParam(':persona_id', $ultimoIdPersona);
+                $stmt->bindParam(':username', $usuario);
+                $stmt->bindParam(':password', $hashedPassword);
+                $stmt->bindParam(':rol', $rol);
+                $stmt->bindParam(':tipo_empleado', $tipo_empleado);
+                $stmt->bindParam(':sueldo', $sueldo);
+                $stmt->bindParam(':cantidad_horas_trabajo', $horas_trabajo);
+                $stmt->bindParam(':cantidad_dias_semana', $dias_trabajo_semana);
+
+                $stmt->execute();
+
+
+                $conectar->commit();
+            } else {
+                $sqlUpdatePersona = "
+                UPDATE persona
+                SET 
+                    numero_documento = :numero_documento,
+                    nombres = :nombres,
+                    apellidos = :apellidos,
+                    telefonomovil = :telefonomovil
+                WHERE id = :idPersona
+            ";
+                $stmt = $conectar->prepare($sqlUpdatePersona);
+                $stmt->bindParam(':numero_documento', $numero_documento);
+                $stmt->bindParam(':nombres', $nombres);
+                $stmt->bindParam(':apellidos', $apellidos);
+                $stmt->bindParam(':telefonomovil', $telefonomovil);
+                $stmt->bindParam(':idPersona', $idPersonaEncontrada);
+
+                $stmt->execute();
+
+
+                $sqlInsertUsuario = "
+                INSERT INTO usuario
+                (persona_id, username, password, rol, tipo_empleado, sueldo, cantidad_horas_trabajo, cantidad_dias_semana)
+                VALUES
+                (:persona_id, :username, :password, :rol, :tipo_empleado, :sueldo, :cantidad_horas_trabajo, :cantidad_dias_semana)
+            ";
+
+                $stmt = $conectar->prepare($sqlInsertUsuario);
+
+                $stmt->bindParam(':persona_id', $idPersonaEncontrada);
+                $stmt->bindParam(':username', $usuario);
+
+                $stmt->bindParam(':password', $hashedPassword);
+                $stmt->bindParam(':rol', $rol);
+                $stmt->bindParam(':tipo_empleado', $tipo_empleado);
+                $stmt->bindParam(':sueldo', $sueldo);
+                $stmt->bindParam(':cantidad_horas_trabajo', $horas_trabajo);
+                $stmt->bindParam(':cantidad_dias_semana', $dias_trabajo_semana);
+
+                $stmt->execute();
+
+                $conectar->commit();
+            }
+
+
+            echo json_encode(['estado' => true, 'mensaje' => 'Registrado :)']);
+        }
+    } catch (Exception $e) {
+
+        $conectar->rollBack();
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
+    }
+}
+
+
+function fnInsertDetalleCajaGrande($jsDatosDetalleCaja)
+{
+    global $conectar;
+
+    try {
+
+        $data = json_decode($jsDatosDetalleCaja, true);
+        $forma_pago_id = $data['forma_pago_id'];
+        $responsable_id = $data['responsable_id'];
+        $responsable = $data['responsable'];
+        $tipo_movimiento = $data['tipo_movimiento'];
+        $monto_caja_grande = $data['monto_caja_grande'];
+        $concepto_id = $data['concepto_id'];
+        $concepto_egreso = $data['concepto_egreso'];
+        $nota_caja_grande = $data['nota_caja_grande'];
+        $movimiento_caja_v2 = 'EGRESO DE CAJA';
+
+        $conectar->beginTransaction();
+
+
+        $sql = "
+        INSERT INTO detalle_caja_grande
+        (forma_pago_id,concepto_id,tipo_movimiento,monto,responsable_id,responsable,concepto,nota,movimiento_caja_v2)
+        VALUES
+        (:forma_pago_id,:concepto_id,:tipo_movimiento ,:monto_caja_grande, :responsable_id, :responsable, :concepto_egreso, :nota_caja_grande,:movimiento_caja_v2)
+        ";
+
+
+        $stmt = $conectar->prepare($sql);
+
+
+        $stmt->bindParam(':forma_pago_id', $forma_pago_id);
+        $stmt->bindParam(':responsable_id', $responsable_id);
+        $stmt->bindParam(':responsable', $responsable);
+        $stmt->bindParam(':tipo_movimiento', $tipo_movimiento);
+        $stmt->bindParam(':monto_caja_grande', $monto_caja_grande);
+        $stmt->bindParam(':concepto_id', $concepto_id);
+        $stmt->bindParam(':concepto_egreso', $concepto_egreso);
+        $stmt->bindParam(':nota_caja_grande', $nota_caja_grande, PDO::PARAM_STR);
+        $stmt->bindParam(':movimiento_caja_v2', $movimiento_caja_v2);
+
+        $stmt->execute();
+
+
+        $conectar->commit();
+
+
+        echo json_encode(['estado' => true, 'mensaje' => 'Egreso de Caja Registrado :)']);
     } catch (Exception $e) {
 
         $conectar->rollBack();

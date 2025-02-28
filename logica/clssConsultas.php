@@ -271,7 +271,7 @@ function listarEmpleados(): array
     FROM persona p
     JOIN usuario u on p.id = u.persona_id 
     
-    WHERE p.deleted_at IS NULL AND u.deleted_at is null;
+    WHERE p.deleted_at IS NULL AND u.deleted_at_v2 is null;
     ";
     return executeQuery($query);
 }

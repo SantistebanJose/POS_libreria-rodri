@@ -77,6 +77,7 @@ function controladorVentaCorte($accion)
     }
 }
 
+
 function consultarPersona($id)
 {
     global $conectar;

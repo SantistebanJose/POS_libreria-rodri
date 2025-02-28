@@ -38,7 +38,7 @@ include("cabecera.php");
                                             class="dropdown-menu"
                                             aria-labelledby="dropdownMenuButton">
                                             <button class="dropdown-item" href="#" onclick='fnAbrirSwalRegistroEgreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Registrar Egreso</button>
-                                            <button class="dropdown-item" href="#"><i class="fas fa-caret-right"></i> Registrar Ingreso</button>
+                                            <button class="dropdown-item" href="#" onclick='fnAbrirSwalRegistroIngreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Registrar Ingreso</button>
                                             <button class="dropdown-item" href="#"><i class="fas fa-caret-right"></i> Actualizar Monto</button>
                                         </div>
                                     </div>
@@ -62,33 +62,6 @@ include("cabecera.php");
             <div class="card-body">
                 <h4 class="card-title"><i class="fas fa-briefcase"></i> Flujo de Caja</h4>
                 <hr>
-                <div class="row">
-                    <?php foreach (listarFormaPago() as $datos) {
-                        $datosJSON = json_encode($datos);
-                    ?>
-                        <div class="col-sm-6 col-md-3">
-                            <div class="card card-stats card-round">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-5">
-                                            <div class="icon-big text-center">
-                                                <i class="<?php echo $datos["icon"] ?>"></i>
-                                            </div>
-                                        </div>
-                                        <div class="col-7 col-stats">
-                                            <div class="numbers">
-                                                <p class="card-category"><?php echo $datos["nombre"] ?></p>
-                                                <h4 class="card-title">S/ <?php echo $datos["monto"] ?></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php
-                    } ?>
-                </div>
-                <hr>
                 <div class="card text-start">
                     <div class="card-body">
 
@@ -101,11 +74,13 @@ include("cabecera.php");
                                         <th>ID</th>
                                         <th>Accionado</th>
                                         <th>Movimiento</th>
+                                        <th>concepto</th>
                                         <th>Forma de Pago</th>
                                         <th>dia de semana</th>
                                         <th>Fecha</th>
                                         <th>Hora</th>
                                         <th>Monto</th>
+                                        <th>Nota</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -117,17 +92,14 @@ include("cabecera.php");
                                             <td><?php echo $datos["id"] ?></td>
                                             <td><?php echo $datos["accionado"] ?></td>
                                             <td><?php echo $datos["tipo_movimiento"] ?></td>
+                                            <td><?php echo $datos["concepto"] ?></td>
                                             <td><?php echo $datos["forma_pago"] ?></td>
                                             <td><?php echo $datos["dia_semana"] ?></td>
 
                                             <td><?php echo $datos["fecha"] ?></td>
                                             <td><?php echo $datos["hora"] ?></td>
-
                                             <td>S/ <?php echo $datos["monto"] ?></td>
-
-
-
-
+                                            <td><?php echo $datos["nota"] ?></td>
                                         </tr>
 
                                     <?php
@@ -141,12 +113,6 @@ include("cabecera.php");
 
             </div>
         </div>
-
-
-
-
-
-
 
     </div>
 </div>
@@ -169,6 +135,7 @@ include("cabecera.php");
                         <div class="card-body text-center">
                             <div id="idFormaPago" style="display: none;"></div>
                             <h4 id="idContenidoTitulo"></h4>
+                            <h4>S/ <span id="idMontoDisponible"></span></h4>
                         </div>
 
                         <div class="card-sub text-center">
@@ -223,6 +190,53 @@ include("cabecera.php");
     </div>
 </div>
 
+
+<div class="modal fade" id="modalRegistrarIngreso" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="card border-primary">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="card-body">
+                        <div class="card-body text-center">
+                            <div id="idFormaPagoIngreso" style="display: none;"></div>
+                            <h4 id="idContenidoTituloIngreso">Ingreso de Caja</h4>
+                            <h4>S/ <span id="idMontoDisponibleIngreso"></span></h4>
+                        </div>
+
+                        <div class="card-sub text-center">
+                            Aquí podrás registrar <strong>INGRESOS de Caja.</strong>
+                        </div>
+                        <hr>
+
+                        <div class="row justify-content-center align-items-center g-2">
+                            <div class="mb-3">
+                                <label for="idMontoIngresoCaja" class="form-label"><strong>(S/) Monto</strong></label>
+                                <input type="number" class="form-control" id="idMontoIngresoCaja" placeholder="Ingrese monto" />
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="idNotaIngresoCaja" class="form-label"><strong><i class="fas fa-sticky-note"></i> Nota</strong></label>
+                                <textarea class="form-control" id="idNotaIngresoCaja" rows="3" placeholder="Escribe una nota (Ej. Ingreso por venta de producto)"></textarea>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="text-center">
+                            <a name="" id="" class="btn btn-success btn-round" onclick="fnRegistrarIngresoDeCajaGrande()" role="button">
+                                Registrar Ingreso de Caja <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <?php
 include("pie.php");
 ?>
@@ -268,9 +282,23 @@ include("pie.php");
     function fnAbrirSwalRegistroEgreso(jsDatos) {
         $('#modalRegistrarEgreso').modal('show');
         //`<span style="color:${jsDatos["color"]}"></sppan> '<i class="${jsDatos["icon"]}"></i> Registrar Egreso en ${jsDatos["nombre"]}</h4>`
+        //monto["monto"]
         document.getElementById("idFormaPago").innerText = jsDatos["id"];
         document.getElementById("idContenidoTitulo").innerHTML = `<span style="color:${jsDatos["color"]}"> <i class="${jsDatos["icon"]}"></i> Registrar Egreso en ${jsDatos["nombre"]} </span>`
         document.getElementById("idMontoEgresoCajaGrande").value = "";
+        document.getElementById("idMontoDisponible").innerText = jsDatos["monto"];
+
+    }
+    //modalRegistrarIngreso
+    function fnAbrirSwalRegistroIngreso(jsDatos) {
+        $('#modalRegistrarIngreso').modal('show');
+        //`<span style="color:${jsDatos["color"]}"></sppan> '<i class="${jsDatos["icon"]}"></i> Registrar Egreso en ${jsDatos["nombre"]}</h4>`
+        //monto["monto"]
+        document.getElementById("idFormaPagoIngreso").innerText = jsDatos["id"];
+        document.getElementById("idContenidoTituloIngreso").innerHTML = `<span style="color:${jsDatos["color"]}"> <i class="${jsDatos["icon"]}"></i> Registrar Egreso en ${jsDatos["nombre"]} </span>`
+        document.getElementById("idMontoIngresoCaja").value = "";
+        document.getElementById("idMontoDisponibleIngreso").innerText = jsDatos["monto"];
+
     }
 
     function fnRegistrarEgresoDeCajaGrande() {
@@ -281,18 +309,185 @@ include("pie.php");
         var montoCajaGrande = parseFloat(document.getElementById("idMontoEgresoCajaGrande").value);
         var notaCajaGrande = document.getElementById("idDetalleNotaCajaGrande").value;
 
-        var jsDetalleCajaGrande = {
-            "forma_pago_id": parseInt(document.getElementById("idFormaPago").innerText),
-            "tipo_movimiento": "EGRESO",
-            "responsable_id": <?php echo $id_usuario_s; ?>,
-            "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>",
-            "monto_caja_grande": montoCajaGrande,
-            "nota_caja_grande": (notaCajaGrande.length) === 0 ? null : notaCajaGrande,
-            "concepto_id": concepto,
-            "concepto_egreso": concepto_egreso
-        };
+        var montoDisponible = parseFloat(document.getElementById("idMontoDisponible").innerText);
+
         console.log(jsDetalleCajaGrande);
+        if (isNaN(montoCajaGrande)) {
+            swal("Upps", "Debes de ingresar el monto para registrar el egreso caja 😥", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        } else if (montoCajaGrande > montoDisponible) {
+            swal("Upps", "El monto ingresado supera al saldo de Caja 😥", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        } else {
+            var jsDetalleCajaGrande = {
+                "forma_pago_id": parseInt(document.getElementById("idFormaPago").innerText),
+                "tipo_movimiento": "EGRESO",
+                "responsable_id": <?php echo $id_usuario_s; ?>,
+                "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>",
+                "monto_caja_grande": montoCajaGrande,
+                "nota_caja_grande": (notaCajaGrande.length) === 0 ? null : notaCajaGrande,
+                "concepto_id": parseInt(concepto),
+                "concepto_egreso": concepto_egreso
+            };
+            console.log(jsDetalleCajaGrande);
+            $.ajax({
+                url: 'logica/clssInsertPA.php',
+                type: 'POST',
+                data: {
+                    accion: 'INSERTDETALLECAJAGRANDE',
+                    jsDetalleCajaGrande: JSON.stringify(jsDetalleCajaGrande)
+                },
+                success: function(response) {
+
+                    console.log("Respuesta del servidor: ", response);
+
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.estado === true) {
+                            swal({
+                                title: "Egreso de Caja Registrado con Exito!",
+                                text: result.mensaje,
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });;
+                        } else {
+                            swal("Error", result.mensaje, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log("Error al parsear el JSON: ", e);
+                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    swal("Error", "Hubo un problema con la solicitud.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            });
+        }
+    }
 
 
+    function fnRegistrarIngresoDeCajaGrande() {
+
+        var montoCajaGrande = parseFloat(document.getElementById("idMontoIngresoCaja").value);
+        var notaCajaGrande = document.getElementById("idNotaIngresoCaja").value;
+
+
+        console.log(jsDetalleCajaGrande);
+        if (isNaN(montoCajaGrande)) {
+            swal("Upps", "Debes de ingresar el monto para registrar el Ingreso a caja 😥", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        } else {
+            var jsDetalleCajaGrande = {
+                "forma_pago_id": parseInt(document.getElementById("idFormaPagoIngreso").innerText),
+                "tipo_movimiento": "INGRESO",
+                "responsable_id": <?php echo $id_usuario_s; ?>,
+                "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>",
+                "monto_caja_grande": montoCajaGrande,
+                "nota_caja_grande": (notaCajaGrande.length) === 0 ? null : notaCajaGrande,
+                "concepto_id": 1,
+                "concepto_egreso": "INGRESO DE DINERO A CAJA"
+            };
+            console.log(jsDetalleCajaGrande);
+            $.ajax({
+                url: 'logica/clssInsertPA.php',
+                type: 'POST',
+                data: {
+                    accion: 'INSERTDETALLECAJAGRANDE',
+                    jsDetalleCajaGrande: JSON.stringify(jsDetalleCajaGrande)
+                },
+                success: function(response) {
+
+                    console.log("Respuesta del servidor: ", response);
+
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.estado === true) {
+                            swal({
+                                title: "Egreso de Caja Registrado con Exito!",
+                                text: result.mensaje,
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });;
+                        } else {
+                            swal("Error", result.mensaje, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log("Error al parsear el JSON: ", e);
+                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    swal("Error", "Hubo un problema con la solicitud.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            });
+        }
     }
 </script>

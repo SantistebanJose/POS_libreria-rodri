@@ -18,6 +18,11 @@ function controladorFiltro($accion){
             
             consultapersonaempleado($data);
             break;
+        case 'FILTROPERSONASINSEREMPLEADO':
+            $data = $_POST["data"];
+            
+            consultarPersonaSinSerEmpleado($data);
+            break;
         case 'CAMBIARCONTRASEÑA':
             break;
 
@@ -34,6 +39,9 @@ function consultapersonaventa($data): void
         SELECT 
             id, 
             CONCAT(numero_documento, ' - ', nombres, ' ', apellidos) AS persona_concatenada,
+            nombres,
+            apellidos,
+            numero_documento,
             COALESCE(NULLIF(telefonomovil, ''), 'Sin número') AS telefonomovil,
             COALESCE(NULLIF(email, ''), 'Sin correo') AS email
         FROM persona
@@ -64,7 +72,50 @@ function consultapersonaventa($data): void
         ]);
     }
 }
+function consultarPersonaSinSerEmpleado($data): void
+{
+    global $conectar;
 
+    try {
+        // Consulta SQL con la función ILIKE para hacer la comparación insensible a mayúsculas y minúsculas
+        $query = $conectar->prepare("
+        SELECT 
+            p.id, 
+            condicion,
+            CONCAT(p.numero_documento, ' - ', p.nombres, ' ', p.apellidos) AS persona_concatenada,
+            p.nombres,
+            p.apellidos,
+            p.numero_documento,
+            COALESCE(NULLIF(p.telefonomovil, ''), 'Sin número') AS telefonomovil,
+            COALESCE(NULLIF(p.email, ''), 'Sin correo') AS email
+        FROM persona p
+        LEFT JOIN usuario u ON u.persona_id=p.id
+        WHERE u.persona_id is null
+        AND condicion IN ('CLIENTE')
+        AND numero_documento ILIKE :data 
+        LIMIT 10;
+        ");
+
+        
+        $likeData = '%' . $data . '%';  // Añadimos los comodines en PHP
+
+        
+        $query->bindValue(':data', $likeData, PDO::PARAM_STR);
+        $query->execute();
+        
+        
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Devolver los resultados como JSON
+        echo json_encode($result);
+    } catch (\Throwable $th) {
+        // En caso de error, devolver un JSON con el mensaje de error
+        echo json_encode([
+            "error" => true,
+            "message" => $th->getMessage()
+        ]);
+    }
+}
 
 function consultapersonaempleado($data): void
 {
@@ -78,7 +129,7 @@ function consultapersonaempleado($data): void
                 COALESCE(NULLIF(telefonomovil, ''), 'Sin número') AS telefonomovil,
                 COALESCE(NULLIF(email, ''), 'Sin correo') AS email
             FROM persona
-            WHERE tipo_persona = 'NATURAL' 
+            WHERE condicion = 'EMPLEADO' 
             AND (LOWER(numero_documento) LIKE LOWER(:data)
                 OR LOWER(nombres) LIKE LOWER(:data)
                 OR LOWER(apellidos) LIKE LOWER(:data))

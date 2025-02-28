@@ -14,6 +14,17 @@ include("cabecera.php");
         cursor: pointer;
     }
 
+    #idDatosPersona {
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1050;
+        /* Para asegurar que esté sobre otros elementos */
+    }
+
+    #idDatosPersona .list-group-item {
+        cursor: pointer;
+    }
+
     .error-input {
         border: 2px solid red;
     }
@@ -126,59 +137,66 @@ include("cabecera.php");
 
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="card-title"><i class="fas fa-users"></i> Trabajadores</h4>
-                    <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico">Agregar Persona <i class="fas fa-plus"> </i></button>
+                    <!--<button class="btn btn-success rounded-5" id="btnAbrirModalGenerico">Agregar Persona <i class="fas fa-plus"> </i></button> -->
+
+                    <a
+                        onclick='fn_abrirModalTrabajador()'
+                        class="btn btn-secondary btn-round"
+                        role="button">
+                        <i class="fas fa-user-plus"> </i> Agregar Trabajador
+                    </a>
                 </div>
                 <hr>
                 <div
                     class="row justify-content-center align-items-center md-2">
 
                     <div class="col-sm-12">
-                      
-                            <div class="table-responsive">
-                                <table
-                                    id="multi-filter-select"
-                                    class="display table table-striped table-hover">
-                                    <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Trabajador</th>
-                                                <th>N° de Documento</th>
-                                                <th>Condicion</th>
-                                                <th>Accion</th>
-                                            </tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                            <?php
-                                            foreach (listarEmpleados() as $datos) {
-                                                $datosJSON = json_encode($datos);
-                                            ?>
-                                            <tr>
-                                                    <td><?php echo $datos["id"] ?></td>
-                                                    <td><?php echo $datos["empleado"] ?></td>
-                                                    <td><?php echo $datos["numero_documento"] ?></td>
-                                                    <td><?php echo $datos["condicion"] ?></td>
-                                                    <td>
-                                                        <div class="mt-2 text-center">
-                                                        <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
-                                                            onclick='fn_editar_usuario(<?php echo $datosJSON; ?>)' role="button">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
-                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                onclick='fn_bloquear_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
-                                                                <i class="fa fa-lock"></i>
-                                                            </a>
 
-                                                        </div>
-                                                    </td>
-                                            </tr>
+                        <div class="table-responsive">
+                            <table
+                                id="multi-filter-select"
+                                class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Trabajador</th>
+                                        <th>N° de Documento</th>
+                                        <th>Condicion</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
 
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                           
+                                <tbody>
+                                    <?php
+                                    foreach (listarEmpleados() as $datos) {
+                                        $datosJSON = json_encode($datos);
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $datos["id"] ?></td>
+                                            <td><?php echo $datos["empleado"] ?></td>
+                                            <td><?php echo $datos["numero_documento"] ?></td>
+                                            <td><?php echo $datos["condicion"] ?></td>
+                                            <td>
+                                                <div class="mt-2 text-center">
+                                                    <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                        onclick='fn_editar_usuario(<?php echo $datosJSON; ?>)' role="button">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                        onclick='fn_bloquear_usuario(<?php echo $datosUsuario["id"]; ?>)' role="button">
+                                                        <i class="fa fa-lock"></i>
+                                                    </a>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                 </div>
@@ -188,16 +206,152 @@ include("cabecera.php");
     </div>
 </div>
 
+
 <!-- Modal para registrar Cliente -->
 
 <div class="modal fade" id="modalCliente" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" id="contenidoUsuario">
-
+        <div class="modal-content">
+            <div id="contenidoUsuario">
+            </div>                
         </div>
     </div>
 </div>
 
+
+<div class="modal fade" id="modalRegistrarTrabajador" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalUsuarioLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="card text-start">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="card-body">
+                        <h5 class="card-title text-center" id="modalClienteLabel"> <i class="fas fa-user"></i> Registrar Trabajador</h5>
+                        <div class="card-sub text-center">
+                            Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                        </div>
+
+                        <div class="tab-content mt-3" id="pills-tabContent">
+                            <!-- Formulario Persona -->
+                            <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
+                                <div class="row justify-content-center align-items-center g-2">
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <div id="idPersonaEncontrada" style="display: none;">#</div>
+
+                                            <label for="numeroDocumentoPersona" class="form-label"><b>Número de Documento <span class="fw-bold text-danger">*</span></b></label>
+                                            <input type="number" class="form-control" id="idNnumeroDocumentoTrabajador" placeholder="Número de Documento">
+                                            <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
+                                        </div>
+                                        <div id="idDatosPersona" class="list-group position-absolute w-100"></div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="nombresPersona" class="form-label"><b>Nombres <span class="fw-bold text-danger">*</span></b></label>
+                                            <input type="text" class="form-control" id="idNombreTrabajador" placeholder="Nombres">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label"><b>Apellidos <span class="fw-bold text-danger">*</span></b></label>
+                                            <input type="text" class="form-control" id="idApellidosTrabajador" placeholder="Apellidos">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"><b>Teléfono Móvil <span class="fw-bold text-danger">*</span></b></label>
+                                            <input type="text" class="form-control" id="idTelefonoMovilTrabajador" placeholder="Teléfono Móvil">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label"><b>Sueldo</b></label>
+                                            <input type="number" class="form-control" id="idSueldoTrabajador" placeholder="00.00">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="horasPersona" class="form-label"><b>Horas de trabajo Por Día</b></label>
+                                            <input type="number" class="form-control" id="idHorasPersona" placeholder="00">
+                                            <div class="invalid-feedback" id="error-horasPersona"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="diasPersona" class="form-label"><b>Días de trabajo a la semana</b></label>
+                                            <input type="number" class="form-control" id="idDiasTrabajoPersona" placeholder="00">
+                                            <div class="invalid-feedback" id="error-diasPersona"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-sub text-center">
+                                    Puedes Asignar un Usuario directamente, si no por defecto sera el <strong>Nímero de Documento del Trabajador</strong>. Luego podras Modificar o Asignar nuevos usuario al trabajador en el apartado de <strong>Administrador/Usuarios.</strong>
+                                </div>
+                                <div class="accordion" id="accordionExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingTwo">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                Datos Usuario
+                                            </button>
+                                        </h2>
+
+
+                                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <div
+                                                    class="row justify-content-center align-items-center g-2">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                                        <div class="mb-3">
+                                                            <div class="col-sm-12 mb-3">
+                                                                <label for="nombreUsuario"> <b> Nombre de Usuario </b> </label>
+                                                                <input type="text" class="form-control required" id="idUsurioTrabajador" placeholder="user001" value="" />
+                                                                <div id="error-nombreUsuario" class="error-message"></div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                                        <div class="col-sm-12 mb-3">
+                                                            <label for="cambiarContrasena"><b> Contraseña </b> </label>
+                                                            <input type="text" class="form-control" id="idContraseniaUsuarioTrabajador" placeholder="********" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="text-center">
+                                    <a
+                                        name=""
+                                        id=""
+                                        class="btn btn-success btn-round text"
+                                        onclick='fn_registrarTrabajador()'
+                                        role="button">Registrar Trabajador <i class="fas fa-plus"> </i></a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 
@@ -206,6 +360,153 @@ include("cabecera.php");
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="assets/js/scriptNotify.js"></script>
+
+<script>
+    function fn_abrirModalTrabajador() {
+        $('#modalRegistrarTrabajador').modal('show');
+        var numero_documento = document.getElementById("idNnumeroDocumentoTrabajador");
+        var nombres = document.getElementById("idNombreTrabajador");
+        var apellidos = document.getElementById("idApellidosTrabajador"); // Aseguramos que solo hay una variable para apellidos
+        var numero_telefono_movil = document.getElementById("idTelefonoMovilTrabajador");
+        var sugerencias = document.getElementById("idDatosPersona");
+
+        numero_documento.addEventListener("input", function() {
+            const query = numero_documento.value.trim();
+            console.log(query);
+            if (query.length > 0) {
+                $.ajax({
+                    method: "POST",
+                    url: "logica/clssFiltro.php",
+                    data: {
+                        "accion": "FILTROPERSONASINSEREMPLEADO",
+                        "data": query
+                    }
+                }).done(function(response) {
+                    try {
+                        console.log(response);
+                        const resultados = JSON.parse(response);
+                        sugerencias.innerHTML = "";
+                        if (resultados.length > 0) {
+                            resultados.forEach(persona => {
+                                const item = document.createElement("div");
+                                item.classList.add("list-group-item");
+                                item.textContent = persona.persona_concatenada;
+
+                                item.addEventListener("click", function() {
+                                    console.log(persona);
+                                    numero_documento.value = persona.numero_documento;
+                                    nombres.value = persona.nombres;
+                                    apellidos.value = persona.apellidos;
+                                    numero_telefono_movil.value = persona.telefonomovil;
+                                    document.getElementById("idPersonaEncontrada").innerText = persona.id;
+                                    sugerencias.innerHTML = "";
+                                });
+                                sugerencias.appendChild(item);
+                            });
+                        } else {
+                            const noResults = document.createElement("div");
+                            noResults.classList.add("list-group-item", "text-muted");
+                            noResults.textContent = "Sin resultados";
+                            nombres.value = "";
+                            apellidos.value = "";
+                            numero_telefono_movil.value = "";
+                            document.getElementById("idPersonaEncontrada").innerText = "#";
+                            sugerencias.appendChild(noResults);
+                            sugerencias.innerHTML = "";
+                        }
+                    } catch (e) {
+                        console.error("Error al procesar los resultados:", e);
+                        sugerencias.innerHTML = "";
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                    sugerencias.innerHTML = "";
+                });
+            } else {
+                sugerencias.innerHTML = "";
+            }
+        });
+    }
+
+
+    function fn_registrarTrabajador() {
+
+        idPersonaEncontrada = document.getElementById("idPersonaEncontrada").innerText;
+
+        jsDatosTrabajador = {
+            idPersonaEncontrada: document.getElementById("idPersonaEncontrada").innerText,
+            numero_documento: document.getElementById("idNnumeroDocumentoTrabajador").value,
+            nombres: document.getElementById("idNombreTrabajador").value,
+            apellidos: document.getElementById("idApellidosTrabajador").value,
+            numero_telefono_movil: document.getElementById("idTelefonoMovilTrabajador").value,
+            sueldo: isNaN(parseFloat(document.getElementById("idSueldoTrabajador").value)) ? 0 : parseFloat(document.getElementById("idSueldoTrabajador").value),
+
+            horas_trabajo: isNaN(parseInt(document.getElementById("idHorasPersona").value)) ? 0 : parseInt(document.getElementById("idHorasPersona").value),
+            dias_trabajo_semana: isNaN(parseInt(document.getElementById("idDiasTrabajoPersona").value)) ? 0 : parseInt(document.getElementById("idDiasTrabajoPersona").value),
+            usuario: document.getElementById("idUsurioTrabajador").length > 0 ? document.getElementById("idUsurioTrabajador") : document.getElementById("idNnumeroDocumentoTrabajador").value,
+            contrasenia: document.getElementById("idContraseniaUsuarioTrabajador").length > 0 ? document.getElementById("idContraseniaUsuarioTrabajador") : document.getElementById("idNnumeroDocumentoTrabajador").value
+        }
+        $.ajax({
+            url: 'logica/clssInsertPA.php',
+            type: 'POST',
+            data: {
+                accion: 'INSERTTRABAJADORUSUARIO',
+                jsDatosTrabajador: JSON.stringify(jsDatosTrabajador)
+            },
+            success: function(response) {
+
+                console.log("Respuesta del servidor: ", response);
+
+                try {
+                    var result = JSON.parse(response);
+                    if (result.estado === true) {
+                        swal({
+                            title: "Trabajador Registrado con Exito!",
+                            text: result.mensaje,
+                            icon: "success",
+                            buttons: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });;
+                    } else {
+                        swal("Error", result.mensaje, {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                } catch (e) {
+                    console.log("Error al parsear el JSON: ", e);
+                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Error: " + error);
+                swal("Error", "Hubo un problema con la solicitud.", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+        });
+
+
+    }
+</script>
 
 <script>
     $(document).ready(function() {
@@ -238,7 +539,7 @@ include("cabecera.php");
         });
 
         $("#multi-filter-select").DataTable({
-            pageLength: 5,
+            pageLength: 10,
             language: {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -443,7 +744,7 @@ include("cabecera.php");
             modal.show();
 
 
-         
+
             const btnRegistrarCliente = document.getElementById('btnRegistrarCliente');
 
             // Función para validar los campos
@@ -540,40 +841,86 @@ include("cabecera.php");
             }
 
 
-            
+
 
             btnRegistrarCliente.addEventListener('click', async function() {
                 let datos = {};
 
-                    // Recolectar los datos del formulario Persona
-                    if (validarCamposPersona()) {
-                        datos = {
-                            "numero_documento": document.getElementById('numeroDocumentoPersona').value,
-                            "nombres": document.getElementById('nombresPersona').value,
-                            "apellidos": document.getElementById('apellidosPersona').value,
-                            "telefono_movil": document.getElementById('telefonoPersona').value || null,
-                            "email": document.getElementById('emailPersona').value,
-                            "direccion": document.getElementById('direccionPersona').value,
-                            "condicion": document.getElementById('condicionPersona').value,
-                            "sueldo": document.getElementById('sueldoPersona').value,
-                            "horas": document.getElementById('horasPersona').value,
-                            "dias": document.getElementById('diasPersona').value,
-                            "username": document.getElementById('userPersona').value,
-                            "password": document.getElementById('passPersona').value
+                // Recolectar los datos del formulario Persona
+                if (validarCamposPersona()) {
+                    datos = {
+                        "numero_documento": document.getElementById('numeroDocumentoPersona').value,
+                        "nombres": document.getElementById('nombresPersona').value,
+                        "apellidos": document.getElementById('apellidosPersona').value,
+                        "telefono_movil": document.getElementById('telefonoPersona').value || null,
+                        "email": document.getElementById('emailPersona').value,
+                        "direccion": document.getElementById('direccionPersona').value,
+                        "condicion": document.getElementById('condicionPersona').value,
+                        "sueldo": document.getElementById('sueldoPersona').value,
+                        "horas": document.getElementById('horasPersona').value,
+                        "dias": document.getElementById('diasPersona').value,
+                        "username": document.getElementById('userPersona').value,
+                        "password": document.getElementById('passPersona').value
 
 
-                        };
+                    };
 
-                        // Llamar a la función AJAX para registrar la persona
-                        console.log(datos);
-                        const response = await fnRegistrarPersona(datos);
-                        console.log("Persona insertado con éxito:", response);
-                        console.log(response.persona_id);
+                    // Llamar a la función AJAX para registrar la persona
+                    console.log(datos);
+                    const response = await fnRegistrarPersona(datos);
+                    console.log("Persona insertado con éxito:", response);
+                    console.log(response.persona_id);
 
-                        if (response.success === true) {
+                    if (response.success === true) {
+                        swal({
+                            title: "Registro con Exito!",
+                            text: 'Usuario Registrado  correctamente',
+                            icon: "success",
+                            buttons: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });
+
+                    } else if (response.error === true) {
+                        // Si existe un error, mostrar el mensaje devuelto por el servidor
+                        swal("Error", result.message, {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+
+
+
+                }
+
+            });
+
+
+            function fnRegistrarPersona(datos) {
+                $.ajax({
+                    method: "POST",
+                    url: "logica/clssPersona.php",
+                    data: {
+                        "accion": "REGISTRAREMPLEADO",
+                        "data": JSON.stringify(datos)
+                    }
+                }).done(function(response) {
+                    console.log("Respuesta del servidor:", response);
+
+                    try {
+                        const jsonResponse = JSON.parse(response); // Intentamos convertir la respuesta a JSON
+                        console.log("JSON procesado:", jsonResponse);
+
+                        if (jsonResponse.success) {
+                            // Si la respuesta es exitosa
                             swal({
-                                title: "Registro con Exito!",
-                                text: 'Usuario Registrado  correctamente',
+                                title: "Registro con Éxito!",
+                                text: "Persona actualizada correctamente",
                                 icon: "success",
                                 buttons: false,
                                 timer: 1500
@@ -581,88 +928,42 @@ include("cabecera.php");
                                 location.reload();
                             });
 
-                        } else if (response.error === true) {
-                            // Si existe un error, mostrar el mensaje devuelto por el servidor
-                            swal("Error", result.message, {
-                                icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
-                            });
+                        } else {
+                            // Si la respuesta no es exitosa
+                            throw new Error(jsonResponse.message || "Error desconocido en la respuesta del servidor");
                         }
 
+                    } catch (error) {
+                        console.error("Error al procesar JSON:", error); // Imprimir el error en la consola para diagnóstico
 
-
+                        // Mostrar un mensaje más detallado de error
+                        swal("Error", error.message || "Respuesta del servidor no válida", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
                     }
-            
-            });
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error en AJAX:", textStatus, errorThrown, jqXHR.responseText);
 
-
-            function fnRegistrarPersona(datos) {
-    $.ajax({
-        method: "POST",
-        url: "logica/clssPersona.php",
-        data: {
-            "accion": "REGISTRAREMPLEADO",
-            "data": JSON.stringify(datos)
-        }
-    }).done(function(response) {
-        console.log("Respuesta del servidor:", response);
-
-        try {
-            const jsonResponse = JSON.parse(response); // Intentamos convertir la respuesta a JSON
-            console.log("JSON procesado:", jsonResponse);
-
-            if (jsonResponse.success) {
-                // Si la respuesta es exitosa
-                swal({
-                    title: "Registro con Éxito!",
-                    text: "Persona actualizada correctamente",
-                    icon: "success",
-                    buttons: false,
-                    timer: 1500
-                }).then(() => {
-                    location.reload();
+                    // Manejar el error en la solicitud AJAX
+                    swal("Error", jqXHR.responseText || "Ocurrió un error en la solicitud", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
                 });
-
-            } else {
-                // Si la respuesta no es exitosa
-                throw new Error(jsonResponse.message || "Error desconocido en la respuesta del servidor");
             }
 
-        } catch (error) {
-            console.error("Error al procesar JSON:", error); // Imprimir el error en la consola para diagnóstico
-
-            // Mostrar un mensaje más detallado de error
-            swal("Error", error.message || "Respuesta del servidor no válida", {
-                icon: "error",
-                buttons: {
-                    confirm: {
-                        className: "btn btn-danger",
-                    },
-                },
-            });
-        }
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Error en AJAX:", textStatus, errorThrown, jqXHR.responseText);
-
-        // Manejar el error en la solicitud AJAX
-        swal("Error", jqXHR.responseText || "Ocurrió un error en la solicitud", {
-            icon: "error",
-            buttons: {
-                confirm: {
-                    className: "btn btn-danger",
-                },
-            },
-        });
-    });
-}
 
 
 
-         
         });
     });
 </script>
@@ -813,7 +1114,7 @@ include("cabecera.php");
 
                         // Mostrar y ocultar formularios según la condición
                         if (usuario.condicion === "CLIENTE" || usuario.condicion === "EMPLEADO") {
-   
+
                             // Llenar campos de Persona
                             document.getElementById("numeroDocumentoPersona").value = usuario.numero_documento;
                             document.getElementById("nombresPersona").value = usuario.nombres;
@@ -836,7 +1137,7 @@ include("cabecera.php");
                             document.getElementById("pills-empresa-tab").style.display = "none";
                             document.getElementById("pills-empresa").style.display = "none";
 
-                        } 
+                        }
                     } else {
                         swal("Error", result.message, {
                             icon: "error",
@@ -884,7 +1185,7 @@ include("cabecera.php");
                 fnActualizarPersona(datos);
 
 
-            } 
+            }
 
 
         });
@@ -949,7 +1250,7 @@ include("cabecera.php");
 
         }
 
-       
+
 
 
 
