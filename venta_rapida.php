@@ -3251,14 +3251,19 @@ if (isset($_GET['id'])) {
                         try {
                             var result = JSON.parse(response);
                             if (result.estado === true) {
+                                console.log(result)
+                                console.log(result.id_venta_generado)
+                                
                                 Swal.fire({
                                     title: "Pagado con Éxito!",
-                                    html: `<p style="text-align: center;"> ${result.mensaje}</p>`, // Usa "html" en lugar de "text"
+                                    html: `<p style="text-align: center;"> Venta Realizada con Exitó</p>`, // Usa "html" en lugar de "text"
                                     icon: "success",
                                     buttons: false,
                                     timer: 1500
                                 }).then(() => {
+                                    window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                                     location.reload();
+
                                 });
                             } else {
                                 swal("Error", result.mensaje, {
@@ -3390,13 +3395,14 @@ if (isset($_GET['id'])) {
                     var result = JSON.parse(response);
                     if (result.estado === true) {
                         Swal.fire({
-                            title: "Pagado con Éxito!",
-                            html: `<div style="text-align: center;">${result.mensaje}</div>`, // Se usa "html" en lugar de "text"
+                            title: "Venta Realizada el Credito con Éxito!",
+                            html: `<div style="text-align: center;">Venta Realizada</div>`, // Se usa "html" en lugar de "text"
                             icon: "success",
                             buttons: false,
                             timer: 1500
                         }).then(() => {
                             location.reload();
+                            window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                         });
                     } else {
                         swal("Error", result.mensaje, {

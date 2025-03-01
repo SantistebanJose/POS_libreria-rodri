@@ -9,20 +9,22 @@ if (isset($_GET['id'])) {
         <div class="card text-start">
 
             <div class="card-body">
-                <h4 class="card-title">Listado de Ventas</h4>
+                
+                <h4 class="card-title"><i class="fas fa-align-left"></i> Listado de Ventas</h4>
                 <div class="card-sub">
                     Selecciona de acuerdo a las ventas que necesites :)
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="ventaDiaria" data-bs-toggle="pill" href="#pills-ventaDiaria" role="tab" aria-controls="pills-ventaDiaria" aria-selected="true">Ventas del Día</a>
+                            
+                            <a class="nav-link active" id="ventaDiaria" data-bs-toggle="pill" href="#pills-ventaDiaria" role="tab" aria-controls="pills-ventaDiaria" aria-selected="true"><i class="fas fa-clock"></i> Ventas del Día</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="ventaSemanal" data-bs-toggle="pill" href="#pills-ventaSemanal" role="tab" aria-controls="pills-ventaSemanal" aria-selected="false">Ventas de la Semana</a>
+                            <a class="nav-link" id="ventaSemanal" data-bs-toggle="pill" href="#pills-ventaSemanal" role="tab" aria-controls="pills-ventaSemanal" aria-selected="false"><i class="fas fa-calendar-alt"></i> Ventas de la Semana</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Todas las Ventas</a>
+                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-contact-nobd" role="tab" aria-controls="pills-contact-nobd" aria-selected="false"><i class="fas fa-chart-bar"></i> Todas las Ventas</a>
                         </li>
                     </ul>
                     <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
@@ -36,6 +38,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>N° Ticket</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
@@ -52,9 +55,11 @@ if (isset($_GET['id'])) {
                                                 foreach (fnListForVentasDiarias() as $datos) {
                                                     $datos['accion_ajax'] = 'DETALLEVENTA_VENTA_ID';
                                                     $datosJSON = json_encode($datos);
+                                                    
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["venta_id"] ?></td>
+                                                        <td><?php echo $datos["codigo_tiket"] ?></td>
                                                         <td><?php echo $datos["cliente"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
@@ -94,6 +99,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>N° Ticket</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
@@ -113,6 +119,7 @@ if (isset($_GET['id'])) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["venta_id"] ?></td>
+                                                        <td><?php echo $datos["codigo_tiket"] ?></td>
                                                         <td><?php echo $datos["cliente"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
@@ -152,6 +159,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>N° Ticket</th>
                                                     <th>Cliente</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
@@ -171,6 +179,7 @@ if (isset($_GET['id'])) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["venta_id"] ?></td>
+                                                        <td><?php echo $datos["codigo_tiket"] ?></td>
                                                         <td><?php echo $datos["cliente"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>

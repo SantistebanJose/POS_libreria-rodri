@@ -18,7 +18,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link
         rel="icon"
-        href="assets/img/kaiadmin/favicon.ico"
+        href="assets/img/caracoles.png"
         type="image/x-icon" />
         <title>VYSAM</title>
         
@@ -89,13 +89,16 @@
     <body>
 
         <div class="container login-container">
+            
+            
             <div class="card login-card">
                 <div class="login-header">
                     <img
-                        src="assets/img/usuario.png"
-                        class="img-fluid rounded-top"
-                        alt="" />
-                    <h3>VYSAM</h3>
+                        src="assets/img/caracolesv2.png"
+                        class="navbar-brand"
+                        height="100"
+                        />
+                    <h3 style="color: white;" class="card-title">Caracol Soft - VYSAM</h3>
                 </div>
                 <div id="form-login" class="card-body">
                     <div class="mb-4">

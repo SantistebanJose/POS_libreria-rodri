@@ -9,20 +9,20 @@ if (isset($_GET['id'])) {
         <div class="card text-start">
 
             <div class="card-body">
-                <h4 class="card-title">Listado de Pagos</h4>
+                <h4 class="card-title"><i class="fas fa-align-left"></i> Listado de Pagos</h4>
                 <div class="card-sub">
                     Selecciona de acuerdo a los pagos realizados y revisa sus detalles :)
                 </div>
                 <div class="card-body">
                     <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="ventaDiaria" data-bs-toggle="pill" href="#pills-pagosDiarios" role="tab" aria-controls="pills-pagosDiarios" aria-selected="true">Pagos del Día</a>
+                            <a class="nav-link active" id="ventaDiaria" data-bs-toggle="pill" href="#pills-pagosDiarios" role="tab" aria-controls="pills-pagosDiarios" aria-selected="true"><i class="fas fa-clock"></i> Pagos del Día</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="ventaSemanal" data-bs-toggle="pill" href="#pills-pagoSemanal" role="tab" aria-controls="pills-pagoSemanal" aria-selected="false">Pagos de la Semana</a>
+                            <a class="nav-link" id="ventaSemanal" data-bs-toggle="pill" href="#pills-pagoSemanal" role="tab" aria-controls="pills-pagoSemanal" aria-selected="false"><i class="fas fa-calendar-alt"></i> Pagos de la Semana</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-todosLosPagos" role="tab" aria-controls="pills-todosLosPagos" aria-selected="false">Todos los Pagos</a>
+                            <a class="nav-link" id="pills-contact-tab-nobd" data-bs-toggle="pill" href="#pills-todosLosPagos" role="tab" aria-controls="pills-todosLosPagos" aria-selected="false"><i class="fas fa-chart-bar"></i> Todos los Pagos</a>
                         </li>
                     </ul>
                     <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
@@ -36,6 +36,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>N° TICKET</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
                                                     <th>HORA</th>
@@ -49,10 +50,12 @@ if (isset($_GET['id'])) {
                                                 <?php
                                                 foreach (fnListForPagos() as $datos) {
                                                     $datosJSON = json_encode($datos);
+                                                    $ventaJSON = json_decode($datos["js_venta"], true);
 
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
+                                                        <td><?php echo $ventaJSON["codigo_tiket"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
@@ -91,6 +94,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>N° TICKET</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
                                                     <th>HORA</th>
@@ -104,9 +108,11 @@ if (isset($_GET['id'])) {
                                                 <?php
                                                 foreach (fnListForPagosSemanales() as $datos) {
                                                     $datosJSON = json_encode($datos);
+                                                    $ventaJSON = json_decode($datos["js_venta"], true);
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
+                                                        <td><?php echo $ventaJSON["codigo_tiket"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
@@ -144,6 +150,7 @@ if (isset($_GET['id'])) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
+                                                    <th>N° TICKET</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
                                                     <th>HORA</th>
@@ -157,9 +164,11 @@ if (isset($_GET['id'])) {
                                                 <?php
                                                 foreach (fnListForAllPagos() as $datos) {
                                                     $datosJSON = json_encode($datos);
+                                                    $ventaJSON = json_decode($datos["js_venta"], true);
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
+                                                        <td><?php echo $ventaJSON["codigo_tiket"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>

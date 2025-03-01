@@ -449,11 +449,7 @@ include("cabecera.php");
 
                         </div>
                 </div>
-                
                 </div>
-                    
-                    
-                    
            
             `;
 
@@ -899,7 +895,7 @@ include("cabecera.php");
                 // Si es un número entero positivo, lo convierte a número; si no, asigna 0
                 let stock = isNaN(stockEscrito)? 0 : stockEscrito;
 
-                let precioventaEscrito = document.getElementById("idRegistrarStock").value.trim();
+                let precioventaEscrito = document.getElementById("idRegistrarPrecioVenta").value.trim();
 
                 // Si es un número entero positivo, lo convierte a número; si no, asigna 0
                 let precioventa = precioventaEscrito !== "" && /^\d+$/.test(precioventaEscrito) ? parseFloat(precioventaEscrito, 10) : 0;

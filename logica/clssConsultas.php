@@ -56,7 +56,8 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result ? $result : []);
             }
             break;
-            //
+        //fnGenerarComprobante
+        
     }
 }
 function executeQuery(string $query, array $params = []): array
@@ -281,6 +282,7 @@ function fnListForVentasDiarias(): array
     $query = "
             SELECT 
             v.fecha_fin_transaccion,
+            concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')) as codigo_tiket,
             v.id AS venta_id, 
             CASE 
                 WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
@@ -332,6 +334,7 @@ function fnListForVentasSemanales(): array
     $query = "
             SELECT 
             v.fecha_fin_transaccion,
+            concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')) as codigo_tiket,
             v.id AS venta_id, 
             CASE 
                 WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
@@ -380,6 +383,7 @@ function fnListForVentasTodasLasVentas(): array
     $query = "
             SELECT 
             v.fecha_fin_transaccion,
+            concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')) as codigo_tiket,
             v.id AS venta_id, 
             CASE 
                 WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
@@ -424,7 +428,108 @@ function fnListForVentasTodasLasVentas(): array
     return executeQuery($query);
 }
 
-
+function fnUltimaVentaPorIdVenta($id_venta): array
+{
+    $query = "
+    WITH with_detalle AS (
+        SELECT 
+            rva.id AS rel_venta_articulo_id,
+            rva.venta_id,
+            rva.articulo_id,
+            m.descripcion,
+            CASE 
+                WHEN ar.dimension_id IS NOT NULL THEN
+                    CONCAT(ar.nombre, ' (', dim.medida, ')')
+                WHEN ar.nombre IS NULL THEN
+                    m.descripcion
+                ELSE
+                    ar.nombre 
+            END as descripcion_2,
+            rva.cantidad,
+            rva.precio_unitario_articulo,
+            rva.minutos,
+            rva.costo_por_minuto,
+            rva.sub_total
+        FROM rel_venta_articulo AS rva
+        JOIN movimiento as m ON rva.movimiento_id = m.id
+        LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
+        LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
+    ),
+    with_detalle_pago AS(
+        SELECT 
+            fpu.id_venta,
+            fpu.id as ID_DETALLE,
+            fp.nombre as FORMA_PAGO,
+            fpu.monto
+        FROM detalle_forma_pago fpu
+        JOIN forma_pago fp ON fpu.id_forma_pago = fp.id
+    )
+    SELECT 
+    concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')) as codigo_tiket,
+    v.fecha_fin_transaccion,
+    v.id AS venta_id, 
+    CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
+    TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD') AS fecha, 
+    TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM') AS hora, 
+    
+    p.telefonomovil AS telefonomovil_cliente,
+    p.email AS email_cliente, 
+    p.numero_documento AS numero_doc_cliente,
+    CONCAT(usua.nombres, ', ', usua.apellidos) AS usuario, 
+    v.atencion_final_usuario,
+    p.id AS id_persona,
+    v.usuario_id,
+    v.monto_venta_final,
+    v.total, 
+    (v.total - v.monto_venta_final)as perdida_utilidad,
+    CASE 
+        WHEN v.estado_pago = 'P' THEN 'PAGADO'
+        WHEN v.estado_pago = 'C' THEN 'CREDITO'
+    END AS estado_pago,
+    v.estado_final,
+    (
+        SELECT jsonb_agg(
+            jsonb_build_object(
+                'rel_venta_articulo_id', wf.rel_venta_articulo_id,
+                'venta_id', wf.venta_id,
+                'articulo_id',wf.articulo_id,
+                'descripcion',wf.descripcion,
+                'descripcion_2',wf.descripcion_2,
+                'cantidad',wf.cantidad,
+                'precio_unitario_articulo',wf.precio_unitario_articulo,
+                'minutos',wf.minutos,
+                'costo_por_minuto',wf.costo_por_minuto,
+                'sub_total',wf.sub_total
+            )
+        )
+        FROM with_detalle as wf
+        WHERE wf.venta_id = v.id
+    ) AS js_detalle,
+    (
+        SELECT jsonb_agg(
+            jsonb_build_object(
+                'id_venta', id_venta,
+                'id_detalle',wdf.ID_DETALLE,
+                'forma_pago',wdf.FORMA_PAGO,
+                'monto',wdf.monto
+            )
+        )
+        FROM with_detalle_pago wdf
+        WHERE wdf.id_venta = v.id
+    )as js_detalle_forma_pago
+    FROM venta AS v
+    LEFT JOIN deuda AS du ON v.id=du.id_venta
+    INNER JOIN usuario AS us ON v.usuario_id = us.id  
+    INNER JOIN persona AS usua ON us.persona_id = usua.id
+    LEFT JOIN persona AS p ON v.cliente_id = p.id
+    WHERE v.estado_venta = 'VR' 
+    AND v.id = :idVenta
+    AND v.deleted_at IS NULL
+    --AND v.fecha_fin_transaccion::DATE = current_date 
+    ORDER BY v.fecha_fin_transaccion;
+    ";
+    return executeQuery($query, params: ['idVenta' => $id_venta]);
+}
 function fnListarDetalleVentaID($idVenta): array
 {
     $query = "
@@ -652,6 +757,7 @@ function fnListForPagos(): array
                     jsonb_build_object(
                         'venta_id', v.id,
                         'fecha_fin_transaccion', v.fecha_fin_transaccion,
+                        'codigo_tiket',concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')),
                         'dia_nombre', CASE 
                             WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
                             WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
@@ -730,6 +836,7 @@ function fnListForPagos(): array
                 WHERE dfp.id_venta = p.id_venta
             ) as js_detalle_forma_pago
             FROM pago p
+
             -- WHERE p.id = 2
             where p.created_at::date = current_date
             order by p.created_at desc;
@@ -765,6 +872,7 @@ function fnListForPagosSemanales(): array
                 SELECT 
                     jsonb_build_object(
                         'venta_id', v.id,
+                        'codigo_tiket',concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')),
                         'fecha_fin_transaccion', v.fecha_fin_transaccion,
                         'dia_nombre', CASE 
                             WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
@@ -879,6 +987,7 @@ function fnListForAllPagos(): array
                 SELECT 
                     jsonb_build_object(
                         'venta_id', v.id,
+                        'codigo_tiket',concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')),
                         'fecha_fin_transaccion', v.fecha_fin_transaccion,
                         'dia_nombre', 
                         CASE 
@@ -1188,7 +1297,7 @@ function fnListadoCajaChicaCerradas(): array
 
 function fnListadoConceptosEgresos($tipoCaja): array
 {
-    
+
     $query = "     
     SELECT 
     * 
@@ -1198,12 +1307,12 @@ function fnListadoConceptosEgresos($tipoCaja): array
     AND deleted_at IS null
     ORDER BY orden
     ";
-    
-    return executeQuery($query,params:["tipo_caja"=>$tipoCaja]);
+
+    return executeQuery($query, params: ["tipo_caja" => $tipoCaja]);
 }
 function fnListadoMovimientoCajaGrande(): array
 {
-    
+
     $query = "     
     SELECT 
     dc.*,
@@ -1231,7 +1340,7 @@ function fnListadoMovimientoCajaGrande(): array
     where dc.deleted_at is null -- and dc.tipo_movimiento = 'EGRESO'
     ORDER by 1;
     ";
-    
+
     return executeQuery($query);
 }
 
@@ -1244,10 +1353,10 @@ function fnVerificarUsarioSession($id): int
     FROM usuario
     WHERE id = :idUsuario AND deleted_at IS NULL
     ";
-    
+
     // Ejecutar la consulta
     $result = executeQuery($query, ['idUsuario' => $id]);
-    
+
     // Verificar si el usuario existe
     if ($result[0]['cantidad'] > 0) {
         // Si el usuario existe y no está eliminado, devolver 1
@@ -1258,3 +1367,152 @@ function fnVerificarUsarioSession($id): int
     }
 }
 
+function fnGenerarTicket($idVenta):void
+{
+    $datosprueba = fnUltimaVentaPorIdVenta($idVenta)[0];
+
+    // Datos de la venta obtenidos de la consulta
+    $datosVenta = [
+        "codigo_tiket" => $datosprueba["codigo_tiket"],
+        "fecha" => $datosprueba["fecha"],
+        "hora" => $datosprueba["hora"],
+        "cliente" => $datosprueba["cliente"],
+        "numero_doc_cliente" => $datosprueba["numero_doc_cliente"],
+        "usuario_inicial" => $datosprueba["usuario"],
+        "usuario_final" => $datosprueba["atencion_final_usuario"],
+        "total" => $datosprueba["total"],
+        "estado_pago" => $datosprueba["estado_pago"],
+        "estado_final" => $datosprueba["estado_final"],
+        "descuento" => $datosprueba["perdida_utilidad"],
+        "js_detalle" => $datosprueba["js_detalle"],
+        "js_detalle_forma_pago" => $datosprueba["js_detalle_forma_pago"]
+    ];
+
+    // Decodificar productos vendidos y formas de pago
+    $productos = json_decode($datosVenta["js_detalle"], true);
+    $pagos = json_decode($datosVenta["js_detalle_forma_pago"], true);
+
+    // Limpiar salida previa
+    ob_clean();
+
+    // Crear PDF en formato ticket térmico (80mm de ancho)
+    $pdf = new FPDF('P', 'mm', array(80, 200));
+    $pdf->AddPage();
+
+    // TÍTULO: TICKET DE VENTA
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(60, 4, 'TICKET DE VENTA', 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 8);
+    $pdf->Cell(60, 4, $datosVenta["codigo_tiket"], 0, 1, 'C');
+    $pdf->Ln(1);
+
+    // DATOS DEL CLIENTE
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(60, 4, 'Cliente: ' . $datosVenta["cliente"], 0, 1, 'L');
+    $pdf->Cell(60, 4, 'DNI/RUC: ' . $datosVenta["numero_doc_cliente"], 0, 1, 'L');
+    $pdf->Cell(60, 4, 'Fecha: ' . $datosVenta["fecha"] . ' ' . $datosVenta["hora"], 0, 1, 'L');
+    $pdf->Ln(1);
+
+    // SEPARADOR
+    $pdf->Cell(60, 3, str_repeat('_', 25), 0, 1, 'C');
+    $pdf->Ln(1);
+
+    // ENCABEZADO DE PRODUCTOS
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(30, 3, 'DESCRIPCION', 0, 0, 'L');
+    $pdf->Cell(8, 3, 'CANT.', 0, 0, 'C');
+    $pdf->Cell(12, 3, 'P.U', 0, 0, 'C');
+    $pdf->Cell(10, 3, 'TOTAL', 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->Ln(1);
+
+    // LISTADO DE PRODUCTOS
+    foreach ($productos as $producto) {
+        $yInicial = $pdf->GetY();
+
+        // Nombre del producto en varias líneas
+        $pdf->MultiCell(30, 3, $producto["descripcion_2"], 0, 'L');
+
+        $yFinal = $pdf->GetY();
+        $alturaFila = $yFinal - $yInicial;
+
+        // Alinear las demás columnas en la misma altura
+        $pdf->SetY($yInicial);
+        $pdf->SetX(40);
+
+        $pdf->Cell(8, $alturaFila, $producto["cantidad"], 0, 0, 'C');
+        $pdf->Cell(12, $alturaFila, 'S/ ' . number_format($producto["precio_unitario_articulo"], 2), 0, 0, 'C');
+        $pdf->Cell(10, $alturaFila, 'S/ ' . number_format($producto["sub_total"], 2), 0, 1, 'C');
+    }
+
+    // SEPARADOR
+    $pdf->Ln(1);
+    $pdf->Cell(60, 3, str_repeat('_', 25), 0, 1, 'C');
+    $pdf->Ln(1);
+
+    // ESTADO DE PAGO Y ESTADO FINAL
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(20, 3, 'Estado:', 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->Cell(15, 3, $datosVenta["estado_pago"], 0, 1, 'L');
+    $pdf->Ln(1);
+
+    // ESTADO DE PAGO Y ESTADO FINAL
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(20, 3, 'Descuento:', 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->Cell(15, 3, "S/ " . $datosVenta["descuento"], 0, 1, 'L');
+    $pdf->Ln(1);
+
+
+
+    // ENCABEZADO DE PAGOS
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(30, 3, 'Forma de Pago', 0, 0, 'L');
+    $pdf->Cell(20, 3, 'Monto', 0, 1, 'R');
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->Ln(1);
+
+    // LISTADO DE PAGOS
+    foreach ($pagos as $x) {
+        $pdf->Cell(30, 3, $x["forma_pago"], 0, 0, 'L');
+        $pdf->Cell(20, 3, 'S/ ' . number_format($x["monto"], 2), 0, 1, 'R');
+    }
+
+    // SEPARADOR
+    $pdf->Ln(1);
+    $pdf->Cell(60, 3, str_repeat('_', 25), 0, 1, 'C');
+    $pdf->Ln(1);
+
+    // TOTAL DE VENTA
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->Cell(60, 4, 'TOTAL DE VENTA: S/ ' . number_format($datosVenta["total"], 2), 0, 1, 'C');
+    $pdf->Ln(1);
+
+
+    // TOTAL EN LETRAS
+    $total_letras = strtoupper(number_format($datosVenta["total"], 2) . " /100 PEN");
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->Cell(60, 3, $total_letras, 0, 1, 'C');
+    $pdf->Ln(1);
+
+    // VENDEDOR
+    $pdf->SetFont('Arial', 'B', 6);
+    $pdf->Cell(60, 3, 'Atendido por: ' . $datosVenta["usuario_final"], 0, 1, 'C');
+    $pdf->Ln(1);
+
+    // MENSAJE DE AGRADECIMIENTO
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->Cell(60, 3, 'Representacion impresa del ticket de venta electronica', 0, 1, 'C');
+    $pdf->Cell(60, 3, 'Gracias por su preferencia', 0, 1, 'C');
+
+    // FIRMA DE LA EMPRESA
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(60, 3, 'VYSAM', 0, 1, 'C');
+    $pdf->Cell(60, 3, 'Desarrollado Por Caracol Soft', 0, 1, 'C');
+    $pdf->Ln(4);
+
+    // GENERAR PDF
+    ob_clean();
+    $pdf->Output('I', 'ticket_venta.pdf');
+}

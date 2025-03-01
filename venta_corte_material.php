@@ -1256,6 +1256,7 @@ if (isset($_GET['id'])) {
                                 buttons: false,
                                 timer: 1500
                             }).then(() => {
+                                window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(idVenta), "_blank");
                                 location.reload();
                             });;
                         } else {
@@ -1382,6 +1383,7 @@ if (isset($_GET['id'])) {
                             buttons: false,
                             timer: 1500
                         }).then(() => {
+                            window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(idVenta), "_blank");
                             location.reload();
                         });;
                     } else {

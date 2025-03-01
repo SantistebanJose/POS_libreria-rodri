@@ -48,7 +48,7 @@ if ($flagRespuesta == 0) {
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>VYSAM</title>
+    <title>Caracol Soft - VYSAM</title>
     <meta charset="UTF-8">
 
     <meta
@@ -56,7 +56,7 @@ if ($flagRespuesta == 0) {
         name="viewport" />
     <link
         rel="icon"
-        href="assets/img/kaiadmin/favicon.ico"
+        href="assets/img/caracoles.png"
         type="image/x-icon" />
 
     <!-- Fonts and icons -->
@@ -104,12 +104,14 @@ if ($flagRespuesta == 0) {
 
                     <a href="index.php" class="logo">
                         <img
-                            src="assets/img/kaiadmin/favicon.png"
+                            src="assets/img/caracoles.png"
                             alt="navbar brand"
                             class="navbar-brand"
-                            height="20" />
+                            height="30" /> <span style="color: white; font-size: 14px;">Caracol Soft - <strong>VYSAM</strong></span>
+
                     </a>
-                    
+
+
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
                             <i class="gg-menu-right"></i>
@@ -522,7 +524,7 @@ if ($flagRespuesta == 0) {
                 </nav>
                 <!-- End Navbar -->
             </div>
-            
+
             <br>
 
             <script>
