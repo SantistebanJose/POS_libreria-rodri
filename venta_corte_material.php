@@ -107,10 +107,12 @@ if (isset($_GET['id'])) {
             class="card">
 
             <div class="card-body">
-                <h4 class="card-title">Venta</h4>
+                
+                <h4 class="card-title"><i class="fas fa-child"></i> Atender Reservas</h4>
                 <div class="mb-3">
+                    
                     <div class="card-sub">
-                        Aquí podrás realizar ventas de cuando un cliente viene a realizar corte y/o compra de materiales.
+                        Aquí podrás <strong>Atender la reservas realizados por tus clientes.</strong> Si te piden más Articulos, lo puedes seguir agrengando en la parte de abajo.
                     </div>
                     <div class="col-md-12">
                         <div class="card">

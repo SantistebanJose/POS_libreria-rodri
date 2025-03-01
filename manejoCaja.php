@@ -12,34 +12,29 @@ include("cabecera.php");
             <?php foreach (listarFormaPago() as $datos) {
                 $datosJSON = json_encode($datos);
             ?>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3 mb-4">
                     <div class="card">
                         <div class="card-header">
-
-                            <div class="card-head-row">
-                                <div class="card-title">
-                                    <i class="<?php echo $datos["icon"]; ?>" style="color: <?php echo $datos["color"]; ?>;"></i>
-                                    <span style="color: <?php echo $datos["color"]; ?>;"> <?php echo $datos["nombre"]; ?> </span>
+                            <div class="card-head-row d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="card-title d-flex align-items-center">
+                                    <i class="<?php echo $datos["icon"]; ?>" style="color: <?php echo $datos["color"]; ?>; font-size: 1.5rem;"></i>
+                                    <span style="color: <?php echo $datos["color"]; ?>; font-size: 1rem;" class="ms-2"> <?php echo $datos["nombre"]; ?> </span>
                                 </div>
 
                                 <div class="card-tools">
                                     <div class="dropdown">
                                         <button
-                                            style="background-color: <?php echo $datos["color"] ?>;"
-                                            class="btn btn-sm btn-label-light dropdown-toggle btn-round "
+                                            class="btn btn-sm btn-label-secondary dropdown-toggle btn-round"
                                             type="button"
                                             id="dropdownMenuButton"
                                             data-bs-toggle="dropdown"
                                             aria-haspopup="true"
                                             aria-expanded="false">
-                                            Acciones
+                                            <i class="fas fa-ellipsis-v"></i>
                                         </button>
-                                        <div
-                                            class="dropdown-menu"
-                                            aria-labelledby="dropdownMenuButton">
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <button class="dropdown-item" href="#" onclick='fnAbrirSwalRegistroEgreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Registrar Egreso</button>
                                             <button class="dropdown-item" href="#" onclick='fnAbrirSwalRegistroIngreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Registrar Ingreso</button>
-                                            <button class="dropdown-item" href="#"><i class="fas fa-caret-right"></i> Actualizar Monto</button>
                                         </div>
                                     </div>
                                 </div>
@@ -48,14 +43,14 @@ include("cabecera.php");
                         </div>
                         <div class="card-body pb-0">
                             <div class="mb-4 mt-2">
-                                <h1>S/ <?php echo $datos["monto"] ?></h1>
+                                <h3>S/ <?php echo $datos["monto"] ?></h3>
                             </div>
                         </div>
                     </div>
                 </div>
-            <?php
-            } ?>
+            <?php } ?>
         </div>
+
 
         <div class="card text-start">
 
@@ -215,7 +210,7 @@ include("cabecera.php");
                                 <label for="idMontoIngresoCaja" class="form-label"><strong>(S/) Monto</strong></label>
                                 <input type="number" class="form-control" id="idMontoIngresoCaja" placeholder="Ingrese monto" />
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="idNotaIngresoCaja" class="form-label"><strong><i class="fas fa-sticky-note"></i> Nota</strong></label>
                                 <textarea class="form-control" id="idNotaIngresoCaja" rows="3" placeholder="Escribe una nota (Ej. Ingreso por venta de producto)"></textarea>

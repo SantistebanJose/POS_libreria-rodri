@@ -152,7 +152,7 @@ if (isset($_GET['id'])) {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
-                                <h4 class="card-title"><i class="fas fa-chess-queen"></i> Artículos, Ploteo, Impresiones, Escaneos</h4>
+                                <h6 class="card-title"><i class="fas fa-chess-queen"></i> Artículos</h6>
                                 <ul class="nav d-flex">
                                     <li class="nav-item me-3">
                                         <button class="btn btn-secondary btn-round" id="btnAbrirModalPloteo">Ploteo</button>
@@ -192,7 +192,7 @@ if (isset($_GET['id'])) {
                                             <button
                                                 name=""
                                                 id="clearFilters"
-                                                class="btn btn-secondary btn-round btn-round btn-md"
+                                                class="btn btn-warning btn-round btn-round btn-md"
                                                 href="#"
                                                 role="button"><i class="fas fa-broom"></i> Limpiar Filtros</b>
                                         </div>

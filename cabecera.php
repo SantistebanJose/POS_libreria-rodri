@@ -41,6 +41,8 @@ if ($flagRespuesta == 0) {
 }
 
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -107,7 +109,7 @@ if ($flagRespuesta == 0) {
                             class="navbar-brand"
                             height="20" />
                     </a>
-
+                    
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
                             <i class="gg-menu-right"></i>
@@ -468,12 +470,6 @@ if ($flagRespuesta == 0) {
                                     </div>
                                 </div>
                             </li>
-
-
-
-
-
-
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a
                                     class="dropdown-toggle profile-pic"
@@ -526,6 +522,7 @@ if ($flagRespuesta == 0) {
                 </nav>
                 <!-- End Navbar -->
             </div>
+            
             <br>
 
             <script>

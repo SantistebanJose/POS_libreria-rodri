@@ -8,7 +8,8 @@ include("cabecera.php");
     <div class="page-inner">
         <div class="card text-start">
             <div class="card-body">
-                <h4 class="card-title">Clientes</h4>
+                
+                <h4 class="card-title"><i class="fas fa-users"></i> Clientes</h4>
                 <div class="card-sub">
                     Busca a tu cliente con deuda y, al hacer clic en 'Ver deuda', podrás comenzar a abonar el monto pendiente.
                 </div>

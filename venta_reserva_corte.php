@@ -143,10 +143,11 @@ if (isset($_GET['id'])) {
             class="card">
 
             <div class=" card-body">
-                <h4 class="card-title"><i class="fas fa-weight-hanging"></i> Venta</h4>
+                <h4 class="card-title"><i class="fas fa-weight-hanging"></i> Venta Por Reserva</h4>
                 <div class="mb-3">
+                    
                     <div class="card-sub">
-                        Aquí podrás realizar ventas de cuando un cliente viene a realizar corte y/o compra de materiales.
+                        Aquí podrás <strong>Registrar los pedidos que te envían WhatsApp de tus cliente</strong>. Solo reversas Y luego podran venir a recogerlo.
                     </div>
                     <div class="col-md-12">
                         <div class="card">

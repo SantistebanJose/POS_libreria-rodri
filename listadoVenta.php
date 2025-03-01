@@ -69,8 +69,8 @@ if (isset($_GET['id'])) {
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetalle(<?php echo $datosJSON ?>)'
-                                                                    class="btn btn-success btn-round"
-                                                                    role="button">Ver</a>
+                                                                    class="btn btn-success btn-sm btn-round"
+                                                                    role="button"><i class="fas fa-external-link-square-alt"></i></a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -126,9 +126,9 @@ if (isset($_GET['id'])) {
                                                                 <a
                                                                     name=""
                                                                     id=""
-                                                                    class="btn btn-success btn-round"
+                                                                    class="btn btn-success btn-sm btn-round"
                                                                     onclick='abrirModalDetalle(<?php echo $datosJSON ?>)'
-                                                                    role="button">Ver</a>
+                                                                    role="button"><i class="fas fa-external-link-square-alt"></i></a>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -185,8 +185,8 @@ if (isset($_GET['id'])) {
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetalle(<?php echo $datosJSON ?>)'
-                                                                    class="btn btn-success btn-round"
-                                                                    role="button">Ver</a>
+                                                                    class="btn btn-success btn-sm btn-round"
+                                                                    role="button"><i class="fas fa-external-link-square-alt"></i></a>
                                                             </div>
                                                         </td>
                                                     </tr>

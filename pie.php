@@ -1,28 +1,7 @@
-</div>
-
 <footer class="footer">
-  <div class="container-fluid d-flex justify-content-between">
-    <nav class="pull-left">
-      <ul class="nav">
+  <div class="text-center">
+    <i class="fa fa-desktop text-muted"></i> 2025, Desarrollado Por <strong>Caracol Soft - VYSAM</strong>
 
-        <!-- 
-                  <li class="nav-item">
-                  <a class="nav-link" href="http://www.themekita.com">
-                    ThemeKita
-                  </a>
-                </li>
-                  <li class="nav-item">
-                  <a class="nav-link" href="#"> Help </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#"> Licenses </a>
-                </li>
-                --->
-
-      </ul>
-    </nav>
-    <div class="text-center"><i class="fa fa-desktop text-muted"></i> 2025, Caracol Soft</div>
-    </div>
   </div>
 </footer>
 </div>

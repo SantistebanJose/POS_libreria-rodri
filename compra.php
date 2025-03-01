@@ -529,46 +529,6 @@ include("cabecera.php");
 
     </div>
 </div>
-<style>
-    /* Tamaño por defecto para pantallas grandes (computadoras) */
-    .modal-dialog-custom {
-        max-width: 50%;
-        /* Este sería el tamaño 'normal' para computadoras */
-        margin: 0 auto;
-        /* Centra el modal */
-    }
-
-    /* Tamaño para pantallas medianas (tabletas) */
-    @media (max-width: 768px) {
-        .modal-dialog-custom {
-            max-width: 80%;
-            /* 80% del ancho de la pantalla en tabletas */
-        }
-    }
-
-    /* Tamaño para pantallas pequeñas (teléfonos móviles) */
-    @media (max-width: 576px) {
-        .modal-dialog-custom {
-            width: 100%;
-            /* Asegura que el modal ocupe todo el ancho disponible en móviles */
-            margin: 0 10px;
-            /* Da un poco de espacio a los lados en móviles */
-            max-width: 100%;
-            /* No permite que el modal se haga más grande que el 100% */
-        }
-    }
-
-    /* Asegura que el contenido del modal no se desborde */
-    .modal-content {
-        padding: 15px;
-        /* Espaciado dentro del modal para que el contenido no esté pegado a los bordes */
-    }
-
-    .dataTable {
-        overflow-x: auto;
-        /* Para permitir desplazamiento horizontal si es necesario */
-    }
-</style>
 
 <div
     class="modal fade"
@@ -577,49 +537,55 @@ include("cabecera.php");
     role="dialog"
     aria-labelledby="modalTitleId"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
         <div class="modal-content">
+            <div class="modal-body">
+                <div class="card border-primary">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="card-body">
 
+                        <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Registro de Compras</h4>
+                        <hr>
+                        <div class="card-sub text-center">
+                            Aquí podrás Registrar la Compras que realizas a tus proveedores. Una vez registrado, el <strong>Stock de tus productos</strong> tambien se actualiza.
+                        </div>
+                        <div class="row justify-content-center align-items-center sm-2">
+                            <div class="col-sm-6">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Compra</h4>
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Name</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name=""
+                                                id=""
+                                                aria-describedby="helpId"
+                                                placeholder="" />
+                                            <small id="helpId" class="form-text text-muted">Help text</small>
+                                        </div>
 
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="card-body">
-                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Registro de Compras</h4>
-                <hr>
-                <div class="card-sub text-center">
-                    Aquí podrás Registrar la Compras que realizas a tus proveedores. Una vez registrado, el <strong>Stock de tus productos</strong> tambien se actualiza.
-                </div>
-                <div class="row justify-content-center align-items-center sm-2">
-                    <div class="col-sm-6">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <h4 class="card-title">Compra</h4>
-                                <div class="mb-3">
-                                    <label for="" class="form-label">Name</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name=""
-                                        id=""
-                                        aria-describedby="helpId"
-                                        placeholder="" />
-                                    <small id="helpId" class="form-text text-muted">Help text</small>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Productos</h4>
+                                        <p class="card-text">Body</p>
+                                    </div>
                                 </div>
 
                             </div>
                         </div>
-
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <h4 class="card-title">Productos</h4>
-                                <p class="card-text">Body</p>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
+
+
             </div>
+
 
         </div>
     </div>
@@ -833,7 +799,7 @@ include("cabecera.php");
     role="dialog"
     aria-labelledby="modalTitleId"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document"> 
         <div class="modal-content">
 
 
@@ -960,79 +926,86 @@ include("cabecera.php");
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
         <div class="modal-content">
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            <div class="card-body">
-                <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Compra <strong id="idMontoVenta"></strong></h4>
-                <hr>
-                <div class="card-sub text-center">
-                    Aquí podrás revisar los datos de la Compra. Revisa el detalle de la compra de articulos.
-                </div>
-                <div class="row justify-content-center align-items-center sm-2">
-                    <div class="col-sm-12">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <h4 class="card-title"><i class="fas fa-user"> </i> Usuario</h4>
-                                <hr>
-                                <div><strong>Registrado Por: </strong> <span id="idUsuario"></span></div>
-                                <div><strong>Fecha de Compra:</strong> <span id="idFechaComprav2"></span></div>
-                                <div><strong>Fecha de Registro:</strong> <span id="idFechaRegistro"></span></div>
-                                <div><strong>Hora de Registro:</strong> <span id="idHoraRegistro"></span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <h4 class="card-title"><i class="fas fa-user"> </i> Proveedor</h4>
-                                <p class="card-text" id="nombreCliente"></p>
-                                <hr>
-                                <div><strong>N° DOCUMENTO:</strong> <span id="docProveedor"></span></div>
-                                <div><strong>Proveedor:</strong> <span id="idProveedorNombre"></span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card text-start">
-                            <div class="card-body">
-                                <h4 class="card-title"><i class="fas fa-credit-card"> </i> Montos S/ </h4>
-                                <hr>
-                                <div><strong>Monto Registrado:</strong> <span id="idMontoRegistrado"></span></div>
-                                <div><strong>Total Por Articulos:</strong> <span id="idMontoTotalArticulos"></span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="card">
+            <div class="modal-body">
+                <div class="card border-primary">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="card-body">
-                        <div class="accordion accordion-flush" id="accordionFlushExample">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="flush-headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                        <strong><i class="fas fa-cart-arrow-down"></i> Detalle de Compra</strong>
-                                    </button>
-                                </h2>
-                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                        <div class="card-sub">
-                                            Revisa tu detalle de compra :)
-                                        </div>
-                                        <div>
-                                            <ul id="idContenidoUlDetalle">
-
-                                            </ul>
-                                        </div>
-
+                        <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Compra <strong id="idMontoVenta"></strong></h4>
+                        <hr>
+                        <div class="card-sub text-center">
+                            Aquí podrás revisar los datos de la Compra. Revisa el detalle de la compra de articulos.
+                        </div>
+                        <div class="row justify-content-center align-items-center sm-2">
+                            <div class="col-sm-12">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i class="fas fa-user"> </i> Usuario</h4>
+                                        <hr>
+                                        <div><strong>Registrado Por: </strong> <span id="idUsuario"></span></div>
+                                        <div><strong>Fecha de Compra:</strong> <span id="idFechaComprav2"></span></div>
+                                        <div><strong>Fecha de Registro:</strong> <span id="idFechaRegistro"></span></div>
+                                        <div><strong>Hora de Registro:</strong> <span id="idHoraRegistro"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i class="fas fa-user"> </i> Proveedor</h4>
+                                        <p class="card-text" id="nombreCliente"></p>
+                                        <hr>
+                                        <div><strong>N° DOCUMENTO:</strong> <span id="docProveedor"></span></div>
+                                        <div><strong>Proveedor:</strong> <span id="idProveedorNombre"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i class="fas fa-credit-card"> </i> Montos S/ </h4>
+                                        <hr>
+                                        <div><strong>Monto Registrado:</strong> <span id="idMontoRegistrado"></span></div>
+                                        <div><strong>Total Por Articulos:</strong> <span id="idMontoTotalArticulos"></span></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="flush-headingOne">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                                <strong><i class="fas fa-cart-arrow-down"></i> Detalle de Compra</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+                                                <div class="card-sub">
+                                                    Revisa tu detalle de compra :)
+                                                </div>
+                                                <div>
+                                                    <ul id="idContenidoUlDetalle">
+
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
             </div>
+
+
 
         </div>
     </div>
@@ -1917,7 +1890,7 @@ include("cabecera.php");
         document.getElementById("docProveedor").innerText = json_datos.proveedor_num_doc;
         document.getElementById("idProveedorNombre").innerText = json_datos.nombre_comercial_proveedor;
         ////#
-        
+
         document.getElementById("idMontoRegistrado").innerText = json_datos.total;
 
         var totalArticulo = 0;
@@ -1938,7 +1911,7 @@ include("cabecera.php");
             if (item.caja === "si") {
                 cadenaCantidades = "Compra por Cajas [" + item['caj-cantidad_cajas'] + " cajas de " + item['caj-unidades_por_caja'] + " unidades c/u] = " + item.cantidad_ + " unidades | [P.U de Caja: " + item['caj-precio_unitario_de_caja'] + ") | <b>Monto Total = S/" + item["sub_total_"] + "</b>";
             } else {
-                cadenaCantidades = "Compra por Unidades [" + item['cantidad_'] + " UNI] = S/ " + item['sub_total_'];
+                cadenaCantidades = "Compra por Unidades [" + item['cantidad_'] + " UNI X <b>"+item["ca-precio_unitario_calculado_articulo"]+" P.U</b>] = <b> S/ " + item['sub_total_']+"</b>";
             }
             let unidades = item.ca === "si" ? "Unidades Exactas" : "cajas"
             tablaFilasDetalleCompra += `

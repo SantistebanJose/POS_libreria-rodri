@@ -69,7 +69,7 @@ include("cabecera.php");
                                                 <h3 class="text-success fw-bold"> <?php echo "S/" . fnListadoCajaChica()[0]["saldo_v2"] ?> </h3>
                                                 <div class="dropdown-secondary">
                                                     <button
-                                                        class="btn btn-icon btn-clean"
+                                                        class="btn btn-sm btn-label-secondary dropdown-toggle btn-round"
                                                         type="button"
                                                         id="dropdownMenuButton"
                                                         data-bs-toggle="dropdown"
@@ -157,6 +157,7 @@ include("cabecera.php");
                                                             </div>
                                                             <div class="text-secondary">Registrado por: <?php echo "<b>" . $datos["responsable"] . "</b>" ?> </div>
                                                             <div>Monto: <strong>S/ <?php echo number_format($datos["monto"], 2) ?> </strong></div>
+
                                                         </li>
                                                 <?php
                                                     }

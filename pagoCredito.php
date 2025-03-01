@@ -8,7 +8,7 @@ include("cabecera.php");
     <div class="page-inner">
         <div class="card text-start">
             <div class="card-body">
-                <h4 class="card-title">Clientes</h4>
+            <h4 class="card-title"><i class="fas fa-users"></i> Clientes</h4>
                 <div class="card-sub">
                     Busca a tu cliente con deuda y, al hacer clic en 'Ver deuda', podrás comenzar a abonar el monto pendiente.
                 </div>
@@ -694,8 +694,7 @@ include("cabecera.php");
                     console.log(articulo);
                     let min = articulo["minutos"] !== null ? articulo["minutos"] : '';
 
-                    let totalCorte = (articulo["minutos"] === null && articulo["costo_por_minuto"] === null) ?
-                        '-' : // Si ambos son null, mostramos una línea
+                    let totalCorte = (articulo["minutos"] === null && articulo["costo_por_minuto"] === null) ? '-' : 
                         (articulo["minutos"] && articulo["costo_por_minuto"]) ?
                         (articulo["costo_por_minuto"] * articulo["minutos"]) : articulo["sub_total"] || '-';
 
@@ -708,10 +707,12 @@ include("cabecera.php");
                         texto = articulo["descripcion"];
                     }
                     texto = articulo["descripcion"];
+                    //articulo["precio_unitario_articulo"]
+                    let varPuArticulo = articulo["precio_unitario_articulo"]===null ? '-' : articulo["precio_unitario_articulo"]
                     nuevaFila.insertCell(0).innerHTML = texto;
                     nuevaFila.insertCell(1).textContent = totalCorteRedondeado;
                     nuevaFila.insertCell(2).textContent = articulo["cantidad"] || '-';
-                    nuevaFila.insertCell(3).textContent = "S/ " + articulo["precio_unitario_articulo"] || '-';
+                    nuevaFila.insertCell(3).textContent = varPuArticulo;
                     nuevaFila.insertCell(4).textContent = "S/ " + articulo["sub_total"] || '-';
                 }
 
