@@ -423,7 +423,7 @@ include("pie.php");
                 "monto_caja_grande": montoCajaGrande,
                 "nota_caja_grande": (notaCajaGrande.length) === 0 ? null : notaCajaGrande,
                 "concepto_id": 1,
-                "concepto_egreso": "INGRESO DE DINERO A CAJA"
+                "concepto_egreso": "INGRESO A CAJA"
             };
             console.log(jsDetalleCajaGrande);
             $.ajax({

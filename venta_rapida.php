@@ -870,7 +870,7 @@ if (isset($_GET['id'])) {
                     <div class="card card-stats card-round">
                         <div class="card-body text-center">
                             <h5 id="label_total_cortes" class="card-title">Total Cortes S/:</h5>
-                            <span id="id_subtotal_cortes" style="font-size: 1.3rem;" aria-labelledby="label_total_cortes">xx.xx</span>
+                            <span id="id_subtotal_cortes" style="font-size: 1.3rem;" aria-labelledby="label_total_cortes">00.00</span>
                         </div>
                     </div>
                 </div>
@@ -878,7 +878,7 @@ if (isset($_GET['id'])) {
                     <div class="card card-stats card-round">
                         <div class="card-body text-center">
                             <h5 id="label_total_articulos" class="card-title">Total Artículos S/:</h5>
-                            <span id="id_subtotal_articulos" style="font-size: 1.3rem;" aria-labelledby="label_total_articulos">xx.xx</span>
+                            <span id="id_subtotal_articulos" style="font-size: 1.3rem;" aria-labelledby="label_total_articulos">00.00</span>
                         </div>
                     </div>
                 </div>
@@ -886,7 +886,7 @@ if (isset($_GET['id'])) {
                     <div class="card card-primary card-stats card-round">
                         <div class="card-body text-center">
                             <h5 id="label_total_general" class="card-title">Total S/:</h5>
-                            <span id="id_subtotal_general" style="font-size: 1.3rem;" aria-labelledby="label_total_general">xx.xx</span>
+                            <span id="id_subtotal_general" style="font-size: 1.3rem;" aria-labelledby="label_total_general">00.00 </span>
                         </div>
                     </div>
                 </div>

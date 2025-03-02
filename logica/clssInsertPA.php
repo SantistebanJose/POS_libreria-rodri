@@ -794,8 +794,14 @@ function fnInsertDetalleCajaGrande($jsDatosDetalleCaja)
         $concepto_id = $data['concepto_id'];
         $concepto_egreso = $data['concepto_egreso'];
         $nota_caja_grande = $data['nota_caja_grande'];
-        $movimiento_caja_v2 = 'EGRESO DE CAJA';
-
+        $movimiento_caja_v2 = "";
+        if($tipo_movimiento === "INGRESO"){
+            $movimiento_caja_v2 = 'INGRESO DE CAJA';
+        }else{
+            $movimiento_caja_v2 = 'EGRESO DE CAJA';
+        }
+        
+        
         $conectar->beginTransaction();
 
 
