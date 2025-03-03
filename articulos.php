@@ -12,7 +12,7 @@ include("cabecera.php");
 
             <div class="card-body">
 
-                
+
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="card-title"><i class="fas fa-chess-queen"> </i> Articulos</h4>
                     <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico"> <i class="fas fa-plus-circle"> </i> Agregar Articulo </button>
@@ -58,6 +58,7 @@ include("cabecera.php");
                                 class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
+                                        <th>ID</th>
                                         <th>Articulo</th>
                                         <th>Categoria</th>
                                         <th>Tipo</th>
@@ -77,6 +78,7 @@ include("cabecera.php");
 
                                     ?>
                                         <tr>
+                                            <td><?php echo $datosArticulo["articulo_id"] ?></td>
                                             <td><?php echo $datosArticulo["articulo"] ?></td>
                                             <td><?php echo $datosArticulo["categoria"] ?? '-'; ?></td>
                                             <td><?php echo $datosArticulo["tipo"] ?? '-'; ?></td>
@@ -385,6 +387,19 @@ include("cabecera.php");
 
                                     <div class="col-sm-6">
                                         <div class="mb-3">
+                                            <label for="" class="form-label"> <strong>Precio Compra</strong></label>
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                name="idRegistrarPrecioCompra"
+                                                id="idRegistrarPrecioCompra"
+                                                aria-describedby="helpId"
+                                                placeholder="00.00" />
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
                                             <label for="" class="form-label"> <strong>Precio Venta</strong></label>
                                             <input
                                                 type="number"
@@ -495,12 +510,14 @@ include("cabecera.php");
                     let stockEscrito = document.getElementById("idRegistrarStock").value.trim();
 
                     // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                    let stock = stockEscrito !== "" && /^\d+$/.test(stockEscrito) ? parseInt(stockEscrito, 10) : 0;
+                    let stock = parseFloat(document.getElementById("idRegistrarStock").value);
 
                     let precioventaEscrito = document.getElementById("idRegistrarStock").value.trim();
 
-                    // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                    let precioventa = precioventaEscrito !== "" && /^\d+$/.test(precioventaEscrito) ? parseFloat(precioventaEscrito, 10) : 0;
+
+
+                    let precio_venta = parseFloat(document.getElementById("idRegistrarPrecioVenta").value);
+                    let precio_compra = parseFloat(document.getElementById("idRegistrarPrecioCompra").value);
 
                     var jsArticulo = {
                         "nombre": document.getElementById("idRegistroNombreArticulo").value,
@@ -510,36 +527,57 @@ include("cabecera.php");
                         "escala_id": escala,
                         "corte": corte,
                         "color": color,
-                        "stock": stock,
-                        "precio_venta": precioventa,
+                        "stock": isNaN(stock) === true ? 0 : stock,
+                        "precio_venta": isNaN(precio_venta) === true ? 0 : precio_venta,
+                        "precio_compra": isNaN(precio_compra) === true ? 0 : precio_compra,
                         "marca": document.getElementById("idRegistroMarca").value
                     };
                     console.log(jsArticulo);
+                    if (categoriaSelect.selectedIndex === 0) {
+                        swal("Ups!, Para registrar un Articulo, debes de Elegir una Categoría 😩", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    } else {
+                        $.ajax({
+                            url: 'logica/clssInsertPA.php',
+                            type: 'POST',
+                            data: {
+                                accion: 'REGISTAR_ARTICULO_COMPLETO',
+                                jsDatosArticulo: JSON.stringify(jsArticulo)
+                            },
+                            success: function(response) {
+                                console.log("Respuesta del servidor PA articulo: ", response);
+                                try {
+                                    var result = JSON.parse(response);
+                                    if (result.estado === true) {
+                                        swal({
+                                            title: "Registrado con Exito!",
+                                            text: result.mensaje,
+                                            icon: "success",
+                                            buttons: false,
+                                            timer: 1500
+                                        }).then(() => {
+                                            location.reload();
 
-                    $.ajax({
-                        url: 'logica/clssInsertPA.php',
-                        type: 'POST',
-                        data: {
-                            accion: 'REGISTAR_ARTICULO_COMPLETO',
-                            jsDatosArticulo: JSON.stringify(jsArticulo)
-                        },
-                        success: function(response) {
-                            console.log("Respuesta del servidor PA articulo: ", response);
-                            try {
-                                var result = JSON.parse(response);
-                                if (result.estado === true) {
-                                    swal({
-                                        title: "Registrado con Exito!",
-                                        text: result.mensaje,
-                                        icon: "success",
-                                        buttons: false,
-                                        timer: 1500
-                                    }).then(() => {
-                                        location.reload();
-
-                                    });;
-                                } else {
-                                    swal("Error", result.mensaje, {
+                                        });;
+                                    } else {
+                                        swal("Error", result.mensaje, {
+                                            icon: "error",
+                                            buttons: {
+                                                confirm: {
+                                                    className: "btn btn-danger",
+                                                },
+                                            },
+                                        });
+                                    }
+                                } catch (e) {
+                                    console.log("Error al parsear el JSON: ", e);
+                                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
                                         icon: "error",
                                         buttons: {
                                             confirm: {
@@ -548,9 +586,10 @@ include("cabecera.php");
                                         },
                                     });
                                 }
-                            } catch (e) {
-                                console.log("Error al parsear el JSON: ", e);
-                                swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            },
+                            error: function(xhr, status, error) {
+                                console.log("Error: " + error);
+                                swal("Error", "Hubo un problema con la solicitud.", {
                                     icon: "error",
                                     buttons: {
                                         confirm: {
@@ -559,20 +598,9 @@ include("cabecera.php");
                                     },
                                 });
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            console.log("Error: " + error);
-                            swal("Error", "Hubo un problema con la solicitud.", {
-                                icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
-                            });
-                        }
-                    });
+                        });
 
+                    }
 
                 } else {
                     swal("Ups!, Debes de ingresar el nombre del Articulo 😩", {
@@ -745,7 +773,7 @@ include("cabecera.php");
 
                             </div>
 
-                               <div class="col-sm-6">
+                            <div class="col-sm-6">
                                 <div class="mb-3">
                                     <label for="" class="form-label"> <strong>Precio Venta</strong></label>
                                     <input
@@ -756,7 +784,6 @@ include("cabecera.php");
                                         aria-describedby="helpId"
                                         placeholder="00.00" />
                                 </div>
-
                             </div>
 
 
@@ -893,15 +920,15 @@ include("cabecera.php");
                 let stockEscrito = parseInt(document.getElementById("idRegistrarStock").value.trim());
 
                 // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                let stock = isNaN(stockEscrito)? 0 : stockEscrito;
+                let stock = isNaN(stockEscrito) ? 0 : stockEscrito;
 
-                let precioventaEscrito = document.getElementById("idRegistrarPrecioVenta").value.trim();
+                
 
                 // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                let precioventa = precioventaEscrito !== "" && /^\d+$/.test(precioventaEscrito) ? parseFloat(precioventaEscrito, 10) : 0;
-
+                let precioventa = parseFloat(document.getElementById("idRegistrarPrecioVenta").value);
+                //console.log(datosArticulo);
                 var jsArticulo = {
-                    "id": datosArticulo.id,
+                    "id": datosArticulo["articulo_id"],
                     "nombre": document.getElementById("idRegistroNombreArticulo").value,
                     "categoria_id": categoria,
                     "tipo_id": tipo,
@@ -910,7 +937,7 @@ include("cabecera.php");
                     "corte": corte,
                     "color": color,
                     "stock": stock,
-                    "precio_venta": precioventa,
+                    "precio_venta": isNaN(precioventa)===true?0:precioventa,
                     "marca": document.getElementById("idRegistroMarca").value
                 };
                 console.log(jsArticulo);

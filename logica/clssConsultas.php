@@ -56,7 +56,14 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result ? $result : []);
             }
             break;
-        //fnGenerarComprobante
+        //EJECUTARETL
+        case 'EJECUTARETL':
+            if (isset($_POST["EJECUTARETL"])) {
+                $cadena = $_POST["EJECUTARETL"];
+                $result = fnEjecutarETL();
+                echo json_encode($result ? $result : []);
+            }
+            break;
         
     }
 }
@@ -210,9 +217,9 @@ function listarArticuloSinview(): array
 {
     $query = "
     SELECT 
-    a.id,a.nombre as articulo,a.precio_venta,a.stock,a.deleted_at,a.corte,a.color,a.marca, d.medida as dimension, t.abreviatura as tipo,e.abreviatura as escala,c.abreviatura as categoria, a.disponibilidad_venta_fh
+    a.id as articulo_id,a.nombre as articulo,a.precio_venta,a.stock,a.deleted_at,a.corte,a.color,a.marca, d.medida as dimension, t.abreviatura as tipo,e.abreviatura as escala,c.abreviatura as categoria, a.disponibilidad_venta_fh
     FROM articulo a
-    JOIN categoria c ON c.id = a.categoria_id AND a.deleted_at is null
+    LEFT JOIN categoria c ON c.id = a.categoria_id AND a.deleted_at is null
     LEFT JOIN dimension d ON d.id = a.dimension_id 
     LEFT JOIN tipo t ON t.id = a.tipo_id
     LEFT JOIN escala e ON e.id = a.escala_id
@@ -251,6 +258,11 @@ function listarVentaReservaCorte(): array
 }
 
 function listarFormaPago(): array
+{
+    $query = "SELECT *,updated_at::date as fecha, TO_CHAR(updated_at, 'HH12:MI:SS AM') as hora FROM forma_pago WHERE deleted_at IS NULL AND unsubscribe IS NULL  order by id";
+    return executeQuery($query);
+}
+function listarFormaPago_v2(): array
 {
     $query = "SELECT *,updated_at::date as fecha, TO_CHAR(updated_at, 'HH12:MI:SS AM') as hora FROM forma_pago WHERE deleted_at IS NULL order by id";
     return executeQuery($query);
@@ -1364,6 +1376,18 @@ function fnVerificarUsarioSession($id): int
     } else {
         // Si el usuario no existe o está eliminado, devolver 0
         return 0;
+    }
+}
+function fnEjecutarETL(): array
+{
+    $query = "SELECT * FROM fn_etl_vysam();";
+    $result = executeQuery($query);
+    if ($result) {
+        
+        return ['respuesta' => $result[0]['fn_etl_vysam']];
+    } else {
+        
+        return ['respuesta' => 'ERROR'];
     }
 }
 

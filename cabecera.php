@@ -194,12 +194,6 @@ if ($flagRespuesta == 0) {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
-                                                <span class="sub-item">Productos</span>
-                                            </a>
-                                        </li>
-
-                                        <li>
                                             <a href="cajaChica.php">
                                                 <span class="sub-item">Caja Chica</span>
                                             </a>
@@ -228,7 +222,7 @@ if ($flagRespuesta == 0) {
                                     <ul class="nav nav-collapse">
                                         <li>
 
-                                            <a href="">
+                                            <a href="etl.php">
                                                 <span class="sub-item">ETL para Power BI</span>
                                             </a>
                                         </li>
