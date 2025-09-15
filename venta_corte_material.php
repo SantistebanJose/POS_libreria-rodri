@@ -107,10 +107,10 @@ if (isset($_GET['id'])) {
             class="card">
 
             <div class="card-body">
-                
+
                 <h4 class="card-title"><i class="fas fa-child"></i> Atender Reservas</h4>
                 <div class="mb-3">
-                    
+
                     <div class="card-sub">
                         Aquí podrás <strong>Atender la reservas realizados por tus clientes.</strong> Si te piden más Articulos, lo puedes seguir agrengando en la parte de abajo.
                     </div>
@@ -176,9 +176,6 @@ if (isset($_GET['id'])) {
                 </div>
 
 
-
-
-
                 <!-- Modal Solo Corte -->
                 <div class="modal fade" id="modalSoloCorte" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -193,134 +190,250 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
 
-
-
-
-
             </div>
 
         </div>
         <hr>
+
         <div class="row " id="panelAdicionarMas" style="display:none;">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-
                         <div class="card-title">Agrega Más Articulos, Impresiones, Escaneos a la Venta</div>
-
-                        <div>
-                            <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link " id="pills-home-tab-nobd" data-bs-toggle="pill" href="#pills-home-nobd" role="tab" aria-controls="pills-home-nobd" aria-selected="true">Materiales y/o Corte</a>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link" id="btnAbrirModalPloteo">Ploteo</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link" id="btnAbrirModalImprimir">Imprimir</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link" id="btnAbrirModalEscaneo">Escaneo</button>
-                                </li>
-                                <li class="nav-item">
-                                    <button class="nav-link" id="btnAbrirModalSolo" role="tab" aria-controls="pills-contact-nobd" aria-selected="false">Solo Corte</button>
-                                </li>
-                            </ul>
-                        </div>
-
                     </div>
 
 
                     <div class="card-body">
+                        <div class="d-flex justify-content-center flex-wrap text">
+                            <ul class="nav d-flex flex-wrap justify-content-center">
+                                <?php
+                                foreach (listarMovimientos() as $datos) {
+                                    $datosJSON = json_encode($datos);
+                                ?>
+                                    <li class="nav-item me-3 mb-2">
+                                        <button class="btn btn-secondary btn-round btn-sm btn-lg-sm" onclick='fn_servicios(<?php echo $datosJSON ?>)'>
+                                            <i class="fas fa-external-link-alt"></i> <?php echo $datos["descripcion"] ?>
+                                        </button>
+                                    </li>
+                                <?php
+                                }
+                                ?>
+                                <li class="nav-item me-3 mb-2">
+                                    <button class="btn btn-secondary btn-round btn-sm btn-lg-sm" id="btnAbrirModalSolo"><i class="fas fa-cut"></i> SOLO CORTE</button>
+                                </li>
+                                <li class="nav-item me-3">
+                                    <button class="btn btn-secondary btn-round btn-sm btn-lg-sm" id="btnAbrirModalSolov2"><i class="fas fa-print"></i> IMPRESIÓN 3D</button>
+                                </li>
+                            </ul>
+                        </div>
 
 
-                        <div>
-                            <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
-                                <div class="tab-pane fade " id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
-                                    <div class="table-filters mb-3">
-                                        <div class="row justify-content-center align-items-center g-2">
-                                            <div class="col-md-3">
-                                                <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
-                                                    <option value="">Filtrar por Categoría</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
-                                                    <option value="">Filtrar por Tipo</option>
+                        <br>
 
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
-                                                    <option value="">Filtrar por Dimensión</option>
-
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <button id="clearFilters" class="btn btn-secondary btn-round btn-round btn-md">
-                                                    <i class="fas fa-broom"></i> Limpiar Filtros
-                                                </button>
-
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-
-                                        <table
-                                            id="multi-filter-select2"
-                                            class="display table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Articulo</th>
-                                                    <th>Categoria</th>
-                                                    <th>Tipo</th>
-                                                    <th>Dimension</th>
-                                                    <th>Stock</th>
-                                                    <th>Precio de Venta</th>
-                                                    <th>Accion</th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-
-                                                <?php
-                                                foreach (listarProductosVenta1() as $datosArticulo) {
-                                                    $datosArticuloJSON = json_encode($datosArticulo);
-
-
-                                                ?>
-                                                    <tr>
-                                                        <td><?php echo $datosArticulo["articulo"] ?></td>
-                                                        <td><?php echo $datosArticulo["categoria"] ?></td>
-                                                        <td><?php echo $datosArticulo["tipo"] ?></td>
-                                                        <td><?php echo $datosArticulo["dimension"] ?></td>
-                                                        <td><?php echo $datosArticulo["stock"] ?></td>
-                                                        <td><?php echo $datosArticulo["precio_venta"] ?></td>
-                                                        <th>
-
-                                                            <div class="mt-2 text-center">
-                                                                <a
-                                                                    name=""
-                                                                    id=""
-                                                                    class="btn btn-secondary btn-round btn-sm"
-
-                                                                    onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                                    role="button"><i class="fas fa-plus"></i></a>
-                                                            </div>
-                                                        </th>
-                                                    </tr>
-                                                <?php
-                                                }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                        <div class="table-filters mb-3">
+                            <div class="row justify-content-center align-items-center g-2">
+                                <div class="col-md-2">
+                                    <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                        <option value="">Filtrar por Categoría</option>
+                                        <!-- Aquí se agregarán las opciones de categorías dinámicamente -->
+                                    </select>
                                 </div>
-
+                                <div class="col-md-2">
+                                    <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                        <option value="">Filtrar por Tipo</option>
+                                        <!-- Aquí se agregarán las opciones de tipo dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                        <option value="">Filtrar por Dimensión</option>
+                                        <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select id="filterColor" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                        <option value="">Filtrar por Color</option>
+                                        <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button id="clearFilters" class="btn btn-warning btn-round btn-md" role="button"><i class="fas fa-broom"></i> Limpiar Filtros</button>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Buscador de texto -->
+                        <div class="d-flex justify-content-center mt-4">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Buscar Articulo..." onkeyup="filterProducts()">
+                        </div>
+
+
+                        <!-- Contenedor para las tarjetas de productos -->
+                        <div class="container mt-4">
+                            <div class="row" id="productoContainer">
+                                <!-- Los productos se generarán dinámicamente aquí -->
+                            </div>
+                        </div>
+
+                        <!-- Paginación -->
+                        <div id="pagination" class="d-flex justify-content-center mt-4">
+                            <button id="prevPage" class="btn btn-secondary btn-round mx-2" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i> Anterior </button>
+                            <button id="nextPage" class="btn btn-secondary btn-round mx-2" onclick="changePage(1)">Siguiente <i class="fas fa-chevron-right"></i></button>
+                        </div>
+
+
+
+
+                        <script>
+                            const products = <?php echo json_encode(listarProductosVenta1()); ?>;
+                            let currentPage = 1;
+                            const itemsPerPage = 6;
+                            let filteredProducts = products; // Productos que se mostrarán después del filtro
+                            const allCategories = [...new Set(products.map(product => product.categoria))]; // Lista única de categorías
+                            const allTypes = [...new Set(products.map(product => product.tipo))]; // Lista única de tipos
+                            const allDimensions = [...new Set(products.map(product => product.dimension))]; // Lista única de dimensiones
+                            const allColores = [...new Set(products.map(product => product.color))]; // Lista única de colores
+
+                            // Función para llenar los selectores de filtro
+                            function populateFilters() {
+                                const categorySelect = document.getElementById('filterCategoria');
+                                const typeSelect = document.getElementById('filterTipo');
+                                const dimensionSelect = document.getElementById('filterDimension');
+                                const colorSelect = document.getElementById('filterColor');
+
+                                allCategories.forEach(category => {
+                                    categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
+                                });
+
+                                allTypes.forEach(type => {
+                                    typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
+                                });
+
+                                allDimensions.forEach(dimension => {
+                                    dimensionSelect.innerHTML += `<option value="${dimension}">${dimension}</option>`;
+                                });
+                                allColores.forEach(color => {
+                                    colorSelect.innerHTML += `<option value="${color}">${color}</option>`;
+                                });
+                            }
+
+                            // Función para renderizar los productos
+                            function renderProducts(productsToDisplay) {
+                                const container = document.getElementById('productoContainer');
+                                container.innerHTML = '';
+                                productsToDisplay.forEach(product => {
+                                    const stock = parseFloat(product.stock);
+                                    const flag_titulo = stock === 0.00 ? product.articulo + " - " + "SIN STOCK" : product.articulo;
+                                    const flag_color = stock === 0.00 ? "#f31832" : "";
+                                    const card = document.createElement('div');
+                                    card.classList.add('col-md-4', 'mb-3');
+                                    card.innerHTML = `
+                                            <div class="card card-post card-round" style="color:${flag_color}">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <div class="info-post ms-2">
+                                                            <p class="username">${flag_titulo}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="separator-solid"></div>
+                                                    <p class="card-category text-info mb-1">
+                                                        ${product.categoria}
+                                                    </p>
+                                                    <div class="card-text"><b>Tipo:</b> ${product.tipo}</div>
+                                                    <div class="card-text"><b>Dimensión:</b> ${product.dimension}</div>
+                                                    <div class="card-text"><b>Color:</b> ${product.color}</div>
+                                                    <div class="card-text"><b>Stock:</b> ${product.stock}</div>
+
+                                                    
+                                                    <div class="separator-solid"></div>
+                                                    <div class="row justify-content-between align-items-center g-2">
+                                                        <div class="col-sm-8" style="font-size:18px"><b>S/${product.precio_venta}</b></div>
+                                                        <div class="col-sm-4 d-flex justify-content-center">
+                                                            <a href="#" class="btn btn-success btn-sm btn-round" onclick='fn_agregar_venta(${JSON.stringify(product)})'>
+                                                                <i class="fas fa-plus"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    container.appendChild(card);
+                                });
+                            }
+
+                            // Función para cambiar la página
+                            function changePage(direction) {
+                                currentPage += direction;
+                                if (currentPage < 1) currentPage = 1;
+                                if (currentPage > totalPages()) currentPage = totalPages();
+                                renderPage();
+                            }
+
+                            // Función para calcular el total de páginas
+                            function totalPages() {
+                                return Math.ceil(filteredProducts.length / itemsPerPage);
+                            }
+
+                            // Función para renderizar la página actual
+                            function renderPage() {
+                                const start = (currentPage - 1) * itemsPerPage;
+                                const end = start + itemsPerPage;
+                                const productsToDisplay = filteredProducts.slice(start, end);
+
+                                renderProducts(productsToDisplay);
+
+                                document.getElementById('prevPage').disabled = currentPage === 1;
+                                document.getElementById('nextPage').disabled = currentPage === totalPages();
+                            }
+
+                            // Función para filtrar los productos por las opciones seleccionadas
+                            function filterProducts() {
+                                const searchText = document.getElementById('searchInput').value.toLowerCase();
+                                const category = document.getElementById('filterCategoria').value;
+                                const type = document.getElementById('filterTipo').value;
+                                const dimension = document.getElementById('filterDimension').value;
+                                const color = document.getElementById('filterColor').value;
+
+                                filteredProducts = products.filter(product => {
+                                    return (
+                                        (category === '' || product.categoria === category) &&
+                                        (type === '' || product.tipo === type) &&
+                                        (dimension === '' || product.dimension === dimension) &&
+                                        (color === '' || product.color === color) &&
+                                        (product.articulo.toLowerCase().includes(searchText) || product.categoria.toLowerCase().includes(searchText) || product.tipo.toLowerCase().includes(searchText))
+                                    );
+                                });
+
+                                currentPage = 1; // Volver a la primera página después de filtrar
+                                renderPage();
+                            }
+
+                            // Función para limpiar los filtros
+                            function clearFilters() {
+                                document.getElementById('filterCategoria').value = '';
+                                document.getElementById('filterTipo').value = '';
+                                document.getElementById('filterDimension').value = '';
+                                document.getElementById('filterColor').value = '';
+                                document.getElementById('searchInput').value = '';
+                                filteredProducts = products;
+                                currentPage = 1;
+                                renderPage();
+                            }
+
+                            // Inicializar los filtros y la página
+                            populateFilters();
+                            renderPage();
+
+                            // Asociar eventos de filtro
+                            document.getElementById('filterCategoria').addEventListener('change', filterProducts);
+                            document.getElementById('filterTipo').addEventListener('change', filterProducts);
+                            document.getElementById('filterDimension').addEventListener('change', filterProducts);
+                            document.getElementById('filterColor').addEventListener('change', filterProducts);
+                            document.getElementById('clearFilters').addEventListener('click', clearFilters);
+                        </script>
+
+
+
 
                     </div>
                 </div>
@@ -446,6 +559,114 @@ if (isset($_GET['id'])) {
     </div>
 
 
+</div>
+<div class=" modal fade" id="modalSoloCorteMaquina2" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="col-12 p-4 bg-light rounded">
+
+                    <h4 class="card-title text-center"><i class="fas fa-print"></i> Máquina de Impresión 3D</h4>
+
+                    <div class="card-sub text-center">
+                        Aqui podras agregar los minutos y el precio del servicio de impresión.
+                    </div>
+                    <div class="mb-4">
+                        <!-- Minutos Corte -->
+                        <div class="text-center" style="flex: 1;">
+
+                            <p class="mb-1"><strong>Minutos impresión</strong></p>
+                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                <button id="btnRestarSoloCortev2" class="btn btn-danger btn-sm btn-round" onclick='fnAumentoOrResta("-")'><i class="fas fa-minus"></i></button>
+                                <input id="cantidad_solocortev2" type="number" class="form-control text-center mx-2" value="10" style="width: 80px; font-size: 1.2rem;" />
+                                <button id="btnSumarSoloCortev2" class="btn btn-success btn-sm btn-round" onclick='fnAumentoOrResta("+")'><i class="fas fa-plus"></i></button>
+
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex justify-content-center">
+                            <button id="btnIncremento05SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(15)">15 Min.</button>
+                            <button id="btnIncremento1SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(30)">30 Min.</button>
+                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(45)">45 Min.</button>
+                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(60)">1 Hor.</button>
+                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(120)">2 Hor.</button>
+                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(180)">3 Hor.</button>
+                        </div>
+                        <div class="card-sub text-center">
+                            Puedes Seleccionar los minutos de manera rápida
+                        </div>
+                        <script>
+                            function fnAumentoOrResta(accion) {
+                                if (accion === "+") {
+                                    var x = parseFloat(document.getElementById("cantidad_solocortev2").value)
+                                    var x = x + 1;
+                                    document.getElementById("cantidad_solocortev2").value = x;
+                                } else if (accion === "-") {
+                                    var x = parseFloat(document.getElementById("cantidad_solocortev2").value)
+                                    var x = x - 1;
+                                    document.getElementById("cantidad_solocortev2").value = x;
+                                }
+
+                            }
+
+                            function fnAumentarMin(dato) {
+                                document.getElementById("cantidad_solocortev2").value = dato;
+                            }
+
+                            function fnAumentaPrecioImpresion(dato) {
+                                const acum = parseFloat(document.getElementById("precioSoloCortev2").value);
+                                document.getElementById("precioSoloCortev2").value = acum + parseFloat(dato);
+                            }
+
+                            function limpiar() {
+                                document.getElementById("precioSoloCortev2").value = 0;
+                            }
+                        </script>
+
+                        <!-- Línea divisoria -->
+                        <hr>
+
+
+                        <!-- Precio Corte -->
+                        <div class="text-center" style="flex: 1;">
+                            <p class="mb-1"><strong>Precio Impresión</strong></p>
+                            <div class="w-100 d-flex justify-content-center mb-1">
+
+                                <input id="precioSoloCortev2" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                <button id="" class="btn btn-danger btn-sm" onclick="limpiar()"><i class="fas fa-broom"></i></button>
+                            </div>
+                            <br>
+                            <div class="d-flex justify-content-center">
+
+
+                                <button id="btnIncremento05SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(0.5)">+0.5</button>
+                                <button id="btnIncremento1SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(1)">+1</button>
+                                <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(2)">+2</button>
+                                <button id="btnIncremento5SoloCortev2" class="btn btn-outline-primary btn-sm btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(5)">+5</button>
+                            </div>
+                        </div>
+                        <!-- Precio Corte -->
+                        <hr>
+                        <div class="text-center">
+                            <p class="mb-1"><strong>Nota</strong></p>
+                            <textarea class="form-control" name="" id="" rows="3" placeholder="Escribe por ejemplo: Maquina de 3D"></textarea>
+
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocortev2"><i class="fas fa-plus-circle"></i> Agregar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Modal Unificado -->
 <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
@@ -614,6 +835,82 @@ if (isset($_GET['id'])) {
                                                     Aquí podrás elegir si realizan pagos Directo.
                                                 </div>
                                             </div>
+                                            <div class="text-center">
+                                                <div class="form-group">
+                                                    <label class="form-label d-block"><strong>Seleccione Tipo de Comprobante</strong></label>
+                                                    <div class="selectgroup selectgroup-secondary selectgroup-pills">
+                                                        <label class="selectgroup-item">
+                                                            <input
+                                                                type="radio"
+                                                                name="icon-input"
+                                                                value="boleta"
+                                                                checked=""
+                                                                class="selectgroup-input"
+                                                                id="boleta" />
+                                                            <span class="selectgroup-button selectgroup-button-icon">Boleta</span>
+                                                        </label>
+                                                        <label class="selectgroup-item">
+                                                            <input
+                                                                type="radio"
+                                                                name="icon-input"
+                                                                value="factura"
+                                                                class="selectgroup-input"
+                                                                id="factura" />
+                                                            <span class="selectgroup-button selectgroup-button-icon">Factura</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div id="facturaInputs" style="display: none;">
+                                                    <div class="card text-start">
+
+                                                        <div class="card-body">
+                                                            <h4 class="card-title" style="font-size: 14px;">Ingresé datos del Ruc para Factura</h4>
+                                                            <div class="row justify-content-center align-items-center g-2">
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="idRucReceptor" class="form-control" placeholder="Ingrese el RUC" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="idRazonSocialReceptor" class="form-control" placeholder="Ingrese la Razón Social" />
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                const boletaRadio = document.getElementById('boleta');
+                                                const facturaRadio = document.getElementById('factura');
+                                                const facturaInputs = document.getElementById('facturaInputs');
+
+
+                                                function toggleFacturaInputs() {
+                                                    if (facturaRadio.checked) {
+                                                        facturaInputs.style.display = 'block';
+
+                                                    } else {
+                                                        facturaInputs.style.display = 'none';
+                                                    }
+                                                }
+
+                                                boletaRadio.addEventListener('change', toggleFacturaInputs);
+                                                facturaRadio.addEventListener('change', toggleFacturaInputs);
+
+                                                toggleFacturaInputs();
+                                            </script>
+
                                             <!--<label for="" class="form-label"><strong>Forma de Pago</strong></label> -->
                                             <div class="text-center">
                                                 <button id="btnAgregarPago" class="btn btn-secondary btn-sm" type="button"> <i class="fas fa-plus"></i> Agregar Monto (S/) Forma de Pago</button>
@@ -978,6 +1275,183 @@ if (isset($_GET['id'])) {
     });
 </script>
 
+<script>
+    function fn_servicios(jsDatos) {
+        let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
+        console.log(jsDatos);
+
+        // Obtener el array de medidas, eliminando los corchetes y separando por coma
+        const medidasArray = jsDatos["medidas"]
+            .slice(1, -1) // Elimina las llaves '{' y '}'
+            .split(','); // Divide por coma (',') para obtener los elementos como array
+
+        console.log(medidasArray);
+
+        let modalContent = `
+        <div class="text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Servicio de ${jsDatos["descripcion"]}</h4>
+                    <div>ID: <span id="id_mov_${jsDatos["descripcion"]}">${jsDatos["id"]}</span></div>
+                    <div class="card-sub">Aquí ingresa lo que mandaron a ${jsDatos["descripcion"]} de manera general</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Cantidad de ${jsDatos["descripcion"]}</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <button id="btn_menos_${jsDatos["descripcion"]}" class="btn btn-danger btn-round me-2">-</button>
+                        <input id="input_cantidad_${jsDatos["descripcion"]}" class="text-center" type="text" value="1" style="width: 50px;height: 40px;" oninput="validarNumero(event)">
+                        <button id="btn_mas_${jsDatos["descripcion"]}" class="btn btn-success btn-round ms-2">+</button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">Dimensión</p>
+                    <div id = "contenedor-medidas" class="selectgroup selectgroup-pills">`;
+        
+                    medidasArray.forEach((elemento) => {
+                        modalContent += `
+                        <label class="selectgroup-item">
+                            <input
+                                type="checkbox"
+                                name="value"
+                                value="${elemento}"
+                                class="selectgroup-input"    
+                            />
+                            <span class="selectgroup-button">${elemento}</span>
+                        </label>
+                    `;
+                    });
+
+        modalContent += `
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <p class="card-text">Monto (S/)</p>
+                    <input type="number" id="monto_${jsDatos["descripcion"]}" class="form-control" placeholder="Monto (S/)">
+                </div>
+
+
+                <div class="card-body">
+                    <p class="card-text">Detalle</p>
+                    <textarea rows="3" cols="30" id="datelle_material_${jsDatos["descripcion"]}" class="form-control" placeholder="Agrega como: Corte por Material Restante"></textarea>
+                </div>
+
+
+                <div class="text-center">
+                    <button class="btn btn-secondary rounded-5" id="btnAgregar${jsDatos["descripcion"]}" role="button">Añadir a la Venta</button>
+                </div>
+
+                <br>
+            </div>
+        </div>
+    `;
+
+
+        document.getElementById('modalContent').innerHTML = modalContent;
+
+
+        setTimeout(() => {
+
+            document.getElementById("btn_mas_" + jsDatos["descripcion"]).addEventListener("click", function() {
+                let cantidad = parseInt(document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value);
+                document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value = cantidad + 1;
+            });
+
+            document.getElementById("btn_menos_" + jsDatos["descripcion"]).addEventListener("click", function() {
+                let cantidad = parseInt(document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value);
+                if (cantidad > 1) {
+                    document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value = cantidad - 1;
+                }
+            });
+
+
+            document.getElementById('btnAgregar' + jsDatos["descripcion"]).addEventListener('click', function() {
+                const cantidad = parseInt(document.getElementById('input_cantidad_' + jsDatos["descripcion"]).value) || 1;
+                const monto = parseFloat(document.getElementById('monto_' + jsDatos["descripcion"]).value) || 0;
+                const detalle_nota = document.getElementById('datelle_material_' + jsDatos["descripcion"]).value;
+                const inputMonto = document.getElementById('monto_' + jsDatos["descripcion"]);
+                const mensajeErrorExistente = document.querySelector('.error-message');
+                if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                inputMonto.classList.remove('error-input');
+                let textoDimensiones = obtenerValoresSeleccionados();
+                let detalle_notaFormato = detalle_nota ? " / " + detalle_nota  : "";
+                console.log("Texto Dimensiones: " + textoDimensiones);
+                // Validar que el monto haya sido ingresado y sea mayor a 0
+                if (isNaN(monto) || monto <= 0) {
+                    // Añadir clase para resaltar el error
+                    inputMonto.classList.add('error-input');
+
+                    // Crear mensaje de error
+                    const mensajeError = document.createElement('div');
+                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                    mensajeError.classList.add('error-message');
+
+                    // Insertar mensaje debajo del input
+                    inputMonto.parentNode.appendChild(mensajeError);
+                    return; // Detener ejecución si el monto no es válido
+                }
+
+                // Si no estamos editando, agregar un nuevo ploteo
+                console.log("Datos CTMRE")
+                console.log(jsDatos)
+                const datos = [{
+                    id: '0', // ID del ploteo
+                    descripcion:textoDimensiones ? jsDatos["descripcion"] + ' (' + textoDimensiones + ') / '+ detalle_nota : jsDatos["descripcion"] + detalle_notaFormato ,
+                    medidas: medidasArray,
+                    cantidad: cantidad,
+                    monto: '-', // Monto
+                    subtotal: monto, // Subtotal
+                    articulo: textoDimensiones ? jsDatos["descripcion"] + ' (' + textoDimensiones + ') / '+ detalle_nota : jsDatos["descripcion"] + detalle_notaFormato ,
+                    idmovimiento: jsDatos["id"],
+                    dimension: textoDimensiones,
+                    nota_archivo: textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones ? ' (' + textoDimensiones + ') / '+ detalle_nota : jsDatos["descripcion"] + detalle_notaFormato 
+                }];
+                console.log(datos)
+
+                const data = datos[0];
+                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+                try {
+
+                    const response = fn_insert_movimiento(venta_id_lbl, data["idmovimiento"], data["cantidad"], data["nota_archivo"], data["subtotal"]);
+                    console.log("Movimiento insertado con éxito:", response);
+
+
+                    document.getElementById('input_cantidad_' + jsDatos["descripcion"]).value = 0; // Reset cantidad
+                    document.getElementById('monto_' + jsDatos["descripcion"]).value = ''; // Reset monto
+                    // Cerrar modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                    if (modal) modal.hide();
+
+
+                } catch (error) {
+                    // Manejar el error
+                    console.error("Error al insertar movimiento:", error.message);
+                }
+
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+                showNotification("success");
+            });
+
+        }, 0); // Usar setTimeout para asegurar que el DOM esté listo
+
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+        modal.show();
+    }
+</script>
+<script>
+    function obtenerValoresSeleccionados() {
+        let seleccionados = [];
+        document.querySelectorAll('#contenedor-medidas .selectgroup-input:checked').forEach((checkbox) => {
+            seleccionados.push(checkbox.value);
+        });
+        return seleccionados.join(", "); // Convierte el array en un string separado por comas
+    }
+</script>
+
 <!--FRANCO -->
 <script>
     function validarNumero(event) {
@@ -1132,6 +1606,16 @@ if (isset($_GET['id'])) {
 <!-- FRANCO -->
 <script>
     function fn_pagar_directo() {
+
+        const radiosFormaPago = document.querySelectorAll('input[name="icon-input"]');
+        //
+
+        let radioSeleccionado;
+        radiosFormaPago.forEach(radio => {
+            if (radio.checked) {
+                radioSeleccionado = radio.value;
+            }
+        });
         var datosSerializados = $('#form-pago-directo').serializeArray();
 
         console.log(datosSerializados); // Ver los datos serializados como un array de objetos
@@ -1183,7 +1667,14 @@ if (isset($_GET['id'])) {
                 monto = null;
             }
         };
+        var js_detalles_receptor_factura;
+        js_detalles_receptor_factura = {
+            "ruc": document.getElementById("idRucReceptor").value,
+            "razon_social": document.getElementById("idRazonSocialReceptor").value
+        }
         var js_venta = {
+            "tipo_comprobante": radioSeleccionado,
+            "js_detalles_receptor_factura": js_detalles_receptor_factura,
             "venta_id": idVenta,
             "atencion_final_usuario": idAtencionFinal,
             "numUpdateTelefonoPersona": numUpdateTelefonoPersona,
@@ -1191,7 +1682,8 @@ if (isset($_GET['id'])) {
             "monto_venta_final": montoFinal,
             "js_detalle_pagos": js_detalle_pago
         };
-
+        console.log("Datos de la venta")
+        console.log(js_venta)
         var js_for_pago = {
             "venta_id": idVenta,
             "monto_original": montoOriginal,
@@ -1199,7 +1691,23 @@ if (isset($_GET['id'])) {
             "comentario": ""
         };
         //monto_forma_pago
-        if (js_detalle_pago.length === 0) {
+        
+
+        console.log("js_detalles_receptor_factura: " + js_detalles_receptor_factura)
+        console.log(js_detalles_receptor_factura)
+        console.log(radioSeleccionado)
+        //
+        if (radioSeleccionado === "factura" && (document.getElementById("idRucReceptor").value).trim()==="") {
+            console.log("ando aquiii")
+            swal("Ups!, Falta emitir una FACTURA debes de ingresar el Ruc y Razon Social","Agrega los datos correspondientes", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        }else if (js_detalle_pago.length === 0) {
             swal("Ups!, Falta Agregar los monto de acuerdo a forma de Pago", "Agrega los montos :)", {
                 icon: "error",
                 buttons: {
@@ -1256,7 +1764,8 @@ if (isset($_GET['id'])) {
                                 buttons: false,
                                 timer: 1500
                             }).then(() => {
-                                window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(idVenta), "_blank");
+                                //window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(idVenta), "_blank");
+                                window.open("ticket.php?id=" + parseInt(idVenta), "_blank");
                                 location.reload();
                             });;
                         } else {
@@ -1352,6 +1861,7 @@ if (isset($_GET['id'])) {
             js_detalle_deuda = null;
         }
 
+
         var js_venta = {
             "venta_id": idVenta,
             "atencion_final_usuario": idAtencionFinal,
@@ -1383,7 +1893,7 @@ if (isset($_GET['id'])) {
                             buttons: false,
                             timer: 1500
                         }).then(() => {
-                            window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(idVenta), "_blank");
+                            window.open("ticket.php?id=" + parseInt(idVenta), "_blank");
                             location.reload();
                         });;
                     } else {
@@ -1442,7 +1952,7 @@ if (isset($_GET['id'])) {
             // Generar el contenido dinámico, incluyendo el botón "Agregar"
             contenidoCorte.innerHTML = `
                 <div class="col-12  bg-light rounded">
- <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
+                    <h4 class="card-title text-center"><i class="fas fa-cut"></i> Opciones de Corte</h4>
 
                                     <div class="card-sub text-center">
                                 Aqui podras agregar los minutos y el precio del servicio solo corte.
@@ -1499,7 +2009,127 @@ if (isset($_GET['id'])) {
             // Asignar eventos a los elementos generados dinámicamente
             asignarEventosSoloCorte();
         });
+
+
+
+        document.getElementById('btnAbrirModalSolov2').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del botón
+            let navLinks = document.querySelectorAll(".nav-link");
+
+            // Remover la clase 'active' de todas las pestañas
+            navLinks.forEach(function(link) {
+                link.classList.remove("active");
+            });
+
+            // Desactivar todos los panes (contenido de las pestañas)
+            let tabPanes = document.querySelectorAll(".tab-pane");
+            tabPanes.forEach(function(pane) {
+                pane.classList.remove("show", "active");
+            });
+            // Mostrar el modal de Solo Corte
+            const modalElement = document.getElementById('modalSoloCorteMaquina2');
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: 'static', // Evita que se cierre al hacer clic fuera
+                keyboard: false // Evita que se cierre con la tecla 'Esc'
+            });
+
+
+            // Seleccionar el botón "Agregar"
+            const btn_agregar = document.getElementById('btn_agregar_solocortev2');
+            btn_agregar.textContent = 'Agregar';
+
+            btn_agregar.replaceWith(btn_agregar.cloneNode(true));
+
+            // Seleccionar nuevamente el botón clonado
+            const nuevoBtnAgregar = document.getElementById('btn_agregar_solocortev2');
+
+            // Volver a agregar el evento para agregar datos
+            nuevoBtnAgregar.addEventListener("click", fn_agregar_impresion_a_tabla);
+
+            // Limpiar los campos del formulario
+
+            modal.show(); // Muestra el modal
+        });
+
+        async function fn_agregar_impresion_a_tabla() {
+            console.log("Holass")
+            const cantidadMinutos = parseInt(document.getElementById('cantidad_solocortev2').value) || 0;
+            const tarifa = parseFloat(document.getElementById('precioSoloCortev2').value) || 0;
+
+            const inputMonto = document.getElementById('cantidad_solocortev2');
+            const divContainer = inputMonto.closest('.d-flex');
+            const mensajeErrorExistente = document.querySelector('.error-message');
+            if (mensajeErrorExistente) mensajeErrorExistente.remove();
+            inputMonto.classList.remove('error-input');
+
+            if (isNaN(cantidadMinutos) || cantidadMinutos <= 0) {
+                inputMonto.classList.add('error-input');
+
+                const mensajeError =
+                    `
+                    <div class="error-message text-center">
+                        Por favor, ingresa un monto válido mayor a 0.
+                    </div>
+                `;
+
+                divContainer.insertAdjacentHTML('afterend', mensajeError);
+
+                return;
+            }
+
+            const datosImpresion3D = {
+                id: '0',
+                minutos: cantidadMinutos,
+                costo_por_minuto: tarifa,
+                costo: cantidadMinutos * tarifa,
+                articulo: 'MAQUINA DE IMPRESION  3D',
+                id_movimiento: 15,
+                precio_venta: null,
+                cantidad: null,
+            };
+
+            console.log(datosImpresion3D);
+            //fn_solo_corte_tabla(datosImpresion3D);
+            document.getElementById('cantidad_solocortev2').value = '10';
+            document.getElementById('precioSoloCortev2').value = '1.5'; // Valor inicial
+
+            const modalElement = document.getElementById('modalSoloCorteMaquina2');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+            showNotification("success");
+
+
+            const venta_id_lbl = document.getElementById("idVentaReserva").textContent;
+
+            try {
+                // Llamar a la función para insertar el movimiento
+                const response = await fn_adicionar_articulo(venta_id_lbl, datosImpresion3D);
+                console.log("Movimiento insertado con éxito:", response);
+
+                // Resetear valores
+                document.getElementById("cantidad_solocortev2").value = 10;
+                document.getElementById("precioSoloCortev2").value = 1.5;
+
+
+                const modalElement = document.getElementById("modalSoloCorte");
+                const modal = bootstrap.Modal.getInstance(modalElement);
+
+                fn_consultarVenta([{
+                    venta_id: venta_id_lbl
+                }]);
+
+                modal.hide();
+
+
+
+            } catch (error) {
+                console.error("Error al insertar movimiento:", error.message);
+            }
+
+
+        }
     });
+
 
     // Función para asignar eventos a los botones dinámicos
     function asignarEventosSoloCorte() {
@@ -1725,6 +2355,212 @@ if (isset($_GET['id'])) {
         });
     }
 
+    //es datosMoviminto, solo pa no malograr la logica de mrd de adriann
+    function fn_editar_modal(datosArticulo) {
+        var medidas = ["A1", "A2", "A3", "A4", "A5", "A6"];
+        console.log(datosArticulo);
+
+        let modalContent = `
+        <div class="text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Servicio de ${datosArticulo["articulo_nombre"]}</h4>
+                    <div>ID: <span id="id_mov_editar_${datosArticulo["movimiento_id"]}">${datosArticulo["movimiento_id"]}</span></div>
+                    <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Cantidad de Ploteo</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <button id="btn_menos_editar_${datosArticulo["movimiento_id"]}" class="btn btn-danger btn-round me-2">-</button>
+                        <input id="input_cantidad_editar_${datosArticulo["movimiento_id"]}" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
+                        <button id="btn_mas_editar_${datosArticulo["movimiento_id"]}" class="btn btn-success btn-round ms-2">+</button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">Dimensión</p>
+                    <div class="selectgroup selectgroup-pills">
+    `;
+
+        medidas.forEach((x) => {
+            modalContent += `
+            <label id = "contenedor-medidas-update" class="selectgroup-item">
+                <input type="checkbox" name="value" value="${x}" class="selectgroup-input" />
+                <span class="selectgroup-button">${x}</span>
+            </label>`;
+        });
+
+        modalContent += `
+                    </div>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="card-text">Monto (S/)</p>
+                        <input type="number" id="monto_peditar${datosArticulo["movimiento_id"]}" class="form-control" value="${datosArticulo["sub_total"]}">
+                    </div>
+                    <div class="text-center mb-3">
+                        <button class="btn btn-secondary rounded-5" id="btnAgregarploteoEditar" role="button">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        if (datosArticulo["nota_archivo"] && datosArticulo["nota_archivo"] !== 'Sin nota') {
+            let dimensionesSeleccionadas = datosArticulo["nota_archivo"].split(", "); // Convertir string a array si es necesario
+            document.querySelectorAll('.selectgroup-input').forEach((checkbox) => {
+                if (dimensionesSeleccionadas.includes(checkbox.value)) {
+                    checkbox.checked = true; // Marcar el checkbox si su valor está en la lista
+                }
+            });
+        }
+
+
+
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+        modal.show();
+
+        // Esperar a que el modal sea completamente visible
+        document.getElementById('modalGenerico').addEventListener('shown.bs.modal', () => {
+            // Ahora que el modal está completamente cargado, agregar el eventListener
+            document.getElementById('btnAgregarploteoEditar').addEventListener('click', async function() {
+                const cantidadPloteos = parseInt(document.getElementById(`input_cantidad_editar_${datosArticulo["movimiento_id"]}`).value) || 1;
+                const montoPloteo = parseFloat(document.getElementById(`monto_peditar${datosArticulo["movimiento_id"]}`).value) || 0;
+                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+
+                let dimensionesSeleccionadas = [];
+                document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+                    dimensionesSeleccionadas.push(checkbox.value);
+                });
+                let textoDimensiones = dimensionesSeleccionadas.join(", ");
+
+                datosArticulo["cantidad"] = cantidadPloteos;
+                datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
+                datosArticulo["sub_total"] = montoPloteo.toFixed(2);
+
+                // Limpiar los campos
+                document.getElementById(`input_cantidad_editar_${datosArticulo["movimiento_id"]}`).value = 1;
+                document.getElementById(`monto_editar_${datosArticulo["movimiento_id"]}`).value = 0;
+
+                const response = await fn_editar_movimiento(datosArticulo);
+                console.log(response);
+
+                fn_consultarVenta([{
+                    venta_id: venta_id_lbl
+                }]);
+
+                // Resetear el botón y quitar la referencia al ploteo editado
+                const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modalInstance) modalInstance.hide(); // Cierra el modal si existe
+            });
+        });
+    }
+
+    function mostrarModalEditar(datosArticulo) {
+        // Construcción del contenido del modal
+        document.getElementById('modalContent').innerHTML = `
+        <div class="text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Servicio de Impresión</h4>
+                    <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
+                    <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Cantidad a Imprimir</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                    <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
+                    <input id="input_numero_impresionEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
+                    <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">Dimensión</p>
+                    <div class="selectgroup selectgroup-pills">
+                        ${['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'].map(dim => `
+                            <label class="selectgroup-item">
+                                <input type="checkbox" name="value" value="${dim}" class="selectgroup-input"/>
+                                <span class="selectgroup-button">${dim}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">Monto (S/)</p>
+                    <input type="number" id="monto_impresionEditar" class="form-control" value="${datosArticulo["sub_total"]}">
+                </div>
+                <div class="text-center mb-3">
+                    <button class="btn btn-secondary rounded-5" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+        // Lógica para el botón menos
+        document.getElementById('btn_menos_impresionEditar').addEventListener('click', () => {
+            let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+            if (cantidad > 1) document.getElementById('input_numero_impresionEditar').value = cantidad - 1;
+        });
+
+        // Lógica para el botón más
+        document.getElementById('btn_mas_impresionEditar').addEventListener('click', () => {
+            let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
+            document.getElementById('input_numero_impresionEditar').value = cantidad + 1;
+        });
+
+        // Marcar checkboxes según dimensiones seleccionadas en datosArticulo
+        if (datosArticulo["nota_archivo"] && datosArticulo["nota_archivo"] !== 'Sin nota') {
+            let dimensionesSeleccionadas = datosArticulo["nota_archivo"].split(", ");
+            document.querySelectorAll('.selectgroup-input').forEach((checkbox) => {
+                if (dimensionesSeleccionadas.includes(checkbox.value)) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+        modal.show();
+
+        // Lógica para el botón "Actualizar"
+        document.getElementById('btnAgregarimpresionEditar').addEventListener('click', async function() {
+            const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
+            const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
+            let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
+
+            let dimensionesSeleccionadas = [];
+            document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+                dimensionesSeleccionadas.push(checkbox.value);
+            });
+            let textoDimensiones = dimensionesSeleccionadas.join(", ");
+
+            // Actualizar datosArticulo
+            datosArticulo["cantidad"] = cantidadImpresion;
+            datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
+            datosArticulo["sub_total"] = montoImpresion.toFixed(2);
+
+            // Limpiar los campos
+            document.getElementById('input_numero_impresionEditar').value = 1;
+            document.getElementById('monto_impresionEditar').value = 0;
+
+            // Llamar a la función que guarda los cambios
+            const response = await fn_editar_movimiento(datosArticulo);
+            console.log(response);
+
+            // Consultar la venta actualizada
+            fn_consultarVenta([{
+                venta_id: venta_id_lbl
+            }]);
+
+            // Cerrar el modal
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+            if (modalInstance) modalInstance.hide();
+        });
+    }
+
+
     function fn_agregar_articulo_tabla(datosArticulo) {
         var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
         //tabla.innerHTML = "";
@@ -1752,7 +2588,7 @@ if (isset($_GET['id'])) {
         botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
 
         // Agregar el botón de editar a la celda de acciones
-        accionCell.appendChild(botonEditar);
+        //accionCell.appendChild(botonEditar);
 
         switch (datosArticulo["movimiento_id"]) {
             case 1:
@@ -1942,396 +2778,50 @@ if (isset($_GET['id'])) {
                 });
 
                 break;
-            case 2:
+
+            case 15:
                 botonEditar.addEventListener("click", () => {
-                    document.getElementById('modalContent').innerHTML = `
-                        <div class="text-center">
-                            <div class="card">
-                                
-                                <div class="card-body">
-                                    <h4 class="card-title">Servicio de Ploteo</h4>
-                                    <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                                    <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">Cantidad de Ploteo</p>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                    <button id="btn_menos_ploteoEditar" class="btn btn-danger btn-round me-2">-</button>
-                                    <input id="input_cantidad_ploteoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                                    <button id="btn_mas_ploteoEditar" class="btn btn-success btn-round ms-2">+</button>
-                                    </div>
-                                </div>
-
-                                <div class="card-body">
-                                    <p class="card-text">Dimensión</p>
-                                    <div class="selectgroup selectgroup-pills" >
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A0"
-                                                class="selectgroup-input"
-                                            
-                                            />
-                                            <span class="selectgroup-button">A0</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A1"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A1</span>
-                                            </label>
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A2"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A2</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A3"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A3</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A4"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A4</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A5"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A5</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A6"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A6</span>
-                                        </label>
-                                    
-                                    </div>
-                                </div>
-
-                                <div class="card-body">
-                                    <p class="card-text">Monto (S/)</p>
-                                    <input type="number" id="monto_ploteoeditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                                </div>
-                                <div class="text-center mb-3">
-                                    <button class="btn btn-secondary rounded-5" id="btnAgregarploteoEditar" role="button">Actualizar</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    if (datosArticulo["nota_archivo"] && datosArticulo["nota_archivo"] !== 'Sin nota') {
-                        let dimensionesSeleccionadas = datosArticulo["nota_archivo"].split(", "); // Convertir string a array si es necesario
-                        document.querySelectorAll('.selectgroup-input').forEach((checkbox) => {
-                            if (dimensionesSeleccionadas.includes(checkbox.value)) {
-                                checkbox.checked = true; // Marcar el checkbox si su valor está en la lista
-                            }
-                        });
-                    }
-
-                    document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
-                        if (cantidad > 1) document.getElementById('input_cantidad_ploteoEditar').value = cantidad - 1;
+                    //modalSoloCorteMaquina2 
+                    const modalElement = document.getElementById('modalSoloCorteMaquina2');
+                    const modal = new bootstrap.Modal(modalElement, {
+                        backdrop: 'static',
+                        keyboard: false
                     });
 
-                    document.getElementById('btn_mas_ploteoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
-                        document.getElementById('input_cantidad_ploteoEditar').value = cantidad + 1;
-                    });
+                    document.getElementById("cantidad_solocortev2").value = parseInt(datosArticulo["minutos"]);
+                    document.getElementById("precioSoloCortev2").value = parseFloat(datosArticulo["costo_por_minuto"]);
 
-                    // Mostrar el modal
-                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-                    modal.show();
+                    //////////////////////
 
-                    document.getElementById('btnAgregarploteoEditar').addEventListener('click', async function() {
-                        const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
-                        const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
+                    let cant_solo_corte_v2 = document.getElementById("cantidad_solocortev2").value;
+                    let precio_corte_v2 = document.getElementById("precioSoloCortev2").value;
+
+                    console.log(datosArticulo);
+                    const btnAgregar = document.getElementById("btn_agregar_solocortev2");
+                    btnAgregar.textContent = 'Actualizar';
+
+                    btnAgregar.addEventListener("click", async function() {
+                        const nuevosMinutos = parseInt(document.getElementById("cantidad_solocortev2").value) || 10;
+                        const nuevoPrecio = parseFloat(document.getElementById("precioSoloCortev2").value) || 1.5;
+
+                        datosArticulo["minutos"] = parseInt(document.getElementById("cantidad_solocortev2").value) || 0;
+                        datosArticulo["costo_por_minuto"] = parseFloat(document.getElementById("precioSoloCortev2").value) || 1.5;
+                        datosArticulo["sub_total"] = datosArticulo["minutos"] * datosArticulo["costo_por_minuto"];
                         let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
 
-                        let dimensionesSeleccionadas = [];
-                        document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
-                            dimensionesSeleccionadas.push(checkbox.value);
-                        });
-                        let textoDimensiones = dimensionesSeleccionadas.join(", ");
-
-                        datosArticulo["cantidad"] = cantidadPloteos;
-                        datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
-                        datosArticulo["sub_total"] = montoPloteo.toFixed(2);
-                        // Limpiar los campos
-                        document.getElementById('input_cantidad_ploteoEditar').value = 1;
-                        document.getElementById('monto_ploteoeditar').value = 0;
-
-                        const response = await fn_editar_movimiento(datosArticulo);
+                        const response = await fn_editar_articulo(datosArticulo);
                         console.log(response);
-
-
                         fn_consultarVenta([{
                             venta_id: venta_id_lbl
                         }]);
+                        modal.hide();
+                        // Volver a colocar el botón "Agregar" y restaurar el evento de agregar
 
-                        // Resetear el botón y quitar la referencia al ploteo editado
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                        if (modal) modal.hide(); // Cierra el modal si existe
                     });
-
-                });
-
-                break;
-            case 3:
-                botonEditar.addEventListener("click", () => {
-                    document.getElementById('modalContent').innerHTML = `
-                        <div class="text-center">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Servicio de Impresión</h4>
-                                    <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                                    <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">Cantidad a Imprimir</p>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                    <button id="btn_menos_impresionEditar" class="btn btn-danger btn-round me-2">-</button>
-                                    <input id="input_numero_impresionEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                                    <button id="btn_mas_impresionEditar" class="btn btn-success btn-round ms-2">+</button>
-                                    </div>
-                                </div>
-
-                                <div class="card-body">
-                                    <p class="card-text">Dimensión</p>
-                                    <div class="selectgroup selectgroup-pills" >
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A0"
-                                                class="selectgroup-input"
-                                            
-                                            />
-                                            <span class="selectgroup-button">A0</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A1"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A1</span>
-                                            </label>
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A2"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A2</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A3"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A3</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A4"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A4</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A5"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A5</span>
-                                        </label>
-
-                                        <label class="selectgroup-item">
-                                            <input
-                                                type="checkbox"
-                                                name="value"
-                                                value="A6"
-                                                class="selectgroup-input"
-                                            />
-                                            <span class="selectgroup-button">A6</span>
-                                        </label>
-                                    
-                                    </div>
-                                </div>
-
-                                <div class="card-body">
-                                    <p class="card-text">Monto (S/)</p>
-                                    <input type="number" id="monto_impresionEditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                                </div>
-                                <div class="text-center mb-3">
-                                    <button class="btn btn-secondary rounded-5" id="btnAgregarimpresionEditar" role="button">Actualizar</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    document.getElementById('btn_menos_impresionEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
-                        if (cantidad > 1) document.getElementById('input_numero_impresionEditar').value = cantidad - 1;
-                    });
-
-                    document.getElementById('btn_mas_impresionEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_impresionEditar').value);
-                        document.getElementById('input_numero_impresionEditar').value = cantidad + 1;
-                    });
-
-                    if (datosArticulo["nota_archivo"] && datosArticulo["nota_archivo"] !== 'Sin nota') {
-                        let dimensionesSeleccionadas = datosArticulo["nota_archivo"].split(", "); // Convertir string a array si es necesario
-                        document.querySelectorAll('.selectgroup-input').forEach((checkbox) => {
-                            if (dimensionesSeleccionadas.includes(checkbox.value)) {
-                                checkbox.checked = true; // Marcar el checkbox si su valor está en la lista
-                            }
-                        });
-                    }
-
-                    // Mostrar el modal
-                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
                     modal.show();
 
-                    document.getElementById('btnAgregarimpresionEditar').addEventListener('click', async function() {
-                        const cantidadImpresion = parseInt(document.getElementById('input_numero_impresionEditar').value) || 1;
-                        const montoImpresion = parseFloat(document.getElementById('monto_impresionEditar').value) || 0;
-                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-                        let dimensionesSeleccionadas = [];
-                        document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
-                            dimensionesSeleccionadas.push(checkbox.value);
-                        });
-                        let textoDimensiones = dimensionesSeleccionadas.join(", ");
-
-                        datosArticulo["cantidad"] = cantidadImpresion;
-                        datosArticulo["nota_archivo"] = textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones;
-                        datosArticulo["sub_total"] = montoImpresion.toFixed(2);
-
-                        // Limpiar los campos
-                        document.getElementById('input_numero_impresionEditar').value = 1; // Reset cantidad
-                        document.getElementById('monto_impresionEditar').value = 0; // Reset monto
-
-                        const response = await fn_editar_movimiento(datosArticulo);
-                        console.log(response);
-
-                        fn_consultarVenta([{
-                            venta_id: venta_id_lbl
-                        }]);
-
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                        if (modal) modal.hide(); // Cierra el modal si existe
-
-                    });
 
                 });
-                break;
-            case 5:
-                botonEditar.addEventListener("click", () => {
-
-                    document.getElementById('modalContent').innerHTML = `
-                        <div class="text-center">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Servicio de Escaneo</h4>
-                                    <div>ID: <span id="id_mov_escaneoEditar">${datosArticulo["articulo_nombre"]}</span></div>
-                                    <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">Cantidad de Escaneo</p>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                    <button id="btn_menos_escaneoEditar" class="btn btn-danger btn-round me-2">-</button>
-                                    <input id="input_numero_escaneoEditar" class="text-center" type="text" value="${datosArticulo["cantidad"]}" style="width: 40px;" oninput="validarNumero(event)">
-                                    <button id="btn_mas_escaneoEditar" class="btn btn-success btn-round ms-2">+</button>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">Monto (S/)</p>
-                                    <input type="number" id="monto_escaneoEditar" class="form-control" value="${datosArticulo["sub_total"]}">
-                                </div>
-                                <div class="text-center mb-3">
-                                    <button class="btn btn-secondary rounded-5" id="btnAgregarescaneoEditar" role="button">Actualizar</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    document.getElementById('btn_menos_escaneoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
-                        if (cantidad > 1) document.getElementById('input_numero_escaneoEditar').value = cantidad - 1;
-                    });
-
-                    document.getElementById('btn_mas_escaneoEditar').addEventListener('click', () => {
-                        let cantidad = parseInt(document.getElementById('input_numero_escaneoEditar').value);
-                        document.getElementById('input_numero_escaneoEditar').value = cantidad + 1;
-                    });
-
-                    // Mostrar el modal
-                    const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-                    modal.show();
-
-                    document.getElementById('btnAgregarescaneoEditar').addEventListener('click', async function() {
-                        const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneoEditar').value) || 1;
-                        const montoEscaneo = parseFloat(document.getElementById('monto_escaneoEditar').value) || 0;
-                        let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-                        datosArticulo["cantidad"] = cantidadEscaneos;
-                        datosArticulo["sub_total"] = montoEscaneo.toFixed(2);
-
-                        // Limpiar los campos
-                        document.getElementById('input_numero_escaneoEditar').value = 1; // Reset cantidad
-                        document.getElementById('monto_escaneoEditar').value = 0; // Reset monto
-
-                        const response = await fn_editar_movimiento(datosArticulo);
-                        console.log(response);
-
-                        fn_consultarVenta([{
-                            venta_id: venta_id_lbl
-                        }]);
-
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                        if (modal) modal.hide(); // Cierra el modal si existe
-
-                    });
-                });
-
                 break;
             case 6:
                 botonEditar.addEventListener("click", () => {
@@ -2471,6 +2961,13 @@ if (isset($_GET['id'])) {
                 });
                 break;
             default:
+
+                botonEditar.addEventListener("click", () => {
+                    //fn_editar_modal(datosArticulo);
+                    mostrarModalEditar(datosArticulo);
+                });
+
+
                 break;
         }
 
@@ -2618,9 +3115,9 @@ if (isset($_GET['id'])) {
                 inputCantidad.value++;
                 actualizarVisibilidadCorte(datosArticulo);
             }
-          
+
             // Actualizar la visibilidad de la sección de corte
-           
+
         });
 
         document.getElementById('btnRestarCorte').addEventListener('click', function() {
@@ -2630,14 +3127,14 @@ if (isset($_GET['id'])) {
             }
         });
 
-        document.getElementById('btnSumarCorte').addEventListener('click', function() {
-            let cantidadCorte = document.getElementById('cantidadCorte');
-            if (cantidadCorte == 0) {
+        document.getElementById('btnSumarCorte').onclick = () => {
+            let corte = parseInt(cantidadCorte.value, 10);
+            if (corte == 0) {
                 cantidadCorte.value = 10;
             } else {
-                cantidadCorte.value++;
+                cantidadCorte.value = corte + 1;
             }
-        });
+        };
 
         // Lógica para los botones de incremento de precio de corte
         document.getElementById('btnIncremento05').addEventListener('click', function() {
@@ -2675,7 +3172,7 @@ if (isset($_GET['id'])) {
                 });
                 return; // Detener ejecución
             }
-            
+
             try {
                 const inputCantidad = document.getElementById('inputCantidad');
 
@@ -2733,538 +3230,7 @@ if (isset($_GET['id'])) {
     }
 </script>
 
-<!--Ploteo-->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
-        document.getElementById('btnAbrirModalPloteo').addEventListener('click', function() {
-            document.getElementById('modalContent').innerHTML = `
-                <div class="text-center">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Ploteo</h4>
-                            <div>ID: <span id="id_mov_escaneo">2</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Ploteo</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad de Ploteo</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <button id="btn_menos_ploteo" class="btn btn-danger btn-round me-2">-</button>
-                                <input id="input_cantidad_ploteo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                <button id="btn_mas_ploteo" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
 
-                        <div class="card-body">
-                            <p class="card-text">Dimensión</p>
-                            <div class="selectgroup selectgroup-pills" >
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A0"
-                                        class="selectgroup-input"
-                                    
-                                    />
-                                    <span class="selectgroup-button">A0</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A1"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A1</span>
-                                    </label>
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A2"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A2</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A3"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A3</span>
-                                </label>
-
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A4"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A4</span>
-                                </label>
-
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A5"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A5</span>
-                                </label>
-
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A6"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A6</span>
-                                </label>
-                               
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_ploteo" class="form-control" placeholder="Monto (S/)">
-                        </div>
-                        <div class="text-center mb-3">
-                            <button class="btn btn-secondary rounded-5" id="btnAgregarPloteo" role="button">Añadir a la Venta</button>
-                        </div>
-                        <br>
-                    </div>
-                </div>
-            `;
-
-            // 1. Manejar Incremento y Decremento de Ploteos
-            document.getElementById("btn_mas_ploteo").addEventListener("click", function() {
-                let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
-                document.getElementById("input_cantidad_ploteo").value = cantidad + 1;
-            });
-
-            document.getElementById("btn_menos_ploteo").addEventListener("click", function() {
-                let cantidad = parseInt(document.getElementById("input_cantidad_ploteo").value);
-                if (cantidad > 1) {
-                    document.getElementById("input_cantidad_ploteo").value = cantidad - 1;
-                }
-            });
-
-            // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarPloteo').addEventListener('click', async function() {
-                const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteo').value) || 1;
-                const montoPloteo = parseFloat(document.getElementById('monto_ploteo').value) || 0;
-
-                const inputMonto = document.getElementById('monto_ploteo');
-                const mensajeErrorExistente = document.querySelector('.error-message');
-                if (mensajeErrorExistente) mensajeErrorExistente.remove();
-                inputMonto.classList.remove('error-input');
-
-                let dimensionesSeleccionadas = [];
-                document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
-                    dimensionesSeleccionadas.push(checkbox.value);
-                });
-
-                // Convertir el array a un string separado por comas
-                let textoDimensiones = dimensionesSeleccionadas.join(", ");
-
-                // Validar que el monto haya sido ingresado y sea mayor a 0
-                if (isNaN(montoPloteo) || montoPloteo <= 0) {
-                    // Añadir clase para resaltar el error
-                    inputMonto.classList.add('error-input');
-
-                    // Crear mensaje de error
-                    const mensajeError = document.createElement('div');
-                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
-                    mensajeError.classList.add('error-message');
-
-                    // Insertar mensaje debajo del input
-                    inputMonto.parentNode.appendChild(mensajeError);
-
-                    return; // Detener ejecución si el monto no es válido
-                }
-
-                // Si no estamos editando, agregar un nuevo ploteo
-                const datosPloteo = [{
-                    id: '0', // ID del ploteo
-                    cantidad: cantidadPloteos, // Cantidad de ploteos
-                    monto: '-', // Monto
-                    subtotal: montoPloteo, // Subtotal
-                    articulo: 'PLOTEO',
-                    idmovimiento: 2,
-                    nota_archivo: textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones
-
-                }];
-
-                const ploteo = datosPloteo[0];
-                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-                try {
-                    // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, ploteo.idmovimiento, ploteo.cantidad, ploteo.nota_archivo, ploteo.subtotal);
-                    console.log("Movimiento insertado con éxito:", response);
-
-                    // Si tiene éxito, continúa con el resto del proceso
-                    document.getElementById('input_cantidad_ploteo').value = 0; // Reset cantidad
-                    document.getElementById('monto_ploteo').value = ''; // Reset monto
-                    // Cerrar modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                    if (modal) modal.hide();
-                    fn_consultarVenta([{
-                        venta_id: venta_id_lbl
-                    }]);
-
-                } catch (error) {
-                    // Manejar el error
-                    console.error("Error al insertar movimiento:", error.message);
-                }
-
-
-            });
-
-            // Mostrar el modal
-            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-            modal.show();
-        });
-
-
-
-
-
-    });
-</script>
-
-<!--Impresion-->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let impresionEditando = null; // Variable para guardar la impresión que se está editando
-
-        document.getElementById('btnAbrirModalImprimir').addEventListener('click', function() {
-            document.getElementById('modalContent').innerHTML = `
-                <div class="text-center">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Impresión</h4>
-                            <div>ID: <span id="id_mov_escaneo">3</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Imprimir</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad a Imprimir</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <button id="btn_menos_impresion" class="btn btn-danger btn-round me-2">-</button>
-                                <input id="input_numero_impresion" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                <button id="btn_mas_impresion" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
-
-                         <div class="card-body">
-                            <p class="card-text">Dimensión</p>
-                            <div class="selectgroup selectgroup-pills" >
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A0"
-                                        class="selectgroup-input"
-                                    
-                                    />
-                                    <span class="selectgroup-button">A0</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A1"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A1</span>
-                                    </label>
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A2"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A2</span>
-                                </label>
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A3"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A3</span>
-                                </label>
-
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A4"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A4</span>
-                                </label>
-
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A5"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A5</span>
-                                </label>
-
-                                <label class="selectgroup-item">
-                                    <input
-                                        type="checkbox"
-                                        name="value"
-                                        value="A6"
-                                        class="selectgroup-input"
-                                    />
-                                    <span class="selectgroup-button">A6</span>
-                                </label>
-                               
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_impresion" class="form-control" placeholder="Monto (S/)">
-                        </div>
-                        <div class="text-center mb-3">
-                            <button class="btn btn-secondary rounded-5" id="btnAgregarImpresion" role="button">Añadir a la Venta</button>
-                        </div>
-                        <br>
-                    </div>
-                </div>
-            `;
-
-            // 1. Manejar Incremento y Decremento de Impresiones
-            document.getElementById("btn_mas_impresion").addEventListener("click", function() {
-                let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
-                document.getElementById("input_numero_impresion").value = cantidad + 1;
-            });
-
-            document.getElementById("btn_menos_impresion").addEventListener("click", function() {
-                let cantidad = parseInt(document.getElementById("input_numero_impresion").value);
-                if (cantidad > 1) {
-                    document.getElementById("input_numero_impresion").value = cantidad - 1;
-                }
-            });
-
-            // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarImpresion').addEventListener('click', async function() {
-                const cantidadImpresiones = parseInt(document.getElementById('input_numero_impresion').value) || 1;
-                const montoImpresion = parseFloat(document.getElementById('monto_impresion').value) || 0;
-
-                const inputMonto = document.getElementById('monto_impresion');
-                const mensajeErrorExistente = document.querySelector('.error-message');
-                if (mensajeErrorExistente) mensajeErrorExistente.remove();
-                inputMonto.classList.remove('error-input');
-
-                let dimensionesSeleccionadas = [];
-                document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
-                    dimensionesSeleccionadas.push(checkbox.value);
-                });
-
-                // Convertir el array a un string separado por comas
-                let textoDimensiones = dimensionesSeleccionadas.join(", ");
-
-                // Validar que el monto haya sido ingresado y sea mayor a 0
-                if (isNaN(montoImpresion) || montoImpresion <= 0) {
-                    // Añadir clase para resaltar el error
-                    inputMonto.classList.add('error-input');
-
-                    // Crear mensaje de error
-                    const mensajeError = document.createElement('div');
-                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
-                    mensajeError.classList.add('error-message');
-
-                    // Insertar mensaje debajo del input
-                    inputMonto.parentNode.appendChild(mensajeError);
-
-                    return; // Detener ejecución si el monto no es válido
-                }
-
-                // Si no estamos editando, agregar una nueva impresión
-                const datosImpresion = [{
-                    id: '0', // ID de la impresión
-                    cantidad: cantidadImpresiones, // Cantidad de impresiones
-                    monto: '-', // Monto
-                    subtotal: montoImpresion, // Subtotal
-                    articulo: 'IMPRESIÓN',
-                    idmovimiento: 3, // ID movimiento para impresión
-                    nota_archivo: textoDimensiones.trim() === "" ? "Sin nota" : textoDimensiones
-                }];
-
-
-                const impresion = datosImpresion[0];
-                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-                try {
-                    // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, impresion.idmovimiento, impresion.cantidad, impresion.nota_archivo, impresion.subtotal);
-                    console.log("Movimiento insertado con éxito:", response);
-
-                    // Si tiene éxito, continúa con el resto del proceso
-
-                    document.getElementById('input_numero_impresion').value = 1; // Reset cantidad
-                    document.getElementById('monto_impresion').value = ''; // Reset monto
-
-                    // Cerrar modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                    if (modal) modal.hide();
-                    fn_consultarVenta([{
-                        venta_id: venta_id_lbl
-                    }]);
-
-                } catch (error) {
-                    // Manejar el error
-                    console.error("Error al insertar movimiento:", error.message);
-                }
-
-
-
-            });
-
-            // Mostrar el modal
-            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-            modal.show();
-        });
-
-        // 3. Función para Agregar a la Tabla de Impresiones
-
-    });
-</script>
-
-<!--Escaneo-->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let escaneoEditando = null; // Variable para guardar el escaneo que se está editando
-
-        // Abrir modal con el contenido específico para Escaneo
-        document.getElementById('btnAbrirModalEscaneo').addEventListener('click', function() {
-            document.getElementById('modalContent').innerHTML = `
-                <div class="text-center">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Servicio de Escaneo</h4>
-                            <div>ID: <span id="id_mov_escaneo">4</span></div>
-                            <div class="card-sub">Aquí ingresa lo que mandaron a Escanear</div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Cantidad de Escaneo</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <button id="btn_menos_escaneo" class="btn btn-danger btn-round me-2">-</button>
-                                <input id="input_numero_escaneo" class="text-center" type="text" value="1" style="width: 40px;" oninput="validarNumero(event)">
-                                <button id="btn_mas_escaneo" class="btn btn-success btn-round ms-2">+</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">Monto (S/)</p>
-                            <input type="number" id="monto_escaneo" class="form-control" placeholder="Monto (S/)">
-                        </div>
-                        <div class="text-center mb-3">
-                            <button class="btn btn-secondary rounded-5" id="btnAgregarescaneo" role="button">Añadir a la Venta</button>
-                        </div>
-                        <br>
-                    </div>
-                </div>
-            `;
-
-            // Funcionalidades de Incremento y Decremento
-            document.getElementById("btn_mas_escaneo").addEventListener("click", function() {
-                let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
-                document.getElementById("input_numero_escaneo").value = cantidad + 1;
-            });
-
-            document.getElementById("btn_menos_escaneo").addEventListener("click", function() {
-                let cantidad = parseInt(document.getElementById("input_numero_escaneo").value);
-                if (cantidad > 1) {
-                    document.getElementById("input_numero_escaneo").value = cantidad - 1;
-                }
-            });
-
-            // Funcionalidad para Añadir Escaneo a la Tabla
-            document.getElementById('btnAgregarescaneo').addEventListener('click', async function() {
-                const cantidadEscaneos = parseInt(document.getElementById('input_numero_escaneo').value) || 1;
-                const montoEscaneo = parseFloat(document.getElementById('monto_escaneo').value) || 0;
-
-                const inputMonto = document.getElementById('monto_escaneo');
-                const mensajeErrorExistente = document.querySelector('.error-message');
-                if (mensajeErrorExistente) mensajeErrorExistente.remove();
-                inputMonto.classList.remove('error-input');
-
-                // Validar que el monto haya sido ingresado y sea mayor a 0
-                if (isNaN(montoEscaneo) || montoEscaneo <= 0) {
-                    // Añadir clase para resaltar el error
-                    inputMonto.classList.add('error-input');
-
-                    // Crear mensaje de error
-                    const mensajeError = document.createElement('div');
-                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
-                    mensajeError.classList.add('error-message');
-
-                    // Insertar mensaje debajo del input
-                    inputMonto.parentNode.appendChild(mensajeError);
-
-                    return; // Detener ejecución si el monto no es válido
-                }
-
-
-                const datosEscaneo = [{
-                    id: '0', // ID del escaneo
-                    cantidad: cantidadEscaneos,
-                    monto: '-', // Monto unitario
-                    subtotal: montoEscaneo,
-                    articulo: 'ESCANEO',
-                    idmovimiento: 5, // ID movimiento
-                    nota_archivo: 'Sin nota',
-                }];
-                const movimiento = datosEscaneo[0];
-                let venta_id_lbl = document.getElementById('idVentaReserva').textContent;
-
-                try {
-                    // Espera a que fn_insert_movimiento se complete
-                    const response = await fn_insert_movimiento(venta_id_lbl, movimiento.idmovimiento, movimiento.cantidad, 'Sin nota', movimiento.subtotal);
-                    console.log("Movimiento insertado con éxito:", response);
-
-                    // Si tiene éxito, continúa con el resto del proceso
-
-                    document.getElementById('input_numero_escaneo').value = 1;
-                    document.getElementById('monto_escaneo').value = '';
-
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
-                    if (modal) modal.hide();
-                    fn_consultarVenta([{
-                        venta_id: venta_id_lbl
-                    }]);
-
-                } catch (error) {
-                    // Manejar el error
-                    console.error("Error al insertar movimiento:", error.message);
-                }
-
-            });
-
-            // Mostrar el modal
-            const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
-            modal.show();
-        });
-
-
-
-
-    });
-</script>
 
 <!--Fn Insert, Update y Delete-->
 <script>
@@ -3291,6 +3257,9 @@ if (isset($_GET['id'])) {
                         const jsonResponse = JSON.parse(response); // Si el servidor devuelve un JSON
                         if (jsonResponse.success) {
                             showNotification("success");
+                            fn_consultarVenta([{
+                                venta_id: venta_id
+                            }]);
                             resolve(jsonResponse); // Éxito: Resuelve la promesa
                         } else {
                             showNotification("error");
@@ -3481,7 +3450,8 @@ if (isset($_GET['id'])) {
 <script>
     document.getElementById("btnRealizarPago").addEventListener("click", function() {
 
-
+        document.getElementById("idRucReceptor").value = "",
+            document.getElementById("idRazonSocialReceptor").value = "";
         // Mostrar el modal manualmente
         const modal = new bootstrap.Modal(document.getElementById("modalRealizarPago"));
         modal.show();

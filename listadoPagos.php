@@ -55,7 +55,7 @@ if (isset($_GET['id'])) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
-                                                        <td><?php echo $ventaJSON["codigo_tiket"] ?></td>
+                                                        <td><?php echo $datos["serie_correltavio_referencial"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
@@ -63,16 +63,24 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
                                                         <td><?php echo "S/ " . $datos["utilidad"] ?></td>
                                                         <td>
-                                                            <div class="mt-2 text-center">
-
-                                                                <a
+                                                            <div class="mt-2 text-center d-flex justify-content-center">
+                                                            <a
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
                                                                     class="btn btn-success btn-round btn-round btn-sm"
-                                                                    role="button"> <i class="fas fa-external-link-alt"></i> </a>
+                                                                    role="button">DETALLE</a>
+                                                                <a
+                                                                    href="javascript:void(0);"
+                                                                    onclick='fn_abrir_pdf(<?php echo $datos["venta_id"] ?>)'
+                                                                    class="btn btn-secondary btn-round btn-sm mx-1"
+                                                                    role="button" aria-label="PDF">
+                                                                    PDF
+                                                                </a>
                                                             </div>
+
                                                         </td>
+                                                        
                                                     </tr>
 
                                                 <?php
@@ -112,7 +120,7 @@ if (isset($_GET['id'])) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
-                                                        <td><?php echo $ventaJSON["codigo_tiket"] ?></td>
+                                                        <td><?php echo $datos["serie_correltavio_referencial"] ?></td>
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
@@ -120,14 +128,22 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
                                                         <td><?php echo "S/ " . $datos["utilidad"] ?></td>
                                                         <td>
-                                                            <div class="mt-2 text-center">
-                                                                <a
+                                                            <div class="mt-2 text-center d-flex justify-content-center">
+                                                            <a
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
-                                                                    class="btn btn-success btn-round btn-sm"
-                                                                    role="button"> <i class="fas fa-external-link-alt"></i> </a>
+                                                                    class="btn btn-success btn-round btn-round btn-sm"
+                                                                    role="button">DETALLE</a>
+                                                                <a
+                                                                    href="javascript:void(0);"
+                                                                    onclick='fn_abrir_pdf(<?php echo $datos["venta_id"] ?>)'
+                                                                    class="btn btn-secondary btn-round btn-sm mx-1"
+                                                                    role="button" aria-label="PDF">
+                                                                    PDF
+                                                                </a>
                                                             </div>
+
                                                         </td>
                                                     </tr>
 
@@ -151,6 +167,7 @@ if (isset($_GET['id'])) {
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>N° TICKET</th>
+                                                    <th>Tipo</th>
                                                     <th>DÍA</th>
                                                     <th>FECHA</th>
                                                     <th>HORA</th>
@@ -168,7 +185,9 @@ if (isset($_GET['id'])) {
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["pago_id"] ?></td>
-                                                        <td><?php echo $ventaJSON["codigo_tiket"] ?></td>
+                                                        <td><?php echo $datos["serie_correltavio_referencial"] ?></td>
+                                                        <td><?php echo $datos["tipo_comprobante"] ?></td>
+                                                        
                                                         <td><?php echo $datos["dia_nombre"] ?></td>
                                                         <td><?php echo $datos["fecha"] ?></td>
                                                         <td><?php echo $datos["hora"] ?></td>
@@ -176,14 +195,22 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["monto_venta_final"] ?></td>
                                                         <td><?php echo "S/ " . $datos["utilidad"] ?></td>
                                                         <td>
-                                                            <div class="mt-2 text-center">
-                                                                <a
+                                                            <div class="mt-2 text-center d-flex justify-content-center">
+                                                            <a
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetallePago(<?php echo $datosJSON ?>)'
-                                                                    class="btn btn-success btn-round btn-sm"
-                                                                    role="button"> <i class="fas fa-external-link-alt"></i> </a>
+                                                                    class="btn btn-success btn-round btn-round btn-sm"
+                                                                    role="button">DETALLE</a>
+                                                                <a
+                                                                    href="javascript:void(0);"
+                                                                    onclick='fn_abrir_pdf(<?php echo $datos["venta_id"] ?>)'
+                                                                    class="btn btn-secondary btn-round btn-sm mx-1"
+                                                                    role="button" aria-label="PDF">
+                                                                    PDF
+                                                                </a>
                                                             </div>
+
                                                         </td>
                                                     </tr>
 
@@ -362,6 +389,9 @@ if (isset($_GET['id'])) {
 </div>
 
 <script>
+    function fn_abrir_pdf(id_venta) {
+        window.open("ticket.php?id=" + parseInt(id_venta), "_blank");
+    }
     function abrirModalDetallePago(jsonDatos) {
         $('#modalDetallePago').modal('show');
         console.log(jsonDatos);

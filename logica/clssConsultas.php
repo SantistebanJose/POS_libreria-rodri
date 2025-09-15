@@ -3,6 +3,7 @@ include("bd.php");
 
 
 
+
 if (isset($_POST["accion"])) {
     $accion = $_POST["accion"];
     controladorConsultasPTMRE($accion);
@@ -64,7 +65,6 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result ? $result : []);
             }
             break;
-        
     }
 }
 function executeQuery(string $query, array $params = []): array
@@ -76,11 +76,31 @@ function executeQuery(string $query, array $params = []): array
         $datos = $orden->fetchAll(PDO::FETCH_ASSOC);
         $orden->closeCursor();
         return $datos;
-    } catch (\Throwable $th) {
+    } catch (PDOException $e) {
+        echo "Error de conexión: " . $e->getMessage();
         return [];
     }
 }
+function executeQueryv2($query)
+{
+    global $conectar;
+    try {
 
+        $stmt = $conectar->query($query);
+
+        if (!$stmt) {
+            throw new Exception("Error en la consulta SQL");
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Error de conexión: " . $e->getMessage();
+        return [];
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+        return [];
+    }
+}
 function listarInsumosCompra(): array
 {
     $query = "
@@ -179,13 +199,14 @@ function listarTipoArticulos(): array
 
 function listarMovimientos(): array
 {
-    $query = "SELECT id, descripcion, ruta_php FROM movimiento WHERE deleted_at IS NULL ORDER BY 1";
+    $query = "SELECT * FROM movimiento WHERE deleted_at IS NULL AND id NOT IN (1,4,6,15) ORDER BY 1";
     return executeQuery($query);
 }
 
 function listarProductosVenta1(): array
 {
     $query = "SELECT * FROM view_articulos WHERE precio_venta is not null;";
+
     return executeQuery($query);
 }
 
@@ -217,13 +238,21 @@ function listarArticuloSinview(): array
 {
     $query = "
     SELECT 
-    a.id as articulo_id,a.nombre as articulo,a.precio_venta,a.stock,a.deleted_at,a.corte,a.color,a.marca, d.medida as dimension, t.abreviatura as tipo,e.abreviatura as escala,c.abreviatura as categoria, a.disponibilidad_venta_fh
+    a.id as articulo_id,a.nombre as articulo,a.precio_venta,a.stock,a.deleted_at,a.corte,a.marca, d.medida as dimension, t.abreviatura as tipo,e.abreviatura as escala,c.abreviatura as categoria, a.disponibilidad_venta_fh,
+    a.color,
+    CASE 
+		WHEN a.color IS NULL THEN
+			'SIN COLOR'
+		ELSE
+			a.color
+	END color_v2,
+    a.*
     FROM articulo a
-    LEFT JOIN categoria c ON c.id = a.categoria_id AND a.deleted_at is null
+    LEFT JOIN categoria c ON c.id = a.categoria_id 
     LEFT JOIN dimension d ON d.id = a.dimension_id 
     LEFT JOIN tipo t ON t.id = a.tipo_id
     LEFT JOIN escala e ON e.id = a.escala_id
-    
+    WHERE a.deleted_at is null
     order by a.id";
     return executeQuery($query);
 }
@@ -257,6 +286,224 @@ function listarVentaReservaCorte(): array
     return executeQuery($query);
 }
 
+function listarVentasNoDeclaradas()
+{
+    $sql = "
+        --select * from emisor ;
+        --update emisor set usuario_sol = 'FACVYSAM', clave_sol = 'Jose04_42696143'
+
+        --delete from comprobante
+        --select * from comprobante
+        -- COMPROBANTES NO DECLARADOS
+        SELECT 
+        --cb.*,
+        -- otros campos que ya tienes
+        v.id as venta_id,
+        concat(SUBSTRING(v.tipo_comprobante,1,1),'001') as serie,
+
+        v.id as correlativo,
+        concat(SUBSTRING(v.tipo_comprobante,1,1),'001-',lpad(v.id::text, 6, '0')) as serie_correltavio_referencial,
+        concat('P', LPAD(p.id::TEXT, 6, '0'), 'F', to_char(p.created_at::date, 'YYYYMMDD')) as codigo_pago,
+        case
+            WHEN p1.tipo_persona = 'JURIDICA' and v.js_detalles_receptor_factura is null then '6'
+            WHEN p1.tipo_persona = 'NATURAL' and v.js_detalles_receptor_factura is null  then '1'
+            WHEN v.tipo_comprobante = 'FACTURA' AND v.js_detalles_receptor_factura is not null THEN '6'
+            else ''
+        end ca_cliente_tipo_documento_sunat,
+        p1.direccion as ca_cliente_direccion_sunat,
+        case
+            WHEN p1.numero_documento = '999999999' THEN ''
+            WHEN v.tipo_comprobante = 'FACTURA' AND v.js_detalles_receptor_factura is not null THEN v.js_detalles_receptor_factura->>'ruc'
+            else p1.numero_documento
+        end ca_cliente_numero_documento_sunat,
+        p.monto_venta_final,
+        case
+            WHEN v.tipo_comprobante = 'FACTURA' AND v.js_detalles_receptor_factura is not null THEN v.js_detalles_receptor_factura->>'razon_social'
+            
+            WHEN p1.tipo_persona = 'JURIDICA' then p1.razon_social
+            WHEN p1.tipo_persona = 'NATURAL' then CONCAT(p1.nombres, ' ', p1.apellidos)
+            else 'CLIENTE VARIOS'
+        end AS ca_cliente_cliente_sunat, 
+        TO_CHAR(p.created_at, 'YYYY-MM-DD') as fecha,
+        p.created_at::TIME as hora,
+        TO_CHAR(p.created_at, 'HH12:MI:SS AM') as hora_formateada,
+        p.monto_venta_original,
+        p.monto_venta_final,
+        v.tipo_comprobante,
+        -- Cálculo del descuento directamente en SQL
+        (p.monto_venta_original - p.monto_venta_final) AS descuento,  -- Calculamos el descuento en la consulta
+        (
+            SELECT jsonb_agg(
+                jsonb_build_object(
+                    'rel_venta_articulo_id', rva.id,
+                    'venta_id', rva.venta_id,
+                    'articulo_id', rva.articulo_id,
+                    'descripcion_movimiento', m.descripcion,
+                    'descripcion_articulo', CASE 
+                        WHEN ar.dimension_id IS NOT NULL THEN CONCAT(ar.nombre, ' (', dim.medida, ')')
+                        WHEN ar.nombre IS NULL THEN m.descripcion
+                        ELSE ar.nombre 
+                    END,
+                    'cantidad_sunat', CASE 
+                        WHEN m.id = 1 THEN rva.cantidad
+                        else 1
+                    END,
+                    'cantidad_real', rva.cantidad,
+                    'precio_unitario_articulo', rva.precio_unitario_articulo,
+                    'minutos', rva.minutos,
+                    'costo_por_minuto', rva.costo_por_minuto,
+                    'pu_con_igv', rva.sub_total,
+                    'afectacion', 'SI',
+                    'pu_sin_igv', (rva.sub_total / 1.18),
+                    'IGV', ((rva.sub_total) - (rva.sub_total / 1.18)),
+                    'unidad_medida', 'NIU',
+                    'codigo_igv', 1000,
+                    'afecto_igv_sunat', 'S',
+                    'codigo_afectación', 10,
+                    'valor_agregado', 'VAT',
+                    'factor_icbper', 0.30,
+                    'icbper', 0
+                )
+            ) AS resultado_json
+            FROM rel_venta_articulo AS rva
+            JOIN movimiento AS m ON rva.movimiento_id = m.id 
+            LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
+            LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
+            WHERE rva.venta_id = p.id_venta
+        ) AS js_detalle_venta,
+        (
+            SELECT 
+            json_agg(
+                jsonb_build_object(
+                    'ID_DETALLE', dfp.id,
+                    'FORMA_PAGO', fp.nombre,
+                    'MONTO', dfp.monto,
+                    'COLOR', fp.color
+                )
+            ) AS resultado
+            FROM detalle_forma_pago dfp
+            JOIN forma_pago fp ON dfp.id_forma_pago = fp.id
+            WHERE dfp.id_venta = p.id_venta
+        ) as js_detalle_forma_pago
+        FROM pago p
+        JOIN venta v ON p.id_venta = v.id AND v.tipo_comprobante IN ('BOLETA','FACTURA')
+        JOIN persona p1 ON p1.id = v.cliente_id
+        LEFT JOIN comprobante cb ON v.id = cb.venta_id
+        WHERE cb.venta_id is null 
+        --AND 
+        --WHERE p.created_at >= (CURRENT_TIMESTAMP - INTERVAL '2 days')
+        order by 1 desc
+    ";
+    return executeQuery($sql);
+}
+function listarVentasPagadasParaComprobantes(): array
+{
+    $query = "
+        SELECT 
+            -- otros campos que ya tienes
+            v.id as venta_id,
+            concat(SUBSTRING(v.tipo_comprobante,1,1),'001') as serie,
+            
+            v.id as correlativo,
+            concat(SUBSTRING(v.tipo_comprobante,1,1),'001-',lpad(v.id::text, 6, '0')) as serie_correltavio_referencial,
+            concat('P', LPAD(p.id::TEXT, 6, '0'), 'F', to_char(p.created_at::date, 'YYYYMMDD')) as codigo_pago,
+            case
+                WHEN p1.tipo_persona = 'JURIDICA' and v.js_detalles_receptor_factura is null then '6'
+                WHEN p1.tipo_persona = 'NATURAL' and v.js_detalles_receptor_factura is null  then '1'
+                WHEN v.tipo_comprobante = 'FACTURA' AND v.js_detalles_receptor_factura is not null THEN '6'
+                else ''
+            end ca_cliente_tipo_documento_sunat,
+            p1.direccion as ca_cliente_direccion_sunat,
+            case
+                WHEN p1.numero_documento = '999999999' THEN ''
+                WHEN v.tipo_comprobante = 'FACTURA' AND v.js_detalles_receptor_factura is not null THEN v.js_detalles_receptor_factura->>'ruc'
+                else p1.numero_documento
+            end ca_cliente_numero_documento_sunat,
+            p.monto_venta_final,
+            case
+                WHEN v.tipo_comprobante = 'FACTURA' AND v.js_detalles_receptor_factura is not null THEN v.js_detalles_receptor_factura->>'razon_social'
+                
+                WHEN p1.tipo_persona = 'JURIDICA' then p1.razon_social
+                WHEN p1.tipo_persona = 'NATURAL' then CONCAT(p1.nombres, ' ', p1.apellidos)
+                else 'CLIENTE VARIOS'
+            end AS ca_cliente_cliente_sunat, 
+            TO_CHAR(p.created_at, 'YYYY-MM-DD') as fecha,
+            p.created_at::TIME as hora,
+            TO_CHAR(p.created_at, 'HH12:MI:SS AM') as hora_formateada,
+            p.monto_venta_original,
+            p.monto_venta_final,
+            v.tipo_comprobante,
+            -- Cálculo del descuento directamente en SQL
+            (p.monto_venta_original - p.monto_venta_final) AS descuento,  -- Calculamos el descuento en la consulta
+            (
+                SELECT jsonb_agg(
+                    jsonb_build_object(
+                        'rel_venta_articulo_id', rva.id,
+                        'venta_id', rva.venta_id,
+                        'articulo_id', rva.articulo_id,
+                        'descripcion_movimiento', m.descripcion,
+                        'descripcion_articulo', CASE 
+                            WHEN ar.dimension_id IS NOT NULL THEN CONCAT(ar.nombre, ' (', dim.medida, ')')
+                            WHEN ar.nombre IS NULL THEN m.descripcion
+                            ELSE ar.nombre 
+                        END,
+                        'cantidad_sunat', CASE 
+                            WHEN m.id = 1 THEN rva.cantidad
+                            else 1
+                        END,
+                        'cantidad_real', rva.cantidad,
+                        'precio_unitario_articulo', rva.precio_unitario_articulo,
+                        'minutos', rva.minutos,
+                        'costo_por_minuto', rva.costo_por_minuto,
+                        'pu_con_igv', rva.sub_total,
+                        'afectacion', 'SI',
+                        'pu_sin_igv', (rva.sub_total / 1.18),
+                        'IGV', ((rva.sub_total) - (rva.sub_total / 1.18)),
+                        'unidad_medida', 'NIU',
+                        'codigo_igv', 1000,
+                        'afecto_igv_sunat', 'S',
+                        'codigo_afectación', 10,
+                        'valor_agregado', 'VAT',
+                        'factor_icbper', 0.30,
+                        'icbper', 0
+                    )
+                ) AS resultado_json
+                FROM rel_venta_articulo AS rva
+                JOIN movimiento AS m ON rva.movimiento_id = m.id 
+                LEFT JOIN articulo AS ar ON rva.articulo_id = ar.id
+                LEFT JOIN dimension AS dim ON ar.dimension_id = dim.id
+                WHERE rva.venta_id = p.id_venta
+            ) AS js_detalle_venta,
+            (
+                SELECT 
+                json_agg(
+                    jsonb_build_object(
+                        'ID_DETALLE', dfp.id,
+                        'FORMA_PAGO', fp.nombre,
+                        'MONTO', dfp.monto,
+                        'COLOR', fp.color
+                    )
+                ) AS resultado
+                FROM detalle_forma_pago dfp
+                JOIN forma_pago fp ON dfp.id_forma_pago = fp.id
+                WHERE dfp.id_venta = p.id_venta
+            ) as js_detalle_forma_pago
+        FROM pago p
+        JOIN venta v ON p.id_venta = v.id AND v.tipo_comprobante IN ('BOLETA','FACTURA')
+        JOIN persona p1 ON p1.id = v.cliente_id
+        LEFT JOIN comprobante cb ON v.id = cb.venta_id
+        WHERE cb.venta_id is null 
+        AND p.created_at >= (CURRENT_TIMESTAMP - INTERVAL '2 days')
+        order by 1 desc
+
+    ";
+    return executeQuery($query);
+}
+function listComprobantesDeclarados(): array
+{
+    $query = "select * from comprobante where estado_envio = true order by 1";
+    return executeQuery($query);
+}
 function listarFormaPago(): array
 {
     $query = "SELECT *,updated_at::date as fecha, TO_CHAR(updated_at, 'HH12:MI:SS AM') as hora FROM forma_pago WHERE deleted_at IS NULL AND unsubscribe IS NULL  order by id";
@@ -288,7 +535,24 @@ function listarEmpleados(): array
     ";
     return executeQuery($query);
 }
-
+function fnListarEmisor()
+{
+    $sql = "
+        select * from emisor limit 1
+    ";
+    return executeQuery($sql);
+}
+function fnSiguienteCorrelativo($tipo_comprobante)
+{
+    $sql = "
+        select 
+        coalesce(max(correlativo),0)+1 as correlativo_siguiente,
+        LPAD((coalesce(max(correlativo),0)+1)::text,6,0::text) as correlativo_texto
+        from comprobante where tipo_comprobante=:tipo_comprobante AND estado_envio=true
+         and mensaje_sunat='Ok';;
+    ";
+    return executeQuery($sql, params: [":tipo_comprobante" => $tipo_comprobante]);
+}
 function fnListForVentasDiarias(): array
 {
     $query = "
@@ -477,7 +741,9 @@ function fnUltimaVentaPorIdVenta($id_venta): array
         JOIN forma_pago fp ON fpu.id_forma_pago = fp.id
     )
     SELECT 
-    concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')) as codigo_tiket,
+    v.tipo_comprobante,
+
+    concat(SUBSTRING(v.tipo_comprobante,1,1),'001 - ',LPAD(v.id::TEXT,6,'0')) as codigo_tiket,
     v.fecha_fin_transaccion,
     v.id AS venta_id, 
     CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
@@ -748,6 +1014,9 @@ function fnListForPagos(): array
             SELECT 
             p.created_at,
             p.id as pago_id,
+            v.id as venta_id,
+            v.tipo_comprobante,
+            concat(SUBSTRING(v.tipo_comprobante,1,1),'001-',lpad(v.id::text, 6, '0')) as serie_correltavio_referencial,
             concat('P',LPAD(p.id::TEXT,10,'0'),'F',to_char(p.created_at::date, 'YYYYMMDD')) as codigo,
             CASE 
                 WHEN EXTRACT(DOW FROM p.created_at) = 0 THEN UPPER('Domingo')
@@ -848,7 +1117,7 @@ function fnListForPagos(): array
                 WHERE dfp.id_venta = p.id_venta
             ) as js_detalle_forma_pago
             FROM pago p
-
+            JOIN venta as v ON v.id = p.id_venta
             -- WHERE p.id = 2
             where p.created_at::date = current_date
             order by p.created_at desc;
@@ -864,6 +1133,9 @@ function fnListForPagosSemanales(): array
             SELECT 
             p.created_at,
             p.id as pago_id,
+            v.id as venta_id,
+            v.tipo_comprobante,
+            concat(SUBSTRING(v.tipo_comprobante,1,1),'001-',lpad(v.id::text, 6, '0')) as serie_correltavio_referencial,
             concat('P',LPAD(p.id::TEXT,10,'0'),'F',to_char(p.created_at::date, 'YYYYMMDD')) as codigo,
             CASE 
                 WHEN EXTRACT(DOW FROM p.created_at) = 0 THEN UPPER('Domingo')
@@ -964,6 +1236,7 @@ function fnListForPagosSemanales(): array
                 WHERE dfp.id_venta = p.id_venta
             ) as js_detalle_forma_pago
             FROM pago p
+            JOIN venta as v ON v.id = p.id_venta
             -- WHERE p.id = 2
             Where p.created_at::date >= date_trunc('week', CURRENT_DATE)
             AND p.created_at::date < CURRENT_DATE + INTERVAL '1 day'
@@ -979,6 +1252,9 @@ function fnListForAllPagos(): array
             SELECT 
             p.created_at,
             p.id as pago_id,
+            v.id as venta_id,
+            v.tipo_comprobante,
+            concat(SUBSTRING(v.tipo_comprobante,1,1),'001-',lpad(v.id::text, 6, '0')) as serie_correltavio_referencial,
             concat('P',LPAD(p.id::TEXT,10,'0'),'F',to_char(p.created_at::date, 'YYYYMMDD')) as codigo,
             CASE 
                 WHEN EXTRACT(DOW FROM p.created_at) = 0 THEN UPPER('Domingo')
@@ -1080,6 +1356,7 @@ function fnListForAllPagos(): array
                 WHERE dfp.id_venta = p.id_venta
             ) as js_detalle_forma_pago
             FROM pago p
+            JOIN venta as v ON v.id = p.id_venta
             -- WHERE p.id = 2
             --Where p.created_at::date >= date_trunc('week', CURRENT_DATE)
             --AND p.created_at::date < CURRENT_DATE + INTERVAL '1 day'
@@ -1383,21 +1660,68 @@ function fnEjecutarETL(): array
     $query = "SELECT * FROM fn_etl_vysam();";
     $result = executeQuery($query);
     if ($result) {
-        
+
         return ['respuesta' => $result[0]['fn_etl_vysam']];
     } else {
-        
+
         return ['respuesta' => 'ERROR'];
     }
 }
+function fnListadoDeReservasWeb(): array
+{
+    $query = "
+    SELECT
+    *
+    FROM dblink(
+        'host=bdfrvf2000.cux2mus4silq.us-east-1.rds.amazonaws.com
+        dbname=frvf2000 
+        user=postgres 
+        password=PnNcbW5AUNYgthN', 
+        'SELECT * FROM view_bd_local_vysam'
+    ) AS t1
+    (
+     id integer,
+     usuario_id integer,
+     estado  CHAR(1),
+     tipo  CHAR(1),
+     created_at TIMESTAMP,
+     updated_at TIMESTAMP,
+     deleted_at TIMESTAMP,
+     estado_v2 varchar,
+     tipo_v2 varchar,
+     json_cliente JSON,
+     json_detalle JSON
+    )
+    ORDER BY 1
+    ";
 
-function fnGenerarTicket($idVenta):void
+    return executeQuery($query);
+}
+
+
+function fnListadoDeEmisor(): array
+{
+    $query = "SELECT * FROM emisor";
+
+
+    $result = executeQuery($query);
+
+    //var_dump($result);
+
+
+    return $result;
+}
+
+
+function fnGenerarTicket($idVenta): void
 {
     $datosprueba = fnUltimaVentaPorIdVenta($idVenta)[0];
 
     // Datos de la venta obtenidos de la consulta
+    $datoEmisor = fnListadoDeEmisor()[0];
     $datosVenta = [
         "codigo_tiket" => $datosprueba["codigo_tiket"],
+        "tipo_comprobante" => $datosprueba["tipo_comprobante"],
         "fecha" => $datosprueba["fecha"],
         "hora" => $datosprueba["hora"],
         "cliente" => $datosprueba["cliente"],
@@ -1405,6 +1729,7 @@ function fnGenerarTicket($idVenta):void
         "usuario_inicial" => $datosprueba["usuario"],
         "usuario_final" => $datosprueba["atencion_final_usuario"],
         "total" => $datosprueba["total"],
+        "monto_venta_final" => $datosprueba["monto_venta_final"],
         "estado_pago" => $datosprueba["estado_pago"],
         "estado_final" => $datosprueba["estado_final"],
         "descuento" => $datosprueba["perdida_utilidad"],
@@ -1422,12 +1747,47 @@ function fnGenerarTicket($idVenta):void
     // Crear PDF en formato ticket térmico (80mm de ancho)
     $pdf = new FPDF('P', 'mm', array(80, 200));
     $pdf->AddPage();
+    
+    $logoPath = 'logica/logo.jpeg';
 
+    // Verificar si la imagen existe
+    if (file_exists($logoPath)) {
+        $logoWidth = 20; // Ancho del logo
+        $centerX = (80 - $logoWidth) / 2; // Centrado en una página de 80mm de ancho
+        
+        $pdf->Image($logoPath, $centerX, 5, $logoWidth); // Ajustar la posición y tamaño del logo
+        $pdf->Ln(20);
+    } else {
+        $pdf->Cell(60, 4, 'Logo no disponible', 0, 1, 'C');
+    }
+
+
+    //$pdf->Image('logo.jpg', 10, 5, 20); // Ruta a tu logo, ajuste de posición (x=10, y=5) y tamaño (ancho=20)
+    //$pdf->Ln(20); // Deja un espacio de 20mm después del logo
     // TÍTULO: TICKET DE VENTA
+
+    $pdf->SetFont('Arial', 'B', size: 7);
+    $pdf->Cell(60, 4, $datoEmisor["razon_social"], 0, 1, 'C');
+    $pdf->Cell(60, 4, "RUC: " . $datoEmisor["ruc"], 0, 1, 'C');
+
+    $pdf->SetFont('Arial', size: 7);
+
+    $pdf->SetFont('Arial', '', 6);
+    $pdf->MultiCell(60, 4, $datoEmisor["direccion"], 0, 'C');
+    $pdf->SetFont('Arial', 'B', 8); // Restaurar estilo después
+
+    //$pdf->Cell(60, 4, $datoEmisor["direccion"], 0, 1, 'C');
+    //$pdf->SetFont('Arial', 'B', 8);
+
+
+
     $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(60, 4, 'TICKET DE VENTA', 0, 1, 'C');
-    $pdf->SetFont('Arial', '', 8);
+    $pdf->Cell(60, 4, $datosprueba["tipo_comprobante"] . ' DE VENTA ELECTRONICA', 0, 1, 'C');
+    $pdf->SetFont('Arial', 'B', 8);
+
+
     $pdf->Cell(60, 4, $datosVenta["codigo_tiket"], 0, 1, 'C');
+
     $pdf->Ln(1);
 
     // DATOS DEL CLIENTE
@@ -1509,9 +1869,14 @@ function fnGenerarTicket($idVenta):void
     $pdf->Ln(1);
 
     // TOTAL DE VENTA
-    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->SetFont('Arial', 'B', 5);
     $pdf->Cell(60, 4, 'TOTAL DE VENTA: S/ ' . number_format($datosVenta["total"], 2), 0, 1, 'C');
     $pdf->Ln(1);
+    // TOTAL DE VENTA REAL
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(60, 4, 'TOTAL DE VENTA REAL: S/ ' . number_format($datosVenta["monto_venta_final"], 2), 0, 1, 'C');
+    $pdf->Ln(1);
+
 
 
     // TOTAL EN LETRAS
@@ -1522,19 +1887,24 @@ function fnGenerarTicket($idVenta):void
 
     // VENDEDOR
     $pdf->SetFont('Arial', 'B', 6);
-    $pdf->Cell(60, 3, 'Atendido por: ' . $datosVenta["usuario_final"], 0, 1, 'C');
+    $pdf->Cell(60, 3, 'ATENDIDO POR: ' . $datosVenta["usuario_final"], 0, 1, 'C');
     $pdf->Ln(1);
 
     // MENSAJE DE AGRADECIMIENTO
     $pdf->SetFont('Arial', '', 7);
-    $pdf->Cell(60, 3, 'Representacion impresa del ticket de venta electronica', 0, 1, 'C');
-    $pdf->Cell(60, 3, 'Gracias por su preferencia', 0, 1, 'C');
+    $pdf->MultiCell(60, 3, 'Representacion Impresa de la ' . $datosprueba["tipo_comprobante"] . ' DE VENTA ELECTRONICA', 0, 'C');
+    $pdf->MultiCell(60, 3, 'Gracias por su preferencia', 0, 'C');
 
     // FIRMA DE LA EMPRESA
     $pdf->SetFont('Arial', 'B', 7);
-    $pdf->Cell(60, 3, 'VYSAM', 0, 1, 'C');
-    $pdf->Cell(60, 3, 'Desarrollado Por Caracol Soft', 0, 1, 'C');
+    $pdf->Cell(60, 3, ' ', 0, 1, 'C');
+    $pdf->Cell(60, 3, 'LIBRERIA BAZAR RODRI', 0, 1, 'C');
+    $pdf->Cell(60, 3, 'DESARROLLADO POR CARACOL SOFT', 0, 1, 'C');
     $pdf->Ln(4);
+
+
+
+
 
     // GENERAR PDF
     ob_clean();

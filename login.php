@@ -3,7 +3,7 @@
 
     // Verificar si el usuario ha iniciado sesión
     if (isset($_SESSION['id'])) {
-    header("Location: index.php");
+        header("Location: index.php");
     }
 
     ?>

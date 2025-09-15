@@ -207,6 +207,49 @@ if ($flagRespuesta == 0) {
                                     </ul>
                                 </div>
                             </li>
+                            
+
+
+
+                            <li class="nav-item">
+                                <a
+                                    data-bs-toggle="collapse"
+                                    href="#facturador_sunat"
+                                    class="collapsed"
+                                    aria-expanded="false">
+                                    <i class="fab fa-stripe-s"></i>
+                                    <p>Facturador SUNAT</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="facturador_sunat">
+                                    <ul class="nav nav-collapse">
+
+                                        <li>
+                                            <a href="emisor.php">
+                                                <span class="sub-item">Datos de Emisor</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="listVentasForPagosSunat.php">
+                                                <span class="sub-item">Declarar Comprobantes a SUNAT </span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href="listComprobantesDeclarados.php">
+                                                <span class="sub-item">Comprobantes Declarados</span>
+                                            </a>
+                                        </li>
+                            
+                                        <li>
+                                            <a href="comprobantes_no_declarados.php">
+                                                <span class="sub-item" style="color: red;">Comprobantes NO Declarados</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            
 
                             <li class="nav-item">
                                 <a
@@ -229,8 +272,36 @@ if ($flagRespuesta == 0) {
                                     </ul>
                                 </div>
                             </li>
-                        <?php } ?>
+                            <li class="nav-item">
+                                <a
+                                    data-bs-toggle="collapse"
+                                    href="#deuda"
+                                    class="collapsed"
+                                    aria-expanded="false">
+                                    <i class="fas fa-user-lock"></i>
+                                    <p>Crédito</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="deuda">
+                                    <ul class="nav nav-collapse">
+                                        <li>
+                                            <a href="pagoCredito.php">
+                                                <span class="sub-item">Realizar Abono a Crédito</span>
+                                            </a>
+                                        </li>
 
+                                        <li>
+                                            <a href="historialClientes.php">
+                                                <span class="sub-item">Historial de Clientes </span>
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                            </li>
+                        <?php } ?>
+                        
                         <li class="nav-item">
                             <a
                                 data-bs-toggle="collapse"
@@ -259,6 +330,31 @@ if ($flagRespuesta == 0) {
                                 </ul>
                             </div>
                         </li>
+                        <!--
+                        <li class="nav-item">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#reservaweb"
+                                class="collapsed"
+                                aria-expanded="false">
+                                <i class="fas fa-cloud-download-alt"></i>
+                                <p>Reserva WEB</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="reservaweb">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="listadoWeb.php">
+                                            <span class="sub-item">Listado de Reserva por la Web </span>
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </li>
+                         -->
+                        
                         <li class="nav-item">
                             <a
                                 data-bs-toggle="collapse"
@@ -272,7 +368,7 @@ if ($flagRespuesta == 0) {
                             <div class="collapse" id="venta">
                                 <ul class="nav nav-collapse">
                                     <li>
-                                        <a href="venta_rapida.php">
+                                        <a href="venta_rapida_v2.php">
                                             <span class="sub-item">Punto de Venta Rapida</span>
                                         </a>
                                     </li>
@@ -305,35 +401,6 @@ if ($flagRespuesta == 0) {
                                         </a>
                                     </li>
 
-
-
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li class="nav-item">
-                            <a
-                                data-bs-toggle="collapse"
-                                href="#deuda"
-                                class="collapsed"
-                                aria-expanded="false">
-                                <i class="fas fa-user-lock"></i>
-                                <p>Crédito</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="deuda">
-                                <ul class="nav nav-collapse">
-                                    <li>
-                                        <a href="pagoCredito.php">
-                                            <span class="sub-item">Realizar Abono a Crédito</span>
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a href="historialClientes.php">
-                                            <span class="sub-item">Historial de Clientes </span>
-                                        </a>
-                                    </li>
 
 
                                 </ul>
@@ -405,7 +472,7 @@ if ($flagRespuesta == 0) {
                                     <div class="quick-actions-scroll scrollbar-outer">
                                         <div class="quick-actions-items">
                                             <div class="row m-0">
-                                                <a class="col-6 col-md-4 p-0" href="venta_rapida.php">
+                                                <a class="col-6 col-md-4 p-0" href="venta_rapida_v2.php">
                                                     <div class="quick-actions-item">
                                                         <div class="avatar-item bg-primary rounded-circle">
                                                             <i class="fas fa-users"></i>
@@ -416,8 +483,8 @@ if ($flagRespuesta == 0) {
                                                 <a class="col-6 col-md-4 p-0" href="venta_reserva_corte.php">
                                                     <div class="quick-actions-item">
                                                         <div
-                                                            class="avatar-item bg-info rounded-circle">
-                                                            <i class="fas fa-user-check"></i>
+                                                            class="avatar-item bg-success rounded-circle">
+                                                            <i class="fab fa-whatsapp"></i>
                                                         </div>
                                                         <span class="text">Venta Por Reserva</span>
                                                     </div>
@@ -452,7 +519,7 @@ if ($flagRespuesta == 0) {
                                                     <a class="col-6 col-md-4 p-0" href="cajaChica.php">
                                                         <div class="quick-actions-item">
                                                             <div
-                                                                class="avatar-item bg-success rounded-circle">
+                                                                class="avatar-item bg-info rounded-circle">
                                                                 <i class="fas fa-box-open"></i>
                                                             </div>
                                                             <span class="text">Caja Chica</span>
@@ -504,9 +571,8 @@ if ($flagRespuesta == 0) {
                                             </div>
                                         </li>
                                         <li>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Mi Perfil</a>
-
+                                            <!--<div class="dropdown-divider"></div> -->
+                                            <!-- <a class="dropdown-item" href="#">Mi Perfil</a> -->
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="logica/logout.php">Salir</a>
                                         </li>

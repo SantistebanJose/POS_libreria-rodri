@@ -9,7 +9,7 @@ if (isset($_GET['id'])) {
         <div class="card text-start">
 
             <div class="card-body">
-                
+
                 <h4 class="card-title"><i class="fas fa-align-left"></i> Listado de Ventas</h4>
                 <div class="card-sub">
                     Selecciona de acuerdo a las ventas que necesites :)
@@ -17,7 +17,7 @@ if (isset($_GET['id'])) {
                 <div class="card-body">
                     <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                         <li class="nav-item">
-                            
+
                             <a class="nav-link active" id="ventaDiaria" data-bs-toggle="pill" href="#pills-ventaDiaria" role="tab" aria-controls="pills-ventaDiaria" aria-selected="true"><i class="fas fa-clock"></i> Ventas del Día</a>
                         </li>
                         <li class="nav-item">
@@ -55,7 +55,7 @@ if (isset($_GET['id'])) {
                                                 foreach (fnListForVentasDiarias() as $datos) {
                                                     $datos['accion_ajax'] = 'DETALLEVENTA_VENTA_ID';
                                                     $datosJSON = json_encode($datos);
-                                                    
+
                                                 ?>
                                                     <tr>
                                                         <td><?php echo $datos["venta_id"] ?></td>
@@ -69,14 +69,22 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["perdida_utilidad"] ?></td>
                                                         <td><?php echo $datos["estado_pago"] ?></td>
                                                         <td>
-                                                            <div class="mt-2 text-center">
+                                                            <div class="mt-2 text-center d-flex justify-content-center">
                                                                 <a
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetalle(<?php echo $datosJSON ?>)'
                                                                     class="btn btn-success btn-sm btn-round"
-                                                                    role="button"><i class="fas fa-external-link-square-alt"></i></a>
+                                                                    role="button">DETALLE</a>
+                                                                <a
+                                                                    href="javascript:void(0);"
+                                                                    onclick='fn_abrir_pdf(<?php echo $datos["venta_id"] ?>)'
+                                                                    class="btn btn-secondary btn-round btn-sm mx-1"
+                                                                    role="button" aria-label="PDF">
+                                                                    PDF
+                                                                </a>
                                                             </div>
+
                                                         </td>
                                                     </tr>
 
@@ -129,14 +137,22 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["perdida_utilidad"] ?></td>
                                                         <td><?php echo $datos["estado_pago"] ?></td>
                                                         <td>
-                                                            <div class="mt-2 text-center">
+                                                            <div class="mt-2 text-center d-flex justify-content-center">
                                                                 <a
                                                                     name=""
                                                                     id=""
-                                                                    class="btn btn-success btn-sm btn-round"
                                                                     onclick='abrirModalDetalle(<?php echo $datosJSON ?>)'
-                                                                    role="button"><i class="fas fa-external-link-square-alt"></i></a>
+                                                                    class="btn btn-success btn-sm btn-round"
+                                                                    role="button">DETALLE</a>
+                                                                <a
+                                                                    href="javascript:void(0);"
+                                                                    onclick='fn_abrir_pdf(<?php echo $datos["venta_id"] ?>)'
+                                                                    class="btn btn-secondary btn-round btn-sm mx-1"
+                                                                    role="button" aria-label="PDF">
+                                                                    PDF
+                                                                </a>
                                                             </div>
+
                                                         </td>
                                                     </tr>
 
@@ -189,14 +205,22 @@ if (isset($_GET['id'])) {
                                                         <td><?php echo "S/ " . $datos["perdida_utilidad"] ?></td>
                                                         <td><?php echo $datos["estado_pago"] ?></td>
                                                         <td>
-                                                            <div class="mt-2 text-center">
+                                                            <div class="mt-2 text-center d-flex justify-content-center">
                                                                 <a
                                                                     name=""
                                                                     id=""
                                                                     onclick='abrirModalDetalle(<?php echo $datosJSON ?>)'
                                                                     class="btn btn-success btn-sm btn-round"
-                                                                    role="button"><i class="fas fa-external-link-square-alt"></i></a>
+                                                                    role="button">DETALLE</a>
+                                                                <a
+                                                                    href="javascript:void(0);"
+                                                                    onclick='fn_abrir_pdf(<?php echo $datos["venta_id"] ?>)'
+                                                                    class="btn btn-secondary btn-round btn-sm mx-1"
+                                                                    role="button" aria-label="PDF">
+                                                                    PDF
+                                                                </a>
                                                             </div>
+
                                                         </td>
                                                     </tr>
 
@@ -340,7 +364,9 @@ if (isset($_GET['id'])) {
     </div>
 </div>
 <script>
-
+    function fn_abrir_pdf(id_venta) {
+        window.open("ticket.php?id=" + parseInt(id_venta), "_blank");
+    }
 </script>
 
 <script>
@@ -406,11 +432,11 @@ if (isset($_GET['id'])) {
                         (articulo["minutos"] && articulo["costo_por_minuto"]) ?
                         (articulo["costo_por_minuto"] * articulo["minutos"]) : articulo["sub_total"] || '-';
 
-                    let totalCorteRedondeado = (totalCorte !== '-') ? "S/ " + (totalCorte.toFixed(2)) : totalCorte;
+                    let totalCorteRedondeado = (totalCorte !== '-') ? "S/ " + (totalCorte) : totalCorte;
 
                     let texto = "";
                     if (articulo["minutos"] !== null || articulo["costo_por_minuto"] !== null) {
-                        texto = articulo["descripcion"] + "\n" + "<span style='color:blue'> <b>[" + min + " Minutos X " + articulo["costo_por_minuto"] + " = " + totalCorte.toFixed(2) + "]</b></span>";
+                        texto = articulo["descripcion"] + "\n" + "<span style='color:blue'> <b>[" + min + " Minutos X " + articulo["costo_por_minuto"] + " = " + totalCorte + "]</b></span>";
 
                     } else {
                         texto = articulo["descripcion"];

@@ -157,7 +157,7 @@ include("cabecera.php");
                                                 <h4 class="card-title"><i class="fas fa-cart-plus"></i> Articulos</h4>
                                                 <hr>
                                                 <div class="mb-3">
-                                                    
+
                                                     <label for="" class="form-label"><strong> Articulo</strong></label>
                                                     <div class="input-group position-relative">
                                                         <textarea
@@ -843,448 +843,467 @@ include("cabecera.php");
             </div>
         </div>
     </div>
+</div>
 
-
-    <div
-        class="modal fade"
-        id="modalDetalleCompra"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="modalTitleId"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="card border-primary">
-                        <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                        <div class="card-body">
-                            <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Compra <strong id="idMontoVenta"></strong></h4>
-                            <hr>
-                            <div class="card-sub text-center">
-                                Aquí podrás revisar los datos de la Compra. Revisa el detalle de la compra de articulos.
-                            </div>
-                            <div class="row justify-content-center align-items-center sm-2">
-                                <div class="col-sm-12">
-                                    <div class="card text-start">
-                                        <div class="card-body">
-                                            <h4 class="card-title"><i class="fas fa-user"> </i> Usuario</h4>
-                                            <hr>
-                                            <div><strong>Registrado Por: </strong> <span id="idUsuario"></span></div>
-                                            <div><strong>Fecha de Compra:</strong> <span id="idFechaComprav2"></span></div>
-                                            <div><strong>Fecha de Registro:</strong> <span id="idFechaRegistro"></span></div>
-                                            <div><strong>Hora de Registro:</strong> <span id="idHoraRegistro"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="card text-start">
-                                        <div class="card-body">
-                                            <h4 class="card-title"><i class="fas fa-user"> </i> Proveedor</h4>
-                                            <p class="card-text" id="nombreCliente"></p>
-                                            <hr>
-                                            <div><strong>N° DOCUMENTO:</strong> <span id="docProveedor"></span></div>
-                                            <div><strong>Proveedor:</strong> <span id="idProveedorNombre"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="card text-start">
-                                        <div class="card-body">
-                                            <h4 class="card-title"><i class="fas fa-credit-card"> </i> Montos S/ </h4>
-                                            <hr>
-                                            <div><strong>Monto Registrado:</strong> <span id="idMontoRegistrado"></span></div>
-                                            <div><strong>Total Por Articulos:</strong> <span id="idMontoTotalArticulos"></span></div>
-                                        </div>
+<div
+    class="modal fade"
+    id="modalDetalleCompra"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document"> <!-- Usamos la clase personalizada aquí -->
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card border-primary">
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="card-body">
+                        <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Compra <strong id="idMontoVenta"></strong></h4>
+                        <hr>
+                        <div class="card-sub text-center">
+                            Aquí podrás revisar los datos de la Compra. Revisa el detalle de la compra de articulos.
+                        </div>
+                        <div class="row justify-content-center align-items-center sm-2">
+                            <div class="col-sm-12">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i class="fas fa-user"> </i> Usuario</h4>
+                                        <hr>
+                                        <div><strong>Registrado Por: </strong> <span id="idUsuario"></span></div>
+                                        <div><strong>Fecha de Compra:</strong> <span id="idFechaComprav2"></span></div>
+                                        <div><strong>Fecha de Registro:</strong> <span id="idFechaRegistro"></span></div>
+                                        <div><strong>Hora de Registro:</strong> <span id="idHoraRegistro"></span></div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i class="fas fa-user"> </i> Proveedor</h4>
+                                        <p class="card-text" id="nombreCliente"></p>
+                                        <hr>
+                                        <div><strong>N° DOCUMENTO:</strong> <span id="docProveedor"></span></div>
+                                        <div><strong>Proveedor:</strong> <span id="idProveedorNombre"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card text-start">
+                                    <div class="card-body">
+                                        <h4 class="card-title"><i class="fas fa-credit-card"> </i> Montos S/ </h4>
+                                        <hr>
+                                        <div><strong>Monto Registrado:</strong> <span id="idMontoRegistrado"></span></div>
+                                        <div><strong>Total Por Articulos:</strong> <span id="idMontoTotalArticulos"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="accordion accordion-flush" id="accordionFlushExample">
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="flush-headingOne">
-                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                                    <strong><i class="fas fa-cart-arrow-down"></i> Detalle de Compra</strong>
-                                                </button>
-                                            </h2>
-                                            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                                <div class="accordion-body">
-                                                    <div class="card-sub">
-                                                        Revisa tu detalle de compra :)
-                                                    </div>
-                                                    <div>
-                                                        <ul id="idContenidoUlDetalle">
-
-                                                        </ul>
-                                                    </div>
-
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="flush-headingOne">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                                <strong><i class="fas fa-cart-arrow-down"></i> Detalle de Compra</strong>
+                                            </button>
+                                        </h2>
+                                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                            <div class="accordion-body">
+                                                <div class="card-sub">
+                                                    Revisa tu detalle de compra :)
                                                 </div>
+                                                <div>
+                                                    <ul id="idContenidoUlDetalle">
+
+                                                    </ul>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                    </div>
 
+                    </div>
                 </div>
 
-
-
             </div>
+
+
+
         </div>
     </div>
-
-    <!-- Incluir el CSS de DataTables -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-
-    <!-- Incluir jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Incluir el JS de DataTables -->
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
-
-    <script>
-        $(document).ready(function() {
-
-            fnDataTables();
-        });
-
-        function fnDataTables() {
-            $(".dataTable").DataTable({
-                "order": [
-                    [0, 'desc']
-                ],
-                language: {
-                    "sProcessing": "Procesando...",
-                    "sLengthMenu": "Mostrar _MENU_ registros",
-                    "sZeroRecords": "No se encontraron resultados",
-                    "sEmptyTable": "Ningún dato disponible en esta tabla",
-                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Buscar:",
-                    "sUrl": "",
-                    "sInfoThousands": ",",
-                    "sLoadingRecords": "Cargando...",
-                    "oPaginate": {
-                        "sFirst": "Primero",
-                        "sPrevious": "Anterior",
-                        "sNext": "Siguiente",
-                        "sLast": "Último"
-                    },
-                    "oAria": {
-                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                }
-            });
-        }
-    </script>
-
-    <script>
-        var variable_global_js_articulo;
-        var listaArticulosCantidades = [];
-        $(document).ready(function() {
-            var selectedIndexProveedor = -1; // Índice de la sugerencia seleccionada para proveedor
-            var selectedIndexArticulo = -1; // Índice de la sugerencia seleccionada para artículos
-
-            // Búsqueda de proveedores (campo de texto para proveedor)
-            $('#proveedor').on('input', function() {
-                var busqueda = $(this).val();
-                if (busqueda.length >= 2) { // Si hay al menos 2 caracteres
-                    $.ajax({
-                        url: 'logica/clssConsultas.php',
-                        type: 'POST',
-                        data: {
-                            accion: "BUSQUEDAD_PROVEEDOR",
-                            cadenaBusqueda: busqueda // El valor de lo que escribe el usuario
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            var suggestions = '';
-                            $.each(data, function(index, proveedor) {
-                                suggestions += '<li class="list-group-item list-group-item-action suggestion-item-proveedor" data-id="' + proveedor.id + '" data-name="' + proveedor.nombre_comercial + '">' + proveedor.nombre_comercial + '</li>';
-                            });
-
-                            $('#suggestions').html(suggestions);
-                            selectedIndexProveedor = -1; // Resetea el índice de selección
-                        }
-                    });
-                } else {
-                    $('#suggestions').html('');
-                }
-            });
-
-            // Manejo de clic en proveedor (asignar solo en proveedor)
-            $(document).on('click', '.suggestion-item-proveedor', function() {
-                var selectedId = $(this).data('id');
-                var selectedName = $(this).data('name');
-
-                $('#proveedor').val(selectedName); // Pasa el nombre al campo proveedor
-                $('#proveedor_id').val(selectedId); // Guarda el ID del proveedor
-                $('#suggestions').html(''); // Limpiar las sugerencias
-            });
-
-            // Manejo de teclas para proveedor (solo si el foco está en #proveedor)
-            $('#proveedor').on('keydown', function(e) {
-                var items = $('.suggestion-item-proveedor');
-                if (items.length > 0) {
-                    // Flecha hacia abajo
-                    if (e.keyCode === 40) {
-                        selectedIndexProveedor = (selectedIndexProveedor + 1) % items.length; // Avanza el índice
-                        highlightItemProveedor();
-                    }
-                    // Flecha hacia arriba
-                    else if (e.keyCode === 38) {
-                        selectedIndexProveedor = (selectedIndexProveedor - 1 + items.length) % items.length; // Retrocede el índice
-                        highlightItemProveedor();
-                    }
-                    // Tecla Enter (si el proveedor tiene seleccionado un item)
-                    else if (e.keyCode === 13 && selectedIndexProveedor >= 0) {
-                        var selectedItem = items.eq(selectedIndexProveedor);
-                        var selectedId = selectedItem.data('id');
-                        var selectedName = selectedItem.data('name');
-
-                        $('#proveedor').val(selectedName); // Pasa el nombre al campo proveedor
-                        $('#proveedor_id').val(selectedId); // Guarda el ID del proveedor
-                        $('#suggestions').html(''); // Limpiar las sugerencias
-                    }
-                }
-            });
-
-            // Resaltar el item seleccionado para proveedor
-            function highlightItemProveedor() {
-                $('.suggestion-item-proveedor').removeClass('active'); // Elimina la clase "active" de todos los items
-                var selectedItem = $('.suggestion-item-proveedor').eq(selectedIndexProveedor);
-                selectedItem.addClass('active'); // Agrega la clase "active" al item seleccionado
-            }
+</div>
 
 
 
-            // Inicialización de índice seleccionado
-            var selectedIndexArticulo = -1;
 
-            // Búsqueda de artículos (campo de texto para artículos)
-            $('#idBuscarArticulos').on('input', function() {
-                var busqueda = $(this).val();
-                if (busqueda.length >= 2) { // Si hay al menos 2 caracteres
-                    $.ajax({
-                        url: 'logica/clssConsultas.php',
-                        type: 'POST',
-                        data: {
-                            accion: "BUSQUEDAD_FILTRO_ARTICULOS",
-                            cadenaBusqueda: busqueda // El valor de lo que escribe el usuario
-                        },
-                        dataType: 'json',
-                        success: function(data) {
-                            var suggestions = '';
-                            $.each(data, function(index, articulo) {
-                                var articuloJson = JSON.stringify(articulo);
-                                var articuloJsonEscapado = encodeURIComponent(articuloJson);
-                                suggestions += '<li class="list-group-item list-group-item-action suggestion-item-articulo" data-json-articulo="' + articuloJsonEscapado + '" data-id="' + articulo.id + '" data-name="' + articulo.articulo_formato + '">' + articulo.articulo_formato + '</li>';
-                            });
+<!-- Incluir el CSS de DataTables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
 
-                            $('#listadoArticulosBusqueda').html(suggestions);
-                            selectedIndexArticulo = -1; // Resetea el índice de selección
-                        }
-                    });
-                } else {
-                    $('#listadoArticulosBusqueda').html('');
-                }
-            });
-
-            // Manejo de clic en artículo (asignar solo en artículo)
-            $(document).on('click', '.suggestion-item-articulo', function() {
-                var selectedId = $(this).data('id');
-                var selectedName = $(this).data('name');
-                var articuloJsonString = decodeURIComponent($(this).data('json-articulo'));
-                var jsArticulo = JSON.parse(articuloJsonString);
-                variable_global_js_articulo = jsArticulo;
-                //idBuscarArticulos
-                $('#idBuscarArticulos').val(selectedName); // Pasa el nombre al campo idBuscarArticulos
-                $('#idArticuloEncontrado').val(selectedId); // Guarda el ID del artículo
-                $('#listadoArticulosBusqueda').html(''); // Limpiar las sugerencias
-
-                console.log("jsdeMrd: " + variable_global_js_articulo);
-            });
-
-            // Manejo de teclas para artículos (solo si el foco está en #idBuscarArticulos)
-            $('#idBuscarArticulos').on('keydown', function(e) {
-                var items = $('.suggestion-item-articulo');
-
-                if (items.length > 0) {
-                    // Flecha hacia abajo
-                    if (e.keyCode === 40) {
-                        selectedIndexArticulo = (selectedIndexArticulo + 1) % items.length; // Avanza el índice
-                        highlightItemArticulo(); // Resalta el artículo
-                    }
-                    // Flecha hacia arriba
-                    else if (e.keyCode === 38) {
-                        selectedIndexArticulo = (selectedIndexArticulo - 1 + items.length) % items.length; // Retrocede el índice
-                        highlightItemArticulo(); // Resalta el artículo
-                    }
-                    // Tecla Enter (si el artículo tiene seleccionado un item)
-                    else if (e.keyCode === 13 && selectedIndexArticulo >= 0) {
-                        e.preventDefault(); // Prevenir el comportamiento predeterminado (enviar formulario)
-
-                        var selectedItem = items.eq(selectedIndexArticulo); // Asegurarse de que selecciona el item resaltado
-                        var selectedId = selectedItem.data('id');
-                        var selectedName = selectedItem.data('name');
-
-                        // Obtener el JSON del artículo seleccionado
-                        var articuloJsonStringTecl = decodeURIComponent(selectedItem.data('json-articulo'));
-                        var jsArticuloTecl = JSON.parse(articuloJsonStringTecl);
-                        variable_global_js_articulo = jsArticuloTecl;
-
-                        // Actualizar los campos con la información del artículo seleccionado
-                        $('#idBuscarArticulos').val(selectedName);
-                        $('#idArticuloEncontrado').val(selectedId);
-                        $('#listadoArticulosBusqueda').html(''); // Limpiar las sugerencias
-                    }
-                }
-            });
-
-            // Resaltar el item seleccionado para artículos
-            function highlightItemArticulo() {
-                $('.suggestion-item-articulo').removeClass('active'); // Elimina la clase "active" de todos los items
-                var selectedItem = $('.suggestion-item-articulo').eq(selectedIndexArticulo);
-                selectedItem.addClass('active'); // Agrega la clase "active" al item seleccionado
-            }
-
-        });
-    </script>
-
-    <!-- vamos hacer unos calculos de mrd -->
-    <script>
-        $(document).ready(function() {
-            $(document).on('input', '#ca-idCantidadArticulos, #ca-idTotalCompraArticulo', function() {
-                var cantidadArticulos = parseFloat($("#ca-idCantidadArticulos").val());
-                var totalCompraArticulo = parseFloat($("#ca-idTotalCompraArticulo").val());
-
-                if (!isNaN(cantidadArticulos) && !isNaN(totalCompraArticulo)) {
-                    var resultado = totalCompraArticulo / cantidadArticulos;
-                    console.log(resultado);
-                    $("#ca-idPrecioCalculado").val(resultado.toFixed(2));
-                } else {
-                    $("#ca-idPrecioCalculado").val("0.00");
-                }
-            });
-        });
-        ////////////////////////////////////////////////////
-        $(document).ready(function() {
-            $(document).on('input', '#caj-idCantidadCajas, #caj-idUnidadesPorCaja, #caj-idPrecioUnitarioCaja', function() {
-
-                var cantidadCajas = parseFloat($("#caj-idCantidadCajas").val());
-                var unidadesPorCaja = parseFloat($("#caj-idUnidadesPorCaja").val());
-                var precioUnitarioCaja = parseFloat($("#caj-idPrecioUnitarioCaja").val());
+<!-- Incluir jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Incluir el JS de DataTables -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
 
-                var totalCajas = parseFloat($("#ca-idTotalCompraArticulo").val());
+<script>
+    $(document).ready(function() {
 
-                if (!isNaN(cantidadCajas) && !isNaN(unidadesPorCaja) && !isNaN(precioUnitarioCaja)) {
-                    var totalCajas = precioUnitarioCaja * cantidadCajas;
-                    var unidadesTotales = unidadesPorCaja * cantidadCajas;
-                    ///////////
-                    var puCalculado = totalCajas / unidadesTotales;
-                    /////////////////////
-                    $("#caj-idTotalCajas").val(totalCajas.toFixed(2));
-                    $("#caj-idUnidadesCalculadas").val(unidadesTotales.toFixed(2));
-                    $("#caj-idPrecioUnitarioCalculado").val(puCalculado.toFixed(2));
-                } else {
-                    $("#caj-idUnidadesCalculadas").val("0.00");
-                    $("#caj-idPrecioUnitarioCalculado").val("0.00");
-                    $("#caj-idTotalCajas").val("0.00");
-                }
-            });
-        });
-    </script>
-    <script>
-        function showNotification(estado, comentario) {
-            // Configurar el contenido de la notificación
-            var content = {};
-            var state = ""; // Tipo de estado (success, error, etc.)
-            var placementFrom = "bottom"; // Posición vertical
-            var placementAlign = "right"; // Posición horizontal
+        fnDataTables();
+    });
 
-            // Personalizar contenido según el estado
-            switch (estado) {
-                case 'Agregar':
-                    content.message = comentario;
-                    content.title = "¡Agregado con Éxito!";
-                    content.icon = "fa fa-check-circle"; // Ícono para éxito
-                    state = "success";
-                    break;
-                case 'Eliminar':
-                    content.message = "Operación exitosa.";
-                    content.title = "¡Eliminado!";
-                    content.icon = "fa fa-times-circle"; // Ícono para éxito
-                    state = "danger";
-                    break;
-                case 'success':
-                    content.message = "Operación exitosa.";
-                    content.title = "¡Éxito!";
-                    content.icon = "fa fa-check-circle"; // Ícono para éxito
-                    state = "success";
-                    break;
-                case 'error':
-                    content.message = "Ocurrió un error inesperado.";
-                    content.title = "¡Error!";
-                    content.icon = "fa fa-times-circle"; // Ícono para error
-                    state = "danger";
-                    break;
-                case 'warning':
-                    content.message = "Advertencia: Revisa los datos.";
-                    content.title = "¡Advertencia!";
-                    content.icon = "fa fa-exclamation-triangle"; // Ícono para advertencia
-                    state = "warning";
-                    break;
-                case 'info':
-                    content.message = "Este es un mensaje informativo.";
-                    content.title = "Información";
-                    content.icon = "fa fa-info-circle"; // Ícono para información
-                    state = "info";
-                    break;
-                default:
-                    content.message = "Estado desconocido.";
-                    content.title = "Notificación";
-                    content.icon = "fa fa-question-circle"; // Ícono por defecto
-                    state = "info";
-            }
-
-            // Mostrar la notificación
-            $.notify(content, {
-                type: state, // Estado
-                placement: {
-                    from: placementFrom, // Posición vertical
-                    align: placementAlign // Posición horizontal
+    function fnDataTables() {
+        $(".dataTable").DataTable({
+            "order": [
+                [0, 'desc']
+            ],
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
                 },
-                time: 1000, // Duración de la animación
-                delay: 3000, // Tiempo para ocultar (ms)
-            });
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+    }
+</script>
+
+<script>
+    var variable_global_js_articulo;
+    var listaArticulosCantidades = [];
+    $(document).ready(function() {
+        var selectedIndexProveedor = -1; // Índice de la sugerencia seleccionada para proveedor
+        var selectedIndexArticulo = -1; // Índice de la sugerencia seleccionada para artículos
+
+        // Búsqueda de proveedores (campo de texto para proveedor)
+        $('#proveedor').on('input', function() {
+            var busqueda = $(this).val();
+            if (busqueda.length >= 2) { // Si hay al menos 2 caracteres
+                $.ajax({
+                    url: 'logica/clssConsultas.php',
+                    type: 'POST',
+                    data: {
+                        accion: "BUSQUEDAD_PROVEEDOR",
+                        cadenaBusqueda: busqueda // El valor de lo que escribe el usuario
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var suggestions = '';
+                        $.each(data, function(index, proveedor) {
+                            suggestions += '<li class="list-group-item list-group-item-action suggestion-item-proveedor" data-id="' + proveedor.id + '" data-name="' + proveedor.nombre_comercial + '">' + proveedor.nombre_comercial + '</li>';
+                        });
+
+                        $('#suggestions').html(suggestions);
+                        selectedIndexProveedor = -1; // Resetea el índice de selección
+                    }
+                });
+            } else {
+                $('#suggestions').html('');
+            }
+        });
+
+        // Manejo de clic en proveedor (asignar solo en proveedor)
+        $(document).on('click', '.suggestion-item-proveedor', function() {
+            var selectedId = $(this).data('id');
+            var selectedName = $(this).data('name');
+
+            $('#proveedor').val(selectedName); // Pasa el nombre al campo proveedor
+            $('#proveedor_id').val(selectedId); // Guarda el ID del proveedor
+            $('#suggestions').html(''); // Limpiar las sugerencias
+        });
+
+        // Manejo de teclas para proveedor (solo si el foco está en #proveedor)
+        $('#proveedor').on('keydown', function(e) {
+            var items = $('.suggestion-item-proveedor');
+            if (items.length > 0) {
+                // Flecha hacia abajo
+                if (e.keyCode === 40) {
+                    selectedIndexProveedor = (selectedIndexProveedor + 1) % items.length; // Avanza el índice
+                    highlightItemProveedor();
+                }
+                // Flecha hacia arriba
+                else if (e.keyCode === 38) {
+                    selectedIndexProveedor = (selectedIndexProveedor - 1 + items.length) % items.length; // Retrocede el índice
+                    highlightItemProveedor();
+                }
+                // Tecla Enter (si el proveedor tiene seleccionado un item)
+                else if (e.keyCode === 13 && selectedIndexProveedor >= 0) {
+                    var selectedItem = items.eq(selectedIndexProveedor);
+                    var selectedId = selectedItem.data('id');
+                    var selectedName = selectedItem.data('name');
+
+                    $('#proveedor').val(selectedName); // Pasa el nombre al campo proveedor
+                    $('#proveedor_id').val(selectedId); // Guarda el ID del proveedor
+                    $('#suggestions').html(''); // Limpiar las sugerencias
+                }
+            }
+        });
+
+        // Resaltar el item seleccionado para proveedor
+        function highlightItemProveedor() {
+            $('.suggestion-item-proveedor').removeClass('active'); // Elimina la clase "active" de todos los items
+            var selectedItem = $('.suggestion-item-proveedor').eq(selectedIndexProveedor);
+            selectedItem.addClass('active'); // Agrega la clase "active" al item seleccionado
         }
-    </script>
-    <script>
-        function fn_agregar_cantidad_exacta() {
-            try {
 
-                var articulo_id = document.getElementById("idArticuloEncontrado").value;
-                var articulo = document.getElementById("idBuscarArticulos").value;
-                var cantidad = document.getElementById("ca-idCantidadArticulos").value;
-                var total_compra = document.getElementById("ca-idTotalCompraArticulo").value;
-                var precio_calculado = document.getElementById("ca-idPrecioCalculado").value;
 
-                var precio_venta = parseFloat(document.getElementById("ca-idPrecioVenta").value).toFixed(2);
 
-                console.log("Precio de Venta ", precio_venta);
-                if (variable_global_js_articulo === null && (isNaN(precio_venta) || precio_venta === "")) {
+        // Inicialización de índice seleccionado
+        var selectedIndexArticulo = -1;
 
+        // Búsqueda de artículos (campo de texto para artículos)
+        $('#idBuscarArticulos').on('input', function() {
+            var busqueda = $(this).val();
+            if (busqueda.length >= 2) { // Si hay al menos 2 caracteres
+                $.ajax({
+                    url: 'logica/clssConsultas.php',
+                    type: 'POST',
+                    data: {
+                        accion: "BUSQUEDAD_FILTRO_ARTICULOS",
+                        cadenaBusqueda: busqueda // El valor de lo que escribe el usuario
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var suggestions = '';
+                        $.each(data, function(index, articulo) {
+                            var articuloJson = JSON.stringify(articulo);
+                            var articuloJsonEscapado = encodeURIComponent(articuloJson);
+                            suggestions += '<li class="list-group-item list-group-item-action suggestion-item-articulo" data-json-articulo="' + articuloJsonEscapado + '" data-id="' + articulo.id + '" data-name="' + articulo.articulo_formato + '">' + articulo.articulo_formato + '</li>';
+                        });
+
+                        $('#listadoArticulosBusqueda').html(suggestions);
+                        selectedIndexArticulo = -1; // Resetea el índice de selección
+                    }
+                });
+            } else {
+                $('#listadoArticulosBusqueda').html('');
+            }
+        });
+
+        // Manejo de clic en artículo (asignar solo en artículo)
+        $(document).on('click', '.suggestion-item-articulo', function() {
+            var selectedId = $(this).data('id');
+            var selectedName = $(this).data('name');
+            var articuloJsonString = decodeURIComponent($(this).data('json-articulo'));
+            var jsArticulo = JSON.parse(articuloJsonString);
+            variable_global_js_articulo = jsArticulo;
+            //idBuscarArticulos
+            $('#idBuscarArticulos').val(selectedName); // Pasa el nombre al campo idBuscarArticulos
+            $('#idArticuloEncontrado').val(selectedId); // Guarda el ID del artículo
+            $('#listadoArticulosBusqueda').html(''); // Limpiar las sugerencias
+
+            console.log("jsdeMrd: " + variable_global_js_articulo);
+        });
+
+        // Manejo de teclas para artículos (solo si el foco está en #idBuscarArticulos)
+        $('#idBuscarArticulos').on('keydown', function(e) {
+            var items = $('.suggestion-item-articulo');
+
+            if (items.length > 0) {
+                // Flecha hacia abajo
+                if (e.keyCode === 40) {
+                    selectedIndexArticulo = (selectedIndexArticulo + 1) % items.length; // Avanza el índice
+                    highlightItemArticulo(); // Resalta el artículo
+                }
+                // Flecha hacia arriba
+                else if (e.keyCode === 38) {
+                    selectedIndexArticulo = (selectedIndexArticulo - 1 + items.length) % items.length; // Retrocede el índice
+                    highlightItemArticulo(); // Resalta el artículo
+                }
+                // Tecla Enter (si el artículo tiene seleccionado un item)
+                else if (e.keyCode === 13 && selectedIndexArticulo >= 0) {
+                    e.preventDefault(); // Prevenir el comportamiento predeterminado (enviar formulario)
+
+                    var selectedItem = items.eq(selectedIndexArticulo); // Asegurarse de que selecciona el item resaltado
+                    var selectedId = selectedItem.data('id');
+                    var selectedName = selectedItem.data('name');
+
+                    // Obtener el JSON del artículo seleccionado
+                    var articuloJsonStringTecl = decodeURIComponent(selectedItem.data('json-articulo'));
+                    var jsArticuloTecl = JSON.parse(articuloJsonStringTecl);
+                    variable_global_js_articulo = jsArticuloTecl;
+
+                    // Actualizar los campos con la información del artículo seleccionado
+                    $('#idBuscarArticulos').val(selectedName);
+                    $('#idArticuloEncontrado').val(selectedId);
+                    $('#listadoArticulosBusqueda').html(''); // Limpiar las sugerencias
+                }
+            }
+        });
+
+        // Resaltar el item seleccionado para artículos
+        function highlightItemArticulo() {
+            $('.suggestion-item-articulo').removeClass('active'); // Elimina la clase "active" de todos los items
+            var selectedItem = $('.suggestion-item-articulo').eq(selectedIndexArticulo);
+            selectedItem.addClass('active'); // Agrega la clase "active" al item seleccionado
+        }
+
+    });
+</script>
+
+<!-- vamos hacer unos calculos de mrd -->
+<script>
+    $(document).ready(function() {
+        $(document).on('input', '#ca-idCantidadArticulos, #ca-idTotalCompraArticulo', function() {
+            var cantidadArticulos = parseFloat($("#ca-idCantidadArticulos").val());
+            var totalCompraArticulo = parseFloat($("#ca-idTotalCompraArticulo").val());
+
+            if (!isNaN(cantidadArticulos) && !isNaN(totalCompraArticulo)) {
+                var resultado = totalCompraArticulo / cantidadArticulos;
+                console.log(resultado);
+                $("#ca-idPrecioCalculado").val(resultado.toFixed(2));
+            } else {
+                $("#ca-idPrecioCalculado").val("0.00");
+            }
+        });
+    });
+    ////////////////////////////////////////////////////
+    $(document).ready(function() {
+        $(document).on('input', '#caj-idCantidadCajas, #caj-idUnidadesPorCaja, #caj-idPrecioUnitarioCaja', function() {
+
+            var cantidadCajas = parseFloat($("#caj-idCantidadCajas").val());
+            var unidadesPorCaja = parseFloat($("#caj-idUnidadesPorCaja").val());
+            var precioUnitarioCaja = parseFloat($("#caj-idPrecioUnitarioCaja").val());
+
+
+            var totalCajas = parseFloat($("#ca-idTotalCompraArticulo").val());
+
+            if (!isNaN(cantidadCajas) && !isNaN(unidadesPorCaja) && !isNaN(precioUnitarioCaja)) {
+                var totalCajas = precioUnitarioCaja * cantidadCajas;
+                var unidadesTotales = unidadesPorCaja * cantidadCajas;
+                ///////////
+                var puCalculado = totalCajas / unidadesTotales;
+                /////////////////////
+                $("#caj-idTotalCajas").val(totalCajas.toFixed(2));
+                $("#caj-idUnidadesCalculadas").val(unidadesTotales.toFixed(2));
+                $("#caj-idPrecioUnitarioCalculado").val(puCalculado.toFixed(2));
+            } else {
+                $("#caj-idUnidadesCalculadas").val("0.00");
+                $("#caj-idPrecioUnitarioCalculado").val("0.00");
+                $("#caj-idTotalCajas").val("0.00");
+            }
+        });
+    });
+</script>
+<script>
+    function showNotification(estado, comentario) {
+        // Configurar el contenido de la notificación
+        var content = {};
+        var state = ""; // Tipo de estado (success, error, etc.)
+        var placementFrom = "bottom"; // Posición vertical
+        var placementAlign = "right"; // Posición horizontal
+
+        // Personalizar contenido según el estado
+        switch (estado) {
+            case 'Agregar':
+                content.message = comentario;
+                content.title = "¡Agregado con Éxito!";
+                content.icon = "fa fa-check-circle"; // Ícono para éxito
+                state = "success";
+                break;
+            case 'Eliminar':
+                content.message = "Operación exitosa.";
+                content.title = "¡Eliminado!";
+                content.icon = "fa fa-times-circle"; // Ícono para éxito
+                state = "danger";
+                break;
+            case 'success':
+                content.message = "Operación exitosa.";
+                content.title = "¡Éxito!";
+                content.icon = "fa fa-check-circle"; // Ícono para éxito
+                state = "success";
+                break;
+            case 'error':
+                content.message = "Ocurrió un error inesperado.";
+                content.title = "¡Error!";
+                content.icon = "fa fa-times-circle"; // Ícono para error
+                state = "danger";
+                break;
+            case 'warning':
+                content.message = "Advertencia: Revisa los datos.";
+                content.title = "¡Advertencia!";
+                content.icon = "fa fa-exclamation-triangle"; // Ícono para advertencia
+                state = "warning";
+                break;
+            case 'info':
+                content.message = "Este es un mensaje informativo.";
+                content.title = "Información";
+                content.icon = "fa fa-info-circle"; // Ícono para información
+                state = "info";
+                break;
+            default:
+                content.message = "Estado desconocido.";
+                content.title = "Notificación";
+                content.icon = "fa fa-question-circle"; // Ícono por defecto
+                state = "info";
+        }
+
+        // Mostrar la notificación
+        $.notify(content, {
+            type: state, // Estado
+            placement: {
+                from: placementFrom, // Posición vertical
+                align: placementAlign // Posición horizontal
+            },
+            time: 1000, // Duración de la animación
+            delay: 3000, // Tiempo para ocultar (ms)
+        });
+    }
+</script>
+<script>
+    function fn_agregar_cantidad_exacta() {
+        try {
+
+            var articulo_id = document.getElementById("idArticuloEncontrado").value;
+            var articulo = document.getElementById("idBuscarArticulos").value;
+            var cantidad = document.getElementById("ca-idCantidadArticulos").value;
+            var total_compra = document.getElementById("ca-idTotalCompraArticulo").value;
+            var precio_calculado = document.getElementById("ca-idPrecioCalculado").value;
+
+            var precio_venta = parseFloat(document.getElementById("ca-idPrecioVenta").value).toFixed(2);
+
+            console.log("Precio de Venta ", precio_venta);
+            if (variable_global_js_articulo === null && (isNaN(precio_venta) || precio_venta === "")) {
+
+                swal("Error", "El producto no tiene precio de venta (S/)", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+
+
+            } else {
+                if (precio_venta === "" || isNaN(precio_venta)) {
+                    precio_venta = variable_global_js_articulo.precio_venta;
+                }
+                if (precio_venta === null || precio_venta === null) {
+                    console.log("Es nuloooo como tu culoo")
                     swal("Error", "El producto no tiene precio de venta (S/)", {
                         icon: "error",
                         buttons: {
@@ -1293,214 +1312,46 @@ include("cabecera.php");
                             },
                         },
                     });
-
-
                 } else {
-                    if (precio_venta === "" || isNaN(precio_venta)) {
-                        precio_venta = variable_global_js_articulo.precio_venta;
-                    }
-                    if (precio_venta === null || precio_venta === null) {
-                        console.log("Es nuloooo como tu culoo")
-                        swal("Error", "El producto no tiene precio de venta (S/)", {
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                    } else {
-                        var js_cantidad_exacta = {
-                            "articulo_id": articulo_id,
-                            "cantidad_": cantidad,
-                            "precio_unitario_": precio_calculado,
-                            "sub_total_": total_compra,
-                            "precio_venta_": precio_venta,
-                            "ca": "si",
-                            "ca-cantidad_exacta": "si",
-                            "ca-cantidad_articulos": cantidad,
-                            "ca-total_compra": total_compra,
-                            "ca-precio_unitario_calculado_articulo": precio_calculado,
-                            "ca-precio_venta": precio_venta,
-                            "caja": "no",
-                            "caj-caja": "no",
-                            "caj-cantidad_cajas": 0,
-                            "caj-unidades_por_caja": 0,
-                            "caj-precio_unitario_de_caja": 0,
-                            "caj-total": 0,
-                            "caj-precio_unitario_articulo_calculado": 0,
-                            "caj-unidades_calculadas": 0,
-                            "caj-precio_venta_por_articulo": 0,
-                            "json_producto": variable_global_js_articulo
-                        };
-                        console.log("Cantidad: " + cantidad);
-                        console.log("Articulo: " + articulo_id);
-
-                        if (articulo_id === "" || isNaN(cantidad) || isNaN(total_compra) || isNaN(precio_calculado)) {
-                            alert("Por favor, completa todos los campos.");
-                            return; // Salir de la función si algún campo está vacío
-                        }
-
-
-                        var articuloJsFormat;
-                        if (variable_global_js_articulo === null) {
-                            articuloJsFormat = document.getElementById("idBuscarArticulos").value;
-                        } else {
-                            articuloJsFormat = variable_global_js_articulo.articulo + " | Tipo: " + variable_global_js_articulo.tipo + " | Dimesion: " + variable_global_js_articulo.dimension;
-                        }
-                        //var articuloJsFormat = variable_global_js_articulo.articulo + " | Tipo: " + variable_global_js_articulo.tipo + " | Dimesion: " + variable_global_js_articulo.dimension;
-
-                        var tablita = document.getElementById("idTablitaCompra").getElementsByTagName('tbody')[0];
-                        var newRow = tablita.insertRow(tablita.rows.length);
-                        var cell1 = newRow.insertCell(0); // ID
-                        var cell2 = newRow.insertCell(1); // Artículo
-                        var cell3 = newRow.insertCell(2); // Cantidad
-                        var cell4 = newRow.insertCell(3); // Precio Unitario
-                        var cell5 = newRow.insertCell(4); // Sub Total
-                        var cell6 = newRow.insertCell(5); // Precio Venta
-                        var cell7 = newRow.insertCell(6); // Celda para el botón
-
-                        ////////////////////////////////////////////////////////
-                        var btnEliminar = document.createElement("button");
-                        //btn btn-success btn-round
-                        btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
-                        btnEliminar.classList.add("btn", "btn-danger", "btn-round", "btn-sm");
-
-                        // Cambiar la forma en que se llama a la función eliminarFilaDeMrd
-                        btnEliminar.onclick = function() {
-
-                            var row = this.closest('tr'); // Obtiene la fila más cercana al botón
-                            row.remove(); // Elimina la fila del DOM
-                            ///////////////////////////////7
-                            var indiceFila = row.rowIndex;
-                            listaArticulosCantidades.splice(indiceFila, 1);
-                            console.log("Lista de mrd de Json Cantidad de Exacta");
-                            console.log(listaArticulosCantidades);
-                            showNotification('eliminar');
-
-                        };
-                        //////////////////////////////////////////////////////
-
-                        // Insertar los valores en las celdas
-                        cell1.innerHTML = articulo_id;
-                        cell2.innerHTML = articuloJsFormat;
-                        cell3.innerHTML = cantidad;
-                        cell4.innerHTML = precio_calculado;
-                        cell5.innerHTML = (cantidad * precio_calculado).toFixed(2); // Sub Total = Cantidad * Precio Unitario
-                        cell6.innerHTML = precio_venta;
-                        cell7.appendChild(btnEliminar);
-                        if (variable_global_js_articulo === null) {
-                            showNotification('Agregar', 'Articulo Agregado ');
-                        } else {
-                            showNotification('Agregar', 'Articulo ' + variable_global_js_articulo.articulo);
-                        }
-
-                        ///////////////////////////
-                        listaArticulosCantidades.push(js_cantidad_exacta);
-
-
-                        console.log("Lista de mrd de Json Cantidad de Exacta");
-                        console.log(listaArticulosCantidades);
-                        document.getElementById("idBuscarArticulos").value = "";
-                        document.getElementById("ca-idCantidadArticulos").value = "";
-                        document.getElementById("ca-idTotalCompraArticulo").value = "";
-                        document.getElementById("ca-idPrecioCalculado").value = "";
-                        document.getElementById("ca-idPrecioVenta").value = "";
-                    }
-
-                }
-            } catch (error) {
-                console.log("Error de mrd: ", error);
-            }
-
-
-        }
-        //////////////////////////////////////////////////////////////////////////////////
-        function fn_agregar_cantidad_cajas() {
-            var articulo_id = document.getElementById("idArticuloEncontrado").value;
-            var articulo = document.getElementById("idBuscarArticulos").value;
-            ////////////////////////////////////////////////////////////////
-            var cantidad_cajas = document.getElementById("caj-idCantidadCajas").value;
-            var unidades_por_caja = document.getElementById("caj-idUnidadesPorCaja").value;
-            var pu_caja = document.getElementById("caj-idPrecioUnitarioCaja").value;
-            var total_calculado_cajas = document.getElementById("caj-idTotalCajas").value;
-
-            var pu_calculado_articulo_x_caja = document.getElementById("caj-idPrecioUnitarioCalculado").value;
-            var unidades_calculadas = document.getElementById("caj-idUnidadesCalculadas").value;
-
-
-
-            if (articulo_id === "" || isNaN(cantidad_cajas) || isNaN(unidades_por_caja) || isNaN(pu_caja)) {
-                alert("Por favor, completa todos los campos.");
-                return; // Salir de la función si algún campo está vacío
-            }
-            var precio_venta_articulos = parseFloat(document.getElementById("caj-idPrecioVenta").value);
-
-
-            console.log("Precio de Venta " + precio_venta_articulos);
-
-            if (variable_global_js_articulo === null && (isNaN(precio_venta_articulos) || precio_venta_articulos === "")) {
-                swal("Error", "El Articulo no tiene precio de venta (S/)", {
-                    icon: "error",
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-danger",
-                        },
-                    },
-                });
-            } else {
-                if (precio_venta_articulos === "" || isNaN(precio_venta_articulos)) {
-                    precio_venta_articulos = variable_global_js_articulo.precio_venta;
-                }
-                if (precio_venta_articulos === null) {
-                    console.log("Es nuloooo como tu culoo")
-                    swal("Error", "El Articulo no tiene precio de venta (S/)", {
-                        icon: "error",
-                        buttons: {
-                            confirm: {
-                                className: "btn btn-danger",
-                            },
-                        },
-                    });
-                } else {
-                    console.log("Variable Global de mrd:");
-                    console.log(variable_global_js_articulo);
-
-
-
-                    var js_cantidad_cajas = {
+                    var js_cantidad_exacta = {
                         "articulo_id": articulo_id,
-                        "cantidad_": unidades_calculadas,
-                        "precio_unitario_": pu_calculado_articulo_x_caja,
-                        "sub_total_": total_calculado_cajas,
-                        "precio_venta_": precio_venta_articulos,
-                        "ca": "no",
-                        "ca-cantidad_exacta": "no",
-                        "ca-cantidad_articulos": 0,
-                        "ca-total_compra": 0,
-                        "ca-precio_unitario_calculado_articulo": 0,
-                        "ca-precio_venta": 0,
-                        "caja": "si",
-                        "caj-caja": "si",
-                        "caj-cantidad_cajas": cantidad_cajas,
-                        "caj-unidades_por_caja": unidades_por_caja,
-                        "caj-precio_unitario_de_caja": pu_caja,
-                        "caj-total": total_calculado_cajas,
-                        "caj-precio_unitario_articulo_calculado": pu_calculado_articulo_x_caja,
-                        "caj-unidades_calculadas": unidades_calculadas,
-                        "caj-precio_venta_por_articulo": precio_venta_articulos,
+                        "cantidad_": cantidad,
+                        "precio_unitario_": precio_calculado,
+                        "sub_total_": total_compra,
+                        "precio_venta_": precio_venta,
+                        "ca": "si",
+                        "ca-cantidad_exacta": "si",
+                        "ca-cantidad_articulos": cantidad,
+                        "ca-total_compra": total_compra,
+                        "ca-precio_unitario_calculado_articulo": precio_calculado,
+                        "ca-precio_venta": precio_venta,
+                        "caja": "no",
+                        "caj-caja": "no",
+                        "caj-cantidad_cajas": 0,
+                        "caj-unidades_por_caja": 0,
+                        "caj-precio_unitario_de_caja": 0,
+                        "caj-total": 0,
+                        "caj-precio_unitario_articulo_calculado": 0,
+                        "caj-unidades_calculadas": 0,
+                        "caj-precio_venta_por_articulo": 0,
                         "json_producto": variable_global_js_articulo
                     };
+                    console.log("Cantidad: " + cantidad);
+                    console.log("Articulo: " + articulo_id);
+
+                    if (articulo_id === "" || isNaN(cantidad) || isNaN(total_compra) || isNaN(precio_calculado)) {
+                        alert("Por favor, completa todos los campos.");
+                        return; // Salir de la función si algún campo está vacío
+                    }
 
 
                     var articuloJsFormat;
                     if (variable_global_js_articulo === null) {
-
                         articuloJsFormat = document.getElementById("idBuscarArticulos").value;
                     } else {
                         articuloJsFormat = variable_global_js_articulo.articulo + " | Tipo: " + variable_global_js_articulo.tipo + " | Dimesion: " + variable_global_js_articulo.dimension;
                     }
-
+                    //var articuloJsFormat = variable_global_js_articulo.articulo + " | Tipo: " + variable_global_js_articulo.tipo + " | Dimesion: " + variable_global_js_articulo.dimension;
 
                     var tablita = document.getElementById("idTablitaCompra").getElementsByTagName('tbody')[0];
                     var newRow = tablita.insertRow(tablita.rows.length);
@@ -1515,7 +1366,7 @@ include("cabecera.php");
                     ////////////////////////////////////////////////////////
                     var btnEliminar = document.createElement("button");
                     //btn btn-success btn-round
-                    btnEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+                    btnEliminar.innerHTML = '<i class="fas fa-times"></i>';
                     btnEliminar.classList.add("btn", "btn-danger", "btn-round", "btn-sm");
 
                     // Cambiar la forma en que se llama a la función eliminarFilaDeMrd
@@ -1536,76 +1387,77 @@ include("cabecera.php");
                     // Insertar los valores en las celdas
                     cell1.innerHTML = articulo_id;
                     cell2.innerHTML = articuloJsFormat;
-                    cell3.innerHTML = unidades_calculadas;
-                    cell4.innerHTML = pu_calculado_articulo_x_caja;
-                    cell5.innerHTML = (pu_calculado_articulo_x_caja * unidades_calculadas).toFixed(2); // Sub Total = Cantidad * Precio Unitario
-                    cell6.innerHTML = precio_venta_articulos;
+                    cell3.innerHTML = cantidad;
+                    cell4.innerHTML = precio_calculado;
+                    cell5.innerHTML = (cantidad * precio_calculado).toFixed(2); // Sub Total = Cantidad * Precio Unitario
+                    cell6.innerHTML = precio_venta;
                     cell7.appendChild(btnEliminar);
-
-
                     if (variable_global_js_articulo === null) {
-                        console.log("Estoy Auqiiiaoaia")
-                        showNotification('Agregar', 'Agregado con Exito !!!');
+                        showNotification('Agregar', 'Articulo Agregado ');
                     } else {
                         showNotification('Agregar', 'Articulo ' + variable_global_js_articulo.articulo);
                     }
 
                     ///////////////////////////
-                    listaArticulosCantidades.push(js_cantidad_cajas);
+                    listaArticulosCantidades.push(js_cantidad_exacta);
 
+
+                    console.log("Lista de mrd de Json Cantidad de Exacta");
                     console.log(listaArticulosCantidades);
-
                     document.getElementById("idBuscarArticulos").value = "";
-                    document.getElementById("caj-idCantidadCajas").value = "";
-                    document.getElementById("caj-idUnidadesPorCaja").value = "";
-                    document.getElementById("caj-idPrecioUnitarioCaja").value = "";
-                    document.getElementById("caj-idTotalCajas").value = "";
-
-                    ///////////////////////////////////////////////////////////////
-
-                    document.getElementById("caj-idPrecioUnitarioCalculado").value = "";
-                    document.getElementById("caj-idUnidadesCalculadas").value = "";
-                    document.getElementById("caj-idPrecioVenta").value = "";
-
+                    document.getElementById("ca-idCantidadArticulos").value = "";
+                    document.getElementById("ca-idTotalCompraArticulo").value = "";
+                    document.getElementById("ca-idPrecioCalculado").value = "";
+                    document.getElementById("ca-idPrecioVenta").value = "";
                 }
 
             }
-
-        }
-    </script>
-
-
-
-    <script>
-        function abriModalRegistroCompra() {
-            $('#modalRegistroCompra').modal('show');
-
-            fnAbrirModalRegistroArticulos()
+        } catch (error) {
+            console.log("Error de mrd: ", error);
         }
 
-        function fnAbrirModalRegistroArticulos() {
-            $('#modalRegistroArticulos').modal('show');
+
+    }
+    //////////////////////////////////////////////////////////////////////////////////
+    function fn_agregar_cantidad_cajas() {
+        var articulo_id = document.getElementById("idArticuloEncontrado").value;
+        var articulo = document.getElementById("idBuscarArticulos").value;
+        ////////////////////////////////////////////////////////////////
+        var cantidad_cajas = document.getElementById("caj-idCantidadCajas").value;
+        var unidades_por_caja = document.getElementById("caj-idUnidadesPorCaja").value;
+        var pu_caja = document.getElementById("caj-idPrecioUnitarioCaja").value;
+        var total_calculado_cajas = document.getElementById("caj-idTotalCajas").value;
+
+        var pu_calculado_articulo_x_caja = document.getElementById("caj-idPrecioUnitarioCalculado").value;
+        var unidades_calculadas = document.getElementById("caj-idUnidadesCalculadas").value;
+
+
+
+        if (articulo_id === "" || isNaN(cantidad_cajas) || isNaN(unidades_por_caja) || isNaN(pu_caja)) {
+            alert("Por favor, completa todos los campos.");
+            return; // Salir de la función si algún campo está vacío
         }
+        var precio_venta_articulos = parseFloat(document.getElementById("caj-idPrecioVenta").value);
 
-        function fnAbrirModalRegistroProveedor() {
-            $('#idModalRegistrarProveedor').modal('show');
 
-        }
+        console.log("Precio de Venta " + precio_venta_articulos);
 
-        //////////////////
-        function fnRegistrarProveedor() {
-            if ((document.getElementById("idNombreComercialProveedor").value).length <= 0 || document.getElementById("idNombreComercialProveedor").value === "") {
-                swal("Upps", "Debes de ingresar el nombre comercial del proveedor 😥", {
-                    icon: "error",
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-danger",
-                        },
+        if (variable_global_js_articulo === null && (isNaN(precio_venta_articulos) || precio_venta_articulos === "")) {
+            swal("Error", "El Articulo no tiene precio de venta (S/)", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
                     },
-                });
-
-            } else if ((document.getElementById("idRucProveedor").value).length <= 0 || document.getElementById("idNombreComercialProveedor").value === "") {
-                swal("Upps", "Debes de ingresar el RUC del Proveedor 😥", {
+                },
+            });
+        } else {
+            if (precio_venta_articulos === "" || isNaN(precio_venta_articulos)) {
+                precio_venta_articulos = variable_global_js_articulo.precio_venta;
+            }
+            if (precio_venta_articulos === null) {
+                console.log("Es nuloooo como tu culoo")
+                swal("Error", "El Articulo no tiene precio de venta (S/)", {
                     icon: "error",
                     buttons: {
                         confirm: {
@@ -1614,355 +1466,506 @@ include("cabecera.php");
                     },
                 });
             } else {
-                var jsDatosProveedor = {
-                    "nombre_comercial": document.getElementById("idNombreComercialProveedor").value,
-                    "razon_social": document.getElementById("idRazonSocialProveedor").value,
-                    "numero_documento": document.getElementById("idRucProveedor").value,
-                    "telefonofijo": document.getElementById("idNumTelefonoFijoProveedor").value === "" ? null : document.getElementById("idNumTelefonoFijoProveedor").value,
-                    "telefonomovil": document.getElementById("idNumCelularProveedor").value === "" ? null : document.getElementById("idNumCelularProveedor").value,
-                    "email": document.getElementById("idCorreoProveedor").value === "" ? null : document.getElementById("idCorreoProveedor").value,
-                    "tipo_persona": "JURIDICA",
-                    "condicion": "PROVEEDOR"
-                }
-                console.log(jsDatosProveedor);
-                $.ajax({
-                    url: 'logica/clssInsertPA.php',
-                    type: 'POST',
-                    data: {
-                        accion: 'INSERTPROVEEDORALMOMENTODECOMPRA',
-                        jsDatosProveedor: JSON.stringify(jsDatosProveedor)
-                    },
-                    success: function(response) {
+                console.log("Variable Global de mrd:");
+                console.log(variable_global_js_articulo);
 
-                        console.log("Respuesta del servidor: ", response);
 
-                        try {
-                            var result = JSON.parse(response);
-                            document.getElementById("proveedor").value = result.proveedor;
-                            document.getElementById("proveedor_id").value = result.ultimo_id_proveedor;
-                            if (result.estado === true) {
-                                swal({
-                                    title: "Proveedor Registado con Exito!",
-                                    text: result.mensaje,
-                                    icon: "success",
-                                    buttons: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    //
 
-                                    $('#idModalRegistrarProveedor').modal('hide');
-                                });;
-                            } else {
-                                swal("Error", result.mensaje, {
-                                    icon: "error",
-                                    buttons: {
-                                        confirm: {
-                                            className: "btn btn-danger",
-                                        },
-                                    },
-                                });
-                            }
-                        } catch (e) {
-                            console.log("Error al parsear el JSON: ", e);
-                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Error: " + error);
-                        swal("Error", "Hubo un problema con la solicitud.", {
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                    }
-                });
-
-            }
-
-        }
-        //////////////
-        function fn_registrar_articulo() {
-
-            if ((document.getElementById("idRegistroNombreArticulo").value).length > 0) {
-
-                let categoriaSelect = document.getElementById("idRegistoCategoria");
-                let categoria = categoriaSelect.selectedIndex === 0 ? null : categoriaSelect.value;
-                //////////////////////////////
-                let tipoSelect = document.getElementById("idRegistoTipo");
-                let tipo = tipoSelect.selectedIndex === 0 ? null : tipoSelect.value;
-                /////////////////////////////
-                let dimensionSelect = document.getElementById("idRegistroDimension");
-                let dimension = dimensionSelect.selectedIndex === 0 ? null : dimensionSelect.value;
-
-                /////////////
-                let escalaSelect = document.getElementById("idRegistroEscala");
-                let escala = escalaSelect.selectedIndex === 0 ? null : escalaSelect.value;
-
-                /////////////////////////////////////////
-                let radios = document.getElementsByName("flexRadioDefault");
-                let selectedValue = "";
-
-                for (let i = 0; i < radios.length; i++) {
-                    if (radios[i].checked) {
-                        selectedValue = radios[i].value;
-                        break;
-                    }
-                }
-                let corte = selectedValue === "Si" ? true : false;
-
-                let colorEscrito = document.getElementById("idRegistroColor").value;
-                let color = (colorEscrito).length > 0 ? colorEscrito : null
-                ///////
-                let marcaEscrita = document.getElementById("idRegistroMarca").value;
-                let marca = (marcaEscrita).length > 0 ? marcaEscrita : null
-
-                var jsArticulo = {
-                    "nombre": document.getElementById("idRegistroNombreArticulo").value,
-                    "categoria_id": categoria,
-                    "tipo_id": tipo,
-                    "dimension_id": dimension,
-                    "escala_id": escala,
-                    "corte": corte,
-                    "color": color,
-                    "marca": document.getElementById("idRegistroMarca").value
+                var js_cantidad_cajas = {
+                    "articulo_id": articulo_id,
+                    "cantidad_": unidades_calculadas,
+                    "precio_unitario_": pu_calculado_articulo_x_caja,
+                    "sub_total_": total_calculado_cajas,
+                    "precio_venta_": precio_venta_articulos,
+                    "ca": "no",
+                    "ca-cantidad_exacta": "no",
+                    "ca-cantidad_articulos": 0,
+                    "ca-total_compra": 0,
+                    "ca-precio_unitario_calculado_articulo": 0,
+                    "ca-precio_venta": 0,
+                    "caja": "si",
+                    "caj-caja": "si",
+                    "caj-cantidad_cajas": cantidad_cajas,
+                    "caj-unidades_por_caja": unidades_por_caja,
+                    "caj-precio_unitario_de_caja": pu_caja,
+                    "caj-total": total_calculado_cajas,
+                    "caj-precio_unitario_articulo_calculado": pu_calculado_articulo_x_caja,
+                    "caj-unidades_calculadas": unidades_calculadas,
+                    "caj-precio_venta_por_articulo": precio_venta_articulos,
+                    "json_producto": variable_global_js_articulo
                 };
-                console.log(jsArticulo);
-
-                $.ajax({
-                    url: 'logica/clssInsertPA.php',
-                    type: 'POST',
-                    data: {
-                        accion: 'REGISTAR_ARTICULO',
-                        jsDatosArticulo: JSON.stringify(jsArticulo)
-                    },
-                    success: function(response) {
-                        console.log("Respuesta del servidor PA articulo: ", response);
-                        try {
-                            var result = JSON.parse(response);
-                            if (result.estado === true) {
-                                swal({
-                                    title: "Registrado con Exito!",
-                                    text: result.mensaje,
-                                    icon: "success",
-                                    buttons: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    //location.reload();
-                                    //articulo_formato
-                                    //idBuscarArticulos
-                                    variable_global_js_articulo = null;
-                                    $('#idBuscarArticulos').val(result.articulo_formato);
-                                    $('#idArticuloEncontrado').val(result.ultimo_id);
-                                    document.getElementById("idRegistoCategoria").selectedIndex = 0;
-                                    document.getElementById("idRegistoTipo").selectedIndex = 0;
-                                    document.getElementById("idRegistroDimension").selectedIndex = 0;
-                                    document.getElementById("idRegistroEscala").selectedIndex = 0;
-                                    document.getElementById("idRegistroEscala").selectedIndex = 0;
-                                    document.getElementById("idRegistroColor").value = "";
-                                    document.getElementById("idRegistroMarca").value = "";
-                                    document.getElementById("idRegistroNombreArticulo").value = "";
-
-                                    $('#modalRegistroArticulos').modal('hide');
-
-                                });;
-                            } else {
-                                swal("Error", result.mensaje, {
-                                    icon: "error",
-                                    buttons: {
-                                        confirm: {
-                                            className: "btn btn-danger",
-                                        },
-                                    },
-                                });
-                            }
-                        } catch (e) {
-                            console.log("Error al parsear el JSON: ", e);
-                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Error: " + error);
-                        swal("Error", "Hubo un problema con la solicitud.", {
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                    }
-                });
 
 
-            } else {
-                swal("Ups!, Debes de ingresar el nombre del Articulo 😩", {
-                    icon: "error",
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-danger",
-                        },
-                    },
-                });
-            }
+                var articuloJsFormat;
+                if (variable_global_js_articulo === null) {
 
-        }
-    </script>
-    <script>
-        function fn_registrar_compra() {
-
-            var json_compra = {
-                usuario_id: parseInt(document.getElementById("idUsuarioCompra").innerText),
-                proveedor_id: parseInt(document.getElementById("proveedor_id").value),
-                fecha: document.getElementById("idFechaCompra").value,
-                numero_comprobante: document.getElementById("idCompraNumComprabante").value,
-                total: parseFloat(document.getElementById("idCompraTotalDeCompra").value),
-                js_detalle_compra: listaArticulosCantidades,
-            };
-            console.log(json_compra);
-            console.log(listaArticulosCantidades);
-            if (document.getElementById("idFechaCompra").value === "" || (document.getElementById("idFechaCompra").value).length === 0) {
-                swal("Ups!", "Necesitas ingresar la fecha de compra para realizar el registro.", {
-                    icon: "error",
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-danger",
-                        },
-                    },
-                });
-            } else {
-                $.ajax({
-                    url: 'logica/clssInsertPA.php',
-                    type: 'POST',
-                    data: {
-                        accion: 'REGISTRAR_COMPRA',
-                        jsDatosCompra: JSON.stringify(json_compra)
-                    },
-                    success: function(response) {
-
-                        console.log("Respuesta del servidor: ", response);
-
-                        try {
-                            var result = JSON.parse(response);
-                            if (result.estado === true) {
-                                swal({
-                                    title: "Compra Registrada con Exito!",
-                                    text: "Compra registrada juntos con los articulos",
-                                    icon: "success",
-                                    buttons: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    location.reload();
-                                });;
-                            } else {
-                                swal("Error", result.mensaje, {
-                                    icon: "error",
-                                    buttons: {
-                                        confirm: {
-                                            className: "btn btn-danger",
-                                        },
-                                    },
-                                });
-                            }
-                        } catch (e) {
-                            console.log("Error al parsear el JSON: ", e);
-                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.log("Error: " + error);
-                        swal("Error", "Hubo un problema con la solicitud.", {
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                    }
-                });
-            }
-
-
-
-        }
-    </script>
-
-    <script>
-        function abrirDetalle(json_datos) {
-            $('#modalDetalleCompra').modal('show');
-            console.log("Datos del jSON de mrd");
-            console.log(json_datos);
-            document.getElementById("idUsuario").innerText = json_datos.realizada_por;
-            document.getElementById("idFechaComprav2").innerText = json_datos.fecha_compra;
-            document.getElementById("idFechaRegistro").innerText = json_datos.fecha_registro;
-            document.getElementById("idHoraRegistro").innerText = json_datos.hora;
-
-            //////////////////////////////
-            document.getElementById("docProveedor").innerText = json_datos.proveedor_num_doc;
-            document.getElementById("idProveedorNombre").innerText = json_datos.nombre_comercial_proveedor;
-            ////#
-
-            document.getElementById("idMontoRegistrado").innerText = json_datos.total;
-
-            var totalArticulo = 0;
-
-            console.log(json_datos.js_detalle_compra);
-
-            var json_detalle_compra = JSON.parse(json_datos.js_detalle_compra)
-            console.log(json_detalle_compra)
-
-            ////////////////////////////////
-            var tablaFilasDetalleCompra = '';
-            json_detalle_compra.forEach(function(item) {
-                var jsArticulo = item.json_producto;
-                totalArticulo = totalArticulo + parseFloat(item.sub_total_);
-                console.log(item);
-                console.log(item.json_producto);
-                let cadenaCantidades;
-                if (item.caja === "si") {
-                    cadenaCantidades = "Compra por Cajas [" + item['caj-cantidad_cajas'] + " cajas de " + item['caj-unidades_por_caja'] + " unidades c/u] = " + item.cantidad_ + " unidades | [P.U de Caja: " + item['caj-precio_unitario_de_caja'] + ") | <b>Monto Total = S/" + item["sub_total_"] + "</b>";
+                    articuloJsFormat = document.getElementById("idBuscarArticulos").value;
                 } else {
-                    cadenaCantidades = "Compra por Unidades [" + item['cantidad_'] + " UNI X <b>" + item["ca-precio_unitario_calculado_articulo"] + " P.U</b>] = <b> S/ " + item['sub_total_'] + "</b>";
+                    articuloJsFormat = variable_global_js_articulo.articulo + " | Tipo: " + variable_global_js_articulo.tipo + " | Dimesion: " + variable_global_js_articulo.dimension;
                 }
-                let unidades = item.ca === "si" ? "Unidades Exactas" : "cajas"
-                tablaFilasDetalleCompra += `
+
+
+                var tablita = document.getElementById("idTablitaCompra").getElementsByTagName('tbody')[0];
+                var newRow = tablita.insertRow(tablita.rows.length);
+                var cell1 = newRow.insertCell(0); // ID
+                var cell2 = newRow.insertCell(1); // Artículo
+                var cell3 = newRow.insertCell(2); // Cantidad
+                var cell4 = newRow.insertCell(3); // Precio Unitario
+                var cell5 = newRow.insertCell(4); // Sub Total
+                var cell6 = newRow.insertCell(5); // Precio Venta
+                var cell7 = newRow.insertCell(6); // Celda para el botón
+
+                ////////////////////////////////////////////////////////
+                var btnEliminar = document.createElement("button");
+                //btn btn-success btn-round
+                btnEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+                btnEliminar.classList.add("btn", "btn-danger", "btn-round", "btn-sm");
+
+                // Cambiar la forma en que se llama a la función eliminarFilaDeMrd
+                btnEliminar.onclick = function() {
+
+                    var row = this.closest('tr'); // Obtiene la fila más cercana al botón
+                    row.remove(); // Elimina la fila del DOM
+                    ///////////////////////////////7
+                    var indiceFila = row.rowIndex;
+                    listaArticulosCantidades.splice(indiceFila, 1);
+                    console.log("Lista de mrd de Json Cantidad de Exacta");
+                    console.log(listaArticulosCantidades);
+                    showNotification('eliminar');
+
+                };
+                //////////////////////////////////////////////////////
+
+                // Insertar los valores en las celdas
+                cell1.innerHTML = articulo_id;
+                cell2.innerHTML = articuloJsFormat;
+                cell3.innerHTML = unidades_calculadas;
+                cell4.innerHTML = pu_calculado_articulo_x_caja;
+                cell5.innerHTML = (pu_calculado_articulo_x_caja * unidades_calculadas).toFixed(2); // Sub Total = Cantidad * Precio Unitario
+                cell6.innerHTML = precio_venta_articulos;
+                cell7.appendChild(btnEliminar);
+
+
+                if (variable_global_js_articulo === null) {
+                    console.log("Estoy Auqiiiaoaia")
+                    showNotification('Agregar', 'Agregado con Exito !!!');
+                } else {
+                    showNotification('Agregar', 'Articulo ' + variable_global_js_articulo.articulo);
+                }
+
+                ///////////////////////////
+                listaArticulosCantidades.push(js_cantidad_cajas);
+
+                console.log(listaArticulosCantidades);
+
+                document.getElementById("idBuscarArticulos").value = "";
+                document.getElementById("caj-idCantidadCajas").value = "";
+                document.getElementById("caj-idUnidadesPorCaja").value = "";
+                document.getElementById("caj-idPrecioUnitarioCaja").value = "";
+                document.getElementById("caj-idTotalCajas").value = "";
+
+                ///////////////////////////////////////////////////////////////
+
+                document.getElementById("caj-idPrecioUnitarioCalculado").value = "";
+                document.getElementById("caj-idUnidadesCalculadas").value = "";
+                document.getElementById("caj-idPrecioVenta").value = "";
+
+            }
+
+        }
+
+    }
+</script>
+
+
+
+<script>
+    function abriModalRegistroCompra() {
+        $('#modalRegistroCompra').modal('show');
+
+        fnAbrirModalRegistroArticulos()
+    }
+
+    function fnAbrirModalRegistroArticulos() {
+        $('#modalRegistroArticulos').modal('show');
+    }
+
+    function fnAbrirModalRegistroProveedor() {
+        $('#idModalRegistrarProveedor').modal('show');
+
+    }
+
+    //////////////////
+    function fnRegistrarProveedor() {
+        if ((document.getElementById("idNombreComercialProveedor").value).length <= 0 || document.getElementById("idNombreComercialProveedor").value === "") {
+            swal("Upps", "Debes de ingresar el nombre comercial del proveedor 😥", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+
+        } else if ((document.getElementById("idRucProveedor").value).length <= 0 || document.getElementById("idNombreComercialProveedor").value === "") {
+            swal("Upps", "Debes de ingresar el RUC del Proveedor 😥", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        } else {
+            var jsDatosProveedor = {
+                "nombre_comercial": document.getElementById("idNombreComercialProveedor").value,
+                "razon_social": document.getElementById("idRazonSocialProveedor").value,
+                "numero_documento": document.getElementById("idRucProveedor").value,
+                "telefonofijo": document.getElementById("idNumTelefonoFijoProveedor").value === "" ? null : document.getElementById("idNumTelefonoFijoProveedor").value,
+                "telefonomovil": document.getElementById("idNumCelularProveedor").value === "" ? null : document.getElementById("idNumCelularProveedor").value,
+                "email": document.getElementById("idCorreoProveedor").value === "" ? null : document.getElementById("idCorreoProveedor").value,
+                "tipo_persona": "JURIDICA",
+                "condicion": "PROVEEDOR"
+            }
+            console.log(jsDatosProveedor);
+            $.ajax({
+                url: 'logica/clssInsertPA.php',
+                type: 'POST',
+                data: {
+                    accion: 'INSERTPROVEEDORALMOMENTODECOMPRA',
+                    jsDatosProveedor: JSON.stringify(jsDatosProveedor)
+                },
+                success: function(response) {
+
+                    console.log("Respuesta del servidor: ", response);
+
+                    try {
+                        var result = JSON.parse(response);
+                        document.getElementById("proveedor").value = result.proveedor;
+                        document.getElementById("proveedor_id").value = result.ultimo_id_proveedor;
+                        if (result.estado === true) {
+                            swal({
+                                title: "Proveedor Registado con Exito!",
+                                text: result.mensaje,
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then(() => {
+                                //
+
+                                $('#idModalRegistrarProveedor').modal('hide');
+                            });;
+                        } else {
+                            swal("Error", result.mensaje, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log("Error al parsear el JSON: ", e);
+                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    swal("Error", "Hubo un problema con la solicitud.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            });
+
+        }
+
+    }
+    //////////////
+    function fn_registrar_articulo() {
+
+        if ((document.getElementById("idRegistroNombreArticulo").value).length > 0) {
+
+            let categoriaSelect = document.getElementById("idRegistoCategoria");
+            let categoria = categoriaSelect.selectedIndex === 0 ? null : categoriaSelect.value;
+            //////////////////////////////
+            let tipoSelect = document.getElementById("idRegistoTipo");
+            let tipo = tipoSelect.selectedIndex === 0 ? null : tipoSelect.value;
+            /////////////////////////////
+            let dimensionSelect = document.getElementById("idRegistroDimension");
+            let dimension = dimensionSelect.selectedIndex === 0 ? null : dimensionSelect.value;
+
+            /////////////
+            let escalaSelect = document.getElementById("idRegistroEscala");
+            let escala = escalaSelect.selectedIndex === 0 ? null : escalaSelect.value;
+
+            /////////////////////////////////////////
+            let radios = document.getElementsByName("flexRadioDefault");
+            let selectedValue = "";
+
+            for (let i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    selectedValue = radios[i].value;
+                    break;
+                }
+            }
+            let corte = selectedValue === "Si" ? true : false;
+
+            let colorEscrito = document.getElementById("idRegistroColor").value;
+            let color = (colorEscrito).length > 0 ? colorEscrito : null
+            ///////
+            let marcaEscrita = document.getElementById("idRegistroMarca").value;
+            let marca = (marcaEscrita).length > 0 ? marcaEscrita : null
+
+            var jsArticulo = {
+                "nombre": document.getElementById("idRegistroNombreArticulo").value,
+                "categoria_id": categoria,
+                "tipo_id": tipo,
+                "dimension_id": dimension,
+                "escala_id": escala,
+                "corte": corte,
+                "color": color,
+                "marca": document.getElementById("idRegistroMarca").value
+            };
+            console.log(jsArticulo);
+
+            $.ajax({
+                url: 'logica/clssInsertPA.php',
+                type: 'POST',
+                data: {
+                    accion: 'REGISTAR_ARTICULO',
+                    jsDatosArticulo: JSON.stringify(jsArticulo)
+                },
+                success: function(response) {
+                    console.log("Respuesta del servidor PA articulo: ", response);
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.estado === true) {
+                            swal({
+                                title: "Registrado con Exito!",
+                                text: result.mensaje,
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then(() => {
+                                //location.reload();
+                                //articulo_formato
+                                //idBuscarArticulos
+                                variable_global_js_articulo = null;
+                                $('#idBuscarArticulos').val(result.articulo_formato);
+                                $('#idArticuloEncontrado').val(result.ultimo_id);
+                                document.getElementById("idRegistoCategoria").selectedIndex = 0;
+                                document.getElementById("idRegistoTipo").selectedIndex = 0;
+                                document.getElementById("idRegistroDimension").selectedIndex = 0;
+                                document.getElementById("idRegistroEscala").selectedIndex = 0;
+                                document.getElementById("idRegistroEscala").selectedIndex = 0;
+                                document.getElementById("idRegistroColor").value = "";
+                                document.getElementById("idRegistroMarca").value = "";
+                                document.getElementById("idRegistroNombreArticulo").value = "";
+
+                                $('#modalRegistroArticulos').modal('hide');
+
+                            });;
+                        } else {
+                            swal("Error", result.mensaje, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log("Error al parsear el JSON: ", e);
+                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    swal("Error", "Hubo un problema con la solicitud.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            });
+
+
+        } else {
+            swal("Ups!, Debes de ingresar el nombre del Articulo 😩", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        }
+
+    }
+</script>
+<script>
+    function fn_registrar_compra() {
+
+        var json_compra = {
+            usuario_id: parseInt(document.getElementById("idUsuarioCompra").innerText),
+            proveedor_id: parseInt(document.getElementById("proveedor_id").value),
+            fecha: document.getElementById("idFechaCompra").value,
+            numero_comprobante: document.getElementById("idCompraNumComprabante").value,
+            total: parseFloat(document.getElementById("idCompraTotalDeCompra").value),
+            js_detalle_compra: listaArticulosCantidades,
+        };
+        console.log(json_compra);
+        console.log(listaArticulosCantidades);
+        if (document.getElementById("idFechaCompra").value === "" || (document.getElementById("idFechaCompra").value).length === 0) {
+            swal("Ups!", "Necesitas ingresar la fecha de compra para realizar el registro.", {
+                icon: "error",
+                buttons: {
+                    confirm: {
+                        className: "btn btn-danger",
+                    },
+                },
+            });
+        } else {
+            $.ajax({
+                url: 'logica/clssInsertPA.php',
+                type: 'POST',
+                data: {
+                    accion: 'REGISTRAR_COMPRA',
+                    jsDatosCompra: JSON.stringify(json_compra)
+                },
+                success: function(response) {
+
+                    console.log("Respuesta del servidor: ", response);
+
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.estado === true) {
+                            swal({
+                                title: "Compra Registrada con Exito!",
+                                text: "Compra registrada juntos con los articulos",
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload();
+                            });;
+                        } else {
+                            swal("Error", result.mensaje, {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    } catch (e) {
+                        console.log("Error al parsear el JSON: ", e);
+                        swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error: " + error);
+                    swal("Error", "Hubo un problema con la solicitud.", {
+                        icon: "error",
+                        buttons: {
+                            confirm: {
+                                className: "btn btn-danger",
+                            },
+                        },
+                    });
+                }
+            });
+        }
+
+
+
+    }
+</script>
+
+<script>
+    function abrirDetalle(json_datos) {
+        $('#modalDetalleCompra').modal('show');
+        console.log("Datos del jSON de mrd");
+        console.log(json_datos);
+        document.getElementById("idUsuario").innerText = json_datos.realizada_por;
+        document.getElementById("idFechaComprav2").innerText = json_datos.fecha_compra;
+        document.getElementById("idFechaRegistro").innerText = json_datos.fecha_registro;
+        document.getElementById("idHoraRegistro").innerText = json_datos.hora;
+
+        //////////////////////////////
+        document.getElementById("docProveedor").innerText = json_datos.proveedor_num_doc;
+        document.getElementById("idProveedorNombre").innerText = json_datos.nombre_comercial_proveedor;
+        ////#
+
+        document.getElementById("idMontoRegistrado").innerText = json_datos.total;
+
+        var totalArticulo = 0;
+
+        console.log(json_datos.js_detalle_compra);
+
+        var json_detalle_compra = JSON.parse(json_datos.js_detalle_compra)
+        console.log(json_detalle_compra)
+
+        ////////////////////////////////
+        var tablaFilasDetalleCompra = '';
+        json_detalle_compra.forEach(function(item) {
+            var jsArticulo = item.json_producto;
+            totalArticulo = totalArticulo + parseFloat(item.sub_total_);
+            console.log(item);
+            console.log(item.json_producto);
+            let cadenaCantidades;
+            if (item.caja === "si") {
+                cadenaCantidades = "Compra por Cajas [" + item['caj-cantidad_cajas'] + " cajas de " + item['caj-unidades_por_caja'] + " unidades c/u] = " + item.cantidad_ + " unidades | [P.U de Caja: " + item['caj-precio_unitario_de_caja'] + ") | <b>Monto Total = S/" + item["sub_total_"] + "</b>";
+            } else {
+                cadenaCantidades = "Compra por Unidades [" + item['cantidad_'] + " UNI X <b>" + item["ca-precio_unitario_calculado_articulo"] + " P.U</b>] = <b> S/ " + item['sub_total_'] + "</b>";
+            }
+            let unidades = item.ca === "si" ? "Unidades Exactas" : "cajas"
+            tablaFilasDetalleCompra += `
             <li>
                 <strong>${item.json_producto.articulo}</strong> - ${cadenaCantidades}
             </li>`;
 
-            });
-            document.getElementById("idContenidoUlDetalle").innerHTML = tablaFilasDetalleCompra;
-            document.getElementById("idMontoTotalArticulos").innerText = "S/ " + totalArticulo;
+        });
+        document.getElementById("idContenidoUlDetalle").innerHTML = tablaFilasDetalleCompra;
+        document.getElementById("idMontoTotalArticulos").innerText = "S/ " + totalArticulo;
 
 
 
-        }
-    </script>
+    }
+</script>
 
-    <?php
-    include("pie.php");
-    ?>
+<?php
+include("pie.php");
+?>

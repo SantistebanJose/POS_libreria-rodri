@@ -22,35 +22,36 @@ include("cabecera.php");
                     class="row justify-content-center align-items-center md-2">
 
                     <div class="col-sm-12">
-                        <div class="table-filters mb-4">
+                        <div class="table-filters mb-3">
                             <div class="row justify-content-center align-items-center g-2">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                         <option value="">Filtrar por Categoría</option>
+                                        <!-- Aquí se agregarán las opciones de categorías dinámicamente -->
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                         <option value="">Filtrar por Tipo</option>
-
+                                        <!-- Aquí se agregarán las opciones de tipo dinámicamente -->
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                         <option value="">Filtrar por Dimensión</option>
-
+                                        <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
                                     </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <button
-                                        name=""
-                                        id="clearFilters"
-                                        class="btn btn-secondary btn-round btn-round btn-md"
-                                        href="#"
-                                        role="button"><i class="fas fa-broom"></i> Limpiar Filtros</b>
+                                <div class="col-md-2">
+                                    <select id="filterColor" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                        <option value="">Filtrar por Color</option>
+                                        <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button id="clearFilters" class="btn btn-secondary btn-round btn-md" role="button"><i class="fas fa-broom"></i> Limpiar Filtros</button>
                                 </div>
                             </div>
-
                         </div>
                         <div class="table-responsive">
                             <table
@@ -63,6 +64,7 @@ include("cabecera.php");
                                         <th>Categoria</th>
                                         <th>Tipo</th>
                                         <th>Dimension</th>
+                                        <th>color</th>
                                         <th>Stock</th>
                                         <th>Precio de Venta</th>
                                         <th>Accion</th>
@@ -74,8 +76,6 @@ include("cabecera.php");
                                     <?php
                                     foreach (listarArticuloSinview() as $datosArticulo) {
                                         $datosArticuloJSON = json_encode($datosArticulo);
-
-
                                     ?>
                                         <tr>
                                             <td><?php echo $datosArticulo["articulo_id"] ?></td>
@@ -83,10 +83,10 @@ include("cabecera.php");
                                             <td><?php echo $datosArticulo["categoria"] ?? '-'; ?></td>
                                             <td><?php echo $datosArticulo["tipo"] ?? '-'; ?></td>
                                             <td><?php echo $datosArticulo["dimension"] ?? '-'; ?></td>
+                                            <td><?php echo $datosArticulo["color_v2"] ?? '-'; ?></td>
                                             <td><?php echo $datosArticulo["stock"] ?></td>
                                             <td><?php echo $datosArticulo["precio_venta"] ?></td>
                                             <th>
-
                                                 <div class="mt-2 text-center">
                                                     <!-- Botón de Editar (con ícono amarillo) -->
                                                     <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
@@ -108,8 +108,15 @@ include("cabecera.php");
                                                             <i class="fa fa-unlock"></i>
                                                         </a>
                                                     <?php } ?>
+
+                                                    <!-- Botón para eliminar -->
+                                                    <a name="edit" id="eliminate" class="btn btn-danger btn-round ml-2"
+                                                        onclick='fn_eliminar_articulo(<?php echo $datosArticulo["articulo_id"] ?>)' role="button">
+                                                        <i class="fas fa-times-circle"></i>
+                                                    </a>
                                                 </div>
                                             </th>
+
                                         </tr>
                                     <?php
                                     }
@@ -152,7 +159,7 @@ include("cabecera.php");
 <script>
     $(document).ready(function() {
         var table = $("#multi-filter-select").DataTable({
-            pageLength: 5,
+            pageLength: 20,
             language: {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -199,6 +206,13 @@ include("cabecera.php");
             }
         });
 
+        // Llenar el filtro de color con valores únicos
+        table.column(5).data().unique().sort().each(function(d, j) {
+            if (d !== "") {
+                $('#filterColor').append('<option value="' + d + '">' + d + '</option>');
+            }
+        });
+
         // Filtrar por Categoría
         $('#filterCategoria').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -216,6 +230,11 @@ include("cabecera.php");
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
             table.column(3).search(val ? "^" + val + "$" : "", true, false).draw();
         });
+        // Filtrar por Color
+        $('#filterColor').on('change', function() {
+            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+            table.column(5).search(val ? "^" + val + "$" : "", true, false).draw();
+        });
 
         // Limpiar los filtros al hacer clic en el botón
         $('#clearFilters').on('click', function() {
@@ -223,6 +242,7 @@ include("cabecera.php");
             $('#filterCategoria').val('');
             $('#filterTipo').val('');
             $('#filterDimension').val('');
+            $('#filterColor').val('');
 
             // Restablecer los filtros de la tabla
             table.columns().search('').draw();
@@ -772,7 +792,19 @@ include("cabecera.php");
                                 </div>
 
                             </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label"> <strong>Precio Compra</strong></label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="idRegistrarPrecioCompraUpdate"
+                                        id="idRegistrarPrecioCompraUpdate"
+                                        aria-describedby="helpId"
+                                        placeholder="00.00" />
+                                </div>
 
+                            </div>
                             <div class="col-sm-6">
                                 <div class="mb-3">
                                     <label for="" class="form-label"> <strong>Precio Venta</strong></label>
@@ -835,7 +867,6 @@ include("cabecera.php");
                         </div>
                     </div>
 
-
                 </div>
                 </div>
             </div>
@@ -872,6 +903,7 @@ include("cabecera.php");
         document.getElementById("idRegistroMarca").value = datosArticulo.marca || '';
         document.getElementById("idRegistroColor").value = datosArticulo.color || '';
         document.getElementById("idRegistrarStock").value = datosArticulo.stock || '';
+        document.getElementById("idRegistrarPrecioCompraUpdate").value = datosArticulo.precio_compra || "";
         document.getElementById("idRegistrarPrecioVenta").value = datosArticulo.precio_venta || '';
 
         // Para el campo 'corte' (radio buttons)
@@ -922,10 +954,12 @@ include("cabecera.php");
                 // Si es un número entero positivo, lo convierte a número; si no, asigna 0
                 let stock = isNaN(stockEscrito) ? 0 : stockEscrito;
 
-                
+
 
                 // Si es un número entero positivo, lo convierte a número; si no, asigna 0
                 let precioventa = parseFloat(document.getElementById("idRegistrarPrecioVenta").value);
+                let precioCompra = parseFloat(document.getElementById("idRegistrarPrecioCompraUpdate").value);
+
                 //console.log(datosArticulo);
                 var jsArticulo = {
                     "id": datosArticulo["articulo_id"],
@@ -937,7 +971,8 @@ include("cabecera.php");
                     "corte": corte,
                     "color": color,
                     "stock": stock,
-                    "precio_venta": isNaN(precioventa)===true?0:precioventa,
+                    "precio_venta": isNaN(precioventa) === true ? 0 : precioventa,
+                    "precio_compra": isNaN(precioCompra) === true ? 0 : precioCompra,
                     "marca": document.getElementById("idRegistroMarca").value
                 };
                 console.log(jsArticulo);
@@ -1059,6 +1094,61 @@ include("cabecera.php");
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
                 });
+            }
+        });
+    }
+
+    function fn_eliminar_articulo(idArticulo) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción eliminará al articulo.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, Eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: "POST",
+                    url: "logica/clssInsertPA.php",
+                    data: {
+                        "accion": "ELIMINAR_ARTICULO",
+                        "id": idArticulo
+                    }
+                }).done(function(response) {
+
+                    var result = JSON.parse(response);
+                    console.log(response);
+
+
+                    if (result.estado === true) {
+                        //location.reload();
+                        swal("Articulo Eliminado!, No podrás volver a usarlo 😩", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    } else {
+                        swal("Error", result.message, {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+
+                }).fail(function(error) {
+                    console.error("Error:", error.responseText);
+                });
+
+
             }
         });
     }

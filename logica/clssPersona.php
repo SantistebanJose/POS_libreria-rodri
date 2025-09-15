@@ -144,6 +144,7 @@ function registrar_empleado_trabajador($datos = array()) {
         if ($existe > 0) {
             echo json_encode(["error" => true, "message" => "El número de documento ya está registrado."]);
             return;
+            
         }
         // Iniciar la transacción
         $conectar->beginTransaction();

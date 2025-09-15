@@ -55,11 +55,15 @@ include("cabecera.php");
             <div class="card-body" id="card-body-compras">
                 <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="pills-tipo-articulo-tab" data-bs-toggle="pill" href="#pills-tipo-articulo" role="tab" aria-controls="pills-tipo-articulo" aria-selected="false"><i class="fas fa-cogs"></i> Tipo de Articulo</a>
+                        <a class="nav-link active" id="pills-servicios-tab" data-bs-toggle="pill" href="#pills-servicios" role="tab" aria-controls="pills-servicios" aria-selected="true"><i class="fas fa-cubes"></i> servicios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="pills-categoria-articulo-tab" data-bs-toggle="pill" href="#pills-categoria-articulo" role="tab" aria-controls="pills-categoria-articulo" aria-selected="false"><i class="fas fa-tag"></i> Categoría de Articulo</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-tipo-articulo-tab" data-bs-toggle="pill" href="#pills-tipo-articulo" role="tab" aria-controls="pills-tipo-articulo" aria-selected="false"><i class="fas fa-cogs"></i> Tipo de Articulo</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" id="pills-escala-articulo-tab" data-bs-toggle="pill" href="#pills-escala-articulo" role="tab" aria-controls="pills-escala-articulo" aria-selected="false"><i class="fas fa-sort-amount-up"></i> Escala de Articulo</a>
                     </li>
@@ -68,12 +72,13 @@ include("cabecera.php");
                     </li>
                 </ul>
                 <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
-                    <div class="tab-pane fade show active" id="pills-tipo-articulo" role="tabpanel" aria-labelledby="pills-tipo-articulo-tab">
+                    <div class="tab-pane fade show active" id="pills-servicios" role="tabpanel" aria-labelledby="pills-servicios-tab">
                         <div class="card text-start">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <h4 class="card-title"><i class="fas fa-cogs"></i> Tipo de Articulo</h4>
-                                    <button class="btn btn-success rounded-5" id="btnAgregarTipo"> <i class="fas fa-plus-circle"> </i> Agregar Tipo </button>
+                                    <h4 class="card-title"><i class="fas fa-cubes"></i> Servicios del Negocio</h4>
+
+                                    <button class="btn btn-success rounded-5" id="btnAgregarServicio"> <i class="fas fa-plus-circle"> </i> Agregar Servicio </button>
                                 </div>
                                 <hr>
                                 <div
@@ -87,8 +92,8 @@ include("cabecera.php");
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
-                                                        <th>Nombre</th>
-                                                        <th>Descripción</th>
+                                                        <th>Servicio</th>
+                                                        <th>Tamaños </th>
                                                         <th>Accion</th>
                                                     </tr>
                                                 </thead>
@@ -96,37 +101,24 @@ include("cabecera.php");
                                                 <tbody>
 
                                                     <?php
-                                                    foreach (listarTipoArticuloMantenimiento() as $datosTipo) {
-                                                        $datosTipoJSON = json_encode($datosTipo);
+                                                    foreach (listarMovimientos() as $datosTipo) {
+                                                        $datos = json_encode($datosTipo);
 
 
                                                     ?>
                                                         <tr>
                                                             <td><?php echo $datosTipo["id"] ?></td>
-                                                            <td><?php echo $datosTipo["abreviatura"] ?? '-'; ?></td>
-                                                            <td><?php echo $datosTipo["descripcion"] ?? '-'; ?></td>
+                                                            <td><?php echo $datosTipo["descripcion"] ?></td>
+                                                            <td><?php echo $datosTipo["medidas"] ?></td>
                                                             <td>
                                                                 <div class="mt-2 text-center">
                                                                     <!-- Botón de Editar (con ícono amarillo) -->
                                                                     <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
-                                                                        onclick='fn_editar_tipo(<?php echo $datosTipoJSON; ?>)' role="button">
+                                                                        onclick='fn_editar_servicio(<?php echo $datos; ?>)' role="button">
                                                                         <i class="fa fa-edit"></i>
                                                                     </a>
 
-                                                                    <!-- Botón de Activar/Bloquear -->
-                                                                    <?php if (is_null($datosTipo["deleted_at"])) { ?>
-                                                                        <!-- Botón para bloquear -->
-                                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
-                                                                            onclick='fn_bloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
-                                                                            <i class="fa fa-lock"></i>
-                                                                        </a>
-                                                                    <?php } else { ?>
-                                                                        <!-- Botón para activar -->
-                                                                        <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
-                                                                            onclick='fn_desbloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
-                                                                            <i class="fa fa-unlock"></i>
-                                                                        </a>
-                                                                    <?php } ?>
+
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -216,6 +208,80 @@ include("cabecera.php");
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="pills-tipo-articulo" role="tabpanel" aria-labelledby="pills-tipo-articulo-tab">
+                        <div class="card text-start">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h4 class="card-title"><i class="fas fa-cogs"></i> Tipo de Articulo</h4>
+                                    <button class="btn btn-success rounded-5" id="btnAgregarTipo"> <i class="fas fa-plus-circle"> </i> Agregar Tipo </button>
+                                </div>
+                                <hr>
+                                <div
+                                    class="row justify-content-center align-items-center md-2">
+
+                                    <div class="col-sm-12">
+                                        <div class="table-responsive">
+                                            <table
+                                                id="multi-filter-select3"
+                                                class="display table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Nombre</th>
+                                                        <th>Descripción</th>
+                                                        <th>Accion</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                    <?php
+                                                    foreach (listarTipoArticuloMantenimiento() as $datosTipo) {
+                                                        $datosTipoJSON = json_encode($datosTipo);
+
+
+                                                    ?>
+                                                        <tr>
+                                                            <td><?php echo $datosTipo["id"] ?></td>
+                                                            <td><?php echo $datosTipo["abreviatura"] ?? '-'; ?></td>
+                                                            <td><?php echo $datosTipo["descripcion"] ?? '-'; ?></td>
+                                                            <td>
+                                                                <div class="mt-2 text-center">
+                                                                    <!-- Botón de Editar (con ícono amarillo) -->
+                                                                    <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
+                                                                        onclick='fn_editar_tipo(<?php echo $datosTipoJSON; ?>)' role="button">
+                                                                        <i class="fa fa-edit"></i>
+                                                                    </a>
+
+                                                                    <!-- Botón de Activar/Bloquear -->
+                                                                    <?php if (is_null($datosTipo["deleted_at"])) { ?>
+                                                                        <!-- Botón para bloquear -->
+                                                                        <a name="block" id="block" class="btn btn-dark btn-round ml-2"
+                                                                            onclick='fn_bloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-lock"></i>
+                                                                        </a>
+                                                                    <?php } else { ?>
+                                                                        <!-- Botón para activar -->
+                                                                        <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
+                                                                            onclick='fn_desbloquear_tipo(<?php echo $datosTipo["id"]; ?>)' role="button">
+                                                                            <i class="fa fa-unlock"></i>
+                                                                        </a>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="pills-escala-articulo" role="tabpanel" aria-labelledby="pills-escala-articulo-tab">
                         <div class="card text-start">
 
@@ -231,7 +297,7 @@ include("cabecera.php");
                                     <div class="col-sm-12">
                                         <div class="table-responsive">
                                             <table
-                                                id="multi-filter-select3"
+                                                id="multi-filter-select4"
                                                 class="display table table-striped table-hover">
                                                 <thead>
                                                     <tr>
@@ -305,7 +371,7 @@ include("cabecera.php");
                                     <div class="col-sm-12">
                                         <div class="table-responsive">
                                             <table
-                                                id="multi-filter-select4"
+                                                id="multi-filter-select5"
                                                 class="display table table-striped table-hover">
                                                 <thead>
                                                     <tr>
@@ -403,6 +469,7 @@ include("cabecera.php");
 
 
 <script>
+    /*
     window.onload = function() {
         const activeTab = localStorage.getItem('activeTab');
         if (activeTab) {
@@ -423,6 +490,7 @@ include("cabecera.php");
             localStorage.setItem('activeTab', activeTabId);
         });
     });
+    */
 </script>
 <script>
     $(document).ready(function() {
@@ -1130,6 +1198,169 @@ include("cabecera.php");
 
     });
 
+    document.getElementById("btnAgregarServicio").addEventListener("click", function() {
+        document.getElementById("contenidoGenerico").innerHTML = `
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="card-body">
+            <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-ruler"></i> Registrar Servicios</h4>
+            <div class="card-sub text-center">
+                Aquí podrás <strong>registrar</strong> los nuevos <strong>SERVICIOS de tu negocio.</strong>
+            </div>
+            <div class="card-sub text-center">
+                Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+            </div>
+            <div class="card text-start">
+                <div class="card-body">
+                    <div class="row justify-content-center align-items-center g-2">
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><strong>Descripción <span class="fw-bold text-danger">*</span> </strong></label>
+                                <textarea
+                                    class="form-control"
+                                    name="idRegistroDescripcion"
+                                    id="idRegistroDescripcion"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><strong>Medidas (Selecciona las que apliquen) <span class="fw-bold text-danger">*</span></strong></label>
+                                <div class="selectgroup selectgroup-pills" id="medidasSeleccion">
+                                    <label class="selectgroup-item">
+                                        <input type="checkbox" value="A0" class="selectgroup-input" />
+                                        <span class="selectgroup-button">A0</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="checkbox" value="A1" class="selectgroup-input" />
+                                        <span class="selectgroup-button">A1</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="checkbox" value="A2" class="selectgroup-input" />
+                                        <span class="selectgroup-button">A2</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="checkbox" value="A3" class="selectgroup-input" />
+                                        <span class="selectgroup-button">A3</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="checkbox" value="A4" class="selectgroup-input" />
+                                        <span class="selectgroup-button">A4</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="checkbox" value="A5" class="selectgroup-input" />
+                                        <span class="selectgroup-button">A5</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="checkbox" value="A6" class="selectgroup-input" />
+                                        <span class="selectgroup-button">A6</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <a
+                                name=""
+                                id="btnRegistrarTipo"
+                                class="btn btn-success btn-round"
+                                role="button">Registrar <i class="fas fa-check"> </i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
+
+        // Agregar evento de validación al botón "Registrar"
+        document.getElementById("btnRegistrarTipo").addEventListener("click", async function() {
+            const descripcion = document.getElementById("idRegistroDescripcion").value;
+
+            // Capturar todas las medidas seleccionadas (checkboxes marcados)
+            let medidasArray = [];
+            const checkboxes = document.querySelectorAll("#medidasSeleccion input[type='checkbox']:checked");
+            checkboxes.forEach(function(checkbox) {
+                medidasArray.push(checkbox.value);
+            });
+
+            if (descripcion.length > 0 && medidasArray.length > 0) {
+                var jsDatos = {
+                    "descripcion": descripcion,
+                    "medidas": medidasArray // Ahora es un array de valores seleccionados
+                };
+                console.log(jsDatos);
+
+                $.ajax({
+                    url: 'logica/clssInsertPA.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'INSERT_SERVICIOS',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor: ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Registrado con Éxito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                swal("Error", result.mensaje, {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger",
+                                        },
+                                    },
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                });
+            } else {
+                swal("Ups!, Debes ingresar tanto la descripción como seleccionar al menos una medida 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+        });
+    });
+
+
+
     document.getElementById("btnAgregarDimension").addEventListener("click", function() {
         document.getElementById("contenidoGenerico").innerHTML = `
                     <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1283,6 +1514,158 @@ include("cabecera.php");
 </script>
 
 <script>
+    function fn_editar_servicio(datosServicio) {
+        // Crear el contenido para el modal de edición
+        document.getElementById("contenidoGenerico").innerHTML = `
+        <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="card-body">
+            <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-cogs"></i> Editar Servicio</h4>
+        <div class="card-sub text-center">
+            Aquí podrás <strong>editar</strong> los servicios <strong>existentes.</strong>
+        </div>
+        <div class="card-sub text-center">
+            Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+        </div>
+        <div class="card text-start">
+
+            <div class="card-body">
+                <div class="row justify-content-center align-items-center g-2">
+
+                    <div class="col-sm-12">
+                        <div class="mb-3">
+                            <label for="" class="form-label"> <strong>Descripcion</strong></label>
+                            <textarea
+                                type="text"
+                                class="form-control"
+                                name="idEditarDescripcion"
+                                id="idEditarDescripcion"
+                            >${datosServicio.descripcion}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="mb-3">
+                            <label for="" class="form-label"><strong>Seleccione Medidas</strong></label>
+                            <div class="selectgroup selectgroup-pills" id="medidasSeleccionadas">
+                                ${['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'].map(function (medida) {
+                                    const isChecked = datosServicio.medidas.includes(medida) ? 'checked' : '';
+                                    return `
+                                        <label class="selectgroup-item">
+                                            <input
+                                                type="checkbox"
+                                                name="medidas"
+                                                value="${medida}"
+                                                class="selectgroup-input"
+                                                ${isChecked}
+                                            />
+                                            <span class="selectgroup-button">${medida}</span>
+                                        </label>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a
+                            name=""
+                            id="btnEditarServicio"
+                            class="btn btn-success btn-round"
+                            role="button">Actualizar <i class="fas fa-check"> </i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+    `;
+
+        const modal = new bootstrap.Modal(document.getElementById("modalGenerico"));
+        modal.show();
+
+        // Agregar evento de validación al botón "Actualizar"
+        document.getElementById("btnEditarServicio").addEventListener("click", async function() {
+
+            const descripcionServicio = document.getElementById("idEditarDescripcion").value;
+            const medidasSeleccionadas = Array.from(document.querySelectorAll('input[name="medidas"]:checked')).map(input => input.value);
+
+            if (descripcionServicio.length > 0) {
+                var jsDatos = {
+                    "id": datosServicio.id,
+                    "descripcion": descripcionServicio,
+                    "medidas": medidasSeleccionadas
+                };
+
+                console.log(jsDatos);
+
+                $.ajax({
+                    url: 'logica/clssInsertPA.php',
+                    type: 'POST',
+                    data: {
+                        accion: 'EDITAR_SERVICIO',
+                        jsDatos: JSON.stringify(jsDatos)
+                    },
+                    success: function(response) {
+                        console.log("Respuesta del servidor : ", response);
+                        try {
+                            var result = JSON.parse(response);
+                            if (result.estado === true) {
+                                swal({
+                                    title: "Actualizado con Éxito!",
+                                    text: result.mensaje,
+                                    icon: "success",
+                                    buttons: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                swal("Error", result.mensaje, {
+                                    icon: "error",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-danger",
+                                        },
+                                    },
+                                });
+                            }
+                        } catch (e) {
+                            console.log("Error al parsear el JSON: ", e);
+                            swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                icon: "error",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-danger",
+                                    },
+                                },
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error: " + error);
+                        swal("Error", "Hubo un problema con la solicitud.", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
+                            },
+                        });
+                    }
+                });
+            } else {
+                swal("Ups!, Debes de ingresar el nombre del servicio 😩", {
+                    icon: "error",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-danger",
+                        },
+                    },
+                });
+            }
+        });
+    }
+
     function fn_editar_tipo(datosTipo) {
         document.getElementById("contenidoGenerico").innerHTML = `
             <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1648,9 +2031,7 @@ include("cabecera.php");
 
             </div>
             </div>
-                
-                
-                
+                      
     
         `;
 
@@ -1801,9 +2182,7 @@ include("cabecera.php");
 
             </div>
             </div>
-                
-                
-                
+                     
     
         `;
 

@@ -69,6 +69,7 @@ include("cabecera.php");
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <button class="dropdown-item" href="#" onclick='fnAbrirSwalRegistroEgreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Registrar Egreso</button>
                                                 <button class="dropdown-item" href="#" onclick='fnAbrirSwalRegistroIngreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Registrar Ingreso</button>
+                                                <!-- <button class="dropdown-item" href="#" onclick='fnVaciarCajaEgreso(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Vaciar Caja</button>-->
                                                 <button class="dropdown-item" href="#" onclick='fnAbrirSwalDarDeBaja(<?php echo $datosJSON ?>)'><i class="fas fa-caret-right"></i> Dar de Baja</button>
                                             </div>
                                         <?php
@@ -433,6 +434,84 @@ include("pie.php");
 </script>
 
 <script>
+    function fnVaciarCajaEgreso(jsDatos) {
+        console.log(jsDatos);
+        swal({
+            title: "¿Estás seguro de que deseas Vaciar Caja del Medio de pago de " + jsDatos["nombre"] + "?",
+            type: "warning",
+            buttons: {
+                cancel: {
+                    visible: true,
+                    text: "No, Cancelar!",
+                    className: "btn btn-danger",
+                },
+                confirm: {
+                    text: "Si, Dejar Caja en 0",
+                    className: "btn btn-success",
+                },
+            },
+            content: {
+                element: "div",
+                attributes: {
+                    innerHTML: `<div style="text-align: center;">${"El monto en Caja será de <b> S/ 00.00 </b>."}</div>`
+                }
+            }
+        }).then((willDelete) => {
+            if (willDelete) {
+                swal({
+                    title: jsDatos["nombre"] + " Cerrado",
+                    icon: "success",
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-success",
+                        },
+                    },
+                    content: {
+                        element: "div",
+                        attributes: {
+                            innerHTML: `<div style="text-align: center;">${"¡"+jsDatos['nombre']+" Caja en S/ 00.00"}</div>`
+                        }
+                    }
+                }).then(() => {
+                    ////#msdbasjdbajshd
+                    var jsDatosVaciar = {
+                        "id": parseInt(jsDatos["id"]),
+                        "responsable_id": <?php echo $id_usuario_s; ?>,
+                        "responsable": "<?php echo $nombre . ", " . $ape_usuario; ?>",
+                    }
+                    console.log(jsDatosVaciar);
+                    
+                    
+                    $.ajax({
+                        url: 'logica/clssInsertPA.php',
+                        type: 'POST',
+                        data: {
+                            accion: 'VACIARCAJA',
+                            jsDatos: JSON.stringify(jsDatosVaciar)
+                        },
+                        success: function(response) {
+                            console.log("Respuesta del servidor: ", response);
+                        },
+                    });
+                    location.reload();
+                });
+            } else {
+                swal({
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-success",
+                        },
+                    },
+                    content: {
+                        element: "div",
+                        attributes: {
+                            innerHTML: `<div style="text-align: center;">${"Sigues con la el medio de pago, Puedes seguir con los registros!"}</div>`
+                        }
+                    }
+                });
+            }
+        });
+    }
     function fnAbrirSwalDarDeBaja(jsDatos) {
         console.log(jsDatos);
         swal({
@@ -601,7 +680,6 @@ include("pie.php");
         document.getElementById("idContenidoTituloIngreso").innerHTML = `<span style="color:${jsDatos["color"]}"> <i class="${jsDatos["icon"]}"></i> Registrar Ingreso en ${jsDatos["nombre"]} </span>`
         document.getElementById("idMontoIngresoCaja").value = "";
         document.getElementById("idMontoDisponibleIngreso").innerText = jsDatos["monto"];
-
     }
 
     function fnAbrirModalNuevaFormaPago() {
@@ -711,10 +789,8 @@ include("pie.php");
 
 
     function fnRegistrarIngresoDeCajaGrande() {
-
         var montoCajaGrande = parseFloat(document.getElementById("idMontoIngresoCaja").value);
         var notaCajaGrande = document.getElementById("idNotaIngresoCaja").value;
-
 
         console.log(jsDetalleCajaGrande);
         if (isNaN(montoCajaGrande)) {

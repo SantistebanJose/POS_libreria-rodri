@@ -38,7 +38,7 @@ function consultapersonaventa($data): void
         $query = $conectar->prepare("
         SELECT 
             id, 
-            CONCAT(numero_documento, ' - ', nombres, ' ', apellidos) AS persona_concatenada,
+            CONCAT(numero_documento, ' - ', nombres, ' ', apellidos, razon_social) AS persona_concatenada,
             nombres,
             apellidos,
             numero_documento,

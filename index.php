@@ -4,13 +4,14 @@
     <div class="page-inner">
         <div class="card text-start">
             <div class="card-body">
-                <h3 class="fw-bold mb-3">Acceso Rápido</h3>
+                
+                <h3 class="fw-bold mb-3"><i class="fas fa-reply-all"></i> Acceso Rápido</h3>
                 <div class="card-sub">
                     Accede fácilmente a tu proceso de negocio con el menú de acceso rápido. Solo presiona un botón y serás llevado directamente a la acción.
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-md-4">
-                        <a href="venta_rapida.php">
+                        <a href="venta_rapida_v2.php">
                             <button class="btn btn-primary btn-lg w-100">
                                 <div class="icon-big text-center">
                                     <i class="fas fa-users"></i>
@@ -21,9 +22,9 @@
                     </div>
                     <div class="col-sm-6 col-md-4">
                         <a href="venta_reserva_corte.php">
-                            <button class="btn btn-info btn-lg w-100">
+                            <button class="btn btn-success btn-lg w-100">
                                 <div class="icon-big text-center">
-                                    <i class="fas fa-user-check"></i>
+                                    <i class="fab fa-whatsapp"></i>
                                 </div>
                                 <h6>Venta Por Reserva</h6>
                             </button>
@@ -34,6 +35,9 @@
                             <button class="btn btn-secondary btn-lg w-100">
                                 <div class="icon-big text-center">
                                     <i class="fas fa-luggage-cart"></i>
+                                    <i class="fab fa-whatsapp"></i>
+                                    <i class="fab fa-telegram-plane"></i>
+                                    
                                 </div>
                                 <h6>Atender Reserva</h6>
                             </button>
@@ -46,7 +50,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-md-4">
                             <a href="cajaChica.php">
-                                <button class="btn btn-success btn-lg w-100">
+                                <button class="btn btn-danger btn-lg w-100">
                                     <div class="icon-big text-center">
                                         <i class="fas fa-box-open"></i>
                                     </div>

@@ -145,110 +145,249 @@ if (isset($_GET['id'])) {
             <div class=" card-body">
                 <h4 class="card-title"><i class="fas fa-weight-hanging"></i> Venta Por Reserva</h4>
                 <div class="mb-3">
-                    
+
                     <div class="card-sub">
-                        Aquí podrás <strong>Registrar los pedidos que te envían WhatsApp de tus cliente</strong>. Solo reversas Y luego podran venir a recogerlo.
+                        Aquí podrás <strong>Registrar los pedidos que te envian WhatsApp de tus cliente</strong>. Solo reversas Y luego podran venir a recogerlo.
                     </div>
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between">
-                                <h4 class="card-title"> <i class="fas fa-chess-queen"></i> Artículos</h4>
-                                <ul class="nav d-flex">
-                                    <li class="nav-item me-3">
-                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalPloteo">Ploteo</button>
-                                    </li>
-                                    <li class="nav-item me-3">
-                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalImprimir">Imprimir</button>
-                                    </li>
-                                    <li class="nav-item me-3">
-                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalEscaneo">Escaneo</button>
-                                    </li>
-                                    <li class="nav-item me-3">
-                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalSolo">Solo Corte</button>
-                                    </li>
-                                </ul>
-
+                                <h6 class="card-title"><i class="fas fa-chess-queen"></i> Artículos</h6>
                             </div>
                             <div class="card-body">
+                                <div class="d-flex justify-content-center flex-wrap">
+                                    <ul class="nav d-flex flex-wrap justify-content-center">
+                                        <?php
+                                        foreach (listarMovimientos() as $datos) {
+                                            $datosJSON = json_encode($datos);
+                                        ?>
+                                            <li class="nav-item me-3 mb-2">
+                                                <button class="btn btn-secondary btn-round btn-sm btn-lg-sm" onclick='fn_servicios(<?php echo $datosJSON ?>)'>
+                                                    <i class="fas fa-external-link-alt"></i> <?php echo $datos["descripcion"] ?>
+                                                </button>
+                                            </li>
+
+                                        <?php
+                                        }
+                                        ?>
+                                        <li class="nav-item me-3 mb-2">
+                                            <button class="btn btn-secondary btn-round btn-sm btn-lg-sm" id="btnAbrirModalSolo"><i class="fas fa-cut"></i> SOLO CORTE</button>
+                                        </li>
+                                        <li class="nav-item me-3">
+                                            <button class="btn btn-secondary btn-round btn-sm btn-lg-sm" id="btnAbrirModalSolov2"><i class="fas fa-print"></i> IMPRESIÓN 3D</button>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
+                                <br>
+
                                 <div class="table-filters mb-3">
                                     <div class="row justify-content-center align-items-center g-2">
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                                 <option value="">Filtrar por Categoría</option>
+                                                <!-- Aquí se agregarán las opciones de categorías dinámicamente -->
                                             </select>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                                 <option value="">Filtrar por Tipo</option>
-
+                                                <!-- Aquí se agregarán las opciones de tipo dinámicamente -->
                                             </select>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                                 <option value="">Filtrar por Dimensión</option>
-
+                                                <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
                                             </select>
                                         </div>
-                                        <div class="col-md-3">
-                                            <button
-                                                name=""
-                                                id="clearFilters"
-                                                class="btn btn-warning btn-round btn-round btn-md"
-                                                href="#"
-                                                role="button"><i class="fas fa-broom"></i> Limpiar Filtros</b>
-
-
+                                        <div class="col-md-2">
+                                            <select id="filterColor" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
+                                                <option value="">Filtrar por Color</option>
+                                                <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button id="clearFilters" class="btn btn-warning btn-round btn-md" role="button"><i class="fas fa-broom"></i> Limpiar Filtros</button>
                                         </div>
                                     </div>
-
                                 </div>
 
-                                <div class="table-responsive">
+                                <!-- Buscador de texto -->
+                                <div class="d-flex justify-content-center mt-4">
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar Articulo..." onkeyup="filterProducts()">
+                                </div>
 
 
-                                    <table id="multi-filter-select" class="display table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Articulo</th>
-                                                <th>Categoria</th>
-                                                <th>Tipo</th>
-                                                <th>Dimension</th>
-                                                <th>Stock</th>
-                                                <th>Precio de Venta</th>
-                                                <th>Accion</th>
-                                            </tr>
-                                        </thead>
+                                <!-- Contenedor para las tarjetas de productos -->
+                                <div class="container mt-4">
+                                    <div class="row" id="productoContainer">
+                                        <!-- Los productos se generarán dinámicamente aquí -->
+                                    </div>
+                                </div>
 
-                                        <tbody>
-                                            <?php
-                                            foreach (listarProductosVenta1() as $datosArticulo) {
-                                                $datosArticuloJSON = json_encode($datosArticulo);
-                                            ?>
-                                                <tr>
-                                                    <td><?php echo $datosArticulo["articulo"] ?></td>
-                                                    <td><?php echo $datosArticulo["categoria"] ?></td>
-                                                    <td><?php echo $datosArticulo["tipo"] ?></td>
-                                                    <td><?php echo $datosArticulo["dimension"] ?></td>
-                                                    <td><?php echo $datosArticulo["stock"] ?></td>
-                                                    <td><?php echo $datosArticulo["precio_venta"] ?></td>
-                                                    <th>
-                                                        <div class="mt-2 text-center">
-                                                            <a name="" id="" class="btn btn-secondary btn-round btn-sm"
-                                                                onclick='fn_agregar_venta(<?php echo $datosArticuloJSON; ?>)'
-                                                                role="button"> <i class="fas fa-plus"></i></a>
+                                <!-- Paginación -->
+                                <div id="pagination" class="d-flex justify-content-center mt-4">
+                                    <button id="prevPage" class="btn btn-secondary btn-round mx-2" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i> Anterior </button>
+                                    <button id="nextPage" class="btn btn-secondary btn-round mx-2" onclick="changePage(1)">Siguiente <i class="fas fa-chevron-right"></i></button>
+                                </div>
+
+                                <script>
+                                    const products = <?php echo json_encode(listarProductosVenta1()); ?>;
+                                    let currentPage = 1;
+                                    const itemsPerPage = 6;
+                                    let filteredProducts = products; // Productos que se mostrarán después del filtro
+                                    const allCategories = [...new Set(products.map(product => product.categoria))]; // Lista única de categorías
+                                    const allTypes = [...new Set(products.map(product => product.tipo))]; // Lista única de tipos
+                                    const allDimensions = [...new Set(products.map(product => product.dimension))]; // Lista única de dimensiones
+                                    const allColores = [...new Set(products.map(product => product.color))]; // Lista única de colores
+
+                                    // Función para llenar los selectores de filtro
+                                    function populateFilters() {
+                                        const categorySelect = document.getElementById('filterCategoria');
+                                        const typeSelect = document.getElementById('filterTipo');
+                                        const dimensionSelect = document.getElementById('filterDimension');
+                                        const colorSelect = document.getElementById('filterColor');
+
+                                        allCategories.forEach(category => {
+                                            categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
+                                        });
+
+                                        allTypes.forEach(type => {
+                                            typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
+                                        });
+
+                                        allDimensions.forEach(dimension => {
+                                            dimensionSelect.innerHTML += `<option value="${dimension}">${dimension}</option>`;
+                                        });
+                                        allColores.forEach(color => {
+                                            colorSelect.innerHTML += `<option value="${color}">${color}</option>`;
+                                        });
+                                    }
+
+                                    // Función para renderizar los productos
+                                    function renderProducts(productsToDisplay) {
+                                        const container = document.getElementById('productoContainer');
+                                        container.innerHTML = '';
+                                        productsToDisplay.forEach(product => {
+                                            const stock = parseFloat(product.stock);
+                                            const flag_titulo = stock === 0.00 ? product.articulo + " - " + "SIN STOCK" : product.articulo;
+                                            const flag_color = stock === 0.00 ? "#f31832" : "";
+                                            const card = document.createElement('div');
+                                            card.classList.add('col-md-4', 'mb-3');
+                                            card.innerHTML = `
+                                            <div class="card card-post card-round" style="color:${flag_color}">
+                                                <div class="card-body">
+                                                    <div class="d-flex">
+                                                        <div class="info-post ms-2">
+                                                            <p class="username">${flag_titulo}</p>
                                                         </div>
-                                                    </th>
-                                                </tr>
-                                            <?php
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                    </div>
+                                                    <div class="separator-solid"></div>
+                                                    <p class="card-category text-info mb-1">
+                                                        ${product.categoria}
+                                                    </p>
+                                                    <div class="card-text"><b>Tipo:</b> ${product.tipo}</div>
+                                                    <div class="card-text"><b>Dimensión:</b> ${product.dimension}</div>
+                                                    <div class="card-text"><b>Color:</b> ${product.color}</div>
+                                                    <div class="card-text"><b>Stock:</b> ${product.stock}</div>
+
+                                                    
+                                                    <div class="separator-solid"></div>
+                                                    <div class="row justify-content-between align-items-center g-2">
+                                                        <div class="col-sm-8" style="font-size:18px"><b>S/${product.precio_venta}</b></div>
+                                                        <div class="col-sm-4 d-flex justify-content-center">
+                                                            <a href="#" class="btn btn-success btn-sm btn-round" onclick='fn_agregar_venta(${JSON.stringify(product)})'>
+                                                                <i class="fas fa-plus"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+                                            container.appendChild(card);
+                                        });
+                                    }
+
+                                    // Función para cambiar la página
+                                    function changePage(direction) {
+                                        currentPage += direction;
+                                        if (currentPage < 1) currentPage = 1;
+                                        if (currentPage > totalPages()) currentPage = totalPages();
+                                        renderPage();
+                                    }
+
+                                    // Función para calcular el total de páginas
+                                    function totalPages() {
+                                        return Math.ceil(filteredProducts.length / itemsPerPage);
+                                    }
+
+                                    // Función para renderizar la página actual
+                                    function renderPage() {
+                                        const start = (currentPage - 1) * itemsPerPage;
+                                        const end = start + itemsPerPage;
+                                        const productsToDisplay = filteredProducts.slice(start, end);
+
+                                        renderProducts(productsToDisplay);
+
+                                        document.getElementById('prevPage').disabled = currentPage === 1;
+                                        document.getElementById('nextPage').disabled = currentPage === totalPages();
+                                    }
+
+                                    // Función para filtrar los productos por las opciones seleccionadas
+                                    function filterProducts() {
+                                        const searchText = document.getElementById('searchInput').value.toLowerCase();
+                                        const category = document.getElementById('filterCategoria').value;
+                                        const type = document.getElementById('filterTipo').value;
+                                        const dimension = document.getElementById('filterDimension').value;
+                                        const color = document.getElementById('filterColor').value;
+
+                                        filteredProducts = products.filter(product => {
+                                            return (
+                                                (category === '' || product.categoria === category) &&
+                                                (type === '' || product.tipo === type) &&
+                                                (dimension === '' || product.dimension === dimension) &&
+                                                (color === '' || product.color === color) &&
+                                                (product.articulo.toLowerCase().includes(searchText) || product.categoria.toLowerCase().includes(searchText) || product.tipo.toLowerCase().includes(searchText))
+                                            );
+                                        });
+
+                                        currentPage = 1; // Volver a la primera página después de filtrar
+                                        renderPage();
+                                    }
+
+                                    // Función para limpiar los filtros
+                                    function clearFilters() {
+                                        document.getElementById('filterCategoria').value = '';
+                                        document.getElementById('filterTipo').value = '';
+                                        document.getElementById('filterDimension').value = '';
+                                        document.getElementById('filterColor').value = '';
+                                        document.getElementById('searchInput').value = '';
+                                        filteredProducts = products;
+                                        currentPage = 1;
+                                        renderPage();
+                                    }
+
+                                    // Inicializar los filtros y la página
+                                    populateFilters();
+                                    renderPage();
+
+                                    // Asociar eventos de filtro
+                                    document.getElementById('filterCategoria').addEventListener('change', filterProducts);
+                                    document.getElementById('filterTipo').addEventListener('change', filterProducts);
+                                    document.getElementById('filterDimension').addEventListener('change', filterProducts);
+                                    document.getElementById('filterColor').addEventListener('change', filterProducts);
+                                    document.getElementById('clearFilters').addEventListener('click', clearFilters);
+                                </script>
+
+
+
 
                             </div>
                         </div>
                     </div>
+
 
                     <!-- 
                         <label for="" class="form-label">Movimiento</label>
@@ -332,6 +471,114 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
 
+                <div class=" modal fade" id="modalSoloCorteMaquina2" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-body">
+                                <div class="col-12 p-4 bg-light rounded">
+
+                                    <h4 class="card-title text-center"><i class="fas fa-print"></i> Máquina de Impresión 3D</h4>
+
+                                    <div class="card-sub text-center">
+                                        Aqui podras agregar los minutos y el precio del servicio de impresión.
+                                    </div>
+                                    <div class="mb-4">
+                                        <!-- Minutos Corte -->
+                                        <div class="text-center" style="flex: 1;">
+
+                                            <p class="mb-1"><strong>Minutos impresión</strong></p>
+                                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                                <button id="btnRestarSoloCortev2" class="btn btn-danger btn-sm btn-round" onclick='fnAumentoOrResta("-")'><i class="fas fa-minus"></i></button>
+                                                <input id="cantidad_solocortev2" type="number" class="form-control text-center mx-2" value="10" style="width: 80px; font-size: 1.2rem;" />
+                                                <button id="btnSumarSoloCortev2" class="btn btn-success btn-sm btn-round" onclick='fnAumentoOrResta("+")'><i class="fas fa-plus"></i></button>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="d-flex justify-content-center">
+                                            <button id="btnIncremento05SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(15)">15 Min.</button>
+                                            <button id="btnIncremento1SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(30)">30 Min.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(45)">45 Min.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(60)">1 Hor.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(120)">2 Hor.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(180)">3 Hor.</button>
+                                        </div>
+                                        <div class="card-sub text-center">
+                                            Puedes Seleccionar los minutos de manera rápida
+                                        </div>
+                                        <script>
+                                            function fnAumentoOrResta(accion) {
+                                                if (accion === "+") {
+                                                    var x = parseFloat(document.getElementById("cantidad_solocortev2").value)
+                                                    var x = x + 1;
+                                                    document.getElementById("cantidad_solocortev2").value = x;
+                                                } else if (accion === "-") {
+                                                    var x = parseFloat(document.getElementById("cantidad_solocortev2").value)
+                                                    var x = x - 1;
+                                                    document.getElementById("cantidad_solocortev2").value = x;
+                                                }
+
+                                            }
+
+                                            function fnAumentarMin(dato) {
+                                                document.getElementById("cantidad_solocortev2").value = dato;
+                                            }
+
+                                            function fnAumentaPrecioImpresion(dato) {
+                                                const acum = parseFloat(document.getElementById("precioSoloCortev2").value);
+                                                document.getElementById("precioSoloCortev2").value = acum + parseFloat(dato);
+                                            }
+
+                                            function limpiar() {
+                                                document.getElementById("precioSoloCortev2").value = 0;
+                                            }
+                                        </script>
+
+                                        <!-- Línea divisoria -->
+                                        <hr>
+
+
+                                        <!-- Precio Corte -->
+                                        <div class="text-center" style="flex: 1;">
+                                            <p class="mb-1"><strong>Precio Impresión</strong></p>
+                                            <div class="w-100 d-flex justify-content-center mb-1">
+
+                                                <input id="precioSoloCortev2" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                                <button id="" class="btn btn-danger btn-sm" onclick="limpiar()"><i class="fas fa-broom"></i></button>
+                                            </div>
+                                            <br>
+                                            <div class="d-flex justify-content-center">
+
+
+                                                <button id="btnIncremento05SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(0.5)">+0.5</button>
+                                                <button id="btnIncremento1SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(1)">+1</button>
+                                                <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(2)">+2</button>
+                                                <button id="btnIncremento5SoloCortev2" class="btn btn-outline-primary btn-sm btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(5)">+5</button>
+                                            </div>
+                                        </div>
+                                        <!-- Precio Corte -->
+                                        <hr>
+                                        <div class="text-center">
+                                            <p class="mb-1"><strong>Nota</strong></p>
+                                            <textarea class="form-control" name="" id="" rows="3" placeholder="Escribe por ejemplo: Maquina de 3D"></textarea>
+
+                                        </div>
+
+                                        <div class="text-center mt-3">
+                                            <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocortev2"><i class="fas fa-plus-circle"></i> Agregar</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Modal Unificado -->
                 <div class="modal fade " data-bs-backdrop="static" id="modalCantidad" tabindex="-1" aria-labelledby="modalCantidadCorteLabel" aria-hidden="true">
@@ -363,29 +610,43 @@ if (isset($_GET['id'])) {
                                             <h6 class="fw-bold text-center mb-4">Opciones de Corte</h6>
                                             <div class="mb-4">
                                                 <div class="text-center" style="flex: 1;">
-                                                    <p class="mb-1">Minutos Corte</p>
-                                                    <div class="d-flex justify-content-center align-items-center mb-2">
-                                                        <button id="btnRestarCorte" class="btn btn-danger btn-round">-</button>
-                                                        <input id="cantidadCorte" type="number" class="form-control text-center mx-2 " value="0" style="width: 80px; font-size: 1.2rem;" />
-                                                        <button id="btnSumarCorte" class="btn btn-success btn-round">+</button>
+                                                    <div class="row justify-content-center align-items-center g-2">
+                                                        <div class="col-sm-6">
+                                                            <div class="text-center" style="flex: 1;">
+                                                                <p class="mb-1">Minutos Corte</p>
+                                                                <div class="d-flex justify-content-center align-items-center mb-2">
+                                                                    <button id="btnRestarCorte" class="btn btn-danger btn-round">-</button>
+                                                                    <input id="cantidadCorte" type="number" class="form-control text-center mx-2 " value="0" style="width: 80px; font-size: 1.2rem;" />
+                                                                    <button id="btnSumarCorte" class="btn btn-success btn-round">+</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-sm-6">
+                                                            <div class="text-center" style="flex: 1;">
+                                                                <p class="mb-1">Precio Corte</p>
+                                                                <div class="w-100 d-flex justify-content-center mb-1">
+                                                                    <input id="precioCorte" type="number" class="form-control text-center mx-2 " value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                                                </div>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
+                                                                    <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
+                                                                    <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
+                                                                    <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
 
-                                                <!-- Línea divisoria -->
                                                 <hr>
-
-                                                <div class="text-center" style="flex: 1;">
-                                                    <p class="mb-1">Precio Corte</p>
-                                                    <div class="w-100 d-flex justify-content-center mb-1">
-                                                        <input id="precioCorte" type="number" class="form-control text-center mx-2 " value="1.5" style="width: 90px; font-size: 1.2rem;" />
-                                                    </div>
-                                                    <div class="d-flex justify-content-center">
-                                                        <button id="btnIncremento05" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+0.5</button>
-                                                        <button id="btnIncremento1" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+1</button>
-                                                        <button id="btnIncremento2" class="btn btn-outline-primary btn-sm me-1" style="font-size: 0.9rem;">+2</button>
-                                                        <button id="btnIncremento5" class="btn btn-outline-primary btn-sm" style="font-size: 0.9rem;">+5</button>
-                                                    </div>
+                                                <div class="mb-3">
+                                                    <p class="mb-1">Detalle</p>
+                                                    <textarea class="form-control" name="" id="idTextAreaDetalleInsert" rows="3" placeholder="Describa medidas, restante, etc."></textarea>
                                                 </div>
+
 
                                             </div>
                                         </div>
@@ -576,7 +837,7 @@ if (isset($_GET['id'])) {
             <div class="col-md-4">
                 <div class="card card-stats card-round">
                     <div class="card-body text-center">
-                        <h5 id="label_total_cortes" class="card-title">Total Cortes S/:</h5>
+                        <h5 id="label_total_cortes" class="card-title">Total Cortes S/</h5>
                         <span id="id_subtotal_cortes" style="font-size: 1.3rem;" aria-labelledby="label_total_cortes">00.00</span>
                     </div>
                 </div>
@@ -584,7 +845,7 @@ if (isset($_GET['id'])) {
             <div class="col-md-4">
                 <div class="card card-stats card-round">
                     <div class="card-body text-center">
-                        <h5 id="label_total_articulos" class="card-title">Total Artículos S/:</h5>
+                        <h5 id="label_total_articulos" class="card-title">Total Artículos S/</h5>
                         <span id="id_subtotal_articulos" style="font-size: 1.3rem;" aria-labelledby="label_total_articulos">00.00</span>
                     </div>
                 </div>
@@ -592,7 +853,7 @@ if (isset($_GET['id'])) {
             <div class="col-md-4">
                 <div class="card card-primary card-stats card-round">
                     <div class="card-body text-center">
-                        <h5 id="label_total_general" class="card-title">Total S/:</h5>
+                        <h5 id="label_total_general" class="card-title">Total S/</h5>
                         <span id="id_subtotal_general" style="font-size: 1.3rem;" aria-labelledby="label_total_general">00.00</span>
                     </div>
                 </div>
@@ -887,6 +1148,193 @@ if (isset($_GET['id'])) {
             document.getElementById("precioSoloCorte").value = 1.5;
             modal.show(); // Muestra el modal
         });
+        document.getElementById('btnAbrirModalSolov2').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del botón
+            let navLinks = document.querySelectorAll(".nav-link");
+
+            // Remover la clase 'active' de todas las pestañas
+            navLinks.forEach(function(link) {
+                link.classList.remove("active");
+            });
+
+            // Desactivar todos los panes (contenido de las pestañas)
+            let tabPanes = document.querySelectorAll(".tab-pane");
+            tabPanes.forEach(function(pane) {
+                pane.classList.remove("show", "active");
+            });
+            // Mostrar el modal de Solo Corte
+            const modalElement = document.getElementById('modalSoloCorteMaquina2');
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: 'static', // Evita que se cierre al hacer clic fuera
+                keyboard: false // Evita que se cierre con la tecla 'Esc'
+            });
+
+
+
+            const btn_agregar = document.getElementById('btn_agregar_solocortev2');
+            btn_agregar.textContent = 'Agregar';
+
+            btn_agregar.replaceWith(btn_agregar.cloneNode(true));
+
+
+            const nuevoBtnAgregar = document.getElementById('btn_agregar_solocortev2');
+
+
+            nuevoBtnAgregar.addEventListener("click", fn_agregar_impresion_a_tabla);
+
+
+            modal.show(); // Muestra el modal
+        });
+
+        function fn_agregar_impresion_a_tabla() {
+            console.log("Holass")
+            const cantidadMinutos = parseInt(document.getElementById('cantidad_solocortev2').value) || 0;
+            const tarifa = parseFloat(document.getElementById('precioSoloCortev2').value) || 0;
+
+            const inputMonto = document.getElementById('cantidad_solocortev2');
+            const divContainer = inputMonto.closest('.d-flex');
+            const mensajeErrorExistente = document.querySelector('.error-message');
+            if (mensajeErrorExistente) mensajeErrorExistente.remove();
+            inputMonto.classList.remove('error-input');
+
+            if (isNaN(cantidadMinutos) || cantidadMinutos <= 0) {
+                inputMonto.classList.add('error-input');
+
+                const mensajeError =
+                    `
+                    <div class="error-message text-center">
+                        Por favor, ingresa un monto válido mayor a 0.
+                    </div>
+                `;
+
+                divContainer.insertAdjacentHTML('afterend', mensajeError);
+
+                return;
+            }
+            const datosImpresion3D = [{
+                id: '0',
+                minutos: cantidadMinutos,
+                tarifa: tarifa,
+                costo: cantidadMinutos * tarifa,
+                articulo: 'MAQUINA DE IMPRESION  3D',
+                idmovimiento: 15,
+            }];
+
+            console.log(datosImpresion3D);
+            fn_solo_impresion_tabla(datosImpresion3D);
+            document.getElementById('cantidad_solocortev2').value = '10';
+            document.getElementById('precioSoloCortev2').value = '1.5'; // Valor inicial
+
+            const modalElement = document.getElementById('modalSoloCorteMaquina2');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+            showNotification("success");
+
+        }
+
+        function fn_solo_impresion_tabla(datosCorte) {
+            var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+            datosCorte.forEach(corte => {
+                let nuevaFila = tabla.insertRow();
+
+                nuevaFila.insertCell(0).textContent = corte.id; // ID
+                nuevaFila.insertCell(1).textContent = corte.minutos; // Minutos
+                nuevaFila.insertCell(2).textContent = corte.tarifa; // Costo x Minuto
+                nuevaFila.insertCell(3).textContent = corte.costo; // Costo x Minuto
+                nuevaFila.insertCell(4).textContent = corte.articulo; // Artículo
+                nuevaFila.insertCell(5).textContent = '-'; // Cantidad fija por corte
+                nuevaFila.insertCell(6).textContent = '-'; // Precio unitario
+                nuevaFila.insertCell(7).textContent = (corte.costo).toFixed(2); // Subtotal
+
+                let accionCell = nuevaFila.insertCell(8);
+                nuevaFila.insertCell(9).textContent = corte.idmovimiento; // Subtotal
+
+                // 1. Botón de Editar
+                let botonEditar = document.createElement("button");
+                botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+                botonEditar.innerHTML = '<i class="fas fa-edit"></i>'; // Ícono de editar con texto
+
+                // Agregar el botón de editar a la celda de acciones
+                accionCell.appendChild(botonEditar);
+
+                // 2. Botón de Eliminar
+                let botonEliminar = document.createElement("button");
+                botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+                botonEliminar.innerHTML = '<i class="fas fa-trash"></i>'; // Ícono de eliminar con texto
+
+                accionCell.appendChild(botonEliminar);
+
+                botonEditar.addEventListener("click", () => {
+                    // Llenamos el modal con los datos del corte
+
+                    document.getElementById("cantidad_solocortev2").value = corte.minutos || 0; // Minutos corte
+                    document.getElementById("precioSoloCortev2").value = corte.tarifa || 1.5; // Precio corte
+
+                    // Mostrar el modal
+                    const modalElement = document.getElementById('modalSoloCorteMaquina2');
+                    const modal = new bootstrap.Modal(modalElement, {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                    modal.show();
+
+                    // El botón de agregar se convierte en "Actualizar" para modificar los valores
+                    const btn_agregar = document.getElementById('btn_agregar_solocortev2');
+                    btn_agregar.textContent = 'Actualizar'; // Cambiar texto del botón
+                    btn_agregar.removeEventListener("click", fn_agregar_impresion_a_tabla);
+
+                    // Actualizar el corte en la tabla cuando se presiona "Actualizar"
+                    btn_agregar.addEventListener("click", function() {
+                        corte.minutos = parseInt(document.getElementById("cantidad_solocortev2").value) || 0;
+                        corte.tarifa = parseFloat(document.getElementById("precioSoloCortev2").value) || 1.5;
+                        corte.costo = corte.minutos * corte.tarifa; // Recalcular el costo
+
+                        // Actualizar las celdas de la fila con los nuevos valores
+                        nuevaFila.cells[1].textContent = corte.minutos; // Minutos
+                        nuevaFila.cells[2].textContent = corte.tarifa; // Costo x Minuto
+                        nuevaFila.cells[3].textContent = corte.costo.toFixed(2); // Costo total
+
+                        // Recalcular el subtotal
+                        nuevaFila.cells[7].textContent = corte.costo.toFixed(2); // Subtotal
+
+                        // Cerrar el modal
+                        modal.hide();
+                        showNotification("success");
+                        fn_obtener_total(); // Recalcular los totales después de editar
+                    });
+                });
+
+                // Función para manejar el botón de eliminar
+                botonEliminar.addEventListener("click", () => {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma, eliminamos la fila
+                            const fila = botonEliminar.closest("tr");
+                            fila.remove(); // Eliminar la fila
+
+                            // Recalcular los totales
+                            fn_obtener_total();
+
+                            // Mostrar mensaje de éxito
+                            showNotification("success");
+                        }
+                    });
+                });
+            });
+
+            fn_obtener_total();
+        }
 
         // Función que maneja el evento de agregar datos
         function agregarDatosCorte() {
@@ -903,7 +1351,6 @@ if (isset($_GET['id'])) {
             if (isNaN(cantidadMinutos) || cantidadMinutos <= 0) {
                 // Añadir clase para resaltar el error
                 inputMonto.classList.add('error-input');
-
                 // Crear mensaje de error dinámicamente
                 const mensajeError = `
                     <div class="error-message text-center">
@@ -1101,6 +1548,9 @@ if (isset($_GET['id'])) {
         const cantidadCorte = document.getElementById('cantidadCorte');
         const precioCorte = document.getElementById('precioCorte');
 
+        const textAreatInsert = document.getElementById("idTextAreaDetalleInsert").value;
+        datosArticulo.nota = textAreatInsert;
+
         const mensajeErrorExistente = document.querySelector('.error-message');
         if (mensajeErrorExistente) mensajeErrorExistente.remove();
         cantidadCorte.classList.remove('error-input');
@@ -1210,35 +1660,18 @@ if (isset($_GET['id'])) {
             }
             datosArticulo.cantidad = parseInt(inputCantidad.value, 10);
             datosArticulo.minutos = parseInt(cantidadCorte.value, 10) || '-';
-            datosArticulo.costo_por_minuto = parseFloat(precioCorte.value, 10) || '-';
+
+            datosArticulo.costo_por_minuto = isNaN(datosArticulo.minutos) === true ? '-' : parseFloat(precioCorte.value, 10);
             datosArticulo.id_movimiento = 1;
 
             if (datosArticulo.corte && datosArticulo.cantidad == 1) {
                 const inputMonto = document.getElementById('cantidadCorte');
                 const divContainer = inputMonto.closest('.d-flex');
-
-
-                // Validar que el monto haya sido ingresado y sea mayor a 0
-                if (isNaN(datosArticulo.minutos) || datosArticulo.minutos <= 0) {
-                    // Añadir clase para resaltar el error
-                    inputMonto.classList.add('error-input');
-
-                    // Crear mensaje de error dinámicamente
-                    const mensajeError = `
-                                <div class="error-message text-center">
-                                    Por favor, ingresa un monto válido mayor a 0.
-                                </div>
-                            `;
-
-                    // Insertar el mensaje de error debajo del contenedor principal
-                    divContainer.insertAdjacentHTML('afterend', mensajeError);
-
-                    return; // Detener ejecución si el monto no es válido
-                }
             }
 
 
-
+            let textAreatInsertv2 = document.getElementById("idTextAreaDetalleInsert").value;
+            datosArticulo.nota = textAreatInsertv2;
             modalCantidad.hide();
             fn_agregar_articulo_tabla(datosArticulo);
             showNotification("success");
@@ -1246,6 +1679,7 @@ if (isset($_GET['id'])) {
 
         // Mostrar el modal
         modalCantidad.show();
+        document.getElementById("idTextAreaDetalleInsert").value = "";
     }
     //}
 
@@ -1289,7 +1723,7 @@ if (isset($_GET['id'])) {
         // Agregar el botón de editar a la celda de acciones
         accionCell.appendChild(botonEditar);
         nuevaFila.insertCell(9).textContent = datosArticulo["id_movimiento"]; // Precio unitario
-
+        nuevaFila.insertCell(10).textContent = datosArticulo["nota"]; 
         // Función para manejar el botón de editar
         botonEditar.addEventListener("click", () => {
             // Abrir el modal con la cantidad actual, nombre del artículo, y datos adicionales de corte
@@ -1322,13 +1756,13 @@ if (isset($_GET['id'])) {
                 const minutos = parseInt(document.getElementById("cantidadCorte").value) || '-';
                 const precio = parseFloat(document.getElementById("precioCorte").value) || '-';
 
+
                 if (datosArticulo["corte"] && cantidad == 1) {
                     const inputMonto = document.getElementById('cantidadCorte');
                     const divContainer = inputMonto.closest('.d-flex');
-
-
                     // Validar que el monto haya sido ingresado y sea mayor a 0
                     if (isNaN(minutos) || minutos <= 0) {
+
                         // Añadir clase para resaltar el error
                         inputMonto.classList.add('error-input');
 
@@ -1474,6 +1908,344 @@ if (isset($_GET['id'])) {
         return false; // Si no se encuentra ninguna coincidencia, retorna false
     }
 </script>
+<script>
+    function fn_servicios(jsDatos) {
+        let ploteoEditando = null; // Variable para guardar el ploteo que se está editando
+        console.log(jsDatos);
+
+        // Obtener el array de medidas, eliminando los corchetes y separando por coma
+        const medidasArray = jsDatos["medidas"]
+            .slice(1, -1) // Elimina las llaves '{' y '}'
+            .split(','); // Divide por coma (',') para obtener los elementos como array
+
+        console.log(medidasArray);
+
+        let modalContent = `
+        <div class="text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Servicio de ${jsDatos["descripcion"]}</h4>
+                    <div>ID: <span id="id_mov_${jsDatos["descripcion"]}">${jsDatos["id"]}</span></div>
+                    <div class="card-sub">Aquí ingresa lo que mandaron a ${jsDatos["descripcion"]} de manera general</div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Cantidad de ${jsDatos["descripcion"]}</p>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <button id="btn_menos_${jsDatos["descripcion"]}" class="btn btn-danger btn-round me-2">-</button>
+                        <input id="input_cantidad_${jsDatos["descripcion"]}" class="text-center" type="text" value="1" style="width: 50px;height: 40px;" oninput="validarNumero(event)">
+                        <button id="btn_mas_${jsDatos["descripcion"]}" class="btn btn-success btn-round ms-2">+</button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">Dimensión</p>
+                    <div class="selectgroup selectgroup-pills">`;
+
+        medidasArray.forEach((elemento) => {
+            modalContent += `
+            <label class="selectgroup-item">
+                <input
+                    type="checkbox"
+                    name="value"
+                    value="${elemento}"
+                    class="selectgroup-input"    
+                />
+                <span class="selectgroup-button">${elemento}</span>
+            </label>
+        `;
+        });
+
+        modalContent += `
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <p class="card-text">Monto (S/)</p>
+                    <input type="number" id="monto_${jsDatos["descripcion"]}" class="form-control" placeholder="Monto (S/)">
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">Detalle</p>
+                    <textarea rows="3" cols="30" id="datelle_material_${jsDatos["descripcion"]}" class="form-control" placeholder="Agrega como: Corte por Material Restante"></textarea>
+                </div>
+
+
+                <div class="text-center">
+                    <button class="btn btn-secondary rounded-5" id="btnAgregar${jsDatos["descripcion"]}" role="button">Añadir a la Venta</button>
+                </div>
+
+                <br>
+            </div>
+        </div>
+    `;
+
+
+        document.getElementById('modalContent').innerHTML = modalContent;
+
+
+        setTimeout(() => {
+
+            document.getElementById("btn_mas_" + jsDatos["descripcion"]).addEventListener("click", function() {
+                let cantidad = parseInt(document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value);
+                document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value = cantidad + 1;
+            });
+
+            document.getElementById("btn_menos_" + jsDatos["descripcion"]).addEventListener("click", function() {
+                let cantidad = parseInt(document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value);
+                if (cantidad > 1) {
+                    document.getElementById("input_cantidad_" + jsDatos["descripcion"]).value = cantidad - 1;
+                }
+            });
+
+
+            document.getElementById('btnAgregar' + jsDatos["descripcion"]).addEventListener('click', function() {
+                const cantidad = parseInt(document.getElementById('input_cantidad_' + jsDatos["descripcion"]).value) || 1;
+                const monto = parseFloat(document.getElementById('monto_' + jsDatos["descripcion"]).value) || 0;
+                const detalle_nota = document.getElementById('datelle_material_' + jsDatos["descripcion"]).value;
+                const inputMonto = document.getElementById('monto_' + jsDatos["descripcion"]);
+                const mensajeErrorExistente = document.querySelector('.error-message');
+                if (mensajeErrorExistente) mensajeErrorExistente.remove();
+                inputMonto.classList.remove('error-input');
+                let textoDimensiones = obtenerValoresSeleccionados();
+                let detalle_notaFormato = detalle_nota ? " / " + detalle_nota : "";
+                // Validar que el monto haya sido ingresado y sea mayor a 0
+                if (isNaN(monto) || monto <= 0) {
+                    // Añadir clase para resaltar el error
+                    inputMonto.classList.add('error-input');
+
+                    // Crear mensaje de error
+                    const mensajeError = document.createElement('div');
+                    mensajeError.textContent = 'Por favor, ingresa un monto válido mayor a 0.';
+                    mensajeError.classList.add('error-message');
+
+                    // Insertar mensaje debajo del input
+                    inputMonto.parentNode.appendChild(mensajeError);
+                    return; // Detener ejecución si el monto no es válido
+                }
+
+                // Si no estamos editando, agregar un nuevo ploteo
+                const datos = [{
+                    id: '0', // ID del ploteo
+                    descripcion: jsDatos["descripcion"],
+                    medidas: medidasArray,
+                    cantidad: cantidad,
+                    monto: '-', // Monto
+                    subtotal: monto, // Subtotal
+                    articulo: textoDimensiones ? jsDatos["descripcion"] + ' (' + textoDimensiones + ') / ' + detalle_nota : jsDatos["descripcion"] + detalle_notaFormato,
+                    idmovimiento: jsDatos["id"],
+                    dimension: textoDimensiones
+                }];
+
+                fn_datos_a_tabla(datos);
+                document.getElementById('input_cantidad_' + jsDatos["descripcion"]).value = 0; // Reset cantidad
+                document.getElementById('monto_' + jsDatos["descripcion"]).value = ''; // Reset monto
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                if (modal) modal.hide();
+                showNotification("success");
+            });
+
+        }, 0); // Usar setTimeout para asegurar que el DOM esté listo
+
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+        modal.show();
+    }
+</script>
+<script>
+    function obtenerValoresSeleccionados() {
+        let seleccionados = [];
+        document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+            seleccionados.push(checkbox.value);
+        });
+        return seleccionados.join(", "); // Convierte el array en un string separado por comas
+    }
+
+    function fn_datos_a_tabla(datos) {
+        var tabla = document.getElementById("tabla_articulos").getElementsByTagName("tbody")[0];
+
+        datos.forEach(elemento => {
+            console.log("Elemento de mrd");
+            console.log(elemento);
+            let nuevaFila = tabla.insertRow();
+
+            // Agregar celdas para los datos de ploteo
+            nuevaFila.insertCell(0).textContent = elemento.id; // ID
+            nuevaFila.insertCell(1).textContent = '-'; // Cantidad de Ploteos
+            nuevaFila.insertCell(2).textContent = '-'; // Monto unitario
+            nuevaFila.insertCell(3).textContent = '-'; // Subtotal
+            nuevaFila.insertCell(4).textContent = elemento.articulo; // Artículo (Ploteo)
+            nuevaFila.insertCell(5).textContent = elemento.cantidad; // Se puede agregar más detalles si se requiere
+            nuevaFila.insertCell(6).textContent = elemento.monto; // Otro dato
+            nuevaFila.insertCell(7).textContent = elemento.subtotal.toFixed(2); // Subtotal (multiplied)
+
+            let accionCell = nuevaFila.insertCell(8);
+            nuevaFila.insertCell(9).textContent = elemento.idmovimiento; // Movimiento ID
+            nuevaFila.insertCell(10).textContent = elemento.dimension; // Dimensión
+
+            // 1. Botón de Editar
+            let botonEditar = document.createElement("button");
+            botonEditar.classList.add("btn", "btn-warning", "btn-round", "ms-2", "text-white", "px-3", "py-2");
+            botonEditar.innerHTML = '<i class="fas fa-edit"></i>';
+            accionCell.appendChild(botonEditar);
+
+            // 2. Botón de Eliminar
+            let botonEliminar = document.createElement("button");
+            botonEliminar.classList.add("btn", "btn-danger", "btn-round", "ms-2", "px-3", "py-2");
+            botonEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+            accionCell.appendChild(botonEliminar);
+
+            botonEditar.addEventListener("click", () => {
+                let modalContent = `<!-- Aquí comienza el contenido del modal -->
+               <div class="text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Servicio de ${elemento.descripcion}</h4>
+                            <div>ID: <span id="id_mov_${elemento.descripcion}">${elemento.idmovimiento}</span></div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Cantidad de <b> ${elemento.descripcion}</b></p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <button id="btn_menos_${elemento.descripcion}" class="btn btn-danger btn-round me-2">-</button>
+                                <input id="input_cantidad_${elemento.descripcion}" class="text-center" type="text" value="${elemento.cantidad}" style="width: 40px;" oninput="validarNumero(event)">
+                                <button id="btn_mas_${elemento.descripcion}" class="btn btn-success btn-round ms-2">+</button>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <p class="card-text">Dimensión</p>
+                            <div class="selectgroup selectgroup-pills">`;
+
+                // Aquí agregamos dinámicamente los checkboxes para cada medida
+                elemento.medidas.forEach((x) => {
+                    modalContent += `
+                <label id="contenedor-medidas-update" class="selectgroup-item">
+                    <input type="checkbox" name="value" value="${x}" class="selectgroup-input" />
+                    <span class="selectgroup-button">${x}</span>
+                </label>`;
+                });
+
+                let cadena_despues_slash = elemento["articulo"].match(/\/\s*(.*)/);
+                let resultado_cadena_sn_slash = cadena_despues_slash ? cadena_despues_slash[1] : "";
+                let parteAntesDelSlash = elemento["articulo"].split("/")[0].trim();
+
+                modalContent += `</div></div> <!-- Fin del contenido de dimensiones -->
+                        <div class="card-body">
+                            <p class="card-text">Monto (S/)</p>
+                            <input type="number" id="monto_editar${elemento["descripcion"]}" class="form-control" value="${elemento.subtotal}">
+                        </div>
+
+                        <div class="card-body">
+                            <p class="card-text">Detalle</p>
+                            <textarea rows="3" cols="30" id="datelle_material_editar${elemento["articulo"]}" class="form-control"> ${resultado_cadena_sn_slash}</textarea>
+                        </div>
+
+
+                        <div class="text-center mb-3">
+                            <button class="btn btn-secondary rounded-5" id="btnEditar${elemento["descripcion"]}" role="button">Actualizar</button>
+                        </div>
+                    </div>
+                </div>`;
+
+                document.getElementById('modalContent').innerHTML = modalContent;
+
+                // Manejo de incremento y decremento de cantidad
+                document.getElementById(`btn_menos_${elemento.descripcion}`).addEventListener('click', () => {
+                    let cantidad = parseInt(document.getElementById(`input_cantidad_${elemento.descripcion}`).value);
+                    if (cantidad > 1) document.getElementById(`input_cantidad_${elemento.descripcion}`).value = cantidad - 1;
+                });
+
+                document.getElementById(`btn_mas_${elemento.descripcion}`).addEventListener('click', () => {
+                    let cantidad = parseInt(document.getElementById(`input_cantidad_${elemento.descripcion}`).value);
+                    document.getElementById(`input_cantidad_${elemento.descripcion}`).value = cantidad + 1;
+                });
+                if (elemento.dimension) {
+                    let dimensionesSeleccionadas = elemento.dimension.split(", "); // Convertir string a array si es necesario
+                    document.querySelectorAll('.selectgroup-input').forEach((checkbox) => {
+                        if (dimensionesSeleccionadas.includes(checkbox.value)) {
+                            checkbox.checked = true; // Marcar el checkbox si su valor está en la lista
+                        }
+                    });
+                }
+
+                // Mostrar el modal
+                const modal = new bootstrap.Modal(document.getElementById('modalGenerico'));
+                modal.show();
+
+                // Evento para actualizar el ploteo
+                document.getElementById('btnEditar' + elemento["descripcion"]).addEventListener('click', function() {
+                    const cantidad = parseInt(document.getElementById(`input_cantidad_${elemento.descripcion}`).value) || 1;
+                    const monto = parseFloat(document.getElementById('monto_editar' + elemento["descripcion"]).value) || 0;
+                    const articulo_titulo = document.getElementById("datelle_material_editar" + elemento["articulo"]).value;
+                    let dimensionesSeleccionadas = [];
+                    const detalle_ = document.getElementById("datelle_material_editar" + elemento["articulo"]).value;
+                    const detalle_formato_update = detalle_ ? " / " + detalle_ : "";
+                    document.querySelectorAll('#contenedor-medidas-update .selectgroup-input:checked').forEach((checkbox) => {
+                        dimensionesSeleccionadas.push(checkbox.value);
+                    });
+
+                    let textoDimensiones = dimensionesSeleccionadas.join(", ");
+
+                    // Validación del monto
+                    if (isNaN(monto) || monto <= 0) {
+                        alert("Por favor, ingresa un monto válido mayor a 0.");
+                        return;
+                    }
+
+                    // Actualizamos los valores de la fila
+                    elemento.cantidad = cantidad;
+                    elemento.subtotal = monto;
+                    elemento.dimension = textoDimensiones;
+                    elemento.articulo = textoDimensiones ? elemento.descripcion + `(${textoDimensiones})` + detalle_formato_update : elemento["descripcion"] + detalle_formato_update;
+
+
+                    // Actualizamos la fila de la tabla
+                    nuevaFila.cells[4].textContent = elemento.articulo;
+                    nuevaFila.cells[5].textContent = elemento.cantidad;
+                    nuevaFila.cells[7].textContent = elemento.subtotal.toFixed(2);
+                    nuevaFila.cells[10].textContent = elemento.dimension;
+
+                    // Limpiar los campos
+                    document.getElementById(`input_cantidad_${elemento.descripcion}`).value = '';
+                    document.getElementById('monto_editar' + elemento.descripcion).value = '';
+                    fn_obtener_total(); // Recalcular totales
+                    // Cerrar el modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerico'));
+                    if (modal) modal.hide();
+                });
+            });
+
+            // Función de eliminar
+            botonEliminar.addEventListener("click", () => {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, eliminamos la fila
+                        const fila = botonEliminar.closest("tr");
+                        fila.remove(); // Eliminar la fila
+
+                        // Recalcular los totales
+                        fn_obtener_total();
+
+                        // Mostrar mensaje de éxito
+                        showNotification("success");
+                    }
+                });
+            });
+        });
+
+        fn_obtener_total(); // Recalcular totales
+    }
+</script>
+
 <!--Tabla-->
 <script>
     document.getElementById("btnRealizarReserva").addEventListener("click", function() {
@@ -1597,7 +2369,7 @@ if (isset($_GET['id'])) {
                     "cantidad": parseInt(row.cells[5].textContent), // Cantidad
                     "sub_total": parseFloat(row.cells[7].textContent), // Subtotal
                     "movimiento_id": parseFloat(row.cells[9].textContent), // Subtotal
-                    "nota_archivo": row.cells[10] ? row.cells[10].textContent.trim() || "Sin nota" : "Sin nota",
+                    "nota_archivo": row.cells[10] ? row.cells[4].textContent + " / " + row.cells[10].textContent.trim() || "Sin nota" : "Sin nota"
                 };
 
                 // Agregar el artículo al array
@@ -1971,12 +2743,18 @@ if (isset($_GET['id'])) {
                                     <p class="card-text">Monto (S/)</p>
                                     <input type="number" id="monto_ploteoeditar" class="form-control" value="${ploteo.subtotal}">
                                 </div>
+
+                                <div class="card-body">
+                                    <p class="card-text">Detalle</p>
+                                    <textarea rows="3" cols="30" id="datelle_material_editar${elemento["articulo"]}" class="form-control"> ${resultado_cadena_sn_slash}</textarea>
+                                </div>
                                 <div class="text-center mb-3">
                                     <button class="btn btn-secondary rounded-5" id="btnAgregarploteoEditar" role="button">Actualizar</button>
                                 </div>
                             </div>
                        </div>
                     `;
+
 
                     document.getElementById('btn_menos_ploteoEditar').addEventListener('click', () => {
                         let cantidad = parseInt(document.getElementById('input_cantidad_ploteoEditar').value);
@@ -2013,9 +2791,11 @@ if (isset($_GET['id'])) {
                     document.getElementById('btnAgregarploteoEditar').addEventListener('click', function() {
                         const cantidadPloteos = parseInt(document.getElementById('input_cantidad_ploteoEditar').value) || 1;
                         const montoPloteo = parseFloat(document.getElementById('monto_ploteoeditar').value) || 0;
-
+                        const articulo_titulo = document.getElementById("datelle_material_editar" + elemento["articulo"]).value;
                         let dimensionesSeleccionadas = [];
-                        document.querySelectorAll('.selectgroup-input:checked').forEach((checkbox) => {
+                        const detalle_ = document.getElementById("datelle_material_editar" + elemento["articulo"]).value;
+                        const detalle_formato_update = detalle_ ? " / " + detalle_ : "";
+                        document.querySelectorAll('#contenedor-medidas-update .selectgroup-input:checked').forEach((checkbox) => {
                             dimensionesSeleccionadas.push(checkbox.value);
                         });
 
@@ -3064,7 +3844,7 @@ if (isset($_GET['id'])) {
                             },
                         });
                     }
-                    
+
 
                 }
             } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {
@@ -3078,32 +3858,32 @@ if (isset($_GET['id'])) {
                         "email": document.getElementById('emailEmpresa').value
                     };
 
-                   try {
-                    console.log(datos);
-                    // Llamar a la función AJAX para registrar la empresa
-                    const response = await fnRegistrarEmpresa(datos);
-                    console.log("Empresa insertado con éxito:", response);
-                    const nombreencadenado = `${document.getElementById('numeroDocumentoEmpresa').value} - ${document.getElementById('razonSocial').value}`;
-                    console.log(nombreencadenado);
-                    console.log(response.empresa_id);
+                    try {
+                        console.log(datos);
+                        // Llamar a la función AJAX para registrar la empresa
+                        const response = await fnRegistrarEmpresa(datos);
+                        console.log("Empresa insertado con éxito:", response);
+                        const nombreencadenado = `${document.getElementById('numeroDocumentoEmpresa').value} - ${document.getElementById('razonSocial').value}`;
+                        console.log(nombreencadenado);
+                        console.log(response.empresa_id);
 
-                    enviardatos(response.empresa_id, nombreencadenado);
-                    limpiarcampos();
-                    showNotification("success");
+                        enviardatos(response.empresa_id, nombreencadenado);
+                        limpiarcampos();
+                        showNotification("success");
 
-                    modalCliente.hide();
-                   } catch (error) {
-                    console.error("Error en el registro:", error.message);
+                        modalCliente.hide();
+                    } catch (error) {
+                        console.error("Error en el registro:", error.message);
 
-                    swal("Error", error.message || "Ocurrió un error inesperado", {
-                        icon: "error",
-                        buttons: {
-                            confirm: {
-                                className: "btn btn-danger",
+                        swal("Error", error.message || "Ocurrió un error inesperado", {
+                            icon: "error",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-danger",
+                                },
                             },
-                        },
-                    });
-                   }
+                        });
+                    }
 
 
                 }

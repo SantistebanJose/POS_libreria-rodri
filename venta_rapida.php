@@ -166,6 +166,10 @@ if (isset($_GET['id'])) {
                                     <li class="nav-item me-3">
                                         <button class="btn btn-secondary btn-round" id="btnAbrirModalSolo">Solo Corte</button>
                                     </li>
+                                    <li class="nav-item me-3">
+                                        <button class="btn btn-secondary btn-round" id="btnAbrirModalSolov2">Solo Corte</button>
+                                    </li>
+
                                 </ul>
                             </div>
                             <div class="card-body">
@@ -332,6 +336,113 @@ if (isset($_GET['id'])) {
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" modal fade" id="modalSoloCorteMaquina2" tabindex="-1" aria-labelledby="modalSoloCorteLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-body">
+                                <div class="col-12 p-4 bg-light rounded">
+
+                                    <h4 class="card-title text-center"><i class="fas fa-print"></i> Máquina de Impresión 3D</h4>
+
+                                    <div class="card-sub text-center">
+                                        Aqui podras agregar los minutos y el precio del servicio de impresión.
+                                    </div>
+                                    <div class="mb-4">
+                                        <!-- Minutos Corte -->
+                                        <div class="text-center" style="flex: 1;">
+
+                                            <p class="mb-1"><strong>Minutos impresión</strong></p>
+                                            <div class="d-flex justify-content-center align-items-center mb-2">
+                                                <button id="btnRestarSoloCortev2" class="btn btn-danger btn-sm btn-round" onclick='fnAumentoOrResta("-")'><i class="fas fa-minus"></i></button>
+                                                <input id="cantidad_solocortev2" type="number" class="form-control text-center mx-2" value="10" style="width: 80px; font-size: 1.2rem;" />
+                                                <button id="btnSumarSoloCortev2" class="btn btn-success btn-sm btn-round" onclick='fnAumentoOrResta("+")'><i class="fas fa-plus"></i></button>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="d-flex justify-content-center">
+                                            <button id="btnIncremento05SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(15)">15 Min.</button>
+                                            <button id="btnIncremento1SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(30)">30 Min.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(45)">45 Min.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(60)">1 Hor.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(120)">2 Hor.</button>
+                                            <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentarMin(180)">3 Hor.</button>
+                                        </div>
+                                        <div class="card-sub text-center">
+                                            Puedes Seleccionar los minutos de manera rápida
+                                        </div>
+                                        <script>
+                                            function fnAumentoOrResta(accion) {
+                                                if (accion === "+") {
+                                                    var x = parseFloat(document.getElementById("cantidad_solocortev2").value)
+                                                    var x = x + 1;
+                                                    document.getElementById("cantidad_solocortev2").value = x;
+                                                } else if (accion === "-") {
+                                                    var x = parseFloat(document.getElementById("cantidad_solocortev2").value)
+                                                    var x = x - 1;
+                                                    document.getElementById("cantidad_solocortev2").value = x;
+                                                }
+
+                                            }
+
+                                            function fnAumentarMin(dato) {
+                                                document.getElementById("cantidad_solocortev2").value = dato;
+                                            }
+                                            function fnAumentaPrecioImpresion(dato) {
+                                                const acum = parseFloat(document.getElementById("precioSoloCortev2").value);
+                                                document.getElementById("precioSoloCortev2").value = acum + parseFloat(dato);
+                                            }
+
+                                            function limpiar() {
+                                                document.getElementById("precioSoloCortev2").value = 0;
+                                            }
+                                        </script>
+
+                                        <!-- Línea divisoria -->
+                                        <hr>
+
+
+                                        <!-- Precio Corte -->
+                                        <div class="text-center" style="flex: 1;">
+                                            <p class="mb-1"><strong>Precio Impresión</strong></p>
+                                            <div class="w-100 d-flex justify-content-center mb-1">
+                                                
+                                                <input id="precioSoloCortev2" type="number" class="form-control text-center mx-2" value="1.5" style="width: 90px; font-size: 1.2rem;" />
+                                                <button id="" class="btn btn-danger btn-sm" onclick="limpiar()"><i class="fas fa-broom"></i></button>
+                                            </div>
+                                            <br>
+                                            <div class="d-flex justify-content-center">
+                                                
+                                                
+                                                <button id="btnIncremento05SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;" onclick="fnAumentaPrecioImpresion(0.5)">+0.5</button>
+                                                <button id="btnIncremento1SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;"onclick="fnAumentaPrecioImpresion(1)">+1</button>
+                                                <button id="btnIncremento2SoloCortev2" class="btn btn-outline-primary btn-sm me-1 btn-round" style="font-size: 0.9rem;"onclick="fnAumentaPrecioImpresion(2)">+2</button>
+                                                <button id="btnIncremento5SoloCortev2" class="btn btn-outline-primary btn-sm btn-round" style="font-size: 0.9rem;"onclick="fnAumentaPrecioImpresion(5)">+5</button>
+                                            </div>
+                                        </div>
+                                        <!-- Precio Corte -->
+                                        <hr>
+                                        <div class="text-center">
+                                            <p class="mb-1"><strong>Nota</strong></p>
+                                            <textarea class="form-control" name="" id="" rows="3" placeholder="Escribe por ejemplo: Maquina de 3D"></textarea>
+
+                                        </div>
+
+                                        <div class="text-center mt-3">
+                                            <button type="button" class="btn btn-secondary rounded-5" id="btn_agregar_solocortev2"><i class="fas fa-plus-circle"></i> Agregar</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
@@ -843,7 +954,7 @@ if (isset($_GET['id'])) {
                                         <th scope="col">ID</th>
                                         <th scope="col">MINUTOS</th>
                                         <th scope="col">Tarifa</th>
-                                        <th scope="col">Total Corte</th>
+                                        <th scope="col">Total I/C</th>
                                         <th scope="col">Articulo</th>
                                         <th scope="col">Cantidad</th>
                                         <th scope="col">Precio Unitario</th>
@@ -895,6 +1006,7 @@ if (isset($_GET['id'])) {
                         <i class="fas fa-shopping-basket"></i> Realizar Venta
                     </button>
                 </div>
+
 
             </div>
         </div>
@@ -1043,17 +1155,23 @@ if (isset($_GET['id'])) {
             $('#filterCategoria').val('');
             $('#filterTipo').val('');
             $('#filterDimension').val('');
-            
+
             $('#multi-filter-select input').val(''); // Limpiar búsqueda global en DataTables
             // Restablecer los filtros de la tabla
-            
+
             // Restablecer los filtros de la tabla
             table.columns().search('').draw();
-            
+
         });
-        
+
     });
 </script>
+
+<!-- FRANCO -->
+
+
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -1117,6 +1235,7 @@ if (isset($_GET['id'])) {
                 keyboard: false // Evita que se cierre con la tecla 'Esc'
             });
 
+
             // Seleccionar el botón "Agregar"
             const btn_agregar = document.getElementById('btn_agregar_solocorte');
             btn_agregar.textContent = 'Agregar';
@@ -1134,6 +1253,94 @@ if (isset($_GET['id'])) {
             document.getElementById("precioSoloCorte").value = 1.5;
             modal.show(); // Muestra el modal
         });
+
+        // Abrir el modal y manejar el evento de agregar corte
+        document.getElementById('btnAbrirModalSolov2').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del botón
+            let navLinks = document.querySelectorAll(".nav-link");
+
+            // Remover la clase 'active' de todas las pestañas
+            navLinks.forEach(function(link) {
+                link.classList.remove("active");
+            });
+
+            // Desactivar todos los panes (contenido de las pestañas)
+            let tabPanes = document.querySelectorAll(".tab-pane");
+            tabPanes.forEach(function(pane) {
+                pane.classList.remove("show", "active");
+            });
+            // Mostrar el modal de Solo Corte
+            const modalElement = document.getElementById('modalSoloCorteMaquina2');
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: 'static', // Evita que se cierre al hacer clic fuera
+                keyboard: false // Evita que se cierre con la tecla 'Esc'
+            });
+
+
+            // Seleccionar el botón "Agregar"
+            const btn_agregar = document.getElementById('btn_agregar_solocortev2');
+            btn_agregar.textContent = 'Agregar';
+
+            btn_agregar.replaceWith(btn_agregar.cloneNode(true));
+
+            // Seleccionar nuevamente el botón clonado
+            const nuevoBtnAgregar = document.getElementById('btn_agregar_solocortev2');
+
+            // Volver a agregar el evento para agregar datos
+            nuevoBtnAgregar.addEventListener("click", fn_agregar_impresion_a_tabla);
+
+            // Limpiar los campos del formulario
+            document.getElementById("cantidad_solocorte").value = 0;
+            document.getElementById("precioSoloCorte").value = 1.5;
+            modal.show(); // Muestra el modal
+        });
+
+        function fn_agregar_impresion_a_tabla() {
+            console.log("Holass")
+            const cantidadMinutos = parseInt(document.getElementById('cantidad_solocortev2').value) || 0;
+            const tarifa = parseFloat(document.getElementById('precioSoloCortev2').value) || 0;
+
+            const inputMonto = document.getElementById('cantidad_solocortev2');
+            const divContainer = inputMonto.closest('.d-flex');
+            const mensajeErrorExistente = document.querySelector('.error-message');
+            if (mensajeErrorExistente) mensajeErrorExistente.remove();
+            inputMonto.classList.remove('error-input');
+
+            if (isNaN(cantidadMinutos) || cantidadMinutos <= 0) {
+                inputMonto.classList.add('error-input');
+
+                const mensajeError =
+                    `
+                    <div class="error-message text-center">
+                        Por favor, ingresa un monto válido mayor a 0.
+                    </div>
+                `;
+
+                divContainer.insertAdjacentHTML('afterend', mensajeError);
+
+                return;
+            }
+            const datosImpresion3D = [{
+                id: '0',
+                minutos: cantidadMinutos,
+                tarifa: tarifa,
+                costo: cantidadMinutos * tarifa,
+                articulo: 'MAQUINA DE IMPRESION  3D',
+                idmovimiento: 15,
+            }];
+            
+            console.log(datosImpresion3D);
+            fn_solo_corte_tabla(datosImpresion3D);
+            document.getElementById('cantidad_solocortev2').value = '10';
+            document.getElementById('precioSoloCortev2').value = '1.5'; // Valor inicial
+
+            const modalElement = document.getElementById('modalSoloCorteMaquina2');
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+            showNotification("success");
+
+
+        }
 
         // Función que maneja el evento de agregar datos
         function agregarDatosCorte() {
@@ -1483,8 +1690,6 @@ if (isset($_GET['id'])) {
                     return; // Detener ejecución si el monto no es válido
                 }
             }
-
-
 
             modalCantidad.hide();
             fn_agregar_articulo_tabla(datosArticulo);
@@ -3253,7 +3458,7 @@ if (isset($_GET['id'])) {
                             if (result.estado === true) {
                                 console.log(result)
                                 console.log(result.id_venta_generado)
-                                
+
                                 Swal.fire({
                                     title: "Pagado con Éxito!",
                                     html: `<p style="text-align: center;"> Venta Realizada con Exitó</p>`, // Usa "html" en lugar de "text"
@@ -3261,7 +3466,8 @@ if (isset($_GET['id'])) {
                                     buttons: false,
                                     timer: 1500
                                 }).then(() => {
-                                    window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
+                                    //window.open("/caracol_soft_vysam/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
+                                    window.open("ticket.php?id=" + parseInt(idVenta), "_blank");
                                     location.reload();
 
                                 });
@@ -3401,8 +3607,9 @@ if (isset($_GET['id'])) {
                             buttons: false,
                             timer: 1500
                         }).then(() => {
+                            //window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
+                            window.open("ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                             location.reload();
-                            window.open("http://localhost/caracol_soft_vysam/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                         });
                     } else {
                         swal("Error", result.mensaje, {
@@ -3769,7 +3976,7 @@ if (isset($_GET['id'])) {
                             },
                         });
                     }
-                   
+
 
                 }
             } else if (document.getElementById('pills-empresa-tab').classList.contains('active')) {

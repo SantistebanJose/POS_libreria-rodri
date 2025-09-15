@@ -70,6 +70,11 @@ function controladorClssInsertPA($accion)
             $id = $_POST["id"]; // Decodificar JSON
             toggle_estado_articulo_completo($id, $accion);
             break;
+        case 'ELIMINAR_ARTICULO':
+            $id = $_POST["id"]; // Decodificar JSON
+            fnElimarArticulo($id);
+            break;
+        //
         case 'REGISTRAR_COMPRA':
             if (isset($_POST["jsDatosCompra"])) {
                 $jsDatos = $_POST["jsDatosCompra"];
@@ -133,7 +138,13 @@ function controladorClssInsertPA($accion)
                 fnDarDeAltaOrBajaMedioDePago($js_datos_altas_baja);
             }
             break;
-
+        case 'VACIARCAJA':
+            //fnUpdateEmisor
+            if (isset($_POST["jsDatos"])) {
+                $jsDatos = $_POST["jsDatos"];
+                fnVaciarCaja($jsDatos);
+            }
+            break;
 
         case 'INSERTPROVEEDORALMOMENTODECOMPRA':
             //fnInsertProveedorAlMomentCompra
@@ -143,6 +154,34 @@ function controladorClssInsertPA($accion)
             }
 
             break;
+
+        case 'INSERT_SERVICIOS':
+            //fnInsertServicio
+            if (isset($_POST["jsDatos"])) {
+                $jsDatos = $_POST["jsDatos"];
+                fnInsertServicio($jsDatos);
+            }
+
+            break;
+        //
+        case 'EDITAR_SERVICIO':
+            //fnEditarServicio
+            if (isset($_POST["jsDatos"])) {
+                $jsDatos = $_POST["jsDatos"];
+                fnEditarServicio($jsDatos);
+            }
+            break;
+
+        case 'EDITAR_EMISOR':
+            //fnUpdateEmisor
+            if (isset($_POST["jsDatos"])) {
+                $jsDatos = $_POST["jsDatos"];
+                fnUpdateEmisor($jsDatos);
+            }
+            break;
+
+        //VACIARCAJA
+
 
         case 'CAMBIARCONTRASEÑA':
             // Otros casos si los necesitas
@@ -158,17 +197,18 @@ function finalizarVentaReserva($jsDatosVenta)
 
     $data = json_decode($jsDatosVenta, true);
 
-
+    $tipo_comprobante = $data['tipo_comprobante'];
     $venta_id = $data['venta_id'];
     $atencion_final_usuario = $data['atencion_final_usuario'];
     $numUpdateTelefonoPersona = $data['numUpdateTelefonoPersona'];
     $monto_original = $data['monto_original'];
     $monto_venta_final = $data['monto_venta_final'];
+    $js_detalles_receptor_factura = json_encode($data['js_detalles_receptor_factura']);
     $json_pagos = json_encode($data['js_detalle_pagos']);
 
     try {
 
-        $sql = "SELECT fn_finalizar_venta_directa(:venta_id, :atencion_final_usuario, :numUpdateTelefonoPersona, :monto_original, :monto_venta_final,:js_pagos)";
+        $sql = "SELECT fn_finalizar_venta_directa(:venta_id, :atencion_final_usuario, :numUpdateTelefonoPersona, :monto_original, :monto_venta_final,:tipo_comprobante ,:js_detalles_receptor_factura,:js_pagos)";
         $stmt = $conectar->prepare($sql);
 
 
@@ -178,6 +218,9 @@ function finalizarVentaReserva($jsDatosVenta)
         $stmt->bindParam(':monto_original', $monto_original);
         $stmt->bindParam(':monto_venta_final', $monto_venta_final);
         $stmt->bindParam(':js_pagos', $json_pagos);
+        $stmt->bindParam(':js_detalles_receptor_factura', $js_detalles_receptor_factura);
+        $stmt->bindParam(':tipo_comprobante', $tipo_comprobante);
+
 
         $stmt->execute();
 
@@ -192,7 +235,11 @@ function finalizarVentaReserva($jsDatosVenta)
         echo json_encode($response);
     } catch (Exception $e) {
 
-        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas']);
+        echo json_encode([
+            'estado' => false,
+            'mensaje' => 'Error al procesar la venta. Consultar con el Administrador de Sistemas',
+            'error' => $e->getMessage()
+        ]);
     }
 }
 
@@ -359,7 +406,7 @@ function paRegistrarArticuloCompleto($jsDatosArticulo)
     $stock = $data['stock'];
     $precio_venta = $data['precio_venta'];
     $precio_compra = $data['precio_compra'];
-    
+
     $marca = $data['marca'];
     $nombre = $data['nombre'];
     $tipo_id = $data['tipo_id'];
@@ -392,6 +439,30 @@ function paRegistrarArticuloCompleto($jsDatosArticulo)
         echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.' . $e, 'jsonEntrada' => $data, 'SQL' => $stmt]);
     }
 }
+
+function fnElimarArticulo($id)
+{
+    global $conectar;
+    try {
+        $sql = "
+        update articulo set deleted_at =  CURRENT_TIMESTAMP where id = :id;
+        ";
+        $stmt = $conectar->prepare($sql);
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+
+
+        if ($stmt->rowCount() > 0) {
+
+            echo json_encode(['estado' => true, 'mensaje' => 'Artículo actualizado con éxito']);
+        } else {
+
+            echo json_encode(['estado' => false, 'mensaje' => 'No se realizó ninguna actualización. Verifique los datos']);
+        }
+    } catch (\Throwable $th) {
+        echo json_encode(['estado' => false, 'mensaje' => $th->getMessage()]);
+    }
+}
 function paEditarArticuloCompleto($jsDatosArticulo)
 {
     global $conectar;
@@ -405,12 +476,29 @@ function paEditarArticuloCompleto($jsDatosArticulo)
     $escala_id = $data['escala_id'];
     $stock = $data['stock'];
     $precio_venta = $data['precio_venta'];
+    $precio_compra = $data['precio_compra'];
     $marca = $data['marca'];
     $nombre = $data['nombre'];
     $tipo_id = $data['tipo_id'];
 
     try {
-        $sql = "SELECT fn_editar_articulo_completo(:id,:nombre, :categoria_id, :tipo_id, :dimension_id, :escala_id,:stock,:precio_venta, :corte, :color, :marca)";
+        $sql = "
+        UPDATE articulo
+        SET 
+            nombre = :nombre,
+            categoria_id = :categoria_id,
+            tipo_id = :tipo_id,
+            dimension_id = :dimension_id,
+            escala_id = :escala_id,
+            stock = :stock,
+            precio_venta = :precio_venta,
+            corte = :corte,
+            color = :color,
+            marca = :marca,
+            precio_compra = :precio_compra
+        WHERE id = :id;
+
+        ";
 
         $stmt = $conectar->prepare($sql);
         $stmt->bindParam(':id', $id);
@@ -421,17 +509,18 @@ function paEditarArticuloCompleto($jsDatosArticulo)
         $stmt->bindParam(':escala_id', $escala_id);
         $stmt->bindParam(':stock', $stock);
         $stmt->bindParam(':precio_venta', $precio_venta);
+        $stmt->bindParam(':precio_compra', $precio_compra);
         $stmt->bindParam(':corte', $corte, PDO::PARAM_BOOL); // Usando PDO::PARAM_BOOL para asegurarse que se trata como booleano
         $stmt->bindParam(':color', $color);
         $stmt->bindParam(':marca', $marca);
 
         $stmt->execute();
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $jsonResponse = $row['fn_editar_articulo_completo'];
-
-        $response = json_decode($jsonResponse, true);
-        echo json_encode($response);
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['estado' => true, 'mensaje' => 'Artículo Eliminado con éxito']);
+        } else {
+            echo json_encode(['estado' => false, 'mensaje' => 'No se realizó ninguna actualización. Verifique los datos']);
+        }
     } catch (Exception $e) {
         echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.' . $e, 'jsonEntrada' => $data, 'SQL' => $stmt]);
     }
@@ -920,6 +1009,132 @@ function fnInsertMedioDePago($jsDatos)
         echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
     }
 }
+function fnInsertServicio($jsDatos)
+{
+    global $conectar;
+
+    try {
+        $data = json_decode($jsDatos, true);
+
+        // Convertir el array de medidas en una cadena que PostgreSQL entiende
+        // Esto es necesario para insertar correctamente el array en PostgreSQL
+        $medidas = '{' . implode(',', $data['medidas']) . '}';
+
+        $conectar->beginTransaction();
+
+        $sql = "
+        insert into movimiento
+        (descripcion, medidas)
+        VALUES
+        (:descripcion, :medidas);
+        ";
+
+        $stmt = $conectar->prepare($sql);
+
+        $stmt->bindParam(':descripcion', $data['descripcion']);
+        $stmt->bindParam(':medidas', $medidas);  // Usamos la cadena formateada
+
+        $stmt->execute();
+
+        $conectar->commit();
+
+        echo json_encode(['estado' => true, 'mensaje' => 'Servicio Registrado :)']);
+    } catch (Exception $e) {
+        $conectar->rollBack();
+
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
+    }
+}
+
+function fnEditarServicio($jsDatos)
+{
+    global $conectar;
+
+    try {
+        $data = json_decode($jsDatos, true);
+
+        $medidas = '{' . implode(',', $data['medidas']) . '}';
+
+        $conectar->beginTransaction();
+
+        $sql = "
+        UPDATE movimiento
+        set
+        descripcion = :descripcion,
+        medidas = :medidas
+        where id = :id
+        ";
+
+        $stmt = $conectar->prepare($sql);
+
+        $stmt->bindParam(':descripcion', $data['descripcion']);
+        $stmt->bindParam(':medidas', $medidas);
+        $stmt->bindParam(':id', $data['id']);
+
+
+        $stmt->execute();
+
+        $conectar->commit();
+
+        echo json_encode(['estado' => true, 'mensaje' => 'Servicio Registrado :)']);
+    } catch (Exception $e) {
+        $conectar->rollBack();
+
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
+    }
+}
+
+function fnVaciarCaja($jsDatos)
+{
+    global $conectar;
+
+    try {
+        $data = json_decode($jsDatos, true);
+
+        $id_medio_pago = $data["id"];
+        $responsable_id = $data["responsable_id"];
+        $responsable = $data["responsable"];
+
+        // Inicia la transacción
+        $conectar->beginTransaction();
+
+        // Primero, actualizamos el monto a 0
+        $sql_update = "
+            UPDATE forma_pago 
+            SET monto = 0
+            WHERE id = :id_medio_pago
+        ";
+        $stmt_update = $conectar->prepare($sql_update);
+        $stmt_update->bindParam(':id_medio_pago', $id_medio_pago);
+        $stmt_update->execute();
+
+        // Luego, insertamos en detalle_caja_grande
+        $sql_insert = "
+            INSERT INTO detalle_caja_grande
+            (forma_pago_id, concepto_id, tipo_movimiento, monto, responsable_id, responsable, nota, movimiento_caja_v2)
+            VALUES
+            (:id_medio_pago, 25, 'CAJA EN S/ 00.00', 0, :responsable_id, :responsable, 'SE DEJO LA CAJA EN 0', 'CAJA EN 0')
+        ";
+        $stmt_insert = $conectar->prepare($sql_insert);
+        $stmt_insert->bindParam(':id_medio_pago', $id_medio_pago);
+        $stmt_insert->bindParam(':responsable_id', $responsable_id);
+        $stmt_insert->bindParam(':responsable', $responsable);
+        $stmt_insert->execute();
+
+        // Confirmamos la transacción
+        $conectar->commit();
+
+        echo json_encode(['estado' => true, 'mensaje' => 'Método de Pago vaciado correctamente :)']);
+
+    } catch (Exception $e) {
+        $conectar->rollBack();
+        echo json_encode([
+            'estado' => false,
+            'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()
+        ]);
+    }
+}
+
 function fnDarDeAltaOrBajaMedioDePago($jsDatos)
 {
     global $conectar;
@@ -997,7 +1212,7 @@ function fnInsertProveedorAlMomentCompra($jsDatos)
             )
         ";
 
-            
+
             $stmt = $conectar->prepare($sql);
             $stmt->bindParam(':numero_documento', $data["numero_documento"]);
             $stmt->bindParam(':tipo_persona', $data["tipo_persona"]);
@@ -1009,29 +1224,29 @@ function fnInsertProveedorAlMomentCompra($jsDatos)
             $stmt->bindParam(':email', $data["email"]);
             $stmt->execute();
 
-        
+
             $ultimoIdPersona = $conectar->lastInsertId();
 
-            
+
             $sql_proveedor_ultimo = "SELECT nombre_comercial FROM persona WHERE id = :idUltimo";
             $stmt = $conectar->prepare($sql_proveedor_ultimo);
             $stmt->bindParam(':idUltimo', $ultimoIdPersona);
             $stmt->execute();
 
-            
+
             $proveedor = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            
+
             $conectar->commit();
 
-            
+
             echo json_encode([
                 'estado' => true,
                 'mensaje' => 'Proveedor Registrado :)',
                 'ultimo_id_proveedor' => $ultimoIdPersona,
-                'proveedor' => $proveedor['nombre_comercial'] 
+                'proveedor' => $proveedor['nombre_comercial']
             ]);
-        }else{
+        } else {
             echo json_encode([
                 'estado' => false,
                 'mensaje' => 'Proveedor Ya existe :)',
@@ -1040,10 +1255,57 @@ function fnInsertProveedorAlMomentCompra($jsDatos)
             ]);
         }
     } catch (Exception $e) {
-        
+
         if ($conectar->inTransaction()) {
             $conectar->rollBack();
         }
+        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
+    }
+}
+
+function fnUpdateEmisor($jsDatos)
+{
+
+    global $conectar;
+
+    try {
+        $conectar->beginTransaction();
+
+        $data = json_decode($jsDatos, true);
+        $sql = "
+        UPDATE emisor SET 
+        ruc = :ruc,
+        razon_social = :razon_social,
+        nombre_comercial = :nombre_comercial,
+        departamento = :departamento,
+        provincia = :provincia,
+        distrito = :distrito,
+        direccion = :direccion,
+        ubigeo = :ubigeo,
+        usuario_sol = :usuario_sol,
+        clave_sol = :clave_sol
+        ";
+
+        $stmt = $conectar->prepare($sql);
+        $stmt->bindParam(':ruc', $data["ruc"]);
+        $stmt->bindParam(':razon_social', $data["razon_social"]);
+        $stmt->bindParam(':nombre_comercial', $data["nombre_comercial"]);
+        $stmt->bindParam(':departamento', $data["departamento"]);
+        $stmt->bindParam(':provincia', $data["provincia"]);
+        $stmt->bindParam(':distrito', $data["distrito"]);
+        $stmt->bindParam(':direccion', $data["direccion"]);
+        $stmt->bindParam(':ubigeo', $data["ubigeo"]);
+        $stmt->bindParam(':usuario_sol', $data["usuario_sol"]);
+        $stmt->bindParam(':clave_sol', $data["clave_sol"]);
+
+        $stmt->execute();
+
+        $conectar->commit();
+
+        echo json_encode(['estado' => true, 'mensaje' => 'Emisor actualizado correctamente']);
+    } catch (Exception $e) {
+        $conectar->rollBack();
+
         echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar la solicitud. Detalles: ' . $e->getMessage()]);
     }
 }
