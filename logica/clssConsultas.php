@@ -506,7 +506,7 @@ function listComprobantesDeclarados(): array
 }
 function listarFormaPago(): array
 {
-    $query = "SELECT *,updated_at::date as fecha, TO_CHAR(updated_at, 'HH12:MI:SS AM') as hora FROM forma_pago WHERE deleted_at IS NULL AND unsubscribe IS NULL  order by id";
+    $query = "SELECT *,updated_at::date as fecha, TO_CHAR(updated_at, 'HH12:MI:SS AM') as hora FROM forma_pago WHERE deleted_at IS NULL AND unsubscribe IS NULL  order by orden";
     return executeQuery($query);
 }
 function listarFormaPago_v2(): array

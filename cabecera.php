@@ -48,7 +48,7 @@ if ($flagRespuesta == 0) {
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Caracol Soft - VYSAM</title>
+    <title>Caracol Soft - LB RODRI</title>
     <meta charset="UTF-8">
 
     <meta
@@ -107,7 +107,7 @@ if ($flagRespuesta == 0) {
                             src="assets/img/caracoles.png"
                             alt="navbar brand"
                             class="navbar-brand"
-                            height="30" /> <span style="color: white; font-size: 14px;">Caracol Soft - <strong>VYSAM</strong></span>
+                            height="30" /> <span style="color: white; font-size: 14px;">Caracol Soft - <strong>LB RODRI</strong></span>
 
                     </a>
 

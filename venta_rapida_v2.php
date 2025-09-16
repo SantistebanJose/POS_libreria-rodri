@@ -2952,7 +2952,7 @@ if (isset($_GET['id'])) {
                                     buttons: false,
                                     timer: 1500
                                 }).then(() => {
-                                    window.open("/caracol_soft_vysam/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
+                                    window.open("/libreria-bazar-rodri/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                                     //window.open("ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                                     location.reload();
 
