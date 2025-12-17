@@ -103,6 +103,46 @@ include("cabecera.php");
 
             <div class="card-body">
                 <h4 class="card-title"><i class="fas fa-briefcase"></i> Flujo de Caja</h4>
+                <div class="row mb-3">
+    <div class="col-md-4">
+        <label for="fechaInicio" class="form-label"><strong><i class="fas fa-calendar"></i> Fecha Inicio</strong></label>
+        <input type="date" class="form-control" id="fechaInicio">
+    </div>
+    <div class="col-md-4">
+        <label for="fechaFin" class="form-label"><strong><i class="fas fa-calendar"></i> Fecha Fin</strong></label>
+        <input type="date" class="form-control" id="fechaFin">
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button class="btn btn-primary btn-round me-2" onclick="filtrarPorFechas()">
+            <i class="fas fa-filter"></i> Filtrar
+        </button>
+        <button class="btn btn-secondary btn-round" onclick="limpiarFiltro()">
+            <i class="fas fa-times"></i> Limpiar
+        </button>
+    </div>
+</div>
+
+<!-- Resumen del periodo filtrado -->
+<div id="resumenPeriodo" class="alert alert-info" style="display: none;">
+    <div class="row text-center">
+        <div class="col-md-3">
+            <strong>Total Ingresos:</strong><br>
+            <span class="text-success" style="font-size: 1.2rem;">S/ <span id="totalIngresos">0.00</span></span>
+        </div>
+        <div class="col-md-3">
+            <strong>Total Egresos:</strong><br>
+            <span class="text-danger" style="font-size: 1.2rem;">S/ <span id="totalEgresos">0.00</span></span>
+        </div>
+        <div class="col-md-3">
+            <strong>Saldo Periodo:</strong><br>
+            <span class="text-primary" style="font-size: 1.2rem;">S/ <span id="saldoPeriodo">0.00</span></span>
+        </div>
+        <div class="col-md-3">
+            <strong>Movimientos:</strong><br>
+            <span style="font-size: 1.2rem;"><span id="cantidadMovimientos">0</span></span>
+        </div>
+    </div>
+</div>
                 <hr>
                 <div class="card text-start">
                     <div class="card-body">
@@ -954,4 +994,172 @@ include("pie.php");
         }
 
     }
+    let tablaOriginal = null;
+let filtroActivo = false;
+
+function filtrarPorFechas() {
+    const fechaInicio = document.getElementById('fechaInicio').value;
+    const fechaFin = document.getElementById('fechaFin').value;
+    
+    if (!fechaInicio || !fechaFin) {
+        swal("Atención", "Debes seleccionar ambas fechas para filtrar", {
+            icon: "warning",
+            buttons: {
+                confirm: {
+                    className: "btn btn-warning",
+                },
+            },
+        });
+        return;
+    }
+    
+    if (fechaInicio > fechaFin) {
+        swal("Error", "La fecha de inicio no puede ser mayor a la fecha fin", {
+            icon: "error",
+            buttons: {
+                confirm: {
+                    className: "btn btn-danger",
+                },
+            },
+        });
+        return;
+    }
+    
+    // Si hay un filtro anterior, limpiarlo
+    if (filtroActivo) {
+        $.fn.dataTable.ext.search.pop();
+    }
+    
+    // Destruir la tabla actual si existe
+    if ($.fn.DataTable.isDataTable('#TablaVentaDiaria')) {
+        $('#TablaVentaDiaria').DataTable().destroy();
+    }
+    
+    // Agregar nuevo filtro personalizado
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            const fechaMovimiento = data[6]; // Columna de fecha (índice 6)
+            
+            // Convertir fechas al formato comparable
+            const partes = fechaMovimiento.split('-');
+            if (partes.length !== 3) return false; // Si el formato no es válido, rechazar
+            
+            // fechaMovimiento viene como YYYY-MM-DD (2025-11-27)
+            const fechaFormateada = fechaMovimiento.trim();
+            
+            console.log('Comparando:', fechaFormateada, 'entre', fechaInicio, 'y', fechaFin);
+            
+            return fechaFormateada >= fechaInicio && fechaFormateada <= fechaFin;
+        }
+    );
+    
+    filtroActivo = true;
+    
+    // Reinicializar la tabla
+    const tabla = $('#TablaVentaDiaria').DataTable({
+        "order": [[0, 'desc']],
+        language: {
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados en el rango de fechas seleccionado",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sPrevious": "Anterior",
+                "sNext": "Siguiente",
+                "sLast": "Último"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+        }
+    });
+    
+    // Calcular totales del periodo filtrado
+    calcularTotalesPeriodo(tabla);
+    
+    // Mostrar el resumen
+    document.getElementById('resumenPeriodo').style.display = 'block';
+}
+
+function calcularTotalesPeriodo(tabla) {
+    let totalIngresos = 0;
+    let totalEgresos = 0;
+    let cantidadMovimientos = 0;
+    
+    // Iterar sobre las filas filtradas
+    tabla.rows({search: 'applied'}).every(function() {
+        const data = this.data();
+        const tipoMovimiento = data[2]; // Columna tipo_movimiento
+        const montoText = data[8].replace('S/ ', '').trim();
+        const monto = parseFloat(montoText);
+        
+        if (!isNaN(monto)) {
+            cantidadMovimientos++;
+            
+            if (tipoMovimiento.toUpperCase() === 'INGRESO') {
+                totalIngresos += monto;
+            } else if (tipoMovimiento.toUpperCase() === 'EGRESO') {
+                totalEgresos += monto;
+            }
+        }
+    });
+    
+    const saldoPeriodo = totalIngresos - totalEgresos;
+    
+    // Actualizar el resumen
+    document.getElementById('totalIngresos').textContent = totalIngresos.toFixed(2);
+    document.getElementById('totalEgresos').textContent = totalEgresos.toFixed(2);
+    document.getElementById('saldoPeriodo').textContent = saldoPeriodo.toFixed(2);
+    document.getElementById('cantidadMovimientos').textContent = cantidadMovimientos;
+    
+    // Cambiar color del saldo según sea positivo o negativo
+    const saldoElement = document.getElementById('saldoPeriodo').parentElement;
+    if (saldoPeriodo >= 0) {
+        saldoElement.classList.remove('text-danger');
+        saldoElement.classList.add('text-success');
+    } else {
+        saldoElement.classList.remove('text-success');
+        saldoElement.classList.add('text-danger');
+    }
+}
+
+function limpiarFiltro() {
+    document.getElementById('fechaInicio').value = '';
+    document.getElementById('fechaFin').value = '';
+    document.getElementById('resumenPeriodo').style.display = 'none';
+    
+    // Limpiar el filtro personalizado
+    if (filtroActivo) {
+        $.fn.dataTable.ext.search.pop();
+        filtroActivo = false;
+    }
+    
+    // Destruir y reinicializar la tabla
+    if ($.fn.DataTable.isDataTable('#TablaVentaDiaria')) {
+        $('#TablaVentaDiaria').DataTable().destroy();
+    }
+    
+    fnDataTables();
+}
+
+// Establecer fecha de hoy como predeterminada al cargar la página
+$(document).ready(function() {
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fechaFin').value = hoy;
+    
+    // Establecer el primer día del mes como fecha de inicio
+    const primerDiaMes = new Date();
+    primerDiaMes.setDate(1);
+    document.getElementById('fechaInicio').value = primerDiaMes.toISOString().split('T')[0];
+});
 </script>

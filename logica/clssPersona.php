@@ -83,12 +83,13 @@ function consultarPersona($id)
     global $conectar;
 
     try {
+        // Cambiado INNER JOIN por LEFT JOIN para que funcione con personas sin usuario
         $orden = $conectar->prepare("
-        select p.id,
+        SELECT p.id,
         p.numero_documento, 
         p.tipo_persona,
         p.condicion, 
-        p.nombres ,
+        p.nombres,
         p.apellidos,
         p.fecha_nacimiento,
         p.telefonofijo,
@@ -98,13 +99,14 @@ function consultarPersona($id)
         p.nombre_comercial, 
         p.razon_social,
         p.deleted_at,
-		u.username,
-		u.sueldo,
-		u.cantidad_horas_trabajo as horas,
-		u.cantidad_dias_semana as dias
-        from persona p
-		inner join usuario u on u.persona_id = p.id
-        where p.id = :id ;");
+        u.username,
+        u.sueldo,
+        u.cantidad_horas_trabajo as horas,
+        u.cantidad_dias_semana as dias
+        FROM persona p
+        LEFT JOIN usuario u ON u.persona_id = p.id
+        WHERE p.id = :id");
+        
         $orden->bindParam(":id", $id);
         $orden->execute();
 
@@ -125,12 +127,11 @@ function consultarPersona($id)
 
     } catch (\Throwable $th) {
         echo json_encode([
-        "success" => false,
-        "error" => $th->getMessage()
-         ]);
+            "success" => false,
+            "error" => $th->getMessage()
+        ]);
     }
 }
-
 function registrar_empleado_trabajador($datos = array()) {
     global $conectar;
 

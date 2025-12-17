@@ -56,6 +56,7 @@ function controladorClssInsertPA($accion)
                 paRegistrarArticuloCompleto($jsDatos);
             }
             break;
+            
         case 'EDITAR_ARTICULO_COMPLETO':
             if (isset($_POST["jsDatosArticulo"])) {
                 $jsDatos = $_POST["jsDatosArticulo"];
@@ -392,6 +393,7 @@ function paRegistrarArticulo($jsDatosArticulo)
     }
 }
 
+
 function paRegistrarArticuloCompleto($jsDatosArticulo)
 {
     global $conectar;
@@ -400,19 +402,32 @@ function paRegistrarArticuloCompleto($jsDatosArticulo)
 
     $categoria_id = $data['categoria_id'];
     $color = $data['color'];
-    $corte = false;
+    $corte = $data['corte']; // Mantener como booleano
     $dimension_id = $data['dimension_id'];
     $escala_id = $data['escala_id'];
     $stock = $data['stock'];
     $precio_venta = $data['precio_venta'];
     $precio_compra = $data['precio_compra'];
-
     $marca = $data['marca'];
     $nombre = $data['nombre'];
     $tipo_id = $data['tipo_id'];
+    $json_url_img = $data['json_url_img'];
 
     try {
-        $sql = "SELECT fn_registrar_articulo_completo(:nombre, :categoria_id, :tipo_id, :dimension_id, :escala_id,:stock,:precio_venta, :corte, :color, :marca,:precio_compra)";
+        $sql = "SELECT * FROM fn_registrar_articulo_completo(
+            :nombre, 
+            :categoria_id, 
+            :tipo_id, 
+            :dimension_id, 
+            :escala_id,
+            :corte,
+            :color,
+            :stock,
+            :precio_venta, 
+            :precio_compra,
+            :marca,
+            :json_url_img
+        )";
 
         $stmt = $conectar->prepare($sql);
 
@@ -421,22 +436,42 @@ function paRegistrarArticuloCompleto($jsDatosArticulo)
         $stmt->bindParam(':tipo_id', $tipo_id);
         $stmt->bindParam(':dimension_id', $dimension_id);
         $stmt->bindParam(':escala_id', $escala_id);
+        
+        // ✅ Convertir booleano a string 'true'/'false' para PostgreSQL
+        $corte_str = $corte ? 'true' : 'false';
+        $stmt->bindParam(':corte', $corte_str);
+        
+        $stmt->bindParam(':color', $color);
         $stmt->bindParam(':stock', $stock);
         $stmt->bindParam(':precio_venta', $precio_venta);
-        $stmt->bindParam(':corte', $corte, PDO::PARAM_BOOL); // Usando PDO::PARAM_BOOL para asegurarse que se trata como booleano
-        $stmt->bindParam(':color', $color);
-        $stmt->bindParam(':marca', $marca);
         $stmt->bindParam(':precio_compra', $precio_compra);
+        $stmt->bindParam(':marca', $marca);
+        $stmt->bindParam(':json_url_img', $json_url_img);
 
         $stmt->execute();
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $jsonResponse = $row['fn_registrar_articulo_completo'];
-
-        $response = json_decode($jsonResponse, true);
-        echo json_encode($response);
+        
+        // ✅ La función retorna una tabla, necesitamos acceder a las columnas
+        if ($row) {
+            echo json_encode([
+                'estado' => $row['estado'],
+                'mensaje' => $row['mensaje'],
+                'articulo_id' => $row['articulo_id'] ?? null
+            ]);
+        } else {
+            echo json_encode([
+                'estado' => false,
+                'mensaje' => 'No se recibió respuesta de la base de datos'
+            ]);
+        }
     } catch (Exception $e) {
-        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.' . $e, 'jsonEntrada' => $data, 'SQL' => $stmt]);
+        echo json_encode([
+            'estado' => false, 
+            'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.',
+            'error' => $e->getMessage(),
+            'jsonEntrada' => $data
+        ]);
     }
 }
 
@@ -468,10 +503,11 @@ function paEditarArticuloCompleto($jsDatosArticulo)
     global $conectar;
 
     $data = json_decode($jsDatosArticulo, true);
+    
     $id = $data['id'];
     $categoria_id = $data['categoria_id'];
     $color = $data['color'];
-    $corte = false;
+    $corte = $data['corte'];
     $dimension_id = $data['dimension_id'];
     $escala_id = $data['escala_id'];
     $stock = $data['stock'];
@@ -480,52 +516,69 @@ function paEditarArticuloCompleto($jsDatosArticulo)
     $marca = $data['marca'];
     $nombre = $data['nombre'];
     $tipo_id = $data['tipo_id'];
+    $json_url_img = $data['json_url_img'];
 
     try {
-        $sql = "
-        UPDATE articulo
-        SET 
-            nombre = :nombre,
-            categoria_id = :categoria_id,
-            tipo_id = :tipo_id,
-            dimension_id = :dimension_id,
-            escala_id = :escala_id,
-            stock = :stock,
-            precio_venta = :precio_venta,
-            corte = :corte,
-            color = :color,
-            marca = :marca,
-            precio_compra = :precio_compra
-        WHERE id = :id;
-
-        ";
+        $sql = "SELECT * FROM fn_editar_articulo_completo(
+            :id,
+            :nombre,
+            :categoria_id,
+            :tipo_id,
+            :dimension_id,
+            :escala_id,
+            :corte,
+            :color,
+            :stock,
+            :precio_venta,
+            :precio_compra,
+            :marca,
+            :json_url_img
+        )";
 
         $stmt = $conectar->prepare($sql);
+        
         $stmt->bindParam(':id', $id);
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':categoria_id', $categoria_id);
         $stmt->bindParam(':tipo_id', $tipo_id);
         $stmt->bindParam(':dimension_id', $dimension_id);
         $stmt->bindParam(':escala_id', $escala_id);
+        
+        // ✅ Convertir booleano a string para PostgreSQL
+        $corte_str = $corte ? 'true' : 'false';
+        $stmt->bindParam(':corte', $corte_str);
+        
+        $stmt->bindParam(':color', $color);
         $stmt->bindParam(':stock', $stock);
         $stmt->bindParam(':precio_venta', $precio_venta);
         $stmt->bindParam(':precio_compra', $precio_compra);
-        $stmt->bindParam(':corte', $corte, PDO::PARAM_BOOL); // Usando PDO::PARAM_BOOL para asegurarse que se trata como booleano
-        $stmt->bindParam(':color', $color);
         $stmt->bindParam(':marca', $marca);
+        $stmt->bindParam(':json_url_img', $json_url_img);
 
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            echo json_encode(['estado' => true, 'mensaje' => 'Artículo Eliminado con éxito']);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row) {
+            echo json_encode([
+                'estado' => $row['estado'],
+                'mensaje' => $row['mensaje']
+            ]);
         } else {
-            echo json_encode(['estado' => false, 'mensaje' => 'No se realizó ninguna actualización. Verifique los datos']);
+            echo json_encode([
+                'estado' => false,
+                'mensaje' => 'No se recibió respuesta de la base de datos'
+            ]);
         }
     } catch (Exception $e) {
-        echo json_encode(['estado' => false, 'mensaje' => 'Error al procesar el Registro. Consultar con el Administrador de Sistemas.' . $e, 'jsonEntrada' => $data, 'SQL' => $stmt]);
+        echo json_encode([
+            'estado' => false, 
+            'mensaje' => 'Error al procesar la actualización. Consultar con el Administrador de Sistemas.',
+            'error' => $e->getMessage(),
+            'jsonEntrada' => $data
+        ]);
     }
 }
-
 function toggle_estado_articulo_completo($id, $accion)
 {
     global $conectar;

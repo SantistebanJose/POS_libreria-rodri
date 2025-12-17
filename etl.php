@@ -15,6 +15,14 @@ include("cabecera.php");
                         <i class="fas fa-file-upload"></i> Ejecutar
                     </a>
                 </div>
+
+                <br>
+
+                <div class="text-center">
+                    <a class="btn btn-success btn-round" onclick='fnCtmreETL()' role="button">
+                        <i class="fas fa-file-upload"></i> update nube
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -22,84 +30,114 @@ include("cabecera.php");
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    
+
+
+    /////
+
     function fn_abrir_swal() {
-        $.ajax({
-            url: 'logica/clssConsultas.php', // Ruta del archivo PHP que maneja el proceso
-            type: 'POST',
-            data: {
-                accion: "EJECUTARETL", // Acción que identifica el proceso ETL
-                EJECUTARETL: "EJECUTARETL" // Cualquier parámetro adicional que necesites
-            },
-            dataType: 'json',
-            success: function(data) {
-                // Si la respuesta es 'REALIZADO', mostramos éxito
-                if (data.respuesta === "REALIZADO") {
-                    Swal.fire({
-                        title: '¡Proceso completado!',
-                        text: 'Los datos fueron migrados exitosamente.',
-                        icon: 'success',
-                        confirmButtonText: 'Aceptar'
-                    });
-                }
-                // Si la respuesta es 'ERROR', mostramos error
-                else if (data.respuesta === "ERROR") {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Hubo un error al ejecutar el proceso.',
-                        icon: 'error',
-                        confirmButtonText: 'Aceptar'
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                // Si la petición AJAX falla (error en la conexión)
+    // Mostrar el loading inmediatamente
+    Swal.fire({
+        title: "Ejecutando proceso...",
+        html: "Por favor, espere. El proceso se está ejecutando.",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Hacer la petición AJAX
+    $.ajax({
+        url: 'logica/clssConsultas.php',
+        type: 'POST',
+        data: {
+            accion: "EJECUTARETL",
+            EJECUTARETL: "EJECUTARETL"
+        },
+        dataType: 'json',
+        success: function(data) {
+            // Cerrar el loading y mostrar el resultado
+            if (data.respuesta === "REALIZADO") {
                 Swal.fire({
-                    title: 'Error de Conexión',
-                    text: 'Hubo un error al intentar conectar con el servidor.',
-                    icon: 'error',
+                    title: '¡Proceso completado!',
+                    text: 'Los datos fueron migrados exitosamente.',
+                    icon: 'success',
                     confirmButtonText: 'Aceptar'
                 });
-            }
-        });
-        let timerInterval;
-
-        // Abrir el modal de SweetAlert2
-        Swal.fire({
-            title: "Ejecutando proceso...",
-            html: "Por favor, espere. El proceso se está ejecutando. <b></b> ms restantes.",
-            timer: 5000, // Ajusta el tiempo total para el proceso
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup().querySelector("b");
-
-                // Actualizar el temporizador cada 100ms
-                timerInterval = setInterval(() => {
-                    timer.textContent = `${Swal.getTimerLeft()}`;
-                }, 100);
-            },
-            willClose: () => {
-                // Detener el temporizador cuando el modal se cierre
-                clearInterval(timerInterval);
-            }
-        }).then((result) => {
-            // Aquí iniciamos la validación antes de continuar con la ejecución del proceso
-            let validacionExitosa = validarProceso();
-
-            if (!validacionExitosa) {
-                // Si la validación falla, mostramos un error y detenemos el proceso
+            } else if (data.respuesta === "ERROR") {
                 Swal.fire({
                     title: 'Error',
-                    text: 'No se puede ejecutar el proceso en este momento. Verifique los datos.',
+                    text: 'Hubo un error al ejecutar el proceso.',
                     icon: 'error',
                     confirmButtonText: 'Aceptar'
                 });
-            } else {
-                // Si la validación es exitosa, hacemos la petición AJAX para ejecutar el proceso
-
             }
-        });
-    }
+        },
+        error: function(xhr, status, error) {
+            // Cerrar el loading y mostrar error de conexión
+            Swal.fire({
+                title: 'Error de Conexión',
+                text: 'Hubo un error al intentar conectar con el servidor.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    });
+}
+
+function fnCtmreETL() {
+    // Mostrar el loading inmediatamente
+    Swal.fire({
+        title: "Ejecutando proceso...",
+        html: "Por favor, espere. El proceso se está ejecutando.",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Hacer la petición AJAX
+    $.ajax({
+        url: 'logica/clssConsultas.php',
+        type: 'POST',
+        data: {
+            accion: "EJECUTARETLARTICULOSNUBE",
+            EJECUTARETLARTICULOSNUBE: "EJECUTARETLARTICULOSNUBE"
+        },
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+            // Cerrar el loading y mostrar el resultado
+            if (data.respuesta) {
+                Swal.fire({
+                    title: '¡Proceso completado!',
+                    text: 'Los datos fueron migrados exitosamente.',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+            } else if (data.respuesta === "ERROR") {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un error al ejecutar el proceso.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            // Cerrar el loading y mostrar error de conexión
+            console.log(error);
+            Swal.fire({
+                title: 'Error de Conexión',
+                text: 'Hubo un error al intentar conectar con el servidor.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    });
+}
 </script>
 
 <?php

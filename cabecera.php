@@ -90,6 +90,8 @@ if ($flagRespuesta == 0) {
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="assets/css/demo.css" />
     <link rel="stylesheet" href="assets/css/stylePerzo.css" />
+    <!-- Efectos Navideños -->
+<link rel="stylesheet" href="assets/css/christmas-effects.css" />
 
 
 </head>
@@ -330,7 +332,7 @@ if ($flagRespuesta == 0) {
                                 </ul>
                             </div>
                         </li>
-                        <!--
+                        
                         <li class="nav-item">
                             <a
                                 data-bs-toggle="collapse"
@@ -353,7 +355,7 @@ if ($flagRespuesta == 0) {
                                 </ul>
                             </div>
                         </li>
-                         -->
+                         
                         
                         <li class="nav-item">
                             <a
@@ -587,7 +589,9 @@ if ($flagRespuesta == 0) {
 
             <br>
 
+            <script src="assets/js/christmas-effects.js"></script>
             <script>
+                
                 document.addEventListener("DOMContentLoaded", function() {
                     let menuItems = document.querySelectorAll(".nav-item a");
                     let currentPath = window.location.pathname.split("/").pop(); // Obtiene solo el nombre del archivo

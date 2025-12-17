@@ -65,6 +65,19 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result ? $result : []);
             }
             break;
+        
+        case 'EJECUTARETLARTICULOSNUBE':
+            if (isset($_POST["EJECUTARETLARTICULOSNUBE"])) {
+                $cadena = $_POST["EJECUTARETLARTICULOSNUBE"];
+                $result = fnEjecutarETLArticulosNube();
+                echo json_encode($result ? $result : []);
+            }
+            break;
+        case 'VENTAS_POR_RANGO':
+            $fecha_inicio = $_POST['fecha_inicio'];
+            $fecha_fin = $_POST['fecha_fin'];
+            echo json_encode(fnListForVentasPorRango($fecha_inicio, $fecha_fin));
+            break;
     }
 }
 function executeQuery(string $query, array $params = []): array
@@ -145,6 +158,57 @@ function listarUsuarios(): array
         order BY u.id;
     ";
     return executeQuery($query);
+}
+
+function fnListForVentasPorRango($fecha_inicio, $fecha_fin) {
+    $query = "
+        SELECT 
+            v.fecha_fin_transaccion,
+            concat('T',LPAD(v.id::TEXT,8,'0'),'-','F',to_char(v.fecha_fin_transaccion::date, 'YYYYMMDD')) as codigo_tiket,
+            v.id AS venta_id, 
+            CASE 
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 0 THEN UPPER('Domingo')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 1 THEN UPPER('Lunes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 2 THEN UPPER('Martes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 3 THEN UPPER('Miércoles')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 4 THEN UPPER('Jueves')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 5 THEN UPPER('Viernes')
+                WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 6 THEN UPPER('Sábado')
+            END AS dia_nombre,
+            CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
+            TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD') AS fecha, 
+            TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM') AS hora, 
+            p.telefonomovil AS telefonomovil_cliente,
+            p.email AS email_cliente, 
+            p.numero_documento AS numero_doc_cliente,
+            CONCAT(us.id, '-', usua.nombres, ', ', usua.apellidos) AS usuario, 
+            v.atencion_final_usuario,
+            p.id AS id_persona,
+            v.usuario_id,
+            v.monto_venta_final,
+            v.total, 
+            (v.total - v.monto_venta_final) as perdida_utilidad,
+            CASE 
+                WHEN v.estado_pago = 'P' THEN 'PAGADO'
+                WHEN v.estado_pago = 'C' THEN 'CREDITO'
+            END AS estado_pago,
+            v.estado_final,
+            du.acumulado AS acumulado_deuda
+        FROM venta AS v
+        LEFT JOIN deuda AS du ON v.id=du.id_venta
+        INNER JOIN usuario AS us ON v.usuario_id = us.id  
+        INNER JOIN persona AS usua ON us.persona_id = usua.id
+        LEFT JOIN persona AS p ON v.cliente_id = p.id
+        WHERE v.estado_venta = 'VR' 
+        AND v.deleted_at IS NULL
+        AND v.fecha_fin_transaccion::DATE BETWEEN :fecha_inicio AND :fecha_fin
+        ORDER BY v.fecha_fin_transaccion DESC
+    ";
+    
+    return executeQuery($query, [
+        'fecha_inicio' => $fecha_inicio,
+        'fecha_fin' => $fecha_fin
+    ]);
 }
 
 function listarPersonas(): array
@@ -1667,32 +1731,27 @@ function fnEjecutarETL(): array
         return ['respuesta' => 'ERROR'];
     }
 }
+
+
+function fnEjecutarETLArticulosNube(): array
+{
+    $query = "SELECT * FROM fn_etl_articulo();";
+    $result = executeQuery($query);
+    if ($result) {
+
+        return ['respuesta' => $result[0]['fn_etl_articulo']];
+    } else {
+
+        return ['respuesta' => 'ERROR'];
+    }
+}
+
+
+
 function fnListadoDeReservasWeb(): array
 {
     $query = "
-    SELECT
-    *
-    FROM dblink(
-        'host=bdfrvf2000.cux2mus4silq.us-east-1.rds.amazonaws.com
-        dbname=frvf2000 
-        user=postgres 
-        password=PnNcbW5AUNYgthN', 
-        'SELECT * FROM view_bd_local_vysam'
-    ) AS t1
-    (
-     id integer,
-     usuario_id integer,
-     estado  CHAR(1),
-     tipo  CHAR(1),
-     created_at TIMESTAMP,
-     updated_at TIMESTAMP,
-     deleted_at TIMESTAMP,
-     estado_v2 varchar,
-     tipo_v2 varchar,
-     json_cliente JSON,
-     json_detalle JSON
-    )
-    ORDER BY 1
+    select * from view_foreingdatabase_reservas_web where estado = 'pendiente'
     ";
 
     return executeQuery($query);

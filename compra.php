@@ -137,7 +137,8 @@ include("cabecera.php");
                                                             <label for="" class="form-label"><strong>Total de Compra</strong></label>
                                                             <div class="input-group mb-3">
                                                                 <span class="input-group-text">S/</span>
-                                                                <input type="number" id="idCompraTotalDeCompra" class="form-control" />
+                                                                <input id="idCompraTotalDeCompra" type="number" step="0.0001" class="form-control" />
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -224,10 +225,7 @@ include("cabecera.php");
                                                                                 <label for="ca-idTotalCompraArticulo" class="form-label"><strong>Total de Compra</strong></label>
                                                                                 <div class="input-group mb-3">
                                                                                     <span class="input-group-text">S/</span>
-                                                                                    <input
-                                                                                        id="ca-idTotalCompraArticulo"
-                                                                                        type="number"
-                                                                                        class="form-control" />
+                                                                                    <input id="ca-idTotalCompraArticulo" type="number" step="0.0001" class="form-control" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -238,12 +236,8 @@ include("cabecera.php");
                                                                                 <label for="ca-idPrecioCalculado" class="form-label"><strong>P.U Calculado</strong></label>
                                                                                 <div class="input-group mb-3">
                                                                                     <span class="input-group-text">S/</span>
-                                                                                    <input
-                                                                                        readonly
-                                                                                        id="ca-idPrecioCalculado"
-                                                                                        type="number"
-                                                                                        class="form-control"
-                                                                                        aria-label="P.U Calculado" />
+                                                                                    <input id="ca-idPrecioCalculado" type="number" step="0.0001" class="form-control" readonly />
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -254,11 +248,8 @@ include("cabecera.php");
                                                                                 <label for="ca-idPrecioVenta" class="form-label"><strong>P.U Venta</strong></label>
                                                                                 <div class="input-group mb-3">
                                                                                     <span class="input-group-text">S/</span>
-                                                                                    <input
-                                                                                        id="ca-idPrecioVenta"
-                                                                                        type="number"
-                                                                                        class="form-control"
-                                                                                        aria-label="Precio de Venta" />
+                                                                                    <input id="ca-idPrecioVenta" type="number" step="0.0001" class="form-control" />
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -312,11 +303,8 @@ include("cabecera.php");
                                                                                 <label for="" class="form-label"><strong>P.U de Caja (S/)</strong></label>
                                                                                 <div class="input-group mb-3">
                                                                                     <span class="input-group-text">S/</span>
-                                                                                    <input
-                                                                                        type="number"
-                                                                                        id="caj-idPrecioUnitarioCaja"
-                                                                                        class="form-control"
-                                                                                        aria-label="Amount (to the nearest dollar)" />
+                                                                                    <input id="caj-idPrecioUnitarioCaja" type="number" step="0.0001" class="form-control" />
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -326,12 +314,8 @@ include("cabecera.php");
                                                                                 <label for="" class="form-label"><strong>Total (S/)</strong></label>
                                                                                 <div class="input-group mb-3">
                                                                                     <span class="input-group-text">S/</span>
-                                                                                    <input
-                                                                                        readonly
-                                                                                        type="number"
-                                                                                        id="caj-idTotalCajas"
-                                                                                        class="form-control"
-                                                                                        aria-label="Amount (to the nearest dollar)" />
+                                                                                    <input id="caj-idTotalCajas" type="number" step="0.0001" class="form-control" readonly />
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -342,12 +326,8 @@ include("cabecera.php");
                                                                                 <label for="" class="form-label"><strong>P.U Calculado</strong></label>
                                                                                 <div class="input-group mb-3">
                                                                                     <span class="input-group-text">S/</span>
-                                                                                    <input
-                                                                                        readonly
-                                                                                        type="number"
-                                                                                        id="caj-idPrecioUnitarioCalculado"
-                                                                                        class="form-control"
-                                                                                        aria-label="Amount (to the nearest dollar)" />
+                                                                                    <input id="caj-idPrecioUnitarioCalculado" type="number" step="0.0001" class="form-control" readonly />
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -371,11 +351,8 @@ include("cabecera.php");
                                                                                 <label for="" class="form-label"><strong>P.U VENTA (S/)</strong></label>
                                                                                 <div class="input-group mb-3">
                                                                                     <span class="input-group-text">S/</span>
-                                                                                    <input
-                                                                                        id="caj-idPrecioVenta"
-                                                                                        type="text"
-                                                                                        class="form-control"
-                                                                                        aria-label="" />
+                                                                                    <input id="caj-idPrecioVenta" type="text" step="0.0001" class="form-control" />
+
 
                                                                                 </div>
                                                                             </div>
@@ -1174,36 +1151,31 @@ include("cabecera.php");
             if (!isNaN(cantidadArticulos) && !isNaN(totalCompraArticulo)) {
                 var resultado = totalCompraArticulo / cantidadArticulos;
                 console.log(resultado);
-                $("#ca-idPrecioCalculado").val(resultado.toFixed(2));
+                $("#ca-idPrecioCalculado").val(resultado.toFixed(4)); // Cambiado de 2 a 4
             } else {
-                $("#ca-idPrecioCalculado").val("0.00");
+                $("#ca-idPrecioCalculado").val("0.0000"); // Cambiado de 0.00 a 0.0000
             }
         });
-    });
+    });   
     ////////////////////////////////////////////////////
     $(document).ready(function() {
         $(document).on('input', '#caj-idCantidadCajas, #caj-idUnidadesPorCaja, #caj-idPrecioUnitarioCaja', function() {
-
             var cantidadCajas = parseFloat($("#caj-idCantidadCajas").val());
             var unidadesPorCaja = parseFloat($("#caj-idUnidadesPorCaja").val());
             var precioUnitarioCaja = parseFloat($("#caj-idPrecioUnitarioCaja").val());
 
-
-            var totalCajas = parseFloat($("#ca-idTotalCompraArticulo").val());
-
             if (!isNaN(cantidadCajas) && !isNaN(unidadesPorCaja) && !isNaN(precioUnitarioCaja)) {
                 var totalCajas = precioUnitarioCaja * cantidadCajas;
                 var unidadesTotales = unidadesPorCaja * cantidadCajas;
-                ///////////
                 var puCalculado = totalCajas / unidadesTotales;
-                /////////////////////
-                $("#caj-idTotalCajas").val(totalCajas.toFixed(2));
-                $("#caj-idUnidadesCalculadas").val(unidadesTotales.toFixed(2));
-                $("#caj-idPrecioUnitarioCalculado").val(puCalculado.toFixed(2));
+                
+                $("#caj-idTotalCajas").val(totalCajas.toFixed(4)); // Cambiado de 2 a 4
+                $("#caj-idUnidadesCalculadas").val(unidadesTotales.toFixed(4)); // Cambiado de 2 a 4
+                $("#caj-idPrecioUnitarioCalculado").val(puCalculado.toFixed(4)); // Cambiado de 2 a 4
             } else {
-                $("#caj-idUnidadesCalculadas").val("0.00");
-                $("#caj-idPrecioUnitarioCalculado").val("0.00");
-                $("#caj-idTotalCajas").val("0.00");
+                $("#caj-idUnidadesCalculadas").val("0.0000");
+                $("#caj-idPrecioUnitarioCalculado").val("0.0000");
+                $("#caj-idTotalCajas").val("0.0000");
             }
         });
     });
@@ -1283,7 +1255,7 @@ include("cabecera.php");
             var total_compra = document.getElementById("ca-idTotalCompraArticulo").value;
             var precio_calculado = document.getElementById("ca-idPrecioCalculado").value;
 
-            var precio_venta = parseFloat(document.getElementById("ca-idPrecioVenta").value).toFixed(2);
+            var precio_venta = parseFloat(document.getElementById("ca-idPrecioVenta").value).toFixed(4);
 
             console.log("Precio de Venta ", precio_venta);
             if (variable_global_js_articulo === null && (isNaN(precio_venta) || precio_venta === "")) {
@@ -1389,7 +1361,7 @@ include("cabecera.php");
                     cell2.innerHTML = articuloJsFormat;
                     cell3.innerHTML = cantidad;
                     cell4.innerHTML = precio_calculado;
-                    cell5.innerHTML = (cantidad * precio_calculado).toFixed(2); // Sub Total = Cantidad * Precio Unitario
+                    cell5.innerHTML = (cantidad * precio_calculado).toFixed(4); // Sub Total = Cantidad * Precio Unitario
                     cell6.innerHTML = precio_venta;
                     cell7.appendChild(btnEliminar);
                     if (variable_global_js_articulo === null) {
@@ -1541,7 +1513,7 @@ include("cabecera.php");
                 cell2.innerHTML = articuloJsFormat;
                 cell3.innerHTML = unidades_calculadas;
                 cell4.innerHTML = pu_calculado_articulo_x_caja;
-                cell5.innerHTML = (pu_calculado_articulo_x_caja * unidades_calculadas).toFixed(2); // Sub Total = Cantidad * Precio Unitario
+                cell5.innerHTML = (pu_calculado_articulo_x_caja * unidades_calculadas).toFixed(4); // Sub Total = Cantidad * Precio Unitario
                 cell6.innerHTML = precio_venta_articulos;
                 cell7.appendChild(btnEliminar);
 

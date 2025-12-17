@@ -2,50 +2,174 @@
 include("cabecera.php");
 ?>
 
+<style>
+    .modal-dialog-custom {
+        max-width: 95%;
+    }
+    
+    .image-item {
+        position: relative;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        background: #f8f9fa;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .image-item:hover {
+        border-color: #6861ce;
+        box-shadow: 0 2px 8px rgba(104, 97, 206, 0.2);
+    }
+    
+    .image-item.principal {
+        border-color: #28a745;
+        background: #e8f5e9;
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-remove-image {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        padding: 2px 8px;
+        font-size: 12px;
+        z-index: 10;
+    }
+    
+    .btn-set-principal {
+        position: absolute;
+        top: 5px;
+        right: 45px;
+        padding: 2px 8px;
+        font-size: 12px;
+        z-index: 10;
+    }
+    
+    .preview-image {
+        width: 100%;
+        max-height: 150px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-top: 8px;
+    }
+    
+    .image-counter {
+        font-size: 12px;
+        font-weight: bold;
+        color: #6861ce;
+        background: white;
+        padding: 2px 8px;
+        border-radius: 5px;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+    }
+    
+    .image-counter.principal {
+        background: #28a745;
+        color: white;
+    }
+    
+    .badge-source {
+        position: absolute;
+        top: 5px;
+        left: 70px;
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 5px;
+        z-index: 5;
+    }
+    
+    .badge-source.web {
+        background: #17a2b8;
+        color: white;
+    }
+    
+    .badge-source.drive {
+        background: #4285f4;
+        color: white;
+    }
+    
+    .no-images-msg {
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+    }
+    
+    .images-section {
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+    
+    .images-section::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .images-section::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .images-section::-webkit-scrollbar-thumb {
+        background: #6861ce;
+        border-radius: 10px;
+    }
+    
+    .nav-tabs .nav-link {
+        color: #6c757d;
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: #6861ce;
+        font-weight: bold;
+    }
+    
+    .badge-principal {
+        background: #28a745;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 5px;
+        font-size: 11px;
+        margin-left: 5px;
+    }
+</style>
 
-
-<div
-    class="container">
-
+<div class="container">
     <div class="page-inner">
         <div class="card text-start">
-
             <div class="card-body">
-
-
                 <div class="d-flex align-items-center justify-content-between">
                     <h4 class="card-title"><i class="fas fa-chess-queen"> </i> Articulos</h4>
                     <button class="btn btn-success rounded-5" id="btnAbrirModalGenerico"> <i class="fas fa-plus-circle"> </i> Agregar Articulo </button>
                 </div>
                 <hr>
-                <div
-                    class="row justify-content-center align-items-center md-2">
-
+                <div class="row justify-content-center align-items-center md-2">
                     <div class="col-sm-12">
                         <div class="table-filters mb-3">
                             <div class="row justify-content-center align-items-center g-2">
                                 <div class="col-md-2">
                                     <select id="filterCategoria" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                         <option value="">Filtrar por Categoría</option>
-                                        <!-- Aquí se agregarán las opciones de categorías dinámicamente -->
                                     </select>
                                 </div>
                                 <div class="col-md-2">
                                     <select id="filterTipo" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                         <option value="">Filtrar por Tipo</option>
-                                        <!-- Aquí se agregarán las opciones de tipo dinámicamente -->
                                     </select>
                                 </div>
                                 <div class="col-md-2">
                                     <select id="filterDimension" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                         <option value="">Filtrar por Dimensión</option>
-                                        <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
                                     </select>
                                 </div>
                                 <div class="col-md-2">
                                     <select id="filterColor" class="form-select" style="border-radius: 25px; border: 2px solid #6861ce;">
                                         <option value="">Filtrar por Color</option>
-                                        <!-- Aquí se agregarán las opciones de dimensión dinámicamente -->
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -54,9 +178,7 @@ include("cabecera.php");
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table
-                                id="multi-filter-select"
-                                class="display table table-striped table-hover">
+                            <table id="multi-filter-select" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -70,9 +192,7 @@ include("cabecera.php");
                                         <th>Accion</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
-
                                     <?php
                                     foreach (listarArticuloSinview() as $datosArticulo) {
                                         $datosArticuloJSON = json_encode($datosArticulo);
@@ -88,35 +208,27 @@ include("cabecera.php");
                                             <td><?php echo $datosArticulo["precio_venta"] ?></td>
                                             <th>
                                                 <div class="mt-2 text-center">
-                                                    <!-- Botón de Editar (con ícono amarillo) -->
                                                     <a name="edit" id="edit" class="btn btn-warning btn-round ml-2"
                                                         onclick='fn_editar_articulo(<?php echo $datosArticuloJSON; ?>)' role="button">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
-
-                                                    <!-- Botón de Activar/Bloquear -->
                                                     <?php if (is_null($datosArticulo["disponibilidad_venta_fh"])) { ?>
-                                                        <!-- Botón para bloquear -->
                                                         <a name="block" id="block" class="btn btn-dark btn-round ml-2"
                                                             onclick='fn_bloquear_articulo(<?php echo $datosArticulo["id"]; ?>)' role="button">
                                                             <i class="fa fa-lock"></i>
                                                         </a>
                                                     <?php } else { ?>
-                                                        <!-- Botón para activar -->
                                                         <a name="activate" id="activate" class="btn btn-secondary btn-round ml-2"
                                                             onclick='fn_desbloquear_articulo(<?php echo $datosArticulo["id"]; ?>)' role="button">
                                                             <i class="fa fa-unlock"></i>
                                                         </a>
                                                     <?php } ?>
-
-                                                    <!-- Botón para eliminar -->
                                                     <a name="edit" id="eliminate" class="btn btn-danger btn-round ml-2"
                                                         onclick='fn_eliminar_articulo(<?php echo $datosArticulo["articulo_id"] ?>)' role="button">
                                                         <i class="fas fa-times-circle"></i>
                                                     </a>
                                                 </div>
                                             </th>
-
                                         </tr>
                                     <?php
                                     }
@@ -124,39 +236,31 @@ include("cabecera.php");
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 
-
-
 <div class="modal fade" id="modalArticulo" tabindex="-1" data-bs-backdrop="static" aria-labelledby="modalArticuloLabel" aria-hidden="true">
-
-    <div class="modal-dialog modal-dialog-centered modal-dialog-custom" role="document">
-
-
-        <div class="modal-content" id="contenidoArticulo">
-
-        </div>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-custom modal-xl" role="document">
+        <div class="modal-content" id="contenidoArticulo"></div>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
 <script src="assets/js/scriptNotify.js"></script>
 
-
 <script>
+    // Variable global para almacenar las imágenes
+    let imagenesArticulo = [];
+    let imagenPrincipalIndex = 0;
+
     $(document).ready(function() {
         var table = $("#multi-filter-select").DataTable({
             pageLength: 20,
@@ -185,872 +289,853 @@ include("cabecera.php");
             }
         });
 
-        // Llenar el filtro de Categoría con valores únicos
-        table.column(1).data().unique().sort().each(function(d, j) {
-            if (d !== "") {
-                $('#filterCategoria').append('<option value="' + d + '">' + d + '</option>');
-            }
-        });
-
-        // Llenar el filtro de Dimensión con valores únicos
-        table.column(3).data().unique().sort().each(function(d, j) {
-            if (d !== "") {
-                $('#filterDimension').append('<option value="' + d + '">' + d + '</option>');
-            }
-        });
-
-        // Llenar el filtro de Tipo con valores únicos
+        // Filtros
         table.column(2).data().unique().sort().each(function(d, j) {
-            if (d !== "") {
-                $('#filterTipo').append('<option value="' + d + '">' + d + '</option>');
-            }
+            if (d !== "" && d !== "-") $('#filterCategoria').append('<option value="' + d + '">' + d + '</option>');
         });
 
-        // Llenar el filtro de color con valores únicos
+        table.column(3).data().unique().sort().each(function(d, j) {
+            if (d !== "" && d !== "-") $('#filterTipo').append('<option value="' + d + '">' + d + '</option>');
+        });
+
+        table.column(4).data().unique().sort().each(function(d, j) {
+            if (d !== "" && d !== "-") $('#filterDimension').append('<option value="' + d + '">' + d + '</option>');
+        });
+
         table.column(5).data().unique().sort().each(function(d, j) {
-            if (d !== "") {
-                $('#filterColor').append('<option value="' + d + '">' + d + '</option>');
-            }
+            if (d !== "" && d !== "-") $('#filterColor').append('<option value="' + d + '">' + d + '</option>');
         });
 
-        // Filtrar por Categoría
         $('#filterCategoria').on('change', function() {
-            var val = $.fn.dataTable.util.escapeRegex($(this).val());
-            table.column(1).search(val ? "^" + val + "$" : "", true, false).draw();
-        });
-
-        // Filtrar por Tipo
-        $('#filterTipo').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
             table.column(2).search(val ? "^" + val + "$" : "", true, false).draw();
         });
 
-        // Filtrar por Dimensión
-        $('#filterDimension').on('change', function() {
+        $('#filterTipo').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
             table.column(3).search(val ? "^" + val + "$" : "", true, false).draw();
         });
-        // Filtrar por Color
+
+        $('#filterDimension').on('change', function() {
+            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+            table.column(4).search(val ? "^" + val + "$" : "", true, false).draw();
+        });
+
         $('#filterColor').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
             table.column(5).search(val ? "^" + val + "$" : "", true, false).draw();
         });
 
-        // Limpiar los filtros al hacer clic en el botón
         $('#clearFilters').on('click', function() {
-            // Limpiar las selecciones de los filtros
-            $('#filterCategoria').val('');
-            $('#filterTipo').val('');
-            $('#filterDimension').val('');
-            $('#filterColor').val('');
-
-            // Restablecer los filtros de la tabla
+            $('#filterCategoria, #filterTipo, #filterDimension, #filterColor').val('');
             table.columns().search('').draw();
         });
     });
-</script>
+    function extraerIdDrive(url) {
+        // Eliminar espacios
+        url = url.trim();
+        
+        // Patrón 1: https://drive.google.com/file/d/FILE_ID/view
+        let match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (match) return match[1];
+        
+        // Patrón 2: https://drive.google.com/open?id=FILE_ID
+        match = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (match) return match[1];
+        
+        // Patrón 3: Ya es un ID directo (sin / ni ?)
+        if (url.length > 20 && !url.includes('/') && !url.includes('?')) {
+            return url;
+        }
+        
+        return null;
+    }
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
+    function convertirUrlDrive(url) {
+        const fileId = extraerIdDrive(url);
+        
+        if (!fileId) {
+            return null;
+        }
+        
+        // Formato para visualización directa
+        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+    }
 
-        document.getElementById("btnAbrirModalGenerico").addEventListener("click", function() {
-            document.getElementById("contenidoArticulo").innerHTML = `
-                <div class="card border-primary">
-                    <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div class="card-body">
+    // FUNCIÓN PARA GENERAR EL FORMULARIO
+    function generarFormularioArticulo(isEdit, datosArticulo) {
+        isEdit = isEdit || false;
+        datosArticulo = datosArticulo || null;
+        
+        var html = '<div class="card border-primary">';
+        html += '<button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close" style="z-index: 1000;"></button>';
+        html += '<div class="card-body">';
+        html += '<h4 class="card-title text-center mb-3" style="font-size: 28px;">';
+        html += '<i class="fas fa-shopping-bag"></i> ' + (isEdit ? 'Modificar' : 'Registro de') + ' Articulos';
+        html += '</h4>';
+        html += '<div class="card-sub text-center mb-3">';
+        html += isEdit ? 'Modifica los datos del artículo' : 'Aquí podrás <strong>registrar</strong> los Artículos <strong>NUEVOS.</strong>';
+        html += '</div>';
+        
+        html += '<div class="row">';
+        
+        // COLUMNA IZQUIERDA
+        html += '<div class="col-md-7">';
+        html += '<div class="card">';
+        html += '<div class="card-header bg-primary text-white">';
+        html += '<h5 class="mb-0"><i class="fas fa-info-circle"></i> Datos del Artículo</h5>';
+        html += '</div>';
+        html += '<div class="card-body">';
+        html += '<div class="row g-3">';
+        
+        // Nombre
+        html += '<div class="col-12">';
+        html += '<label class="form-label"><strong>Nombre de Articulo</strong> <span class="text-danger">*</span></label>';
+        html += '<input type="text" class="form-control" id="idRegistroNombreArticulo" placeholder="Articulo 1" />';
+        html += '</div>';
+        
+        // Categoría y Tipo
+        html += '<div class="col-md-6">';
+        html += '<label class="form-label"><strong>Categoría</strong></label>';
+        html += '<select class="form-select form-select-sm" id="idRegistoCategoria">';
+        html += '<option value="">Seleccione Categoría</option>';
+        html += '<?php foreach (listarCategoria() as $datos) { ?>';
+        html += '<option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>';
+        html += '<?php } ?>';
+        html += '</select>';
+        html += '</div>';
+        
+        html += '<div class="col-md-6">';
+        html += '<label class="form-label"><strong>Tipo de Artículo</strong></label>';
+        html += '<select class="form-select form-select-sm" id="idRegistoTipo">';
+        html += '<option value="">Seleccione Tipo</option>';
+        html += '<?php foreach (listarTipoArticulos() as $datos) { ?>';
+        html += '<option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>';
+        html += '<?php } ?>';
+        html += '</select>';
+        html += '</div>';
+        
+        // Dimensión y Escala
+        html += '<div class="col-md-6">';
+        html += '<label class="form-label"><strong>Dimensión</strong></label>';
+        html += '<select class="form-select form-select-sm" id="idRegistroDimension">';
+        html += '<option value="">Seleccione Dimensión</option>';
+        html += '<?php foreach (listarDimension() as $datos) { ?>';
+        html += '<option value="<?php echo $datos["id"] ?>"><?php echo $datos["medida"] ?></option>';
+        html += '<?php } ?>';
+        html += '</select>';
+        html += '</div>';
+        
+        html += '<div class="col-md-6">';
+        html += '<label class="form-label"><strong>Escala</strong></label>';
+        html += '<select class="form-select form-select-sm" id="idRegistroEscala">';
+        html += '<option value="">Seleccione Escala</option>';
+        html += '<?php foreach (listarEscala() as $datos) { ?>';
+        html += '<option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>';
+        html += '<?php } ?>';
+        html += '</select>';
+        html += '</div>';
+        
+        // Marca y Color
+        html += '<div class="col-md-6">';
+        html += '<label class="form-label"><strong>Marca</strong></label>';
+        html += '<input type="text" class="form-control" id="idRegistroMarca" placeholder="Ej: Artesco" />';
+        html += '</div>';
+        
+        html += '<div class="col-md-6">';
+        html += '<label class="form-label"><strong>Color</strong></label>';
+        html += '<input type="text" class="form-control" id="idRegistroColor" placeholder="Rojo, verde, azul..." />';
+        html += '</div>';
+        
+        // Stock y Precios
+        html += '<div class="col-md-4">';
+        html += '<label class="form-label"><strong>Stock</strong></label>';
+        html += '<input type="number" class="form-control" id="idRegistrarStock" placeholder="0" value="0" />';
+        html += '</div>';
+        
+        html += '<div class="col-md-4">';
+        html += '<label class="form-label"><strong>Precio Compra</strong></label>';
+        html += '<input type="number" step="0.01" class="form-control" id="idRegistrarPrecioCompra" placeholder="0.00" value="0" />';
+        html += '</div>';
+        
+        html += '<div class="col-md-4">';
+        html += '<label class="form-label"><strong>Precio Venta</strong></label>';
+        html += '<input type="number" step="0.01" class="form-control" id="idRegistrarPrecioVenta" placeholder="0.00" value="0" />';
+        html += '</div>';
+        
+        // Requiere Corte
+        html += '<div class="col-12">';
+        html += '<label class="form-label"><strong>Requiere Corte</strong></label>';
+        html += '<div class="d-flex gap-3">';
+        html += '<div class="form-check">';
+        html += '<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="Si" />';
+        html += '<label class="form-check-label" for="flexRadioDefault1">Si</label>';
+        html += '</div>';
+        html += '<div class="form-check">';
+        html += '<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="No" checked />';
+        html += '<label class="form-check-label" for="flexRadioDefault2">No</label>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        
+        html += '</div>'; // row g-3
+        html += '</div>'; // card-body
+        html += '</div>'; // card
+        html += '</div>'; // col-md-7
+        
+        // COLUMNA DERECHA - IMÁGENES CON TABS
+        html += '<div class="col-md-5">';
+        html += '<div class="card">';
+        html += '<div class="card-header bg-success text-white">';
+        html += '<h5 class="mb-0"><i class="fas fa-images"></i> Imágenes del Artículo</h5>';
+        html += '</div>';
+        html += '<div class="card-body">';
+        
+        // TABS
+        html += '<ul class="nav nav-tabs mb-3" role="tablist">';
+        html += '<li class="nav-item" role="presentation">';
+        html += '<button class="nav-link active" id="url-tab" data-bs-toggle="tab" data-bs-target="#url-panel" type="button" role="tab">';
+        html += '<i class="fas fa-link"></i> URL Web';
+        html += '</button>';
+        html += '</li>';
+        html += '<li class="nav-item" role="presentation">';
+        html += '<button class="nav-link" id="drive-tab" data-bs-toggle="tab" data-bs-target="#drive-panel" type="button" role="tab">';
+        html += '<i class="fab fa-google-drive"></i> Google Drive';
+        html += '</button>';
+        html += '</li>';
+        html += '</ul>';
+        
+        // TAB CONTENT
+        html += '<div class="tab-content">';
+        
+        // PANEL URL WEB
+        html += '<div class="tab-pane fade show active" id="url-panel" role="tabpanel">';
+        html += '<label class="form-label"><strong>URL de Imagen Web</strong></label>';
+        html += '<div class="input-group mb-2">';
+        html += '<span class="input-group-text"><i class="fas fa-link"></i></span>';
+        html += '<input type="url" class="form-control" id="idNuevaUrlImagen" placeholder="https://ejemplo.com/imagen.jpg" />';
+        html += '<button class="btn btn-primary" type="button" id="btnAgregarImagen">';
+        html += '<i class="fas fa-plus"></i> Agregar';
+        html += '</button>';
+        html += '</div>';
+        html += '<small class="form-text text-muted">Ingrese la URL completa de una imagen en internet</small>';
+        html += '</div>';
+        
+        // PANEL GOOGLE DRIVE
+        html += '<div class="tab-pane fade" id="drive-panel" role="tabpanel">';
+        html += '<label class="form-label"><strong>Enlace de Google Drive</strong></label>';
+        html += '<div class="input-group mb-2">';
+        html += '<span class="input-group-text"><i class="fab fa-google-drive"></i></span>';
+        html += '<input type="text" class="form-control" id="idNuevaUrlDrive" placeholder="https://drive.google.com/file/d/..." />';
+        html += '<button class="btn btn-primary" type="button" id="btnAgregarDrive">';
+        html += '<i class="fas fa-plus"></i> Agregar';
+        html += '</button>';
+        html += '</div>';
+        html += '<small class="form-text text-muted">';
+        html += '<strong>Pasos:</strong> 1) Sube la imagen a Drive, 2) Clic derecho > "Obtener enlace", 3) Configura como "Cualquier persona con el enlace", 4) Pega el enlace aquí';
+        html += '</small>';
+        html += '</div>';
+        
+        html += '</div>'; // tab-content
+        
+        html += '<hr>';
+        
+        html += '<div class="mb-3">';
+        html += '<label class="form-label"><strong>Imágenes Agregadas (<span id="contadorImagenes">0</span>)</strong></label>';
+        html += '<div class="images-section" id="listaImagenes">';
+        html += '<div class="no-images-msg">';
+        html += '<i class="fas fa-image fa-3x mb-2"></i>';
+        html += '<p>No hay imágenes agregadas aún</p>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        
+        html += '</div>'; // card-body
+        html += '</div>'; // card
+        html += '</div>'; // col-md-5
+        
+        html += '</div>'; // row principal
+        
+        // Botón de acción
+        html += '<div class="row mt-3">';
+        html += '<div class="col-12 text-center">';
+        html += '<button id="' + (isEdit ? 'btnEditarArticulo' : 'btnRegistrarArticulo') + '" class="btn btn-success btn-lg btn-round">';
+        html += isEdit ? '<i class="fas fa-save"></i> Guardar Cambios' : '<i class="fas fa-check"></i> Registrar Artículo';
+        html += '</button>';
+        html += '</div>';
+        html += '</div>';
+        
+        html += '</div>'; // card-body
+        html += '</div>'; // card
+        
+        return html;
+    }
+
+    // FUNCIÓN PARA RENDERIZAR LISTA DE IMÁGENES
+    function renderizarListaImagenes() {
+        var container = document.getElementById('listaImagenes');
+        var contador = document.getElementById('contadorImagenes');
+        
+        if (!container || !contador) return;
+        
+        contador.textContent = imagenesArticulo.length;
+        
+        if (imagenesArticulo.length === 0) {
+            container.innerHTML = '<div class="no-images-msg">' +
+                '<i class="fas fa-image fa-3x mb-2"></i>' +
+                '<p>No hay imágenes agregadas aún</p>' +
+                '</div>';
+            return;
+        }
+        
+        var html = '';
+        for (var i = 0; i < imagenesArticulo.length; i++) {
+            var img = imagenesArticulo[i];
+            var esPrincipal = i === imagenPrincipalIndex;
+            var source = img.source || 'web';
+            var sourceLabel = source === 'drive' ? 'Drive' : 'Web';
+            var sourceClass = source === 'drive' ? 'drive' : 'web';
+            var sourceIcon = source === 'drive' ? 'fab fa-google-drive' : 'fas fa-globe';
+            
+            html += '<div class="image-item ' + (esPrincipal ? 'principal' : '') + '" data-index="' + i + '" onclick="establecerImagenPrincipal(' + i + ')">';
+            html += '<span class="image-counter ' + (esPrincipal ? 'principal' : '') + '">';
+            html += '#' + (i + 1) + (esPrincipal ? ' ★ PRINCIPAL' : '');
+            html += '</span>';
+            
+            html += '<span class="badge-source ' + sourceClass + '">';
+            html += '<i class="' + sourceIcon + '"></i> ' + sourceLabel;
+            html += '</span>';
+            
+            if (!esPrincipal) {
+                html += '<button class="btn btn-success btn-sm btn-set-principal" onclick="event.stopPropagation(); establecerImagenPrincipal(' + i + ')" title="Marcar como principal">';
+                html += '<i class="fas fa-star"></i>';
+                html += '</button>';
+            }
+            
+            html += '<button class="btn btn-danger btn-sm btn-remove-image" onclick="event.stopPropagation(); eliminarImagen(' + i + ')">';
+            html += '<i class="fas fa-trash"></i>';
+            html += '</button>';
+            
+            html += '<div class="mt-4">';
+            html += '<input type="url" class="form-control form-control-sm mb-2" value="' + img.url + '" onchange="actualizarUrlImagen(' + i + ', this.value)" onclick="event.stopPropagation()" placeholder="URL de la imagen" />';
+            html += '<img src="' + img.url + '" class="preview-image" onerror="this.src=\'https://via.placeholder.com/300x200?text=Error+al+cargar\'" alt="Imagen ' + (i + 1) + '" />';
+            html += '</div>';
+            html += '</div>';
+        }
+        
+        container.innerHTML = html;
+    }
+
+    // ESTABLECER IMAGEN PRINCIPAL
+    function establecerImagenPrincipal(index) {
+        if (index >= 0 && index < imagenesArticulo.length) {
+            imagenPrincipalIndex = index;
+            renderizarListaImagenes();
+            
+            swal("¡Imagen principal actualizada!", "La imagen #" + (index + 1) + " es ahora la principal", {
+                icon: "success",
+                buttons: false,
+                timer: 1000
+            });
+        }
+    }
+
+    // AGREGAR IMAGEN
+    function agregarImagen() {
+        var input = document.getElementById('idNuevaUrlImagen');
+        if (!input) return;
+        
+        var url = input.value.trim();
+        
+        if (!url) {
+            swal("Error", "Por favor ingresa una URL", {
+                icon: "warning",
+                buttons: { confirm: { className: "btn btn-warning" } }
+            });
+            return;
+        }
+        
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            swal("Error", "La URL debe comenzar con http:// o https://", {
+                icon: "error",
+                buttons: { confirm: { className: "btn btn-danger" } }
+            });
+            return;
+        }
+        
+        var nuevoIndex = imagenesArticulo.length + 1;
+        imagenesArticulo.push({
+            index: nuevoIndex,
+            url: url,
+            source: 'web'
+        });
+        
+        input.value = '';
+        renderizarListaImagenes();
+        
+        swal("¡Imagen agregada!", "La imagen web se ha agregado correctamente", {
+            icon: "success",
+            buttons: false,
+            timer: 1000
+        });
+    }
+    function agregarImagenDrive() {
+        var input = document.getElementById('idNuevaUrlDrive');
+        if (!input) return;
+        
+        var urlOriginal = input.value.trim();
+        
+        if (!urlOriginal) {
+            swal("Error", "Por favor ingresa un enlace de Google Drive", {
+                icon: "warning",
+                buttons: { confirm: { className: "btn btn-warning" } }
+            });
+            return;
+        }
+        
+        var urlConvertida = convertirUrlDrive(urlOriginal);
+        
+        if (!urlConvertida) {
+            swal("Error", "El enlace de Drive no es válido. Asegúrate de:<br>1) Tener permisos públicos<br>2) Copiar el enlace completo", {
+                icon: "error",
+                buttons: { confirm: { className: "btn btn-danger" } },
+                content: {
+                    element: "div",
+                    attributes: {
+                        innerHTML: "El enlace de Drive no es válido.<br><br><strong>Asegúrate de:</strong><br>1) Hacer clic derecho en la imagen<br>2) Seleccionar 'Obtener enlace'<br>3) Cambiar a 'Cualquier persona con el enlace'<br>4) Copiar y pegar el enlace aquí"
+                    }
+                }
+            });
+            return;
+        }
+        
+        var nuevoIndex = imagenesArticulo.length + 1;
+        imagenesArticulo.push({
+            index: nuevoIndex,
+            url: urlConvertida,
+            source: 'drive',
+            originalUrl: urlOriginal
+        });
+        
+        input.value = '';
+        renderizarListaImagenes();
+        
+        swal("¡Imagen de Drive agregada!", "La imagen se ha agregado correctamente", {
+            icon: "success",
+            buttons: false,
+            timer: 1000
+        });
+    }
+
+    // ELIMINAR IMAGEN
+    function eliminarImagen(index) {
+        Swal.fire({
+            title: '¿Eliminar imagen?',
+            text: "Esta imagen se quitará de la lista",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                imagenesArticulo.splice(index, 1);
                 
-                      <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Registro de Articulos</h4>
-                        <div class="card-sub text-center">
-                            Aquí podrás <strong>registrar</strong> los Artículos <strong>NUEVOS.</strong>
-                        </div>
-                        <div class="card-sub text-center">
-                            Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
-                        </div>
-                        <div class="card text-start">
+                if (imagenPrincipalIndex === index) {
+                    imagenPrincipalIndex = 0;
+                } else if (imagenPrincipalIndex > index) {
+                    imagenPrincipalIndex--;
+                }
+                
+                for (var i = 0; i < imagenesArticulo.length; i++) {
+                    imagenesArticulo[i].index = i + 1;
+                }
+                
+                renderizarListaImagenes();
+            }
+        });
+    }
+    // ACTUALIZAR URL
+    function actualizarUrlImagen(index, nuevaUrl) {
+        if (imagenesArticulo[index]) {
+            imagenesArticulo[index].url = nuevaUrl;
+            renderizarListaImagenes();
+        }
+    }
 
-                            <div class="card-body">
-                                <div
-                                    class="row justify-content-center align-items-center g-2">
+    // OBTENER JSON DE IMÁGENES
+    function obtenerJsonImagenes() {
+        if (imagenesArticulo.length === 0) {
+            return null;
+        }
+        
+        var imagenesOrdenadas = imagenesArticulo.slice();
+        if (imagenPrincipalIndex !== 0) {
+            var imagenPrincipal = imagenesOrdenadas.splice(imagenPrincipalIndex, 1)[0];
+            imagenesOrdenadas.unshift(imagenPrincipal);
+        }
+        
+        var imagenesConIndice = [];
+        for (var i = 0; i < imagenesOrdenadas.length; i++) {
+            imagenesConIndice.push({
+                index: i + 1,
+                url: imagenesOrdenadas[i].url,
+                source: imagenesOrdenadas[i].source || 'web'
+            });
+        }
+        
+        return JSON.stringify(imagenesConIndice);
+    }
 
-                                    <div class="col-sm-12">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"><strong>Ingrese Nombre de Articulo</strong></label>
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                name="idRegistroNombreArticulo"
-                                                id="idRegistroNombreArticulo"
-                                                aria-describedby="helpId"
-                                                placeholder="Articulo 1" />
-                                        </div>
+    // CARGAR IMÁGENES DESDE JSON
+    function cargarImagenesDesdeJson(jsonString) {
+        imagenesArticulo = [];
+        imagenPrincipalIndex = 0;
+        
+        if (!jsonString) {
+            renderizarListaImagenes();
+            return;
+        }
+        
+        try {
+            var data = JSON.parse(jsonString);
+            if (Array.isArray(data)) {
+                imagenesArticulo = data;
+                imagenPrincipalIndex = 0;
+            }
+        } catch (e) {
+            console.error('Error al parsear JSON de imágenes:', e);
+        }
+        
+        renderizarListaImagenes();
+    }
 
-                                    </div>
+    // CONFIGURAR EVENTOS DE IMÁGENES
+    function configurarEventosImagenes() {
+        var btnAgregar = document.getElementById('btnAgregarImagen');
+        var inputUrl = document.getElementById('idNuevaUrlImagen');
+        
+        var btnAgregarDrive = document.getElementById('btnAgregarDrive');
+        var inputDrive = document.getElementById('idNuevaUrlDrive');
+        
+        if (btnAgregar) {
+            btnAgregar.addEventListener('click', agregarImagen);
+        }
+        
+        if (inputUrl) {
+            inputUrl.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    agregarImagen();
+                }
+            });
+        }
+        
+        if (btnAgregarDrive) {
+            btnAgregarDrive.addEventListener('click', agregarImagenDrive);
+        }
+        
+        if (inputDrive) {
+            inputDrive.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    agregarImagenDrive();
+                }
+            });
+        }
+    }
 
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"><strong>Categoría</strong></label>
-                                            <select
-                                                class="form-select form-select-sm"
-                                                name="idRegistoCategoria"
-                                                id="idRegistoCategoria">
-                                                <option selected>Selccione Categoría</option>
-                                                <?php foreach (listarCategoria() as $datos) {
-                                                ?>
-                                                    <option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>
-
-                                                <?php
-                                                } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"><strong>Tipo de Artículo</strong></label>
-                                            <select
-                                                class="form-select form-select-sm"
-                                                name="idRegistoTipo"
-                                                id="idRegistoTipo">
-                                                <option selected>Selccione Tipo de Articulo</option>
-                                                <?php foreach (listarTipoArticulos() as $datos) {
-                                                ?>
-                                                    <option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>
-
-                                                <?php
-                                                } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"><strong>Dimensión</strong></label>
-                                            <select
-                                                class="form-select form-select-sm"
-                                                name="idRegistroDimension"
-                                                id="idRegistroDimension">
-                                                <option selected>Selccione Dimensión</option>
-                                                <?php foreach (listarDimension() as $datos) {
-                                                ?>
-                                                    <option value="<?php echo $datos["id"] ?>"><?php echo $datos["medida"] ?></option>
-
-                                                <?php
-                                                } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"><strong>Escala</strong></label>
-                                            <select
-                                                class="form-select form-select-sm"
-                                                name="idRegistroEscala"
-                                                id="idRegistroEscala">
-                                                <option selected>Selccione Escala</option>
-                                                <?php foreach (listarEscala() as $datos) {
-                                                ?>
-                                                    <option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>
-
-                                                <?php
-                                                } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"><strong>Marca de Articulo</strong></label>
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                name="idRegistroMarca"
-                                                id="idRegistroMarca"
-                                                aria-describedby="helpId"
-                                                placeholder="Ejemplo: Artesco" />
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"> <strong>Color</strong></label>
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                name="idRegistroColor"
-                                                id="idRegistroColor"
-                                                aria-describedby="helpId"
-                                                placeholder="Rojo, verde, azul, Etc." />
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"> <strong>Stock</strong></label>
-                                            <input
-                                                type="number"
-                                                class="form-control"
-                                                name="idRegistrarStock"
-                                                id="idRegistrarStock"
-                                                aria-describedby="helpId"
-                                                placeholder="00" />
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"> <strong>Precio Compra</strong></label>
-                                            <input
-                                                type="number"
-                                                class="form-control"
-                                                name="idRegistrarPrecioCompra"
-                                                id="idRegistrarPrecioCompra"
-                                                aria-describedby="helpId"
-                                                placeholder="00.00" />
-                                        </div>
-
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="mb-3">
-                                            <label for="" class="form-label"> <strong>Precio Venta</strong></label>
-                                            <input
-                                                type="number"
-                                                class="form-control"
-                                                name="idRegistrarPrecioVenta"
-                                                id="idRegistrarPrecioVenta"
-                                                aria-describedby="helpId"
-                                                placeholder="00.00" />
-                                        </div>
-
-                                    </div>
-
-
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="" class="form-label"><strong>Requiere Corte</strong></label>
-                                            <div class="d-flex">
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input"
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault1"
-                                                        value="Si" />
-                                                    <label
-                                                        class="form-check-label"
-                                                        for="flexRadioDefault1">
-                                                        Si
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input"
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault2"
-                                                        value="No"
-                                                        checked />
-                                                    <label
-                                                        class="form-check-label"
-                                                        for="flexRadioDefault2">
-                                                        No
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-
-                                    </div>
-                                    <div class="text-center">
-                                        <a
-                                            name=""
-                                            id="btnRegistrarArticulo"
-                                            class="btn btn-success btn-round"
-
-                                            role="button">Registrar <i class="fas fa-check"> </i></a>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                </div>
-                </div>
-           
-            `;
-
-            const modal = new bootstrap.Modal(document.getElementById("modalArticulo"));
+    // MODAL PARA AGREGAR NUEVO ARTÍCULO
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("btnAbrirModalGenerico").addEventListener("click", function() {
+            imagenesArticulo = [];
+            imagenPrincipalIndex = 0;
+            document.getElementById("contenidoArticulo").innerHTML = generarFormularioArticulo(false);
+            
+            var modal = new bootstrap.Modal(document.getElementById("modalArticulo"));
             modal.show();
 
-            // Agregar evento de validación al botón "Registrar"
+            configurarEventosImagenes();
+            renderizarListaImagenes();
 
-            document.getElementById("btnRegistrarArticulo").addEventListener("click", async function() {
-                if ((document.getElementById("idRegistroNombreArticulo").value).length > 0) {
-
-                    let categoriaSelect = document.getElementById("idRegistoCategoria");
-                    let categoria = categoriaSelect.selectedIndex === 0 ? null : categoriaSelect.value;
-                    //////////////////////////////
-                    let tipoSelect = document.getElementById("idRegistoTipo");
-                    let tipo = tipoSelect.selectedIndex === 0 ? null : tipoSelect.value;
-                    /////////////////////////////
-                    let dimensionSelect = document.getElementById("idRegistroDimension");
-                    let dimension = dimensionSelect.selectedIndex === 0 ? null : dimensionSelect.value;
-
-                    /////////////
-                    let escalaSelect = document.getElementById("idRegistroEscala");
-                    let escala = escalaSelect.selectedIndex === 0 ? null : escalaSelect.value;
-
-                    /////////////////////////////////////////
-                    let radios = document.getElementsByName("flexRadioDefault");
-                    let selectedValue = "";
-
-                    for (let i = 0; i < radios.length; i++) {
-                        if (radios[i].checked) {
-                            selectedValue = radios[i].value;
-                            break;
-                        }
-                    }
-                    let corte = selectedValue === "Si" ? true : false;
-
-                    let colorEscrito = document.getElementById("idRegistroColor").value;
-                    let color = (colorEscrito).length > 0 ? colorEscrito : null;
-                    ///////
-                    let marcaEscrita = document.getElementById("idRegistroMarca").value;
-                    let marca = (marcaEscrita).length > 0 ? marcaEscrita : null;
-
-                    let stockEscrito = document.getElementById("idRegistrarStock").value.trim();
-
-                    // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                    let stock = parseFloat(document.getElementById("idRegistrarStock").value);
-
-                    let precioventaEscrito = document.getElementById("idRegistrarStock").value.trim();
-
-
-
-                    let precio_venta = parseFloat(document.getElementById("idRegistrarPrecioVenta").value);
-                    let precio_compra = parseFloat(document.getElementById("idRegistrarPrecioCompra").value);
-
-                    var jsArticulo = {
-                        "nombre": document.getElementById("idRegistroNombreArticulo").value,
-                        "categoria_id": categoria,
-                        "tipo_id": tipo,
-                        "dimension_id": dimension,
-                        "escala_id": escala,
-                        "corte": corte,
-                        "color": color,
-                        "stock": isNaN(stock) === true ? 0 : stock,
-                        "precio_venta": isNaN(precio_venta) === true ? 0 : precio_venta,
-                        "precio_compra": isNaN(precio_compra) === true ? 0 : precio_compra,
-                        "marca": document.getElementById("idRegistroMarca").value
-                    };
-                    console.log(jsArticulo);
-                    if (categoriaSelect.selectedIndex === 0) {
-                        swal("Ups!, Para registrar un Articulo, debes de Elegir una Categoría 😩", {
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
-                        });
-                    } else {
-                        $.ajax({
-                            url: 'logica/clssInsertPA.php',
-                            type: 'POST',
-                            data: {
-                                accion: 'REGISTAR_ARTICULO_COMPLETO',
-                                jsDatosArticulo: JSON.stringify(jsArticulo)
-                            },
-                            success: function(response) {
-                                console.log("Respuesta del servidor PA articulo: ", response);
-                                try {
-                                    var result = JSON.parse(response);
-                                    if (result.estado === true) {
-                                        swal({
-                                            title: "Registrado con Exito!",
-                                            text: result.mensaje,
-                                            icon: "success",
-                                            buttons: false,
-                                            timer: 1500
-                                        }).then(() => {
-                                            location.reload();
-
-                                        });;
-                                    } else {
-                                        swal("Error", result.mensaje, {
-                                            icon: "error",
-                                            buttons: {
-                                                confirm: {
-                                                    className: "btn btn-danger",
-                                                },
-                                            },
-                                        });
-                                    }
-                                } catch (e) {
-                                    console.log("Error al parsear el JSON: ", e);
-                                    swal("Error", "No se pudo procesar la respuesta del servidor.", {
-                                        icon: "error",
-                                        buttons: {
-                                            confirm: {
-                                                className: "btn btn-danger",
-                                            },
-                                        },
-                                    });
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.log("Error: " + error);
-                                swal("Error", "Hubo un problema con la solicitud.", {
-                                    icon: "error",
-                                    buttons: {
-                                        confirm: {
-                                            className: "btn btn-danger",
-                                        },
-                                    },
-                                });
-                            }
-                        });
-
-                    }
-
-                } else {
-                    swal("Ups!, Debes de ingresar el nombre del Articulo 😩", {
+            // Evento del botón registrar
+            document.getElementById("btnRegistrarArticulo").addEventListener("click", function() {
+                var nombreArticulo = document.getElementById("idRegistroNombreArticulo");
+                
+                if (!nombreArticulo || nombreArticulo.value.trim().length === 0) {
+                    swal("Ups!, Debes ingresar el nombre del Articulo", {
                         icon: "error",
-                        buttons: {
-                            confirm: {
-                                className: "btn btn-danger",
-                            },
-                        },
+                        buttons: { confirm: { className: "btn btn-danger" } }
                     });
+                    return;
                 }
 
-
-            });
-
-        });
-
-
-
-    });
-</script>
-
-
-<script>
-    function fn_editar_articulo(datosArticulo) {
-        console.log(datosArticulo);
-        document.getElementById("contenidoArticulo").innerHTML = `
-        <div class="card border-primary">
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
-
-           <div class="card-body">
-                      <h4 class="card-title text-center" style="font-size: 28px;"><i class="fas fa-shopping-bag"></i> Modificar de Articulos</h4>
-
-                <div class="card text-start">
-
-                    <div class="card-body">
-                        <div
-                            class="row justify-content-center align-items-center g-2">
-
-                            <div class="col-sm-12">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Ingrese Nombre de Articulo</strong></label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="idRegistroNombreArticulo"
-                                        id="idRegistroNombreArticulo"
-                                        aria-describedby="helpId"
-                                        placeholder="Articulo 1" />
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Categoría</strong></label>
-                                    <select
-                                        class="form-select form-select-sm"
-                                        name="idRegistoCategoria"
-                                        id="idRegistoCategoria">
-                                        <option selected>Selccione Categoría</option>
-                                        <?php foreach (listarCategoria() as $datos) {
-                                        ?>
-                                            <option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>
-
-                                        <?php
-                                        } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Tipo de Artículo</strong></label>
-                                    <select
-                                        class="form-select form-select-sm"
-                                        name="idRegistoTipo"
-                                        id="idRegistoTipo">
-                                        <option selected>Selccione Tipo de Articulo</option>
-                                        <?php foreach (listarTipoArticulos() as $datos) {
-                                        ?>
-                                            <option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>
-
-                                        <?php
-                                        } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Dimensión</strong></label>
-                                    <select
-                                        class="form-select form-select-sm"
-                                        name="idRegistroDimension"
-                                        id="idRegistroDimension">
-                                        <option selected>Selccione Dimensión</option>
-                                        <?php foreach (listarDimension() as $datos) {
-                                        ?>
-                                            <option value="<?php echo $datos["id"] ?>"><?php echo $datos["medida"] ?></option>
-
-                                        <?php
-                                        } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Escala</strong></label>
-                                    <select
-                                        class="form-select form-select-sm"
-                                        name="idRegistroEscala"
-                                        id="idRegistroEscala">
-                                        <option selected>Selccione Escala</option>
-                                        <?php foreach (listarEscala() as $datos) {
-                                        ?>
-                                            <option value="<?php echo $datos["id"] ?>"><?php echo $datos["abreviatura"] ?></option>
-
-                                        <?php
-                                        } ?>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"><strong>Marca de Articulo</strong></label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="idRegistroMarca"
-                                        id="idRegistroMarca"
-                                        aria-describedby="helpId"
-                                        placeholder="Ejemplo: Artesco" />
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"> <strong>Color</strong></label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="idRegistroColor"
-                                        id="idRegistroColor"
-                                        aria-describedby="helpId"
-                                        placeholder="Rojo, verde, azul, Etc." />
-                                </div>
-
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"> <strong>Stock</strong></label>
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        name="idRegistrarStock"
-                                        id="idRegistrarStock"
-                                        aria-describedby="helpId"
-                                        placeholder="00" />
-                                </div>
-
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"> <strong>Precio Compra</strong></label>
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        name="idRegistrarPrecioCompraUpdate"
-                                        id="idRegistrarPrecioCompraUpdate"
-                                        aria-describedby="helpId"
-                                        placeholder="00.00" />
-                                </div>
-
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label for="" class="form-label"> <strong>Precio Venta</strong></label>
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        name="idRegistrarPrecioVenta"
-                                        id="idRegistrarPrecioVenta"
-                                        aria-describedby="helpId"
-                                        placeholder="00.00" />
-                                </div>
-                            </div>
-
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="" class="form-label"><strong>Requiere Corte</strong></label>
-                                    <div class="d-flex">
-                                        <div class="form-check">
-                                            <input
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="flexRadioDefault"
-                                                id="flexRadioDefault1"
-                                                value="Si" />
-                                            <label
-                                                class="form-check-label"
-                                                for="flexRadioDefault1">
-                                                Si
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input
-                                                class="form-check-input"
-                                                type="radio"
-                                                name="flexRadioDefault"
-                                                id="flexRadioDefault2"
-                                                value="No"
-                                                checked />
-                                            <label
-                                                class="form-check-label"
-                                                for="flexRadioDefault2">
-                                                No
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-
-                            </div>
-                            <div class="text-center">
-                                <a
-                                    name=""
-                                    id="btnEditarArticulo"
-                                    class="btn btn-success btn-round"
-
-                                    role="button">Guardar Cambios <i class="fas fa-check"> </i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                </div>
-            </div>
-        `;
-        const setSelectValue = (elementId, text) => {
-            const select = document.getElementById(elementId);
-            let optionFound = false;
-
-            if (text === null) {
-                // Seleccionar la primera opción si el texto es null
-                select.selectedIndex = 0;
-            } else {
-                // Recorrer las opciones del select y seleccionar la que tenga el texto correcto
-                for (let option of select.options) {
-                    if (option.text.trim() === text.trim()) {
-                        option.selected = true;
-                        optionFound = true;
-                        break;
-                    }
+                var categoriaSelect = document.getElementById("idRegistoCategoria");
+                
+                if (!categoriaSelect || categoriaSelect.value === "") {
+                    swal("Ups!, Para registrar un Articulo, debes elegir una Categoría", {
+                        icon: "error",
+                        buttons: { confirm: { className: "btn btn-danger" } }
+                    });
+                    return;
                 }
-                // Si no se encuentra la opción con el texto, seleccionamos la primera opción
-                if (!optionFound) {
-                    select.selectedIndex = 0;
-                }
-            }
-        }
 
-        setSelectValue("idRegistoCategoria", datosArticulo.categoria);
-        setSelectValue("idRegistoTipo", datosArticulo.tipo);
-        setSelectValue("idRegistroDimension", datosArticulo.dimension);
-        setSelectValue("idRegistroEscala", datosArticulo.escala);
-        // Rellenar el campo de estado según el valor de datosUsuario
-        document.getElementById("idRegistroNombreArticulo").value = datosArticulo.articulo || '';
-        document.getElementById("idRegistroMarca").value = datosArticulo.marca || '';
-        document.getElementById("idRegistroColor").value = datosArticulo.color || '';
-        document.getElementById("idRegistrarStock").value = datosArticulo.stock || '';
-        document.getElementById("idRegistrarPrecioCompraUpdate").value = datosArticulo.precio_compra || "";
-        document.getElementById("idRegistrarPrecioVenta").value = datosArticulo.precio_venta || '';
-
-        // Para el campo 'corte' (radio buttons)
-        if (datosArticulo.corte) {
-            document.getElementById("flexRadioDefault1").checked = true;
-        } else {
-            document.getElementById("flexRadioDefault2").checked = true;
-        }
-        const modal = new bootstrap.Modal(document.getElementById("modalArticulo"));
-        modal.show();
-
-        document.getElementById("btnEditarArticulo").addEventListener("click", async function() {
-            if ((document.getElementById("idRegistroNombreArticulo").value).length > 0) {
-
-                let categoriaSelect = document.getElementById("idRegistoCategoria");
-                let categoria = categoriaSelect.selectedIndex === 0 ? null : categoriaSelect.value;
-                //////////////////////////////
-                let tipoSelect = document.getElementById("idRegistoTipo");
-                let tipo = tipoSelect.selectedIndex === 0 ? null : tipoSelect.value;
-                /////////////////////////////
-                let dimensionSelect = document.getElementById("idRegistroDimension");
-                let dimension = dimensionSelect.selectedIndex === 0 ? null : dimensionSelect.value;
-
-                /////////////
-                let escalaSelect = document.getElementById("idRegistroEscala");
-                let escala = escalaSelect.selectedIndex === 0 ? null : escalaSelect.value;
-
-                /////////////////////////////////////////
-                let radios = document.getElementsByName("flexRadioDefault");
-                let selectedValue = "";
-
-                for (let i = 0; i < radios.length; i++) {
+                var tipoSelect = document.getElementById("idRegistoTipo");
+                var dimensionSelect = document.getElementById("idRegistroDimension");
+                var escalaSelect = document.getElementById("idRegistroEscala");
+                
+                var radios = document.getElementsByName("flexRadioDefault");
+                var selectedValue = "No";
+                for (var i = 0; i < radios.length; i++) {
                     if (radios[i].checked) {
                         selectedValue = radios[i].value;
                         break;
                     }
                 }
-                let corte = selectedValue === "Si" ? true : false;
 
-                let colorEscrito = document.getElementById("idRegistroColor").value;
-                let color = (colorEscrito).length > 0 ? colorEscrito : null;
-                ///////
-                let marcaEscrita = document.getElementById("idRegistroMarca").value;
-                let marca = (marcaEscrita).length > 0 ? marcaEscrita : null;
+                var stock = document.getElementById("idRegistrarStock");
+                var precioVenta = document.getElementById("idRegistrarPrecioVenta");
+                var precioCompra = document.getElementById("idRegistrarPrecioCompra");
+                var marca = document.getElementById("idRegistroMarca");
+                var color = document.getElementById("idRegistroColor");
 
-                let stockEscrito = parseInt(document.getElementById("idRegistrarStock").value.trim());
-
-                // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                let stock = isNaN(stockEscrito) ? 0 : stockEscrito;
-
-
-
-                // Si es un número entero positivo, lo convierte a número; si no, asigna 0
-                let precioventa = parseFloat(document.getElementById("idRegistrarPrecioVenta").value);
-                let precioCompra = parseFloat(document.getElementById("idRegistrarPrecioCompraUpdate").value);
-
-                //console.log(datosArticulo);
                 var jsArticulo = {
-                    "id": datosArticulo["articulo_id"],
-                    "nombre": document.getElementById("idRegistroNombreArticulo").value,
-                    "categoria_id": categoria,
-                    "tipo_id": tipo,
-                    "dimension_id": dimension,
-                    "escala_id": escala,
-                    "corte": corte,
-                    "color": color,
-                    "stock": stock,
-                    "precio_venta": isNaN(precioventa) === true ? 0 : precioventa,
-                    "precio_compra": isNaN(precioCompra) === true ? 0 : precioCompra,
-                    "marca": document.getElementById("idRegistroMarca").value
+                    "nombre": nombreArticulo.value.trim(),
+                    "categoria_id": categoriaSelect.value === "" ? null : categoriaSelect.value,
+                    "tipo_id": tipoSelect && tipoSelect.value !== "" ? tipoSelect.value : null,
+                    "dimension_id": dimensionSelect && dimensionSelect.value !== "" ? dimensionSelect.value : null,
+                    "escala_id": escalaSelect && escalaSelect.value !== "" ? escalaSelect.value : null,
+                    "corte": selectedValue === "Si",
+                    "color": color && color.value.trim() !== "" ? color.value.trim() : null,
+                    "stock": stock && stock.value !== "" ? parseFloat(stock.value) : 0,
+                    "precio_venta": precioVenta && precioVenta.value !== "" ? parseFloat(precioVenta.value) : 0,
+                    "precio_compra": precioCompra && precioCompra.value !== "" ? parseFloat(precioCompra.value) : 0,
+                    "marca": marca && marca.value.trim() !== "" ? marca.value.trim() : null,
+                    "json_url_img": obtenerJsonImagenes()
                 };
-                console.log(jsArticulo);
+
+                console.log("Datos a enviar:", jsArticulo);
 
                 $.ajax({
                     url: 'logica/clssInsertPA.php',
                     type: 'POST',
                     data: {
-                        accion: 'EDITAR_ARTICULO_COMPLETO',
+                        accion: 'REGISTAR_ARTICULO_COMPLETO',
                         jsDatosArticulo: JSON.stringify(jsArticulo)
                     },
                     success: function(response) {
-                        console.log("Respuesta del servidor PA articulo: ", response);
+                        console.log("Respuesta del servidor:", response);
                         try {
                             var result = JSON.parse(response);
                             if (result.estado === true) {
                                 swal({
-                                    title: "Registrado con Exito!",
-                                    text: result.mensaje,
+                                    title: "¡Registrado con Éxito!",
+                                    text: result.mensaje || "El artículo se ha registrado correctamente",
                                     icon: "success",
                                     buttons: false,
                                     timer: 1500
-                                }).then(() => {
+                                }).then(function() {
                                     location.reload();
-
-                                });;
+                                });
                             } else {
-                                swal("Error", result.mensaje, {
+                                swal("Error", result.mensaje || "No se pudo registrar el artículo", {
                                     icon: "error",
-                                    buttons: {
-                                        confirm: {
-                                            className: "btn btn-danger",
-                                        },
-                                    },
+                                    buttons: { confirm: { className: "btn btn-danger" } }
                                 });
                             }
                         } catch (e) {
-                            console.log("Error al parsear el JSON: ", e);
+                            console.error("Error al parsear JSON:", e);
+                            console.error("Respuesta recibida:", response);
                             swal("Error", "No se pudo procesar la respuesta del servidor.", {
                                 icon: "error",
-                                buttons: {
-                                    confirm: {
-                                        className: "btn btn-danger",
-                                    },
-                                },
+                                buttons: { confirm: { className: "btn btn-danger" } }
                             });
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.log("Error: " + error);
-                        swal("Error", "Hubo un problema con la solicitud.", {
+                        console.error("Error AJAX:", error);
+                        console.error("Status:", status);
+                        console.error("Response:", xhr.responseText);
+                        swal("Error", "Hubo un problema con la solicitud: " + error, {
                             icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
+                            buttons: { confirm: { className: "btn btn-danger" } }
                         });
                     }
                 });
+            });
+        });
+    });
 
+    // FUNCIÓN PARA EDITAR ARTÍCULO
+    function fn_editar_articulo(datosArticulo) {
+        console.log("=== DATOS RECIBIDOS PARA EDITAR ===");
+        console.log("Datos completos:", datosArticulo);
+        
+        imagenesArticulo = [];
+        imagenPrincipalIndex = 0;
+        document.getElementById("contenidoArticulo").innerHTML = generarFormularioArticulo(true, datosArticulo);
 
+        // Función auxiliar para establecer valor de select
+        var setSelectValueById = function(elementId, value) {
+            var select = document.getElementById(elementId);
+            if (select) {
+                if (value === null || value === undefined || value === "") {
+                    select.value = "";
+                } else {
+                    select.value = value;
+                }
+            }
+        };
+
+        // Rellenar campos
+        setTimeout(function() {
+            setSelectValueById("idRegistoCategoria", datosArticulo.categoria_id);
+            setSelectValueById("idRegistoTipo", datosArticulo.tipo_id);
+            setSelectValueById("idRegistroDimension", datosArticulo.dimension_id);
+            setSelectValueById("idRegistroEscala", datosArticulo.escala_id);
+            
+            var nombreInput = document.getElementById("idRegistroNombreArticulo");
+            if (nombreInput) nombreInput.value = datosArticulo.articulo || '';
+            
+            var marcaInput = document.getElementById("idRegistroMarca");
+            if (marcaInput) marcaInput.value = datosArticulo.marca || '';
+            
+            var colorInput = document.getElementById("idRegistroColor");
+            if (colorInput) colorInput.value = datosArticulo.color || '';
+            
+            var stockInput = document.getElementById("idRegistrarStock");
+            if (stockInput) stockInput.value = datosArticulo.stock || '0';
+            
+            var precioCompraInput = document.getElementById("idRegistrarPrecioCompra");
+            if (precioCompraInput) precioCompraInput.value = datosArticulo.precio_compra || '0';
+            
+            var precioVentaInput = document.getElementById("idRegistrarPrecioVenta");
+            if (precioVentaInput) precioVentaInput.value = datosArticulo.precio_venta || '0';
+
+            if (datosArticulo.corte) {
+                var radioSi = document.getElementById("flexRadioDefault1");
+                if (radioSi) radioSi.checked = true;
             } else {
-                swal("Ups!, Debes de ingresar el nombre del Articulo 😩", {
-                    icon: "error",
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-danger",
-                        },
-                    },
-                });
+                var radioNo = document.getElementById("flexRadioDefault2");
+                if (radioNo) radioNo.checked = true;
             }
 
-        });
+            // Cargar imágenes existentes
+            cargarImagenesDesdeJson(datosArticulo.json_url_img);
+        }, 100);
 
+        var modal = new bootstrap.Modal(document.getElementById("modalArticulo"));
+        modal.show();
 
+        setTimeout(function() {
+            configurarEventosImagenes();
+        }, 150);
+
+        // Evento del botón editar
+        setTimeout(function() {
+            var btnEditar = document.getElementById("btnEditarArticulo");
+            if (btnEditar) {
+                btnEditar.addEventListener("click", function() {
+                    var nombreArticulo = document.getElementById("idRegistroNombreArticulo");
+                    
+                    if (!nombreArticulo || nombreArticulo.value.trim().length === 0) {
+                        swal("Ups!, Debes ingresar el nombre del Articulo", {
+                            icon: "error",
+                            buttons: { confirm: { className: "btn btn-danger" } }
+                        });
+                        return;
+                    }
+
+                    var categoriaSelect = document.getElementById("idRegistoCategoria");
+                    var tipoSelect = document.getElementById("idRegistoTipo");
+                    var dimensionSelect = document.getElementById("idRegistroDimension");
+                    var escalaSelect = document.getElementById("idRegistroEscala");
+                    
+                    var radios = document.getElementsByName("flexRadioDefault");
+                    var selectedValue = "No";
+                    for (var i = 0; i < radios.length; i++) {
+                        if (radios[i].checked) {
+                            selectedValue = radios[i].value;
+                            break;
+                        }
+                    }
+
+                    var stock = document.getElementById("idRegistrarStock");
+                    var precioVenta = document.getElementById("idRegistrarPrecioVenta");
+                    var precioCompra = document.getElementById("idRegistrarPrecioCompra");
+                    var marca = document.getElementById("idRegistroMarca");
+                    var color = document.getElementById("idRegistroColor");
+
+                    var jsArticulo = {
+                        "id": datosArticulo.articulo_id,
+                        "nombre": nombreArticulo.value.trim(),
+                        "categoria_id": categoriaSelect && categoriaSelect.value !== "" ? categoriaSelect.value : null,
+                        "tipo_id": tipoSelect && tipoSelect.value !== "" ? tipoSelect.value : null,
+                        "dimension_id": dimensionSelect && dimensionSelect.value !== "" ? dimensionSelect.value : null,
+                        "escala_id": escalaSelect && escalaSelect.value !== "" ? escalaSelect.value : null,
+                        "corte": selectedValue === "Si",
+                        "color": color && color.value.trim() !== "" ? color.value.trim() : null,
+                        "stock": stock && stock.value !== "" ? parseFloat(stock.value) : 0,
+                        "precio_venta": precioVenta && precioVenta.value !== "" ? parseFloat(precioVenta.value) : 0,
+                        "precio_compra": precioCompra && precioCompra.value !== "" ? parseFloat(precioCompra.value) : 0,
+                        "marca": marca && marca.value.trim() !== "" ? marca.value.trim() : null,
+                        "json_url_img": obtenerJsonImagenes()
+                    };
+
+                    console.log("Datos a actualizar:", jsArticulo);
+
+                    $.ajax({
+                        url: 'logica/clssInsertPA.php',
+                        type: 'POST',
+                        data: {
+                            accion: 'EDITAR_ARTICULO_COMPLETO',
+                            jsDatosArticulo: JSON.stringify(jsArticulo)
+                        },
+                        success: function(response) {
+                            console.log("Respuesta del servidor:", response);
+                            try {
+                                var result = JSON.parse(response);
+                                if (result.estado === true) {
+                                    swal({
+                                        title: "¡Actualizado con Éxito!",
+                                        text: result.mensaje || "El artículo se ha actualizado correctamente",
+                                        icon: "success",
+                                        buttons: false,
+                                        timer: 1500
+                                    }).then(function() {
+                                        location.reload();
+                                    });
+                                } else {
+                                    swal("Error", result.mensaje || "No se pudo actualizar el artículo", {
+                                        icon: "error",
+                                        buttons: { confirm: { className: "btn btn-danger" } }
+                                    });
+                                }
+                            } catch (e) {
+                                console.error("Error al parsear JSON:", e);
+                                console.error("Respuesta recibida:", response);
+                                swal("Error", "No se pudo procesar la respuesta del servidor.", {
+                                    icon: "error",
+                                    buttons: { confirm: { className: "btn btn-danger" } }
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error AJAX:", error);
+                            console.error("Response:", xhr.responseText);
+                            swal("Error", "Hubo un problema con la solicitud: " + error, {
+                                icon: "error",
+                                buttons: { confirm: { className: "btn btn-danger" } }
+                            });
+                        }
+                    });
+                });
+            }
+        }, 150);
     }
 
+    // FUNCIÓN PARA BLOQUEAR ARTÍCULO
     function fn_bloquear_articulo(datosArticulo) {
         Swal.fire({
             title: '¿Estás seguro?',
@@ -1061,9 +1146,8 @@ include("cabecera.php");
             cancelButtonColor: '#d33',
             confirmButtonText: 'Sí, Quitar',
             cancelButtonText: 'Cancelar'
-        }).then((result) => {
+        }).then(function(result) {
             if (result.isConfirmed) {
-
                 $.ajax({
                     method: "POST",
                     url: "logica/clssInsertPA.php",
@@ -1072,25 +1156,17 @@ include("cabecera.php");
                         "id": datosArticulo
                     }
                 }).done(function(response) {
-
                     var result = JSON.parse(response);
                     console.log(response);
 
-                    // Verificar si el resultado contiene éxito o error
                     if (result.success === true) {
                         location.reload();
                     } else if (result.error === true) {
-                        // Si existe un error, mostrar el mensaje devuelto por el servidor
                         swal("Error", result.message, {
                             icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
+                            buttons: { confirm: { className: "btn btn-danger" } }
                         });
                     }
-
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
                 });
@@ -1098,6 +1174,7 @@ include("cabecera.php");
         });
     }
 
+    // FUNCIÓN PARA ELIMINAR ARTÍCULO
     function fn_eliminar_articulo(idArticulo) {
         Swal.fire({
             title: '¿Estás seguro?',
@@ -1108,7 +1185,7 @@ include("cabecera.php");
             cancelButtonColor: '#d33',
             confirmButtonText: 'Sí, Eliminar',
             cancelButtonText: 'Cancelar'
-        }).then((result) => {
+        }).then(function(result) {
             if (result.isConfirmed) {
                 $.ajax({
                     method: "POST",
@@ -1118,41 +1195,30 @@ include("cabecera.php");
                         "id": idArticulo
                     }
                 }).done(function(response) {
-
                     var result = JSON.parse(response);
                     console.log(response);
 
-
                     if (result.estado === true) {
-                        //location.reload();
-                        swal("Articulo Eliminado!, No podrás volver a usarlo 😩", {
+                        swal("Articulo Eliminado!, No podrás volver a usarlo", {
                             icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
+                            buttons: { confirm: { className: "btn btn-danger" } }
+                        }).then(function() {
+                            location.reload();
                         });
                     } else {
                         swal("Error", result.message, {
                             icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
+                            buttons: { confirm: { className: "btn btn-danger" } }
                         });
                     }
-
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
                 });
-
-
             }
         });
     }
 
+    // FUNCIÓN PARA DESBLOQUEAR ARTÍCULO
     function fn_desbloquear_articulo(datosArticulo) {
         Swal.fire({
             title: '¿Estás seguro?',
@@ -1163,7 +1229,7 @@ include("cabecera.php");
             cancelButtonColor: '#d33',
             confirmButtonText: 'Sí, habilitar',
             cancelButtonText: 'Cancelar'
-        }).then((result) => {
+        }).then(function(result) {
             if (result.isConfirmed) {
                 $.ajax({
                     method: "POST",
@@ -1173,30 +1239,20 @@ include("cabecera.php");
                         "id": datosArticulo
                     }
                 }).done(function(response) {
-
                     var result = JSON.parse(response);
                     console.log(response);
 
-                    // Verificar si el resultado contiene éxito o error
                     if (result.success === true) {
                         location.reload();
                     } else if (result.error === true) {
-                        // Si existe un error, mostrar el mensaje devuelto por el servidor
                         swal("Error", result.message, {
                             icon: "error",
-                            buttons: {
-                                confirm: {
-                                    className: "btn btn-danger",
-                                },
-                            },
+                            buttons: { confirm: { className: "btn btn-danger" } }
                         });
                     }
-
                 }).fail(function(error) {
                     console.error("Error:", error.responseText);
                 });
-
-
             }
         });
     }
