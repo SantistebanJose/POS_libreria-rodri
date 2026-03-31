@@ -137,6 +137,45 @@ include("cabecera.php");
         font-size: 11px;
         margin-left: 5px;
     }
+    
+    /* Estilos para la imagen en la tabla */
+    .product-image-cell {
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    .product-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        padding: 3px;
+        background: white;
+        transition: transform 0.2s;
+    }
+    
+    .product-thumbnail:hover {
+        transform: scale(1.5);
+        z-index: 999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        border-color: #6861ce;
+    }
+    
+    .no-image-placeholder {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        border: 2px dashed #ddd;
+        border-radius: 8px;
+        color: #999;
+        font-size: 10px;
+        text-align: center;
+        padding: 5px;
+    }
 </style>
 
 <div class="container">
@@ -183,6 +222,7 @@ include("cabecera.php");
                                     <tr>
                                         <th>ID</th>
                                         <th>Articulo</th>
+                                        <th>Imagen</th>
                                         <th>Categoria</th>
                                         <th>Tipo</th>
                                         <th>Dimension</th>
@@ -196,10 +236,31 @@ include("cabecera.php");
                                     <?php
                                     foreach (listarArticuloSinview() as $datosArticulo) {
                                         $datosArticuloJSON = json_encode($datosArticulo);
+                                        
+                                        // Obtener la imagen principal (primera del JSON)
+                                        $imagenPrincipal = null;
+                                        if (!empty($datosArticulo["json_url_img"])) {
+                                            $imagenes = json_decode($datosArticulo["json_url_img"], true);
+                                            if (is_array($imagenes) && count($imagenes) > 0) {
+                                                $imagenPrincipal = $imagenes[0]['url'] ?? null;
+                                            }
+                                        }
                                     ?>
                                         <tr>
                                             <td><?php echo $datosArticulo["articulo_id"] ?></td>
                                             <td><?php echo $datosArticulo["articulo"] ?></td>
+                                            <td class="product-image-cell">
+                                                <?php if ($imagenPrincipal): ?>
+                                                    <img src="<?php echo htmlspecialchars($imagenPrincipal); ?>" 
+                                                         class="product-thumbnail" 
+                                                         alt="<?php echo htmlspecialchars($datosArticulo["articulo"]); ?>"
+                                                         onerror="this.parentElement.innerHTML='<div class=\'no-image-placeholder\'><i class=\'fas fa-image\'></i><br>Sin imagen</div>'">
+                                                <?php else: ?>
+                                                    <div class="no-image-placeholder">
+                                                        <i class="fas fa-image"></i><br>Sin imagen
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
                                             <td><?php echo $datosArticulo["categoria"] ?? '-'; ?></td>
                                             <td><?php echo $datosArticulo["tipo"] ?? '-'; ?></td>
                                             <td><?php echo $datosArticulo["dimension"] ?? '-'; ?></td>
@@ -289,41 +350,41 @@ include("cabecera.php");
             }
         });
 
-        // Filtros
-        table.column(2).data().unique().sort().each(function(d, j) {
+        // Filtros - Ajustados los índices de columna porque ahora "Imagen" está en la posición 2
+        table.column(3).data().unique().sort().each(function(d, j) {
             if (d !== "" && d !== "-") $('#filterCategoria').append('<option value="' + d + '">' + d + '</option>');
         });
 
-        table.column(3).data().unique().sort().each(function(d, j) {
+        table.column(4).data().unique().sort().each(function(d, j) {
             if (d !== "" && d !== "-") $('#filterTipo').append('<option value="' + d + '">' + d + '</option>');
         });
 
-        table.column(4).data().unique().sort().each(function(d, j) {
+        table.column(5).data().unique().sort().each(function(d, j) {
             if (d !== "" && d !== "-") $('#filterDimension').append('<option value="' + d + '">' + d + '</option>');
         });
 
-        table.column(5).data().unique().sort().each(function(d, j) {
+        table.column(6).data().unique().sort().each(function(d, j) {
             if (d !== "" && d !== "-") $('#filterColor').append('<option value="' + d + '">' + d + '</option>');
         });
 
         $('#filterCategoria').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
-            table.column(2).search(val ? "^" + val + "$" : "", true, false).draw();
+            table.column(3).search(val ? "^" + val + "$" : "", true, false).draw();
         });
 
         $('#filterTipo').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
-            table.column(3).search(val ? "^" + val + "$" : "", true, false).draw();
+            table.column(4).search(val ? "^" + val + "$" : "", true, false).draw();
         });
 
         $('#filterDimension').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
-            table.column(4).search(val ? "^" + val + "$" : "", true, false).draw();
+            table.column(5).search(val ? "^" + val + "$" : "", true, false).draw();
         });
 
         $('#filterColor').on('change', function() {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
-            table.column(5).search(val ? "^" + val + "$" : "", true, false).draw();
+            table.column(6).search(val ? "^" + val + "$" : "", true, false).draw();
         });
 
         $('#clearFilters').on('click', function() {
@@ -583,7 +644,7 @@ include("cabecera.php");
         if (imagenesArticulo.length === 0) {
             container.innerHTML = '<div class="no-images-msg">' +
                 '<i class="fas fa-image fa-3x mb-2"></i>' +
-                '<p>No hay imágenes agregadas aún</p>' +
+                '<p>No hay imágenes o videos agregados aún</p>' +
                 '</div>';
             return;
         }
@@ -593,6 +654,7 @@ include("cabecera.php");
             var img = imagenesArticulo[i];
             var esPrincipal = i === imagenPrincipalIndex;
             var source = img.source || 'web';
+            var tipoMedio = img.tipo || 'imagen';
             var sourceLabel = source === 'drive' ? 'Drive' : 'Web';
             var sourceClass = source === 'drive' ? 'drive' : 'web';
             var sourceIcon = source === 'drive' ? 'fab fa-google-drive' : 'fas fa-globe';
@@ -606,6 +668,13 @@ include("cabecera.php");
             html += '<i class="' + sourceIcon + '"></i> ' + sourceLabel;
             html += '</span>';
             
+            // Badge para indicar si es video
+            if (tipoMedio === 'video') {
+                html += '<span class="badge-source" style="left: 140px; background: #e91e63; color: white;">';
+                html += '<i class="fas fa-video"></i> VIDEO';
+                html += '</span>';
+            }
+            
             if (!esPrincipal) {
                 html += '<button class="btn btn-success btn-sm btn-set-principal" onclick="event.stopPropagation(); establecerImagenPrincipal(' + i + ')" title="Marcar como principal">';
                 html += '<i class="fas fa-star"></i>';
@@ -617,15 +686,24 @@ include("cabecera.php");
             html += '</button>';
             
             html += '<div class="mt-4">';
-            html += '<input type="url" class="form-control form-control-sm mb-2" value="' + img.url + '" onchange="actualizarUrlImagen(' + i + ', this.value)" onclick="event.stopPropagation()" placeholder="URL de la imagen" />';
-            html += '<img src="' + img.url + '" class="preview-image" onerror="this.src=\'https://via.placeholder.com/300x200?text=Error+al+cargar\'" alt="Imagen ' + (i + 1) + '" />';
+            html += '<input type="url" class="form-control form-control-sm mb-2" value="' + img.url + '" onchange="actualizarUrlImagen(' + i + ', this.value)" onclick="event.stopPropagation()" placeholder="URL del medio" />';
+            
+            // Mostrar video o imagen según el tipo
+            if (tipoMedio === 'video') {
+                html += '<video controls class="preview-image" style="max-height: 200px;">';
+                html += '<source src="' + img.url + '" type="video/mp4">';
+                html += 'Tu navegador no soporta el elemento de video.';
+                html += '</video>';
+            } else {
+                html += '<img src="' + img.url + '" class="preview-image" onerror="this.src=\'https://via.placeholder.com/300x200?text=Error+al+cargar\'" alt="Imagen ' + (i + 1) + '" />';
+            }
+            
             html += '</div>';
             html += '</div>';
         }
         
         container.innerHTML = html;
     }
-
     // ESTABLECER IMAGEN PRINCIPAL
     function establecerImagenPrincipal(index) {
         if (index >= 0 && index < imagenesArticulo.length) {
@@ -638,6 +716,17 @@ include("cabecera.php");
                 timer: 1000
             });
         }
+    }
+    // Detectar si una URL es de video
+    function esVideo(url) {
+        const extensionesVideo = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
+        const urlLower = url.toLowerCase();
+        return extensionesVideo.some(ext => urlLower.includes(ext));
+    }
+
+    // Detectar el tipo de medio
+    function detectarTipoMedio(url) {
+        return esVideo(url) ? 'video' : 'imagen';
     }
 
     // AGREGAR IMAGEN
@@ -664,16 +753,20 @@ include("cabecera.php");
         }
         
         var nuevoIndex = imagenesArticulo.length + 1;
+        var tipoMedio = detectarTipoMedio(url);
+        
         imagenesArticulo.push({
             index: nuevoIndex,
             url: url,
-            source: 'web'
+            source: 'web',
+            tipo: tipoMedio  // 'imagen' o 'video'
         });
         
         input.value = '';
         renderizarListaImagenes();
         
-        swal("¡Imagen agregada!", "La imagen web se ha agregado correctamente", {
+        var mensaje = tipoMedio === 'video' ? 'El video se ha agregado correctamente' : 'La imagen web se ha agregado correctamente';
+        swal("¡Medio agregado!", mensaje, {
             icon: "success",
             buttons: false,
             timer: 1000
@@ -696,31 +789,29 @@ include("cabecera.php");
         var urlConvertida = convertirUrlDrive(urlOriginal);
         
         if (!urlConvertida) {
-            swal("Error", "El enlace de Drive no es válido. Asegúrate de:<br>1) Tener permisos públicos<br>2) Copiar el enlace completo", {
+            swal("Error", "El enlace de Drive no es válido...", {
                 icon: "error",
-                buttons: { confirm: { className: "btn btn-danger" } },
-                content: {
-                    element: "div",
-                    attributes: {
-                        innerHTML: "El enlace de Drive no es válido.<br><br><strong>Asegúrate de:</strong><br>1) Hacer clic derecho en la imagen<br>2) Seleccionar 'Obtener enlace'<br>3) Cambiar a 'Cualquier persona con el enlace'<br>4) Copiar y pegar el enlace aquí"
-                    }
-                }
+                buttons: { confirm: { className: "btn btn-danger" } }
             });
             return;
         }
         
         var nuevoIndex = imagenesArticulo.length + 1;
+        var tipoMedio = detectarTipoMedio(urlConvertida);
+        
         imagenesArticulo.push({
             index: nuevoIndex,
             url: urlConvertida,
             source: 'drive',
-            originalUrl: urlOriginal
+            originalUrl: urlOriginal,
+            tipo: tipoMedio  // 'imagen' o 'video'
         });
         
         input.value = '';
         renderizarListaImagenes();
         
-        swal("¡Imagen de Drive agregada!", "La imagen se ha agregado correctamente", {
+        var mensaje = tipoMedio === 'video' ? 'El video de Drive se ha agregado' : 'La imagen de Drive se ha agregado';
+        swal("¡Medio agregado!", mensaje, {
             icon: "success",
             buttons: false,
             timer: 1000

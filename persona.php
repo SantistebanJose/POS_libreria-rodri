@@ -108,6 +108,17 @@ include("cabecera.php");
                 font-size: 12px;
             }
         }
+
+        /* Estilos para el botón de búsqueda */
+        .btn-buscar-api {
+            margin-top: 5px;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
    
 </style>
 
@@ -314,6 +325,41 @@ include("cabecera.php");
 
 
 <script>
+    // Función para buscar en la API por DNI
+    async function buscarPorDNI(dni) {
+        try {
+            const response = await fetch(`https://graphperu.daustinn.com/api/query/${dni}`);
+            
+            if (!response.ok) {
+                throw new Error('No se encontraron datos para este DNI');
+            }
+            
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Función para buscar en la API por RUC
+    async function buscarPorRUC(ruc) {
+        try {
+            console.log('Buscando RUC:', ruc);
+            const response = await fetch(`https://graphperu.daustinn.com/api/query/${ruc}`);
+            
+            if (!response.ok) {
+                throw new Error('No se encontraron datos para este RUC');
+            }
+            
+            const data = await response.json();
+            console.log('Respuesta completa de la API para RUC:', data);
+            return data;
+        } catch (error) {
+            console.error('Error en buscarPorRUC:', error);
+            throw error;
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("btnAbrirModalGenerico").addEventListener("click", function () {
@@ -340,8 +386,13 @@ include("cabecera.php");
                             <!-- Formulario Persona -->
                             <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
                                 <div class="mb-3">
-                                    <label for="numeroDocumentoPersona" class="form-label"><b>Número de Documento  <span class="fw-bold text-danger">*</span></b></label>
-                                    <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
+                                    <label for="numeroDocumentoPersona" class="form-label"><b>Número de DNI  <span class="fw-bold text-danger">*</span></b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Ingrese DNI" maxlength="8">
+                                        <button class="btn btn-primary btn-buscar-api" type="button" id="btnBuscarDNI">
+                                            <i class="fas fa-search"></i> Buscar
+                                        </button>
+                                    </div>
                                     <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
                                 </div>
                                 <div class="mb-3">
@@ -387,8 +438,13 @@ include("cabecera.php");
                             <!-- Formulario Empresa -->
                             <div class="tab-pane fade" id="pills-empresa" role="tabpanel" aria-labelledby="pills-empresa-tab">
                                 <div class="mb-3">
-                                    <label for="numeroDocumentoEmpresa" class="form-label">Número de Ruc  <span class="fw-bold text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Número de Documento">
+                                    <label for="numeroDocumentoEmpresa" class="form-label">Número de RUC  <span class="fw-bold text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Ingrese RUC" maxlength="11">
+                                        <button class="btn btn-primary btn-buscar-api" type="button" id="btnBuscarRUC">
+                                            <i class="fas fa-search"></i> Buscar
+                                        </button>
+                                    </div>
                                     <div class="invalid-feedback" id="error-numeroDocumentoEmpresa"></div>
                                 </div>
                                 <div class="mb-3">
@@ -444,6 +500,158 @@ include("cabecera.php");
 
             const modal = new bootstrap.Modal(document.getElementById("modalCliente"));
             modal.show();
+
+            // Event listener para buscar DNI
+            document.getElementById('btnBuscarDNI').addEventListener('click', async function() {
+                const dni = document.getElementById('numeroDocumentoPersona').value.trim();
+                
+                if (dni.length !== 8 || !/^\d{8}$/.test(dni)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'DNI inválido',
+                        text: 'Por favor, ingrese un DNI válido de 8 dígitos',
+                        timer: 2000
+                    });
+                    return;
+                }
+
+                // Mostrar loading en el botón
+                const btnBuscar = this;
+                const textoOriginal = btnBuscar.innerHTML;
+                btnBuscar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Buscando...';
+                btnBuscar.disabled = true;
+
+                try {
+                    const data = await buscarPorDNI(dni);
+                    
+                    // Rellenar los campos con la información obtenida
+                    if (data.names) {
+                        document.getElementById('nombresPersona').value = data.names;
+                    }
+                    
+                    if (data.surnames) {
+                        document.getElementById('apellidosPersona').value = data.surnames;
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Datos encontrados',
+                        text: 'Se han cargado los datos automáticamente',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'No se pudieron obtener los datos del DNI',
+                        timer: 2000
+                    });
+                } finally {
+                    // Restaurar el botón
+                    btnBuscar.innerHTML = textoOriginal;
+                    btnBuscar.disabled = false;
+                }
+            });
+
+            // Event listener para buscar RUC
+            document.getElementById('btnBuscarRUC').addEventListener('click', async function() {
+                const ruc = document.getElementById('numeroDocumentoEmpresa').value.trim();
+                
+                if (ruc.length !== 11 || !/^\d{11}$/.test(ruc)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'RUC inválido',
+                        text: 'Por favor, ingrese un RUC válido de 11 dígitos',
+                        timer: 2000
+                    });
+                    return;
+                }
+
+                // Mostrar loading en el botón
+                const btnBuscar = this;
+                const textoOriginal = btnBuscar.innerHTML;
+                btnBuscar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Buscando...';
+                btnBuscar.disabled = true;
+
+                try {
+                    const data = await buscarPorRUC(ruc);
+                    
+                    console.log('Datos recibidos de la API:', data);
+                    
+                    // Rellenar los campos con la información obtenida
+                    // La API devuelve diferentes campos dependiendo del tipo de documento
+                    
+                    // Para empresas (RUC), la API devuelve:
+                    // - name: nombre de la empresa/persona jurídica
+                    // - razonSocial: razón social (en algunos casos)
+                    // - nombreComercial: nombre comercial (en algunos casos)
+                    // - fullName: nombre completo (fallback)
+                    
+                    let razonSocial = '';
+                    let nombreComercial = '';
+                    
+                    // Intentar obtener la razón social
+                    if (data.razonSocial) {
+                        razonSocial = data.razonSocial;
+                    } else if (data.name) {
+                        razonSocial = data.name;
+                    } else if (data.fullName) {
+                        razonSocial = data.fullName;
+                    }
+                    
+                    // Intentar obtener el nombre comercial
+                    if (data.nombreComercial) {
+                        nombreComercial = data.nombreComercial;
+                    } else if (data.razonSocial) {
+                        nombreComercial = data.razonSocial;
+                    } else if (data.name) {
+                        nombreComercial = data.name;
+                    } else if (data.fullName) {
+                        nombreComercial = data.fullName;
+                    }
+                    
+                    // Asignar los valores a los campos
+                    if (razonSocial) {
+                        document.getElementById('razonSocial').value = razonSocial;
+                    }
+                    
+                    if (nombreComercial) {
+                        document.getElementById('nombreComercial').value = nombreComercial;
+                    }
+
+                    if (razonSocial || nombreComercial) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Datos encontrados',
+                            text: 'Se han cargado los datos automáticamente',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Datos incompletos',
+                            text: 'No se encontraron todos los datos de la empresa',
+                            timer: 2000
+                        });
+                    }
+
+                } catch (error) {
+                    console.error('Error al buscar RUC:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message || 'No se pudieron obtener los datos del RUC',
+                        timer: 2000
+                    });
+                } finally {
+                    // Restaurar el botón
+                    btnBuscar.innerHTML = textoOriginal;
+                    btnBuscar.disabled = false;
+                }
+            });
 
             const personaTab = document.getElementById("pills-persona-tab");
             const empresaTab = document.getElementById("pills-empresa-tab");
@@ -521,7 +729,7 @@ include("cabecera.php");
                 } else if (!/^\d{8}$/.test(numeroDocumentoPersona.value)) {
                     valid = false;
                     numeroDocumentoPersona.classList.add('is-invalid');
-                    errorNumeroDocumentoPersona.textContent = 'Debe ser un DNI válido (9 dígitos).';
+                    errorNumeroDocumentoPersona.textContent = 'Debe ser un DNI válido (8 dígitos).';
                 } else {
                     numeroDocumentoPersona.classList.remove('is-invalid');
                     errorNumeroDocumentoPersona.textContent = '';
@@ -743,7 +951,8 @@ include("cabecera.php");
                             "razon_social": document.getElementById('razonSocial').value,
                             "telefono_movil": document.getElementById('telefonoEmpresa').value,
                             "email": document.getElementById('emailEmpresa').value,
-                            "condicion": document.getElementById('condicionEmpresa').value
+                            "condicion": document.getElementById('condicionEmpresa').value,
+                            "direccion": document.getElementById('direccionEmpresa').value
                                
                         };
 

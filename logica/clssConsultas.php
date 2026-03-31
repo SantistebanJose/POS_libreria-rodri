@@ -19,6 +19,11 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result);
             }
             break;
+        case 'TOTAL_COMPRAS_RANGO':
+            $fecha_desde = $_POST['fecha_desde'] ?? null;
+            $fecha_hasta = $_POST['fecha_hasta'] ?? null;
+            echo json_encode(fnTotalComprasPorRango($fecha_desde, $fecha_hasta));
+            break;
         case 'VENTAIDCLIENTEDEMRD':
             if (isset($_POST["cliente_id"])) {
                 $cliente_id_ = $_POST["cliente_id"];
@@ -73,6 +78,10 @@ function controladorConsultasPTMRE($accion)
                 echo json_encode($result ? $result : []);
             }
             break;
+        case 'RANKING_CLIENTES':
+            $datos = fnRankingClientes();
+            echo json_encode($datos);
+            break;
         case 'VENTAS_POR_RANGO':
             $fecha_inicio = $_POST['fecha_inicio'];
             $fecha_fin = $_POST['fecha_fin'];
@@ -112,6 +121,38 @@ function executeQueryv2($query)
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
         return [];
+    }
+}
+#nueva funcion
+function fnTotalComprasPorRango($desde, $hasta): array {
+    // Convertir strings vacíos a NULL explícitamente
+    $desde = (empty($desde)) ? null : $desde;
+    $hasta = (empty($hasta)) ? null : $hasta;
+
+    if ($desde === null && $hasta === null) {
+        // Sin filtro: total histórico completo
+        $query = "
+            SELECT 
+                COUNT(DISTINCT c.id) AS total_compras,
+                COALESCE(SUM((item->>'sub_total_')::NUMERIC), 0) AS gran_total_productos
+            FROM compra c,
+            LATERAL jsonb_array_elements(c.js_detalle_compra::jsonb) AS item
+            WHERE c.js_detalle_compra IS NOT NULL
+        ";
+        return executeQuery($query);
+    } else {
+        // Con filtro de fechas usando c.fecha (fecha de compra)
+        $query = "
+            SELECT 
+                COUNT(DISTINCT c.id) AS total_compras,
+                COALESCE(SUM((item->>'sub_total_')::NUMERIC), 0) AS gran_total_productos
+            FROM compra c,
+            LATERAL jsonb_array_elements(c.js_detalle_compra::jsonb) AS item
+            WHERE c.js_detalle_compra IS NOT NULL
+            AND (:desde::DATE IS NULL OR c.fecha >= :desde::DATE)
+            AND (:hasta::DATE IS NULL OR c.fecha <= :hasta::DATE)
+        ";
+        return executeQuery($query, ['desde' => $desde, 'hasta' => $hasta]);
     }
 }
 function listarInsumosCompra(): array
@@ -175,7 +216,12 @@ function fnListForVentasPorRango($fecha_inicio, $fecha_fin) {
                 WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 5 THEN UPPER('Viernes')
                 WHEN EXTRACT(DOW FROM v.fecha_fin_transaccion) = 6 THEN UPPER('Sábado')
             END AS dia_nombre,
-            CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
+            CASE 
+                WHEN p.tipo_persona = 'JURIDICA' THEN 
+                    COALESCE(p.razon_social, p.nombre_comercial, 'SIN NOMBRE')
+                ELSE 
+                    CONCAT(p.nombres, ' ', p.apellidos)
+            END AS cliente, 
             TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD') AS fecha, 
             TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM') AS hora, 
             p.telefonomovil AS telefonomovil_cliente,
@@ -806,14 +852,17 @@ function fnUltimaVentaPorIdVenta($id_venta): array
     )
     SELECT 
     v.tipo_comprobante,
-
     concat(SUBSTRING(v.tipo_comprobante,1,1),'001 - ',LPAD(v.id::TEXT,6,'0')) as codigo_tiket,
     v.fecha_fin_transaccion,
     v.id AS venta_id, 
-    CONCAT(p.nombres, ' ', p.apellidos) AS cliente, 
+    CASE 
+        WHEN p.tipo_persona = 'JURIDICA' THEN 
+            COALESCE(p.razon_social, p.nombre_comercial, 'SIN NOMBRE')
+        ELSE 
+            CONCAT(p.nombres, ' ', p.apellidos)
+    END AS cliente,
     TO_CHAR(v.fecha_fin_transaccion, 'YYYY-MM-DD') AS fecha, 
     TO_CHAR(v.fecha_fin_transaccion, 'HH12:MI:SS AM') AS hora, 
-    
     p.telefonomovil AS telefonomovil_cliente,
     p.email AS email_cliente, 
     p.numero_documento AS numero_doc_cliente,
@@ -823,7 +872,7 @@ function fnUltimaVentaPorIdVenta($id_venta): array
     v.usuario_id,
     v.monto_venta_final,
     v.total, 
-    (v.total - v.monto_venta_final)as perdida_utilidad,
+    (v.total - v.monto_venta_final) as perdida_utilidad,
     CASE 
         WHEN v.estado_pago = 'P' THEN 'PAGADO'
         WHEN v.estado_pago = 'C' THEN 'CREDITO'
@@ -834,14 +883,14 @@ function fnUltimaVentaPorIdVenta($id_venta): array
             jsonb_build_object(
                 'rel_venta_articulo_id', wf.rel_venta_articulo_id,
                 'venta_id', wf.venta_id,
-                'articulo_id',wf.articulo_id,
-                'descripcion',wf.descripcion,
-                'descripcion_2',wf.descripcion_2,
-                'cantidad',wf.cantidad,
-                'precio_unitario_articulo',wf.precio_unitario_articulo,
-                'minutos',wf.minutos,
-                'costo_por_minuto',wf.costo_por_minuto,
-                'sub_total',wf.sub_total
+                'articulo_id', wf.articulo_id,
+                'descripcion', wf.descripcion,
+                'descripcion_2', wf.descripcion_2,
+                'cantidad', wf.cantidad,
+                'precio_unitario_articulo', wf.precio_unitario_articulo,
+                'minutos', wf.minutos,
+                'costo_por_minuto', wf.costo_por_minuto,
+                'sub_total', wf.sub_total
             )
         )
         FROM with_detalle as wf
@@ -851,14 +900,14 @@ function fnUltimaVentaPorIdVenta($id_venta): array
         SELECT jsonb_agg(
             jsonb_build_object(
                 'id_venta', id_venta,
-                'id_detalle',wdf.ID_DETALLE,
-                'forma_pago',wdf.FORMA_PAGO,
-                'monto',wdf.monto
+                'id_detalle', wdf.ID_DETALLE,
+                'forma_pago', wdf.FORMA_PAGO,
+                'monto', wdf.monto
             )
         )
         FROM with_detalle_pago wdf
         WHERE wdf.id_venta = v.id
-    )as js_detalle_forma_pago
+    ) as js_detalle_forma_pago
     FROM venta AS v
     LEFT JOIN deuda AS du ON v.id=du.id_venta
     INNER JOIN usuario AS us ON v.usuario_id = us.id  
@@ -867,11 +916,11 @@ function fnUltimaVentaPorIdVenta($id_venta): array
     WHERE v.estado_venta = 'VR' 
     AND v.id = :idVenta
     AND v.deleted_at IS NULL
-    --AND v.fecha_fin_transaccion::DATE = current_date 
     ORDER BY v.fecha_fin_transaccion;
     ";
     return executeQuery($query, params: ['idVenta' => $id_venta]);
 }
+
 function fnListarDetalleVentaID($idVenta): array
 {
     $query = "
@@ -1471,50 +1520,42 @@ function fnListadoProductos($cadena): array
 }
 function fnListadoCompras(): array
 {
-    // La consulta SQL para buscar proveedores
-    $query = "   
+    $query = "
     SELECT 
-    c.id as compra_id, 
-    --c.usuario_id, --AS realizada_por,
-    CONCAT (us.nombres,' ',us.apellidos) AS realizada_por,
-    CASE 
-        WHEN c.proveedor_id IS NOT null THEN
-            CONCAT(proveedor.numero_documento,' - ', UPPER(proveedor.nombre_comercial))
-        ELSE	
-            'SIN REGISTRO DE PROVEEDOR'
-    END proveedor,
-    proveedor.numero_documento as proveedor_num_doc,
-    UPPER(proveedor.nombre_comercial) as nombre_comercial_proveedor,
-    --c.proveedor_id,
-    CASE 
-        WHEN c.fecha IS NULL THEN
-            'SIN REGISTRO'
-        ELSE
-            TO_CHAR(c.fecha, 'YYYY-MM-DD')
-    END fecha_compra,
-    --c.fecha as fecha_compra,
-    c.numero_comprobante,
-    CASE 
-        WHEN c.total IS NULL THEN
-            'SIN REGISTRO'
-        ELSE
-            CONCAT('S/',' ',c.total)
-            ----TO_CHAR(c.total, '999999999.00')
-    END total,
-    --c.total,
-    --js_detalle_compra
-    c.created_at::DATE as fecha_registro,
-    TO_CHAR(c.created_at, 'HH12:MI:SS AM') as hora,
-    js_detalle_compra,
-    --c.created_at::TIME as hora,
-    c.created_at as fecha_hora_registro
+        c.id as compra_id,
+        CONCAT(us.nombres,' ',us.apellidos) AS realizada_por,
+        CASE 
+            WHEN c.proveedor_id IS NOT NULL THEN
+                CONCAT(proveedor.numero_documento,' - ', UPPER(proveedor.nombre_comercial))
+            ELSE	
+                'SIN REGISTRO DE PROVEEDOR'
+        END proveedor,
+        proveedor.numero_documento as proveedor_num_doc,
+        UPPER(proveedor.nombre_comercial) as nombre_comercial_proveedor,
+        CASE 
+            WHEN c.fecha IS NULL THEN
+                'SIN REGISTRO'
+            ELSE
+                TO_CHAR(c.fecha, 'YYYY-MM-DD')
+        END fecha_compra,
+        c.numero_comprobante,
+        CASE 
+            WHEN c.total IS NULL THEN
+                'SIN REGISTRO'
+            ELSE
+                CONCAT('S/',' ',c.total)
+        END total,
+        c.created_at::DATE as fecha_registro,
+        TO_CHAR(c.created_at, 'HH12:MI:SS AM') as hora,
+        js_detalle_compra,
+        c.created_at as fecha_hora_registro
     FROM compra c
-    JOIN usuario u ON u.id = c.usuario_id AND c.created_at::DATE >= CURRENT_DATE - INTERVAL '3 months'
+    JOIN usuario u ON u.id = c.usuario_id
     JOIN persona us ON u.persona_id = us.id
-    LEFT JOIN persona proveedor ON c.proveedor_id = proveedor.id;
+    LEFT JOIN persona proveedor ON c.proveedor_id = proveedor.id
+    ORDER BY c.id DESC;
     ";
 
-    // Ejecuta la consulta con el parámetro de búsqueda
     return executeQuery($query);
 }
 
@@ -1772,200 +1813,450 @@ function fnListadoDeEmisor(): array
 }
 
 
-function fnGenerarTicket($idVenta): void
+function u(string $texto): string
+{
+    return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $texto);
+}
+ 
+// ---------------------------------------------------------------------------
+// FUNCIÓN PRINCIPAL — punto de entrada
+// ---------------------------------------------------------------------------
+function fnGenerarTicket($idVenta, string $formato = 'TICKET'): void
 {
     $datosprueba = fnUltimaVentaPorIdVenta($idVenta)[0];
-
-    // Datos de la venta obtenidos de la consulta
-    $datoEmisor = fnListadoDeEmisor()[0];
+    $datoEmisor  = fnListadoDeEmisor()[0];
+    $productos   = json_decode($datosprueba["js_detalle"], true) ?? [];       // ← agrega ?? []
+    $pagos       = json_decode($datosprueba["js_detalle_forma_pago"], true) ?? []; // ← agrega ?? []
+ 
     $datosVenta = [
-        "codigo_tiket" => $datosprueba["codigo_tiket"],
-        "tipo_comprobante" => $datosprueba["tipo_comprobante"],
-        "fecha" => $datosprueba["fecha"],
-        "hora" => $datosprueba["hora"],
-        "cliente" => $datosprueba["cliente"],
+        "codigo_tiket"       => $datosprueba["codigo_tiket"],
+        "tipo_comprobante"   => $datosprueba["tipo_comprobante"],
+        "fecha"              => $datosprueba["fecha"],
+        "hora"               => $datosprueba["hora"],
+        "cliente"            => $datosprueba["cliente"],
         "numero_doc_cliente" => $datosprueba["numero_doc_cliente"],
-        "usuario_inicial" => $datosprueba["usuario"],
-        "usuario_final" => $datosprueba["atencion_final_usuario"],
-        "total" => $datosprueba["total"],
-        "monto_venta_final" => $datosprueba["monto_venta_final"],
-        "estado_pago" => $datosprueba["estado_pago"],
-        "estado_final" => $datosprueba["estado_final"],
-        "descuento" => $datosprueba["perdida_utilidad"],
-        "js_detalle" => $datosprueba["js_detalle"],
-        "js_detalle_forma_pago" => $datosprueba["js_detalle_forma_pago"]
+        "usuario_final"      => $datosprueba["atencion_final_usuario"],
+        "total"              => $datosprueba["total"],
+        "monto_venta_final"  => $datosprueba["monto_venta_final"],
+        "estado_pago"        => $datosprueba["estado_pago"],
+        "descuento"          => $datosprueba["perdida_utilidad"],
     ];
-
-    // Decodificar productos vendidos y formas de pago
-    $productos = json_decode($datosVenta["js_detalle"], true);
-    $pagos = json_decode($datosVenta["js_detalle_forma_pago"], true);
-
-    // Limpiar salida previa
+ 
     ob_clean();
-
-    // Crear PDF en formato ticket térmico (80mm de ancho)
-    $pdf = new FPDF('P', 'mm', array(80, 200));
-    $pdf->AddPage();
-    
-    $logoPath = 'logica/logo.jpeg';
-
-    // Verificar si la imagen existe
-    if (file_exists($logoPath)) {
-        $logoWidth = 20; // Ancho del logo
-        $centerX = (80 - $logoWidth) / 2; // Centrado en una página de 80mm de ancho
-        
-        $pdf->Image($logoPath, $centerX, 5, $logoWidth); // Ajustar la posición y tamaño del logo
-        $pdf->Ln(20);
+ 
+    if ($formato === 'A4') {
+        fnGenerarTicketA4($datoEmisor, $datosVenta, $datosprueba, $productos, $pagos);
     } else {
-        $pdf->Cell(60, 4, 'Logo no disponible', 0, 1, 'C');
+        fnGenerarTicketTermico($datoEmisor, $datosVenta, $datosprueba, $productos, $pagos);
     }
-
-
-    //$pdf->Image('logo.jpg', 10, 5, 20); // Ruta a tu logo, ajuste de posición (x=10, y=5) y tamaño (ancho=20)
-    //$pdf->Ln(20); // Deja un espacio de 20mm después del logo
-    // TÍTULO: TICKET DE VENTA
-
-    $pdf->SetFont('Arial', 'B', size: 7);
-    $pdf->Cell(60, 4, $datoEmisor["razon_social"], 0, 1, 'C');
-    $pdf->Cell(60, 4, "RUC: " . $datoEmisor["ruc"], 0, 1, 'C');
-
-    $pdf->SetFont('Arial', size: 7);
-
-    $pdf->SetFont('Arial', '', 6);
-    $pdf->MultiCell(60, 4, $datoEmisor["direccion"], 0, 'C');
-    $pdf->SetFont('Arial', 'B', 8); // Restaurar estilo después
-
-    //$pdf->Cell(60, 4, $datoEmisor["direccion"], 0, 1, 'C');
-    //$pdf->SetFont('Arial', 'B', 8);
-
-
-
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Cell(60, 4, $datosprueba["tipo_comprobante"] . ' DE VENTA ELECTRONICA', 0, 1, 'C');
-    $pdf->SetFont('Arial', 'B', 8);
-
-
-    $pdf->Cell(60, 4, $datosVenta["codigo_tiket"], 0, 1, 'C');
-
-    $pdf->Ln(1);
-
+}
+ 
+// ---------------------------------------------------------------------------
+// FORMATO A4 — diseño mejorado + UTF-8 corregido
+// ---------------------------------------------------------------------------
+function fnGenerarTicketA4(array $datoEmisor, array $datosVenta, array $datosprueba, array $productos, array $pagos): void
+{
+    $pdf = new FPDF('P', 'mm', 'A4');
+    $pdf->SetMargins(15, 15, 15);
+    $pdf->AddPage();
+ 
+    $pageW    = $pdf->GetPageWidth();   // 210
+    $mL       = 15;
+    $mR       = 15;
+    $ancho    = $pageW - $mL - $mR;    // 180
+ 
+    // -----------------------------------------------------------------------
+    // FRANJA SUPERIOR AZUL OSCURO
+    // -----------------------------------------------------------------------
+    $pdf->SetFillColor(20, 40, 80);
+    $pdf->Rect(0, 0, $pageW, 12, 'F');
+ 
+    // -----------------------------------------------------------------------
+    // CABECERA: logo + datos emisor
+    // -----------------------------------------------------------------------
+    $logoPath = 'logica/logo.jpeg';
+    $logoW    = 28;
+    $logoY    = 14;
+ 
+    if (file_exists($logoPath)) {
+        $pdf->Image($logoPath, $mL, $logoY, $logoW);
+    }
+ 
+    $xTexto = $mL + $logoW + 6;
+    $wTexto = $ancho - $logoW - 6;
+ 
+    $pdf->SetXY($xTexto, $logoY);
+    $pdf->SetFont('Arial', 'B', 14);
+    $pdf->SetTextColor(20, 40, 80);
+    $pdf->Cell($wTexto, 7, u($datoEmisor["razon_social"]), 0, 1, 'L');
+ 
+    $pdf->SetX($xTexto);
+    $pdf->SetFont('Arial', '', 9);
+    $pdf->SetTextColor(80, 80, 80);
+    $pdf->Cell($wTexto, 5, u('RUC: ' . $datoEmisor["ruc"]), 0, 1, 'L');
+ 
+    $pdf->SetX($xTexto);
+    $pdf->SetFont('Arial', '', 8);
+    $pdf->MultiCell($wTexto, 4, u($datoEmisor["direccion"]), 0, 'L');
+ 
+    // Línea separadora delgada
+    $pdf->SetY(max($pdf->GetY() + 2, $logoY + $logoW * 0.85));
+    $pdf->SetDrawColor(200, 200, 200);
+    $pdf->SetLineWidth(0.3);
+    $pdf->Line($mL, $pdf->GetY(), $pageW - $mR, $pdf->GetY());
+    $pdf->Ln(5);
+ 
+    // -----------------------------------------------------------------------
+    // BLOQUE TIPO COMPROBANTE (fondo azul oscuro, texto blanco)
+    // -----------------------------------------------------------------------
+    $pdf->SetFillColor(20, 40, 80);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('Arial', 'B', 13);
+    $pdf->Cell($ancho, 9, u($datosprueba["tipo_comprobante"] . ' DE VENTA ELECTRONICA'), 0, 1, 'C', true);
+ 
+    $pdf->SetFillColor(40, 70, 130);
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->Cell($ancho, 6, u($datosVenta["codigo_tiket"]), 0, 1, 'C', true);
+ 
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->Ln(5);
+ 
+    // -----------------------------------------------------------------------
     // DATOS DEL CLIENTE
+    // -----------------------------------------------------------------------
+    // Cabecera de sección
+    $pdf->SetFillColor(20, 40, 80);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell($ancho, 6, u('  DATOS DEL CLIENTE'), 0, 1, 'L', true);
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->Ln(2);
+ 
+    $col1 = 30;
+    $col2 = ($ancho / 2) - $col1;
+    $col3 = 30;
+    $col4 = ($ancho / 2) - $col3;
+ 
+    $fila = function($pdf, $label1, $val1, $label2, $val2) use ($col1, $col2, $col3, $col4) {
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->Cell($col1, 5, u($label1), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell($col2, 5, u($val1), 0, 0, 'L');
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->Cell($col3, 5, u($label2), 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell($col4, 5, u($val2), 0, 1, 'L');
+    };
+ 
+    $fila($pdf, 'Cliente:', $datosVenta["cliente"], 'DNI/RUC:', $datosVenta["numero_doc_cliente"]);
+    $fila($pdf, 'Fecha:', $datosVenta["fecha"] . '  ' . $datosVenta["hora"], 'Estado pago:', $datosVenta["estado_pago"]);
+ 
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell($col1, 5, u('Atendido por:'), 0, 0, 'L');
+    $pdf->SetFont('Arial', '', 8);
+    $pdf->Cell($ancho - $col1, 5, u($datosVenta["usuario_final"]), 0, 1, 'L');
+ 
+    $pdf->Ln(4);
+ 
+    // -----------------------------------------------------------------------
+    // TABLA DE PRODUCTOS
+    // -----------------------------------------------------------------------
+    $pdf->SetFillColor(20, 40, 80);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell($ancho, 6, u('  DETALLE DE PRODUCTOS / SERVICIOS'), 0, 1, 'L', true);
+    $pdf->SetTextColor(0, 0, 0);
+ 
+    // Anchos de columna
+    $cDesc = 90;
+    $cCant = 18;
+    $cPU   = 36;
+    $cSub  = $ancho - $cDesc - $cCant - $cPU;
+ 
+    // Encabezado tabla
+    $pdf->SetFillColor(230, 235, 245);
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell($cDesc, 6, u('DESCRIPCION'),   1, 0, 'C', true);
+    $pdf->Cell($cCant, 6, u('CANT.'),         1, 0, 'C', true);
+    $pdf->Cell($cPU,   6, u('PRECIO UNIT.'),  1, 0, 'C', true);
+    $pdf->Cell($cSub,  6, u('SUBTOTAL'),      1, 1, 'C', true);
+ 
+    $pdf->SetFont('Arial', '', 8);
+    $fillRow = false;
+    foreach ($productos as $producto) {
+        $pdf->SetFillColor($fillRow ? 245 : 255, $fillRow ? 247 : 255, $fillRow ? 252 : 255);
+ 
+        $yIni = $pdf->GetY();
+        $xIni = $pdf->GetX();
+ 
+        $pdf->MultiCell($cDesc, 5, u($producto["descripcion_2"]), 1, 'L', $fillRow);
+        $yFin = $pdf->GetY();
+        $h    = $yFin - $yIni;
+ 
+        $pdf->SetXY($xIni + $cDesc, $yIni);
+        $pdf->Cell($cCant, $h, $producto["cantidad"], 1, 0, 'C', $fillRow);
+        $pdf->Cell($cPU,   $h, 'S/ ' . number_format($producto["precio_unitario_articulo"], 2), 1, 0, 'R', $fillRow);
+        $pdf->Cell($cSub,  $h, 'S/ ' . number_format($producto["sub_total"], 2), 1, 0, 'R', $fillRow);
+        $pdf->Ln();
+ 
+        $fillRow = !$fillRow;
+    }
+ 
+    $pdf->Ln(5);
+ 
+    // -----------------------------------------------------------------------
+    // FORMAS DE PAGO (izquierda) + TOTALES (derecha)
+    // -----------------------------------------------------------------------
+    $yBloque = $pdf->GetY();
+    $mitad   = $ancho * 0.5;
+ 
+    // -- Formas de pago --
+    $pdf->SetFillColor(20, 40, 80);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell($mitad - 5, 6, u('  FORMA DE PAGO'), 0, 1, 'L', true);
+    $pdf->SetTextColor(0, 0, 0);
+ 
+    $pdf->SetFont('Arial', '', 8);
+    foreach ($pagos as $x) {
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(($mitad - 5) * 0.55, 5, u($x["forma_pago"]), 0, 0, 'L');
+        $pdf->Cell(($mitad - 5) * 0.45, 5, 'S/ ' . number_format($x["monto"], 2), 0, 1, 'R');
+    }
+ 
+    // -- Totales (derecha) --
+    $yTot = $yBloque;
+    $xTot = $mL + $mitad + 5;
+    $wTot = $mitad - 5;
+ 
+    $pdf->SetXY($xTot, $yTot);
+    $pdf->SetFillColor(20, 40, 80);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell($wTot, 6, u('  RESUMEN'), 0, 1, 'L', true);
+    $pdf->SetTextColor(0, 0, 0);
+ 
+    $filaTotal = function($pdf, $xTot, $wTot, $label, $valor, $bold = false) {
+        $pdf->SetX($xTot);
+        $pdf->SetFont('Arial', $bold ? 'B' : '', 8);
+        $pdf->Cell($wTot * 0.55, 5, u($label), 0, 0, 'L');
+        $pdf->Cell($wTot * 0.45, 5, u($valor), 0, 1, 'R');
+    };
+ 
+    $filaTotal($pdf, $xTot, $wTot, 'Descuento:', 'S/ ' . number_format($datosVenta["descuento"], 2));
+    $filaTotal($pdf, $xTot, $wTot, 'Total bruto:', 'S/ ' . number_format($datosVenta["total"], 2));
+ 
+    // Fila TOTAL destacada
+    $pdf->SetX($xTot);
+    $pdf->SetFillColor(20, 40, 80);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('Arial', 'B', 11);
+    $pdf->Cell($wTot, 8, u('TOTAL:  S/ ' . number_format($datosVenta["monto_venta_final"], 2)), 0, 1, 'R', true);
+    $pdf->SetTextColor(0, 0, 0);
+ 
+    $pdf->Ln(6);
+ 
+    // -----------------------------------------------------------------------
+    // TOTAL EN LETRAS
+    // -----------------------------------------------------------------------
+    $letras = 'Son: ' . strtoupper(number_format($datosVenta["total"], 2) . ' /100 SOLES');
+    $pdf->SetFont('Arial', 'I', 8);
+    $pdf->SetTextColor(100, 100, 100);
+    $pdf->Cell($ancho, 5, u($letras), 0, 1, 'L');
+    $pdf->SetTextColor(0, 0, 0);
+ 
+    $pdf->Ln(4);
+ 
+    // -----------------------------------------------------------------------
+    // MENSAJE NO DEVOLUCIONES
+    // -----------------------------------------------------------------------
+    $pdf->SetLineWidth(0.4);
+    $pdf->SetDrawColor(20, 40, 80);
+    $pdf->Line($mL, $pdf->GetY(), $pageW - $mR, $pdf->GetY());
+    $pdf->Ln(3);
+ 
+    $rectH  = 9;
+    $yRect  = $pdf->GetY();
+ 
+    // Dibujar rectángulo amarillo con borde dorado
+    $pdf->SetFillColor(255, 243, 205);
+    $pdf->SetDrawColor(200, 150, 0);
+    $pdf->SetLineWidth(0.6);
+    $pdf->Rect($mL, $yRect, $ancho, $rectH, 'DF');
+ 
+    // Posicionar cursor SOBRE el rectángulo ya dibujado y escribir el texto
+    $pdf->SetXY($mL, $yRect);
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->SetTextColor(120, 80, 0);
+    $pdf->Cell($ancho, $rectH, u('** NO SE ACEPTAN DEVOLUCIONES **'), 0, 1, 'C');
+ 
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->SetDrawColor(200, 200, 200);
+    $pdf->SetLineWidth(0.3);
+ 
+    $pdf->Ln(5);
+ 
+    // -----------------------------------------------------------------------
+    // PIE DE PÁGINA
+    // -----------------------------------------------------------------------
+    $pdf->SetFillColor(245, 245, 245);
+    $pdf->Rect($mL, $pdf->GetY(), $ancho, 18, 'F');
+ 
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->SetTextColor(120, 120, 120);
+    $pdf->MultiCell(
+        $ancho, 4,
+        u('Representacion impresa de la ' . $datosprueba["tipo_comprobante"] . ' de venta electronica. Consulte su comprobante en: www.sunat.gob.pe'),
+        0, 'C'
+    );
     $pdf->SetFont('Arial', 'B', 7);
-    $pdf->Cell(60, 4, 'Cliente: ' . $datosVenta["cliente"], 0, 1, 'L');
-    $pdf->Cell(60, 4, 'DNI/RUC: ' . $datosVenta["numero_doc_cliente"], 0, 1, 'L');
-    $pdf->Cell(60, 4, 'Fecha: ' . $datosVenta["fecha"] . ' ' . $datosVenta["hora"], 0, 1, 'L');
+    $pdf->Cell($ancho, 4, u('Gracias por su preferencia  —  ' . $datoEmisor["razon_social"]), 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 7);
+    $pdf->Cell($ancho, 4, u('Desarrollado por CAPTAIN'), 0, 1, 'C');
+    $pdf->SetTextColor(0, 0, 0);
+ 
+    ob_clean();
+    $pdf->Output('I', 'comprobante_a4.pdf');
+}
+ 
+ 
+// ---------------------------------------------------------------------------
+// FORMATO TICKET TÉRMICO 80 mm — UTF-8 corregido
+// ---------------------------------------------------------------------------
+function fnGenerarTicketTermico(array $datoEmisor, array $datosVenta, array $datosprueba, array $productos, array $pagos): void
+{
+    $pdf = new FPDF('P', 'mm', [80, 200]);
+    $pdf->AddPage();
+ 
+    $logoPath = 'logica/logo.jpeg';
+    if (file_exists($logoPath)) {
+        $logoW   = 20;
+        $centerX = (80 - $logoW) / 2;
+        $pdf->Image($logoPath, $centerX, 5, $logoW);
+        $pdf->Ln(20);
+    }
+ 
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(60, 4, u($datoEmisor["razon_social"]), 0, 1, 'C');
+    $pdf->Cell(60, 4, u('RUC: ' . $datoEmisor["ruc"]), 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 6);
+    $pdf->MultiCell(60, 4, u($datoEmisor["direccion"]), 0, 'C');
+ 
+    $pdf->SetFont('Arial', 'B', 8);
+    $pdf->Cell(60, 4, u($datosprueba["tipo_comprobante"] . ' DE VENTA ELECTRONICA'), 0, 1, 'C');
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(60, 4, u($datosVenta["codigo_tiket"]), 0, 1, 'C');
     $pdf->Ln(1);
-
-    // SEPARADOR
+ 
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(60, 4, u('Cliente: ' . $datosVenta["cliente"]), 0, 1, 'L');
+    $pdf->Cell(60, 4, u('DNI/RUC: ' . $datosVenta["numero_doc_cliente"]), 0, 1, 'L');
+    $pdf->Cell(60, 4, u('Fecha: ' . $datosVenta["fecha"] . ' ' . $datosVenta["hora"]), 0, 1, 'L');
+    $pdf->Ln(1);
     $pdf->Cell(60, 3, str_repeat('_', 25), 0, 1, 'C');
     $pdf->Ln(1);
-
-    // ENCABEZADO DE PRODUCTOS
+ 
     $pdf->SetFont('Arial', 'B', 7);
-    $pdf->Cell(30, 3, 'DESCRIPCION', 0, 0, 'L');
-    $pdf->Cell(8, 3, 'CANT.', 0, 0, 'C');
-    $pdf->Cell(12, 3, 'P.U', 0, 0, 'C');
+    $pdf->Cell(30, 3, u('DESCRIPCION'), 0, 0, 'L');
+    $pdf->Cell(8,  3, 'CANT.', 0, 0, 'C');
+    $pdf->Cell(12, 3, 'P.U',   0, 0, 'C');
     $pdf->Cell(10, 3, 'TOTAL', 0, 1, 'C');
     $pdf->SetFont('Arial', '', 7);
     $pdf->Ln(1);
-
-    // LISTADO DE PRODUCTOS
+ 
     foreach ($productos as $producto) {
-        $yInicial = $pdf->GetY();
-
-        // Nombre del producto en varias líneas
-        $pdf->MultiCell(30, 3, $producto["descripcion_2"], 0, 'L');
-
-        $yFinal = $pdf->GetY();
-        $alturaFila = $yFinal - $yInicial;
-
-        // Alinear las demás columnas en la misma altura
-        $pdf->SetY($yInicial);
+        $yIni = $pdf->GetY();
+        $pdf->MultiCell(30, 3, u($producto["descripcion_2"]), 0, 'L');
+        $yFin = $pdf->GetY();
+        $h    = $yFin - $yIni;
+        $pdf->SetY($yIni);
         $pdf->SetX(40);
-
-        $pdf->Cell(8, $alturaFila, $producto["cantidad"], 0, 0, 'C');
-        $pdf->Cell(12, $alturaFila, 'S/ ' . number_format($producto["precio_unitario_articulo"], 2), 0, 0, 'C');
-        $pdf->Cell(10, $alturaFila, 'S/ ' . number_format($producto["sub_total"], 2), 0, 1, 'C');
+        $pdf->Cell(8,  $h, $producto["cantidad"], 0, 0, 'C');
+        $pdf->Cell(12, $h, 'S/ ' . number_format($producto["precio_unitario_articulo"], 2), 0, 0, 'C');
+        $pdf->Cell(10, $h, 'S/ ' . number_format($producto["sub_total"], 2), 0, 1, 'C');
     }
-
-    // SEPARADOR
+ 
     $pdf->Ln(1);
     $pdf->Cell(60, 3, str_repeat('_', 25), 0, 1, 'C');
     $pdf->Ln(1);
-
-    // ESTADO DE PAGO Y ESTADO FINAL
+ 
     $pdf->SetFont('Arial', 'B', 7);
-    $pdf->Cell(20, 3, 'Estado:', 0, 0, 'L');
+    $pdf->Cell(20, 3, u('Estado:'),    0, 0, 'L');
     $pdf->SetFont('Arial', '', 7);
-    $pdf->Cell(15, 3, $datosVenta["estado_pago"], 0, 1, 'L');
+    $pdf->Cell(15, 3, u($datosVenta["estado_pago"]), 0, 1, 'L');
     $pdf->Ln(1);
-
-    // ESTADO DE PAGO Y ESTADO FINAL
+ 
     $pdf->SetFont('Arial', 'B', 7);
-    $pdf->Cell(20, 3, 'Descuento:', 0, 0, 'L');
+    $pdf->Cell(20, 3, u('Descuento:'), 0, 0, 'L');
     $pdf->SetFont('Arial', '', 7);
-    $pdf->Cell(15, 3, "S/ " . $datosVenta["descuento"], 0, 1, 'L');
+    $pdf->Cell(15, 3, 'S/ ' . number_format($datosVenta["descuento"], 2), 0, 1, 'L');
     $pdf->Ln(1);
-
-
-
-    // ENCABEZADO DE PAGOS
+ 
     $pdf->SetFont('Arial', 'B', 7);
-    $pdf->Cell(30, 3, 'Forma de Pago', 0, 0, 'L');
-    $pdf->Cell(20, 3, 'Monto', 0, 1, 'R');
+    $pdf->Cell(30, 3, u('Forma de Pago'), 0, 0, 'L');
+    $pdf->Cell(20, 3, 'Monto',           0, 1, 'R');
     $pdf->SetFont('Arial', '', 7);
     $pdf->Ln(1);
-
-    // LISTADO DE PAGOS
     foreach ($pagos as $x) {
-        $pdf->Cell(30, 3, $x["forma_pago"], 0, 0, 'L');
+        $pdf->Cell(30, 3, u($x["forma_pago"]), 0, 0, 'L');
         $pdf->Cell(20, 3, 'S/ ' . number_format($x["monto"], 2), 0, 1, 'R');
     }
-
-    // SEPARADOR
+ 
     $pdf->Ln(1);
     $pdf->Cell(60, 3, str_repeat('_', 25), 0, 1, 'C');
     $pdf->Ln(1);
-
-    // TOTAL DE VENTA
-    $pdf->SetFont('Arial', 'B', 5);
-    $pdf->Cell(60, 4, 'TOTAL DE VENTA: S/ ' . number_format($datosVenta["total"], 2), 0, 1, 'C');
-    $pdf->Ln(1);
-    // TOTAL DE VENTA REAL
+ 
     $pdf->SetFont('Arial', 'B', 7);
-    $pdf->Cell(60, 4, 'TOTAL DE VENTA REAL: S/ ' . number_format($datosVenta["monto_venta_final"], 2), 0, 1, 'C');
+    $pdf->Cell(60, 4, u('TOTAL: S/ ' . number_format($datosVenta["monto_venta_final"], 2)), 0, 1, 'C');
     $pdf->Ln(1);
-
-
-
-    // TOTAL EN LETRAS
-    $total_letras = strtoupper(number_format($datosVenta["total"], 2) . " /100 PEN");
+ 
+    $letras = strtoupper(number_format($datosVenta["total"], 2) . ' /100 PEN');
     $pdf->SetFont('Arial', '', 7);
-    $pdf->Cell(60, 3, $total_letras, 0, 1, 'C');
+    $pdf->Cell(60, 3, u($letras), 0, 1, 'C');
     $pdf->Ln(1);
-
-    // VENDEDOR
+ 
     $pdf->SetFont('Arial', 'B', 6);
-    $pdf->Cell(60, 3, 'ATENDIDO POR: ' . $datosVenta["usuario_final"], 0, 1, 'C');
+    $pdf->Cell(60, 3, u('ATENDIDO POR: ' . $datosVenta["usuario_final"]), 0, 1, 'C');
     $pdf->Ln(1);
-
-    // MENSAJE DE AGRADECIMIENTO
+ 
+    // Mensaje NO DEVOLUCIONES
+    $pdf->Cell(60, 3, str_repeat('_', 25), 0, 1, 'C');
+    $pdf->Ln(1);
+    $pdf->SetFont('Arial', 'B', 7);
+    $pdf->Cell(60, 4, u('** NO SE ACEPTAN DEVOLUCIONES **'), 0, 1, 'C');
+    $pdf->Ln(1);
+ 
     $pdf->SetFont('Arial', '', 7);
-    $pdf->MultiCell(60, 3, 'Representacion Impresa de la ' . $datosprueba["tipo_comprobante"] . ' DE VENTA ELECTRONICA', 0, 'C');
-    $pdf->MultiCell(60, 3, 'Gracias por su preferencia', 0, 'C');
-
-    // FIRMA DE LA EMPRESA
+    $pdf->MultiCell(60, 3, u('Representacion impresa de la ' . $datosprueba["tipo_comprobante"] . ' de venta electronica'), 0, 'C');
+    $pdf->MultiCell(60, 3, u('Gracias por su preferencia'), 0, 'C');
     $pdf->SetFont('Arial', 'B', 7);
     $pdf->Cell(60, 3, ' ', 0, 1, 'C');
-    $pdf->Cell(60, 3, 'LIBRERIA BAZAR RODRI', 0, 1, 'C');
-    $pdf->Cell(60, 3, 'DESARROLLADO POR CARACOL SOFT', 0, 1, 'C');
+    $pdf->Cell(60, 3, u($datoEmisor["razon_social"]), 0, 1, 'C');
+    $pdf->Cell(60, 3, u('Desarrollado por CAPTAIN'), 0, 1, 'C');
     $pdf->Ln(4);
-
-
-
-
-
-    // GENERAR PDF
+ 
     ob_clean();
     $pdf->Output('I', 'ticket_venta.pdf');
+}
+
+
+function fnRankingClientes() {
+    $query = "
+        SELECT
+            p.nombres || ' ' || p.apellidos AS nombre_cliente,
+            SUM(v.monto_venta_final) AS total_compras_acumulado
+        FROM
+            public.venta v
+        INNER JOIN
+            public.persona p ON v.cliente_id = p.id
+        WHERE
+            v.estado_venta = 'VR'
+            AND v.deleted_at IS NULL
+        GROUP BY
+            p.id, p.nombres, p.apellidos
+        ORDER BY
+            total_compras_acumulado DESC
+    ";
+    
+    return executeQuery($query);
 }

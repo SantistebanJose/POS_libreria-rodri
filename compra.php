@@ -28,7 +28,113 @@ include("cabecera.php");
                     </li>
                 </ul>
                 <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
-                    <div class="tab-pane fade show active" id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd" id="tab-registro-compras">
+                    <div class="tab-pane fade show active" id="pills-home-nobd" role="tabpanel" aria-labelledby="pills-home-tab-nobd">
+
+                        <!-- ======== PANEL DE FILTROS ======== -->
+                        <div class="card mb-3" id="card-filtros-compras">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-filter"></i> Filtros de Búsqueda
+                                </h5>
+                                <div class="row g-2 align-items-end">
+
+                                    <!-- Filtro: Proveedor -->
+                                    <div class="col-12 col-sm-6 col-md-3">
+                                        <label class="form-label"><strong><i class="fas fa-truck"></i> Proveedor</strong></label>
+                                        <input
+                                            type="text"
+                                            id="filtro-proveedor"
+                                            class="form-control form-control-sm"
+                                            placeholder="Buscar proveedor..." />
+                                    </div>
+
+                                    <!-- Filtro: Realizada Por (Usuario) -->
+                                    <div class="col-12 col-sm-6 col-md-2">
+                                        <label class="form-label"><strong><i class="fas fa-user"></i> Realizada Por</strong></label>
+                                        <input
+                                            type="text"
+                                            id="filtro-usuario"
+                                            class="form-control form-control-sm"
+                                            placeholder="Usuario..." />
+                                    </div>
+
+                                    <!-- Filtro: Fecha Desde -->
+                                    <div class="col-12 col-sm-6 col-md-2">
+                                        <label class="form-label"><strong><i class="fas fa-calendar-alt"></i> Fecha Desde</strong></label>
+                                        <input
+                                            type="date"
+                                            id="filtro-fecha-desde"
+                                            class="form-control form-control-sm" />
+                                    </div>
+
+                                    <!-- Filtro: Fecha Hasta -->
+                                    <div class="col-12 col-sm-6 col-md-2">
+                                        <label class="form-label"><strong><i class="fas fa-calendar-alt"></i> Fecha Hasta</strong></label>
+                                        <input
+                                            type="date"
+                                            id="filtro-fecha-hasta"
+                                            class="form-control form-control-sm" />
+                                    </div>
+
+                                    <!-- Botones -->
+                                    <div class="col-12 col-sm-6 col-md-3 d-flex gap-2">
+                                        <button
+                                            class="btn btn-primary btn-sm btn-round flex-fill"
+                                            onclick="fnAplicarFiltros()">
+                                            <i class="fas fa-search"></i> Filtrar
+                                        </button>
+                                        <button
+                                            class="btn btn-secondary btn-sm btn-round flex-fill"
+                                            onclick="fnLimpiarFiltros()">
+                                            <i class="fas fa-times"></i> Limpiar
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- ===== TOTALES ACUMULADOS ===== -->
+                                <hr class="mt-3 mb-2">
+                                <div class="row g-2" id="panel-totales-filtro">
+                                    <div class="col-12 col-sm-6">
+                                        <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: #e8f5e9;">
+                                            <i class="fas fa-list-ol text-success" style="font-size:20px;"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Compras encontradas</small>
+                                                <strong id="total-registros-filtro" style="font-size:18px; color:#2e7d32;">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: #fff3e0;">
+                                            <i class="fas fa-boxes text-warning" style="font-size:20px;"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Total por Productos (S/)</small>
+                                                <strong id="total-monto-productos-filtro" style="font-size:18px; color:#e65100;">S/ 0.00</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: #e3f2fd;">
+                                            <i class="fas fa-calendar-check text-primary" style="font-size:20px;"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Total por Rango (S/)</small>
+                                                <strong id="total-monto-rango" style="font-size:18px; color:#1565c0;">S/ 0.00</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="d-flex align-items-center gap-2 p-2 rounded" style="background: #fce4ec;">
+                                            <i class="fas fa-coins text-danger" style="font-size:20px;"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Gran Total Histórico (S/)</small>
+                                                <strong id="total-monto-historico" style="font-size:18px; color:#880e4f;">S/ 0.00</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ======== FIN PANEL DE FILTROS ======== -->
+
 
                         <div class="card text-start">
                             <div class="card-body">
@@ -39,29 +145,50 @@ include("cabecera.php");
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>realizada por</th>
-                                                <th>proveedor</th>
-                                                <th>fecha compra</th>
-                                                <th>total</th>
-                                                <th>fecha de registro</th>
-                                                <th>hora</th>
-                                                <th>Accion</th>
+                                                <th>Realizada Por</th>
+                                                <th>Proveedor</th>
+                                                <th>Fecha Compra</th>
+                                                <th>Total Registrado</th>
+                                                <th>Total por Productos</th>
+                                                <th>Fecha de Registro</th>
+                                                <th>Hora</th>
+                                                <th>Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
                                             foreach (fnListadoCompras() as $datos) {
                                                 $datosJSON = json_encode($datos);
+
+                                                // Calcular Total por Productos desde js_detalle_compra
+                                                $totalProductos = 0;
+                                                if (!empty($datos['js_detalle_compra'])) {
+                                                    $detalle = json_decode($datos['js_detalle_compra'], true);
+                                                    if (is_array($detalle)) {
+                                                        foreach ($detalle as $item) {
+                                                            $totalProductos += floatval($item['sub_total_'] ?? 0);
+                                                        }
+                                                    }
+                                                }
                                             ?>
-                                                <tr>
+                                                <tr
+                                                    data-proveedor="<?php echo strtolower(htmlspecialchars($datos['proveedor'])) ?>"
+                                                    data-usuario="<?php echo strtolower(htmlspecialchars($datos['realizada_por'])) ?>"
+                                                    data-fecha="<?php echo $datos['fecha_compra'] ?>"
+                                                    data-total="<?php echo number_format(floatval($datos['total']), 2, '.', '') ?>"
+                                                    data-total-productos="<?php echo number_format($totalProductos, 2, '.', '') ?>">
                                                     <td><?php echo $datos["compra_id"] ?></td>
                                                     <td><?php echo $datos["realizada_por"] ?></td>
                                                     <td><?php echo $datos["proveedor"] ?></td>
                                                     <td><?php echo $datos["fecha_compra"] ?></td>
-                                                    <td><?php echo $datos["total"] ?></td>
+                                                    <td>S/ <?php echo number_format(floatval($datos["total"]), 2) ?></td>
+                                                    <td>
+                                                        <span class="badge bg-warning text-dark" style="font-size:13px;">
+                                                            S/ <?php echo number_format($totalProductos, 2) ?>
+                                                        </span>
+                                                    </td>
                                                     <td><?php echo $datos["fecha_registro"] ?></td>
                                                     <td><?php echo $datos["hora"] ?></td>
-
                                                     <td>
                                                         <div class="mt-2 text-center">
                                                             <a
@@ -70,21 +197,18 @@ include("cabecera.php");
                                                                 role="button">
                                                                 <i class="fas fa-external-link-square-alt"></i>
                                                             </a>
-
                                                         </div>
                                                     </td>
                                                 </tr>
-
-                                            <?php
-                                            }
-                                            ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
 
-                    </div>
+                    </div><!-- fin tab-pane -->
+
                     <div class="tab-pane fade" id="pills-profile-nobd" role="tabpanel" aria-labelledby="pills-profile-tab-nobd" id="tab-listado-compras">
                         <div class="card text-start">
 
@@ -930,11 +1054,52 @@ include("cabecera.php");
 
 
 <script>
-    $(document).ready(function() {
+    // Variable global para la instancia de DataTables
+    var dt;
 
-        fnDataTables();
+    $(document).ready(function () {
+        // Inicializar DataTables UNA sola vez y guardar instancia
+        dt = $("#TablaVentaDiaria").DataTable({
+            "order": [[0, 'desc']],
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Último"
+                }
+            }
+        });
+
+        // Gran Total Histórico al cargar
+        $.ajax({
+            url: 'logica/clssConsultas.php',
+            type: 'POST',
+            data: { accion: 'TOTAL_COMPRAS_RANGO', fecha_desde: '', fecha_hasta: '' },
+            dataType: 'json',
+            success: function (data) {
+                if (data && data[0]) {
+                    var total = parseFloat(data[0].gran_total_productos).toFixed(2);
+                    var count = data[0].total_compras;
+                    document.getElementById('total-monto-historico').innerText = 'S/ ' + total;
+                    document.getElementById('total-monto-rango').innerText     = 'S/ ' + total;
+                    document.getElementById('total-monto-productos-filtro').innerText = 'S/ ' + total;
+                    document.getElementById('total-registros-filtro').innerText = count; // ← 362
+                }
+            }
+        });
+
+        fnActualizarTotales();
     });
-
     function fnDataTables() {
         $(".dataTable").DataTable({
             "order": [
@@ -1937,7 +2102,117 @@ include("cabecera.php");
 
     }
 </script>
+<script>
+    // Ejecutar filtro al presionar Enter en los inputs
+    document.addEventListener('DOMContentLoaded', function () {
+        ['filtro-proveedor', 'filtro-usuario', 'filtro-fecha-desde', 'filtro-fecha-hasta'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') fnAplicarFiltros();
+                });
+            }
+        });
+        fnActualizarTotales();
+    });
 
+    function fnAplicarFiltros() {
+        var filtroProveedor = (document.getElementById('filtro-proveedor').value || '').toLowerCase().trim();
+        var filtroUsuario   = (document.getElementById('filtro-usuario').value || '').toLowerCase().trim();
+        var filtroDesde     = document.getElementById('filtro-fecha-desde').value; // formato YYYY-MM-DD
+        var filtroHasta     = document.getElementById('filtro-fecha-hasta').value; // formato YYYY-MM-DD
+
+        $.fn.dataTable.ext.search = [];
+
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            if (settings.nTable.id !== 'TablaVentaDiaria') return true;
+
+            var fila = dt.row(dataIndex).node();
+            var fechaData = $(fila).attr('data-fecha');
+            var fecha = fnNormalizarFecha(fechaData);
+
+            console.log("ROW data-fecha:", fechaData, "| normalizada:", fecha, "| desde:", filtroDesde, "| hasta:", filtroHasta);
+
+            var proveedor = (data[2] || '').toLowerCase();
+            var usuario   = (data[1] || '').toLowerCase();
+
+            if (filtroProveedor && !proveedor.includes(filtroProveedor)) return false;
+            if (filtroUsuario   && !usuario.includes(filtroUsuario))     return false;
+            if (filtroDesde     && fecha < filtroDesde)                  return false;
+            if (filtroHasta     && fecha > filtroHasta)                  return false;
+
+            return true;
+        });
+
+        dt.draw();
+        setTimeout(function() { fnActualizarTotales(); }, 150);
+
+        $.ajax({
+            url: 'logica/clssConsultas.php',
+            type: 'POST',
+            data: {
+                accion: 'TOTAL_COMPRAS_RANGO',
+                fecha_desde: filtroDesde || '',
+                fecha_hasta: filtroHasta || ''
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data && data[0]) {
+                    var total = parseFloat(data[0].gran_total_productos).toFixed(2);
+                    var count = data[0].total_compras;
+                    document.getElementById('total-monto-rango').innerText            = 'S/ ' + total;
+                    document.getElementById('total-monto-productos-filtro').innerText = 'S/ ' + total;
+                    document.getElementById('total-registros-filtro').innerText       = count;
+                }
+            }
+        });
+    }
+
+    function fnLimpiarFiltros() {
+        document.getElementById('filtro-proveedor').value   = '';
+        document.getElementById('filtro-usuario').value     = '';
+        document.getElementById('filtro-fecha-desde').value = '';
+        document.getElementById('filtro-fecha-hasta').value = '';
+
+        $.fn.dataTable.ext.search = [];
+        dt.draw();
+        setTimeout(function() { fnActualizarTotales(); }, 150);
+
+        $.ajax({
+            url: 'logica/clssConsultas.php',
+            type: 'POST',
+            data: { accion: 'TOTAL_COMPRAS_RANGO', fecha_desde: '', fecha_hasta: '' },
+            dataType: 'json',
+            success: function (data) {
+                if (data && data[0]) {
+                    var total = parseFloat(data[0].gran_total_productos).toFixed(2);
+                    var count = data[0].total_compras;
+                    document.getElementById('total-monto-rango').innerText            = 'S/ ' + total;
+                    document.getElementById('total-monto-productos-filtro').innerText = 'S/ ' + total;
+                    document.getElementById('total-registros-filtro').innerText       = count;
+                }
+            }
+        });
+    }
+
+    function fnActualizarTotales() {
+    }
+
+    function fnNormalizarFecha(fecha) {
+    if (!fecha) return '';
+    fecha = fecha.trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(fecha)) return fecha.substring(0, 10);
+    if (/^\d{2}\/\d{2}\/\d{4}/.test(fecha)) {
+        var p = fecha.split('/');
+        return p[2] + '-' + p[1] + '-' + p[0];
+    }
+    var p2 = fecha.split('/');
+    if (p2.length === 3) {
+        return p2[2].padStart(4,'0') + '-' + p2[1].padStart(2,'0') + '-' + p2[0].padStart(2,'0');
+    }
+    return fecha;
+}
+</script>
 <?php
 include("pie.php");
 ?>

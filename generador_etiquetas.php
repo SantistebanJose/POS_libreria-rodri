@@ -20,7 +20,7 @@ include("cabecera.php");
         padding: 30px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         margin-bottom: 25px;
-        border-left: 5px solid #6861ce;
+        border-left: 5px solid #FF0080;
     }
 
     .header-card h1 {
@@ -73,7 +73,7 @@ include("cabecera.php");
     .etiqueta-item:hover {
         transform: translateY(-3px);
         box-shadow: 0 4px 15px rgba(104, 97, 206, 0.15);
-        border-color: #6861ce;
+        border-color: #FF0080;
     }
 
     .etiqueta-item::before {
@@ -83,13 +83,13 @@ include("cabecera.php");
         left: 0;
         width: 100%;
         height: 4px;
-        background: #6861ce;
+        background: #FF0080;
     }
 
     .etiqueta-codigo {
         font-size: 13px;
         font-weight: 700;
-        color: #6861ce;
+        color: #ff0000ff;
         margin-bottom: 10px;
         font-family: 'Courier New', monospace;
         text-transform: uppercase;
@@ -123,7 +123,7 @@ include("cabecera.php");
     }
 
     .btn-generar {
-        background: #6861ce;
+        background: #FF0080;
         border: none;
         padding: 12px 35px;
         font-size: 16px;
@@ -135,7 +135,7 @@ include("cabecera.php");
     }
 
     .btn-generar:hover {
-        background: #5651b8;
+        background: #FF0080;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(104, 97, 206, 0.4);
     }
@@ -184,7 +184,7 @@ include("cabecera.php");
     }
 
     .form-select:focus, .form-control:focus {
-        border-color: #6861ce;
+        border-color: #FF0080;
         box-shadow: 0 0 0 0.2rem rgba(104, 97, 206, 0.15);
         outline: none;
     }
@@ -202,7 +202,7 @@ include("cabecera.php");
     }
 
     .stats-card {
-        background: linear-gradient(135deg, #6861ce 0%, #5651b8 100%);
+        background: linear-gradient(135deg, #FF0080 0%, #FF0080 100%);
         color: white;
         padding: 20px;
         border-radius: 10px;
@@ -235,7 +235,7 @@ include("cabecera.php");
     }
 
     .section-title i {
-        color: #6861ce;
+        color: #FF0080;
     }
 
     /* Estilos para impresión PDF */
@@ -529,18 +529,18 @@ include("cabecera.php");
                 const xPosition = margen + (columna * (etiquetaWidth + gapHorizontal));
                 const yPosition = margen + (fila * (etiquetaHeight + gapVertical));
                 
-                // Dibujar borde de la etiqueta
-                pdf.setDrawColor(104, 97, 206);
+                // Dibujar borde de la etiqueta - COLOR FUCSIA #FF0080
+                pdf.setDrawColor(255, 0, 128); // RGB del color fucsia #FF0080
                 pdf.setLineWidth(0.5);
                 pdf.rect(xPosition, yPosition, etiquetaWidth, etiquetaHeight);
                 
-                // Línea superior morada (decorativa)
-                pdf.setFillColor(104, 97, 206);
+                // Línea superior fucsia (decorativa)
+                pdf.setFillColor(255, 0, 128); // RGB del color fucsia #FF0080
                 pdf.rect(xPosition, yPosition, etiquetaWidth, 2, 'F');
                 
-                // Código del artículo
+                // Código del artículo - COLOR ROJO
                 pdf.setFontSize(9);
-                pdf.setTextColor(104, 97, 206);
+                pdf.setTextColor(255, 0, 0); // Color rojo para el código
                 pdf.setFont('courier', 'bold');
                 pdf.text(articulo.codigo, xPosition + etiquetaWidth / 2, yPosition + 7, { align: 'center' });
                 

@@ -67,6 +67,295 @@ if (isset($_GET['id'])) {
         /* Sombra azul para resaltar el modal */
     }
 
+    /* Estilo para los botones de búsqueda */
+    #btnBuscarDNI,
+    #btnBuscarRUC {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    #btnBuscarDNI:hover,
+    #btnBuscarRUC:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    #btnBuscarDNI:active,
+    #btnBuscarRUC:active {
+        transform: translateY(0);
+    }
+    /* Efecto de loading en los inputs durante la búsqueda */
+    .loading-input {
+        position: relative;
+    }
+
+    .loading-input::after {
+        content: "";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: translateY(-50%) rotate(0deg); }
+        100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    /* Estilo para inputs con datos autocompletados */
+    .autocompleted {
+        background-color: #e8f5e9 !important;
+        border-color: #4caf50 !important;
+        transition: all 0.3s ease;
+    }
+
+    .autocompleted:focus {
+        background-color: #ffffff !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    /* Animación para el autocompletado */
+    @keyframes fadeInData {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .autocompleted {
+        animation: fadeInData 0.5s ease;
+    }
+
+    /* Estilo para los pills del modal */
+    #pills-tab .nav-link {
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    #pills-tab .nav-link:hover {
+        transform: translateY(-2px);
+    }
+
+    #pills-tab .nav-link.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    /* Estilo para los iconos en las labels */
+    label i {
+        color: #667eea;
+        margin-right: 5px;
+    }
+
+    /* Estilo para el alert de información */
+    .alert-light {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border: none;
+        border-left: 4px solid #667eea;
+    }
+
+    /* Mejora para el modal header */
+    #modalCliente .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-bottom: none;
+    }
+
+    #modalCliente .btn-close {
+        filter: brightness(0) invert(1);
+    }
+
+    /* Estilo para los small texts (ayuda) */
+    .form-text.text-muted {
+        color: #667eea !important;
+        font-size: 0.875rem;
+        font-style: italic;
+    }
+
+    .form-text.text-muted i {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    /* Responsive para móviles */
+    @media (max-width: 576px) {
+        #btnBuscarDNI,
+        #btnBuscarRUC {
+            font-size: 0.875rem;
+            padding: 0.375rem 0.75rem;
+        }
+        
+        #btnBuscarDNI i,
+        #btnBuscarRUC i {
+            display: none;
+        }
+        
+        #btnBuscarDNI::after {
+            content: "Buscar";
+        }
+        
+        #btnBuscarRUC::after {
+            content: "Buscar";
+        }
+    }
+
+    /* Efecto hover mejorado para el botón Registrar */
+    #btnRegistrarCliente {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    #btnRegistrarCliente:hover {
+        background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+    }
+
+    /* Estilo para inputs con focus */
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    /* Estilo para inputs inválidos mejorado */
+    .form-control.is-invalid {
+        border-color: #dc3545;
+        padding-right: calc(1.5em + 0.75rem);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+        10%, 30%, 50%, 70%, 90% {
+            transform: translateX(-5px);
+        }
+        20%, 40%, 60%, 80% {
+            transform: translateX(5px);
+        }
+    }
+
+    /* Estilo para el feedback de error mejorado */
+    .invalid-feedback {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+        animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Loader personalizado para SweetAlert */
+    .swal2-loader {
+        border-color: #667eea transparent #667eea transparent;
+    }
+
+    /* Estilo para el input group mejorado */
+    .input-group {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 0.375rem;
+        overflow: hidden;
+    }
+
+    .input-group .form-control {
+        border: 1px solid #ced4da;
+        border-right: none;
+    }
+
+    .input-group .btn {
+        border: 1px solid #667eea;
+        border-left: none;
+    }
+
+    /* Transición suave para los tabs */
+    .tab-pane {
+        transition: opacity 0.3s ease;
+    }
+
+    .tab-pane.fade:not(.show) {
+        opacity: 0;
+    }
+
+    .tab-pane.fade.show {
+        opacity: 1;
+    }
+
+    /* Mejora para el espaciado del modal */
+    #modalCliente .modal-body {
+        padding: 1.5rem;
+    }
+
+    /* Estilo para los placeholders */
+    .form-control::placeholder {
+        color: #adb5bd;
+        font-style: italic;
+    }
+
+    /* Indicador visual de campo requerido */
+    .form-label .text-danger {
+        font-size: 1.2em;
+        vertical-align: super;
+    }
+
+    /* Efecto de carga en el modal completo */
+    .modal-loading {
+        position: relative;
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    .modal-loading::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+
     /* Título del modal más grande y con un color diferente */
     #modalCliente .modal-header {
         background-color: #2a2f5b;
@@ -671,13 +960,17 @@ if (isset($_GET['id'])) {
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <!-- Pils para seleccionar entre Persona y Empresa -->
+                                <!-- Pills para seleccionar entre Persona y Empresa -->
                                 <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab" role="tablist">
                                     <li class="nav-item">
-                                        <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">Persona</button>
+                                        <button class="nav-link active" id="pills-persona-tab" data-bs-toggle="pill" data-bs-target="#pills-persona" type="button" role="tab" aria-controls="pills-persona" aria-selected="true">
+                                            <i class="fas fa-user"></i> Persona
+                                        </button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="pills-empresa-tab" data-bs-toggle="pill" data-bs-target="#pills-empresa" type="button" role="tab" aria-controls="pills-empresa" aria-selected="false">Empresa</button>
+                                        <button class="nav-link" id="pills-empresa-tab" data-bs-toggle="pill" data-bs-target="#pills-empresa" type="button" role="tab" aria-controls="pills-empresa" aria-selected="false">
+                                            <i class="fas fa-building"></i> Empresa
+                                        </button>
                                     </li>
                                 </ul>
                                 <hr>
@@ -685,28 +978,65 @@ if (isset($_GET['id'])) {
                                     <!-- Formulario Persona -->
                                     <div class="tab-pane fade show active" id="pills-persona" role="tabpanel" aria-labelledby="pills-persona-tab">
                                         <div class="mb-3">
-                                            <label for="numeroDocumentoPersona" class="form-label">Número de Documento <span class="fw-bold text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="numeroDocumentoPersona" placeholder="Número de Documento">
+                                            <label for="numeroDocumentoPersona" class="form-label">
+                                                Número de DNI <span class="fw-bold text-danger">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" 
+                                                    class="form-control" 
+                                                    id="numeroDocumentoPersona" 
+                                                    placeholder="Ingrese DNI (8 dígitos)" 
+                                                    maxlength="8"
+                                                    pattern="[0-9]{8}">
+                                                <button class="btn btn-primary" type="button" id="btnBuscarDNI">
+                                                    <i class="fas fa-search"></i> Buscar
+                                                </button>
+                                            </div>
                                             <div class="invalid-feedback" id="error-numeroDocumentoPersona"></div>
+                                            <small class="form-text text-muted">
+                                                <i class="fas fa-info-circle"></i> Ingrese el DNI y presione "Buscar" o Enter para autocompletar
+                                            </small>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="nombresPersona" class="form-label">Nombres <span class="fw-bold text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="nombresPersona" placeholder="Nombres">
+                                            <label for="nombresPersona" class="form-label">
+                                                Nombres <span class="fw-bold text-danger">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                id="nombresPersona" 
+                                                placeholder="Nombres">
                                             <div class="invalid-feedback" id="error-nombresPersona"></div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="apellidosPersona" class="form-label">Apellidos <span class="fw-bold text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="apellidosPersona" placeholder="Apellidos">
+                                            <label for="apellidosPersona" class="form-label">
+                                                Apellidos <span class="fw-bold text-danger">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                id="apellidosPersona" 
+                                                placeholder="Apellidos">
                                             <div class="invalid-feedback" id="error-apellidosPersona"></div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="telefonoPersona" class="form-label">Teléfono Móvil</label>
-                                            <input type="text" class="form-control" id="telefonoPersona" placeholder="Teléfono Móvil">
+                                            <label for="telefonoPersona" class="form-label">
+                                                <i class="fas fa-phone"></i> Teléfono Móvil
+                                            </label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                id="telefonoPersona" 
+                                                placeholder="Teléfono Móvil (9 dígitos)"
+                                                maxlength="9"
+                                                pattern="[0-9]{9}">
                                             <div class="invalid-feedback" id="error-telefonoPersona"></div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="emailPersona" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="emailPersona" placeholder="Email">
+                                            <label for="emailPersona" class="form-label">
+                                                <i class="fas fa-envelope"></i> Email
+                                            </label>
+                                            <input type="email" 
+                                                class="form-control" 
+                                                id="emailPersona" 
+                                                placeholder="correo@ejemplo.com">
                                             <div class="invalid-feedback" id="error-emailPersona"></div>
                                         </div>
                                     </div>
@@ -714,40 +1044,86 @@ if (isset($_GET['id'])) {
                                     <!-- Formulario Empresa -->
                                     <div class="tab-pane fade" id="pills-empresa" role="tabpanel" aria-labelledby="pills-empresa-tab">
                                         <div class="mb-3">
-                                            <label for="numeroDocumentoEmpresa" class="form-label">Número de Ruc <span class="fw-bold text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="numeroDocumentoEmpresa" placeholder="Número de Documento">
+                                            <label for="numeroDocumentoEmpresa" class="form-label">
+                                                Número de RUC <span class="fw-bold text-danger">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" 
+                                                    class="form-control" 
+                                                    id="numeroDocumentoEmpresa" 
+                                                    placeholder="Ingrese RUC (11 dígitos)" 
+                                                    maxlength="11"
+                                                    pattern="[0-9]{11}">
+                                                <button class="btn btn-primary" type="button" id="btnBuscarRUC">
+                                                    <i class="fas fa-search"></i> Buscar
+                                                </button>
+                                            </div>
                                             <div class="invalid-feedback" id="error-numeroDocumentoEmpresa"></div>
+                                            <small class="form-text text-muted">
+                                                <i class="fas fa-info-circle"></i> Ingrese el RUC y presione "Buscar" o Enter para autocompletar
+                                            </small>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="nombreComercial" class="form-label">Nombre Comercial <span class="fw-bold text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="nombreComercial" placeholder="Nombre Comercial">
+                                            <label for="nombreComercial" class="form-label">
+                                                Nombre Comercial <span class="fw-bold text-danger">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                id="nombreComercial" 
+                                                placeholder="Nombre Comercial">
                                             <div class="invalid-feedback" id="error-nombreComercial"></div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="razonSocial" class="form-label">Razón Social <span class="fw-bold text-danger">*</span> </label>
-                                            <input type="text" class="form-control" id="razonSocial" placeholder="Razón Social">
+                                            <label for="razonSocial" class="form-label">
+                                                Razón Social <span class="fw-bold text-danger">*</span>
+                                            </label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                id="razonSocial" 
+                                                placeholder="Razón Social">
                                             <div class="invalid-feedback" id="error-razonSocial"></div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="emailEmpresa" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="emailEmpresa" placeholder="Email">
+                                            <label for="emailEmpresa" class="form-label">
+                                                <i class="fas fa-envelope"></i> Email
+                                            </label>
+                                            <input type="email" 
+                                                class="form-control" 
+                                                id="emailEmpresa" 
+                                                placeholder="correo@empresa.com">
                                             <div class="invalid-feedback" id="error-emailEmpresa"></div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="telefonoEmpresa" class="form-label">Teléfono Móvil</label>
-                                            <input type="text" class="form-control" id="telefonoEmpresa" placeholder="Teléfono Móvil">
+                                            <label for="telefonoEmpresa" class="form-label">
+                                                <i class="fas fa-phone"></i> Teléfono Móvil
+                                            </label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                id="telefonoEmpresa" 
+                                                placeholder="Teléfono Móvil (9 dígitos)"
+                                                maxlength="9"
+                                                pattern="[0-9]{9}">
                                             <div class="invalid-feedback" id="error-telefonoEmpresa"></div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="alert alert-light p-3" role="alert">
-                                    <p class="mb-0">Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.</p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-info-circle"></i> Los campos con <span class="fw-bold text-danger">*</span> son obligatorios.
+                                    </p>
+                                    <p class="mb-0 mt-2">
+                                        <i class="fas fa-magic"></i> <strong>Tip:</strong> Usa los botones de búsqueda para autocompletar los datos desde RENIEC/SUNAT.
+                                    </p>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="button" class="btn btn-success" id="btnRegistrarCliente">Registrar</button>
+                                <button type="button" class="btn btn-danger rounded-5" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i> Cerrar
+                                </button>
+                                <button type="button" class="btn btn-success rounded-5" id="btnRegistrarCliente">
+                                    <i class="fas fa-save"></i> Registrar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2952,9 +3328,34 @@ if (isset($_GET['id'])) {
                                     buttons: false,
                                     timer: 1500
                                 }).then(() => {
-                                    window.open("/libreria-bazar-rodri/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
+                                    window.open("/bazar_rodri_desarrollo/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                                     //window.open("ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
-                                    location.reload();
+                                    
+                                    // Verificar si el cliente tiene teléfono registrado
+                                    const numeroTelefono = document.getElementById('idUpdateNumTelefonoCliente').value;
+                                    const idPersona = document.getElementById('idPersona').textContent.trim();
+                                    
+                                    if (numeroTelefono && numeroTelefono !== '' && numeroTelefono !== 'Sin numero' && idPersona !== '#') {
+                                        // Preguntar si desea enviar por WhatsApp
+                                        Swal.fire({
+                                            title: '¿Enviar comprobante?',
+                                            html: `¿Desea enviar el comprobante por WhatsApp al número <strong>${numeroTelefono}</strong>?`,
+                                            icon: 'question',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#25D366',
+                                            cancelButtonColor: '#6c757d',
+                                            confirmButtonText: '<i class="fab fa-whatsapp"></i> Sí, enviar',
+                                            cancelButtonText: 'No'
+                                        }).then((resultado) => {
+                                            if (resultado.isConfirmed) {
+                                                enviarComprobantePorWhatsApp(result.id_venta_generado, numeroTelefono, radioSeleccionado);
+                                            } else {
+                                                location.reload();
+                                            }
+                                        });
+                                    } else {
+                                        location.reload();
+                                    }
 
                                 });
                             } else {
@@ -3399,15 +3800,7 @@ if (isset($_GET['id'])) {
             const condicion = document.getElementById('condicion');
             const errorCondicion = document.getElementById('error-condicion');
 
-            // Verificar si la opción seleccionada es válida
-            if (condicion.value === '') {
-                valid = false; // La variable valid debe ser parte de tu lógica de validación general
-                condicion.classList.add('is-invalid');
-                errorCondicion.textContent = 'Debe seleccionar una opción válida.';
-            } else {
-                condicion.classList.remove('is-invalid');
-                errorCondicion.textContent = '';
-            }
+            
 
             return valid;
         }
@@ -3480,8 +3873,12 @@ if (isset($_GET['id'])) {
                         console.log(nombreencadenado);
                         console.log(response.empresa_id);
 
-                        enviardatos(response.empresa_id, nombreencadenado);
-                        limpiarcampos();
+                        enviardatos(
+                            response.empresa_id, 
+                            nombreencadenado,
+                            document.getElementById('telefonoEmpresa').value || 'Sin numero',
+                            document.getElementById('emailEmpresa').value || 'Sin Correo'
+                        );                        limpiarcampos();
                         showNotification("success");
 
                         modalCliente.hide();
@@ -3559,13 +3956,606 @@ if (isset($_GET['id'])) {
         }
 
 
+        /**
+         * Función para enviar comprobante por WhatsApp
+         * @param {number} idVenta - ID de la venta generada
+         * @param {string} numeroTelefono - Número de teléfono del cliente
+         * @param {string} tipoComprobante - Tipo de comprobante (boleta o factura)
+         */
+        function enviarComprobantePorWhatsApp(idVenta, numeroTelefono, tipoComprobante) {
+            // Mostrar loading
+            Swal.fire({
+                title: 'Enviando comprobante...',
+                html: 'Por favor espere',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Preparar los datos para enviar
+            const datos = {
+                accion: 'ENVIAR_COMPROBANTE_WHATSAPP',
+                id_venta: idVenta,
+                numero_telefono: numeroTelefono,
+                tipo_comprobante: tipoComprobante
+            };
+
+            // Realizar la petición AJAX
+            $.ajax({
+                url: 'logica/clssWhatsApp.php', // Archivo PHP que manejará el envío
+                type: 'POST',
+                data: datos,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: '¡Enviado!',
+                            html: `El comprobante ha sido enviado por WhatsApp al número <strong>${numeroTelefono}</strong>`,
+                            icon: 'success',
+                            confirmButtonColor: '#25D366',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.mensaje || 'No se pudo enviar el comprobante por WhatsApp',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al enviar WhatsApp:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema al intentar enviar el comprobante',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload();
+                    });
+                }
+            });
+        }
+
+
 
     });
+    /**
+ * Script para integrar la API de GraphPeru
+ * Permite buscar datos de DNI y RUC automáticamente
+ */
+
+// URL base de la API
+const API_BASE_URL = 'https://graphperu.daustinn.com/api/query/';
+
+/**
+ * Función para buscar DNI en la API
+ * @param {string} dni - Número de DNI (8 dígitos)
+ */
+async function buscarDNI(dni) {
+    // Validar que sea un DNI válido (8 dígitos)
+    if (!/^\d{8}$/.test(dni)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'DNI Inválido',
+            text: 'El DNI debe tener exactamente 8 dígitos',
+            confirmButtonText: 'Entendido'
+        });
+        return;
+    }
+
+    // Mostrar loading
+    Swal.fire({
+        title: 'Buscando...',
+        html: 'Consultando datos del DNI',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        // Realizar petición a la API
+        const response = await fetch(`${API_BASE_URL}${dni}`);
+        
+        if (!response.ok) {
+            throw new Error('No se pudo consultar el DNI');
+        }
+
+        const data = await response.json();
+        
+        // Verificar si se encontraron datos
+        if (!data.documentID) {
+            Swal.fire({
+                icon: 'info',
+                title: 'No encontrado',
+                text: 'No se encontraron datos para este DNI',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
+        // Cerrar loading
+        Swal.close();
+
+        // Autocompletar los campos del formulario
+        document.getElementById('numeroDocumentoPersona').value = data.documentID;
+        document.getElementById('nombresPersona').value = (data.names || '').toUpperCase();
+        document.getElementById('apellidosPersona').value = `${data.paternalLastName || ''} ${data.maternalLastName || ''}`.trim().toUpperCase();
+
+        // Limpiar errores previos
+        document.getElementById('numeroDocumentoPersona').classList.remove('is-invalid');
+        document.getElementById('nombresPersona').classList.remove('is-invalid');
+        document.getElementById('apellidosPersona').classList.remove('is-invalid');
+        document.getElementById('error-numeroDocumentoPersona').textContent = '';
+        document.getElementById('error-nombresPersona').textContent = '';
+        document.getElementById('error-apellidosPersona').textContent = '';
+
+        // Mostrar mensaje de éxito
+        showNotification("success");
+        
+        // Opcional: Enfocar en el campo de teléfono
+        document.getElementById('telefonoPersona').focus();
+
+    } catch (error) {
+        console.error('Error al buscar DNI:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al consultar el DNI. Intente nuevamente.',
+            confirmButtonText: 'Aceptar'
+        });
+    }
+}
+
+/**
+ * Función para buscar RUC en la API
+ * @param {string} ruc - Número de RUC (11 dígitos)
+ */
+async function buscarRUC(ruc) {
+    // Validar que sea un RUC válido (11 dígitos)
+    if (!/^\d{11}$/.test(ruc)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'RUC Inválido',
+            text: 'El RUC debe tener exactamente 11 dígitos',
+            confirmButtonText: 'Entendido'
+        });
+        return;
+    }
+
+    // Mostrar loading
+    Swal.fire({
+        title: 'Buscando...',
+        html: 'Consultando datos del RUC',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        // Realizar petición a la API
+        const response = await fetch(`${API_BASE_URL}${ruc}`);
+        
+        if (!response.ok) {
+            throw new Error('No se pudo consultar el RUC');
+        }
+
+        const data = await response.json();
+        
+        // Verificar si se encontraron datos
+        if (!data.documentID) {
+            Swal.fire({
+                icon: 'info',
+                title: 'No encontrado',
+                text: 'No se encontraron datos para este RUC',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+
+        // Cerrar loading
+        Swal.close();
+
+        // Autocompletar los campos del formulario
+        document.getElementById('numeroDocumentoEmpresa').value = data.documentID;
+        document.getElementById('razonSocial').value = (data.name || '').toUpperCase();
+
+        const nombreComercial = document.getElementById('nombreComercial');
+        if (!nombreComercial.value) {
+            nombreComercial.value = (data.name || '').toUpperCase();
+        }
+
+        // Limpiar errores previos
+        document.getElementById('numeroDocumentoEmpresa').classList.remove('is-invalid');
+        document.getElementById('nombreComercial').classList.remove('is-invalid');
+        document.getElementById('razonSocial').classList.remove('is-invalid');
+        document.getElementById('error-numeroDocumentoEmpresa').textContent = '';
+        document.getElementById('error-nombreComercial').textContent = '';
+        document.getElementById('error-razonSocial').textContent = '';
+
+        // Mostrar información adicional si está disponible
+        let infoAdicional = '';
+        if (data.state) infoAdicional += `<strong>Estado:</strong> ${data.state}<br>`;
+        if (data.condition) infoAdicional += `<strong>Condición:</strong> ${data.condition}<br>`;
+        if (data.address && data.address !== '-') infoAdicional += `<strong>Dirección:</strong> ${data.address}<br>`;
+
+        if (infoAdicional) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Datos encontrados',
+                html: infoAdicional,
+                confirmButtonText: 'Aceptar'
+            });
+        } else {
+            showNotification("success");
+        }
+        
+        // Opcional: Enfocar en el campo de teléfono
+        document.getElementById('telefonoEmpresa').focus();
+
+    } catch (error) {
+        console.error('Error al buscar RUC:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al consultar el RUC. Intente nuevamente.',
+            confirmButtonText: 'Aceptar'
+        });
+    }
+}
+
+/**
+ * Inicializar eventos cuando el DOM esté listo
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Botón de búsqueda para DNI
+    const btnBuscarDNI = document.getElementById('btnBuscarDNI');
+    if (btnBuscarDNI) {
+        btnBuscarDNI.addEventListener('click', function() {
+            const dni = document.getElementById('numeroDocumentoPersona').value.trim();
+            if (dni) {
+                buscarDNI(dni);
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo vacío',
+                    text: 'Por favor, ingrese un número de DNI',
+                    confirmButtonText: 'Entendido'
+                });
+            }
+        });
+    }
+
+    // Botón de búsqueda para RUC
+    const btnBuscarRUC = document.getElementById('btnBuscarRUC');
+    if (btnBuscarRUC) {
+        btnBuscarRUC.addEventListener('click', function() {
+            const ruc = document.getElementById('numeroDocumentoEmpresa').value.trim();
+            if (ruc) {
+                buscarRUC(ruc);
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo vacío',
+                    text: 'Por favor, ingrese un número de RUC',
+                    confirmButtonText: 'Entendido'
+                });
+            }
+        });
+    }
+
+    // Permitir buscar con Enter en el campo de DNI
+    const inputDNI = document.getElementById('numeroDocumentoPersona');
+    if (inputDNI) {
+        inputDNI.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const dni = this.value.trim();
+                if (dni && dni.length === 8) {
+                    buscarDNI(dni);
+                }
+            }
+        });
+
+        // Validar que solo se ingresen números
+        inputDNI.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 8) {
+                this.value = this.value.slice(0, 8);
+            }
+        });
+    }
+
+    // Permitir buscar con Enter en el campo de RUC
+    const inputRUC = document.getElementById('numeroDocumentoEmpresa');
+    if (inputRUC) {
+        inputRUC.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const ruc = this.value.trim();
+                if (ruc && ruc.length === 11) {
+                    buscarRUC(ruc);
+                }
+            }
+        });
+
+        // Validar que solo se ingresen números
+        inputRUC.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+        });
+    }
+});
+
 </script>
 
+<script>
+(function () {
+    'use strict';
 
+    /* ────────────────────────────────────────────────────────────
+       Solo ejecutar si venimos desde una cotización
+    ──────────────────────────────────────────────────────────── */
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('desde_cotizacion')) return;
 
+    const raw = sessionStorage.getItem('cotizacion_a_venta');
+    if (!raw) return;
 
+    let cotizacion;
+    try {
+        cotizacion = JSON.parse(raw);
+    } catch (e) {
+        console.error('[Cotización→Venta] JSON inválido en sessionStorage:', e);
+        return;
+    }
+
+    /* ────────────────────────────────────────────────────────────
+       Esperar a que el DOM esté listo (el resto de scripts
+       ya definieron las funciones fn_agregar_articulo_tabla,
+       fn_solo_corte_tabla, fn_datos_a_tabla, fn_obtener_total)
+    ──────────────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Pequeño delay para que los otros DOMContentLoaded terminen primero
+        setTimeout(function () {
+            cargarCotizacionEnTabla(cotizacion);
+        }, 200);
+    });
+
+    /* ────────────────────────────────────────────────────────────
+       FUNCIÓN PRINCIPAL: carga todos los ítems en la tabla
+    ──────────────────────────────────────────────────────────── */
+    function cargarCotizacionEnTabla(cot) {
+        if (!cot || !Array.isArray(cot.items) || cot.items.length === 0) {
+            console.warn('[Cotización→Venta] Sin ítems para cargar.');
+            return;
+        }
+
+        // ── 1. Pre-cargar cliente si viene en la cotización ──────
+        if (cot.cliente) {
+            const nombreCliente = document.getElementById('nombreCliente');
+            const idPersonaEl   = document.getElementById('idPersona');
+            const telEl         = document.getElementById('idUpdateNumTelefonoCliente');
+            const correoEl      = document.getElementById('idUpdateCorreoCliente');
+
+            if (nombreCliente) nombreCliente.value          = cot.cliente.persona_concatenada || '';
+            if (idPersonaEl)   idPersonaEl.textContent      = cot.cliente.id || '#';
+            if (telEl)         telEl.value                  = cot.cliente.telefonomovil || '';
+            if (correoEl)      correoEl.value               = cot.cliente.email || '';
+        }
+
+        // ── 2. Cargar cada ítem en la tabla ──────────────────────
+        cot.items.forEach(function (item) {
+            try {
+                cargarItem(item, cot);
+            } catch (err) {
+                console.error('[Cotización→Venta] Error al cargar ítem:', item, err);
+            }
+        });
+
+        // ── 3. Recalcular totales ─────────────────────────────────
+        if (typeof fn_obtener_total === 'function') {
+            fn_obtener_total();
+        }
+
+        // ── 4. Limpiar sessionStorage para no recargar en F5 ─────
+        sessionStorage.removeItem('cotizacion_a_venta');
+
+        // ── 5. Notificación de éxito ─────────────────────────────
+        Swal.fire({
+            icon: 'success',
+            title: '¡Cotización cargada!',
+            html: `
+                <b>${cot.codigo}</b><br>
+                <span style="font-size:.9rem;color:#666;">
+                    ${cot.items.length} ítem(s) precargados correctamente
+                </span>`,
+            timer: 2500,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+    }
+
+    /* ────────────────────────────────────────────────────────────
+       Decide cómo insertar cada ítem según su origen
+    ──────────────────────────────────────────────────────────── */
+    function cargarItem(item, cot) {
+
+        // ── Artículo normal del sistema (tiene productoId) ───────
+        if (item.productoId && !item.esManual) {
+            const datosArticulo = {
+                id:           item.productoId,
+                articulo:     item.descripcion,
+                categoria:    item.categoria || '',
+                precio_venta: item.precioUnit,
+                stock:        9999,     // No validamos stock al cargar cotización
+                cantidad:     item.cantidad,
+                minutos:      '-',
+                costo_por_minuto: '-',
+                corte:        false,
+                id_movimiento: 1,
+                nota:         item.nota || ''
+            };
+
+            if (typeof fn_agregar_articulo_tabla === 'function') {
+                fn_agregar_articulo_tabla(datosArticulo);
+            } else {
+                insertarFilaDirecta(item);
+            }
+            return;
+        }
+
+        // ── Ítem manual ──────────────────────────────────────────
+        if (item.esManual) {
+            insertarFilaManual(item);
+            return;
+        }
+
+        // ── Fallback: insertar fila directamente ─────────────────
+        insertarFilaDirecta(item);
+    }
+
+    /* ────────────────────────────────────────────────────────────
+       Insertar fila directa en la tabla (para ítems manuales
+       o cuando fn_agregar_articulo_tabla no esté disponible)
+    ──────────────────────────────────────────────────────────── */
+    function insertarFilaManual(item) {
+        var tabla = document.getElementById('tabla_articulos');
+        if (!tabla) return;
+        var tbody = tabla.getElementsByTagName('tbody')[0];
+
+        var subtotal = item.cantidad * item.precioUnit;
+        var fila = tbody.insertRow();
+
+        fila.insertCell(0).textContent  = '0';                          // ID (manual = 0)
+        fila.insertCell(1).textContent  = '-';                          // Minutos
+        fila.insertCell(2).textContent  = '-';                          // Costo x min
+        fila.insertCell(3).textContent  = '-';                          // Total corte
+        fila.insertCell(4).textContent  = item.descripcion;             // Artículo
+        fila.insertCell(5).textContent  = item.cantidad;                // Cantidad
+        fila.insertCell(6).textContent  = item.precioUnit.toFixed(2);   // P. Unit.
+        fila.insertCell(7).textContent  = subtotal.toFixed(2);          // Subtotal
+
+        // Celda de acciones
+        var accionCell = fila.insertCell(8);
+        fila.insertCell(9).textContent  = '1';                          // ID movimiento
+        fila.insertCell(10).textContent = item.nota || '';              // Nota
+
+        // Badge "Manual" visible en la columna artículo
+        var badge = document.createElement('span');
+        badge.className   = 'badge bg-warning text-dark ms-1';
+        badge.style.fontSize = '.7rem';
+        badge.textContent = 'Cotización';
+        fila.cells[4].appendChild(badge);
+
+        // Botón editar (simplificado para ítems manuales)
+        var btnEditar = document.createElement('button');
+        btnEditar.className   = 'btn btn-warning btn-round ms-2 text-white px-3 py-2';
+        btnEditar.innerHTML   = '<i class="fas fa-edit"></i>';
+        accionCell.appendChild(btnEditar);
+
+        // Botón eliminar
+        var btnEliminar = document.createElement('button');
+        btnEliminar.className = 'btn btn-danger btn-round ms-2 px-3 py-2';
+        btnEliminar.innerHTML = '<i class="fas fa-trash"></i>';
+        accionCell.appendChild(btnEliminar);
+
+        // Evento eliminar
+        btnEliminar.addEventListener('click', function () {
+            Swal.fire({
+                title: '¿Eliminar ítem?',
+                text: item.descripcion,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then(function (res) {
+                if (res.isConfirmed) {
+                    fila.remove();
+                    if (typeof fn_obtener_total === 'function') fn_obtener_total();
+                    if (typeof showNotification === 'function') showNotification('success');
+                }
+            });
+        });
+
+        // Evento editar (abre modal de cantidad inline)
+        btnEditar.addEventListener('click', function () {
+            Swal.fire({
+                title: 'Editar ítem',
+                html: `
+                    <div class="mb-3 text-start">
+                        <label class="form-label fw-bold">Descripción</label>
+                        <input id="swal_desc" class="form-control" value="${item.descripcion}">
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-6 text-start">
+                            <label class="form-label fw-bold">Cantidad</label>
+                            <input id="swal_cant" type="number" class="form-control" value="${item.cantidad}" min="1">
+                        </div>
+                        <div class="col-6 text-start">
+                            <label class="form-label fw-bold">Precio Unit. (S/)</label>
+                            <input id="swal_precio" type="number" class="form-control" value="${item.precioUnit.toFixed(2)}" step="0.01" min="0">
+                        </div>
+                    </div>`,
+                showCancelButton: true,
+                confirmButtonText: 'Actualizar',
+                cancelButtonText: 'Cancelar',
+                preConfirm: function () {
+                    var desc   = document.getElementById('swal_desc').value.trim();
+                    var cant   = parseInt(document.getElementById('swal_cant').value);
+                    var precio = parseFloat(document.getElementById('swal_precio').value);
+                    if (!desc || isNaN(cant) || cant < 1 || isNaN(precio) || precio < 0) {
+                        Swal.showValidationMessage('Completa todos los campos correctamente.');
+                        return false;
+                    }
+                    return { desc, cant, precio };
+                }
+            }).then(function (res) {
+                if (res.isConfirmed) {
+                    item.descripcion = res.value.desc;
+                    item.cantidad    = res.value.cant;
+                    item.precioUnit  = res.value.precio;
+                    var nuevoSub     = item.cantidad * item.precioUnit;
+
+                    fila.cells[4].childNodes[0].textContent = item.descripcion;
+                    fila.cells[5].textContent = item.cantidad;
+                    fila.cells[6].textContent = item.precioUnit.toFixed(2);
+                    fila.cells[7].textContent = nuevoSub.toFixed(2);
+
+                    if (typeof fn_obtener_total === 'function') fn_obtener_total();
+                    if (typeof showNotification === 'function') showNotification('success');
+                }
+            });
+        });
+    }
+
+    /* ────────────────────────────────────────────────────────────
+       Fallback por si fn_agregar_articulo_tabla no existe aún
+    ──────────────────────────────────────────────────────────── */
+    function insertarFilaDirecta(item) {
+        insertarFilaManual(item); // Reutiliza la lógica manual
+    }
+
+})();
+</script>
 <?php
 include("pie.php");
 ?>
