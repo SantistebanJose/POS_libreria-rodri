@@ -19,6 +19,11 @@ function controladorReservaWeb($accion)
             fn_obtener_reservas_web();
             break;
         
+        case 'BUSCAR_ARTICULO':
+            $termino = isset($_POST["termino"]) ? trim($_POST["termino"]) : '';
+            fn_buscar_articulo($termino);
+            break;
+        
         case 'ACTUALIZARDETALLE':
             $detalle_id = isset($_POST["detalle_id"]) ? intval($_POST["detalle_id"]) : 0;
             $reserva_id = isset($_POST["reserva_id"]) ? intval($_POST["reserva_id"]) : 0;
@@ -269,6 +274,39 @@ function fn_obtener_reservas_web()
         echo json_encode([
             'success' => false,
             'message' => 'Error al obtener reservas: ' . $th->getMessage()
+        ]);
+    }
+}
+
+function fn_buscar_articulo($termino)
+{
+    global $conectar;
+
+    try {
+        $orden = $conectar->prepare("
+            SELECT id, nombre, precio_venta, stock
+            FROM articulo
+            WHERE nombre ILIKE :termino
+            AND deleted_at IS NULL
+            AND stock > 0
+            ORDER BY nombre ASC
+            LIMIT 10
+        ");
+        $busqueda = '%' . $termino . '%';
+        $orden->bindParam(":termino", $busqueda, PDO::PARAM_STR);
+        $orden->execute();
+        $articulos = $orden->fetchAll(PDO::FETCH_ASSOC);
+        $orden->closeCursor();
+
+        echo json_encode([
+            'success' => true,
+            'data' => $articulos
+        ]);
+
+    } catch (\Throwable $th) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error al buscar: ' . $th->getMessage()
         ]);
     }
 }

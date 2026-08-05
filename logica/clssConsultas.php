@@ -343,6 +343,11 @@ function listarCategoriaArticuloMantenimiento(): array
     $query = "select * from categoria";
     return executeQuery($query);
 }
+function listarArticulosSinStockMin(): array
+{
+    $query = "SELECT * FROM view_articulos -- WHERE flag_stock_minimo <> 'OK'";
+    return executeQuery($query);
+}
 
 function listarArticuloSinview(): array
 {
@@ -827,9 +832,9 @@ function fnUltimaVentaPorIdVenta($id_venta): array
                 WHEN ar.dimension_id IS NOT NULL THEN
                     CONCAT(ar.nombre, ' (', dim.medida, ')')
                 WHEN ar.nombre IS NULL THEN
-                    m.descripcion
+                    UPPER(TRIM(SPLIT_PART(REPLACE(COALESCE(rva.nota_archivo, m.descripcion), 'Cotización', ''), ' / ', 1)))
                 ELSE
-                    ar.nombre 
+                    UPPER(TRIM(SPLIT_PART(REPLACE(COALESCE(rva.nota_archivo, ar.nombre), 'Cotización', ''), ' / ', 1)))
             END as descripcion_2,
             rva.cantidad,
             rva.precio_unitario_articulo,
@@ -1898,6 +1903,16 @@ function fnGenerarTicketA4(array $datoEmisor, array $datosVenta, array $datospru
     $pdf->SetX($xTexto);
     $pdf->SetFont('Arial', '', 8);
     $pdf->MultiCell($wTexto, 4, u($datoEmisor["direccion"]), 0, 'L');
+        if (!empty($datoEmisor["telefono"])) {
+        $pdf->SetX($xTexto);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell($wTexto, 4, u('Tel: ' . $datoEmisor["telefono"]), 0, 1, 'L');
+    }
+    if (!empty($datoEmisor["correo_electronico"])) {
+        $pdf->SetX($xTexto);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell($wTexto, 4, u('Email: ' . $datoEmisor["correo_electronico"]), 0, 1, 'L');
+    }
  
     // Línea separadora delgada
     $pdf->SetY(max($pdf->GetY() + 2, $logoY + $logoW * 0.85));
@@ -2141,6 +2156,14 @@ function fnGenerarTicketTermico(array $datoEmisor, array $datosVenta, array $dat
     $pdf->Cell(60, 4, u('RUC: ' . $datoEmisor["ruc"]), 0, 1, 'C');
     $pdf->SetFont('Arial', '', 6);
     $pdf->MultiCell(60, 4, u($datoEmisor["direccion"]), 0, 'C');
+    if (!empty($datoEmisor["telefono"])) {
+    $pdf->SetFont('Arial', '', 6);
+    $pdf->Cell(60, 4, u('Tel: ' . $datoEmisor["telefono"]), 0, 1, 'C');
+    }
+    if (!empty($datoEmisor["correo_electronico"])) {
+    $pdf->SetFont('Arial', '', 6);
+    $pdf->Cell(60, 4, u('Email: ' . $datoEmisor["correo_electronico"]), 0, 1, 'C');
+    }
  
     $pdf->SetFont('Arial', 'B', 8);
     $pdf->Cell(60, 4, u($datosprueba["tipo_comprobante"] . ' DE VENTA ELECTRONICA'), 0, 1, 'C');

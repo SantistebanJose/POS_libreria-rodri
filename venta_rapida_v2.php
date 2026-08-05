@@ -3539,44 +3539,43 @@ if (isset($_GET['id'])) {
     function obtener_json_articulos() {
         var idCliente = document.getElementById('idPersona').textContent.trim();
         var total = document.getElementById("montoTotal").value;
-
         const userId = <?php echo $_SESSION['id']; ?>;
-        console.log(idCliente);
-        console.log(userId);
 
         const datos = {
-            "usuario_id": userId, // Puedes cambiar este valor dinámicamente si es necesario
-            "cliente_id": idCliente, // También este valor puede ser dinámico
+            "usuario_id": userId,
+            "cliente_id": idCliente,
             "total": total,
             "articulos": []
         };
 
-        // Obtener todas las filas de la tabla (excepto el encabezado)
         const rows = document.querySelectorAll("#tabla_articulos tbody tr");
 
-        // Recorrer todas las filas y obtener los datos de cada columna
         rows.forEach(function(row) {
+            const nombreArticulo = row.cells[4].textContent.trim();
+            // Limpiar el badge "Cotización" si existe
+            const nombreLimpio = nombreArticulo.replace(/Cotización/g, '').trim();
+            const notaExtra = row.cells[10] ? row.cells[10].textContent.trim() : "";
+
             const articulo = {
-                "articulo_id": row.cells[0].textContent.trim() === '0' || row.cells[0].textContent.trim() === '' ? null : parseInt(row.cells[0].textContent.trim()) || null,
+                "articulo_id": row.cells[0].textContent.trim() === '0' || row.cells[0].textContent.trim() === '' 
+                    ? null 
+                    : parseInt(row.cells[0].textContent.trim()) || null,
                 "minutos": isNaN(parseFloat(row.cells[1].textContent)) ? null : parseFloat(row.cells[1].textContent),
                 "costoxminuto": isNaN(parseFloat(row.cells[2].textContent)) ? null : parseFloat(row.cells[2].textContent),
                 "precio_unitario": isNaN(parseFloat(row.cells[6].textContent)) ? null : parseFloat(row.cells[6].textContent),
                 "cantidad": isNaN(parseInt(row.cells[5].textContent)) ? null : parseInt(row.cells[5].textContent),
                 "sub_total": isNaN(parseFloat(row.cells[7].textContent)) ? null : parseFloat(row.cells[7].textContent),
                 "movimiento_id": isNaN(parseInt(row.cells[9].textContent)) ? null : parseInt(row.cells[9].textContent),
-                "nota_archivo": row.cells[10] ? row.cells[4].textContent + " / " + row.cells[10].textContent.trim() || "Sin nota" : "Sin nota"
+                "nota_archivo": notaExtra 
+                    ? nombreLimpio + " / " + notaExtra 
+                    : nombreLimpio
             };
 
-
-            // Agregar el artículo al array
             datos.articulos.push(articulo);
         });
 
-        // Mostrar los datos en la consola para verificar
         console.log(JSON.stringify(datos));
-
         return datos.articulos;
-
     }
 </script>
 

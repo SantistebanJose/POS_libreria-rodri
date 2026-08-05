@@ -1,5 +1,7 @@
 <?php
 include("cabecera.php");
+date_default_timezone_set('America/Lima');
+
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 }
@@ -50,7 +52,9 @@ if (isset($_GET['id'])) {
                                         $datos['accion_ajax'] = 'DETALLEVENTA_VENTA_ID';
                                         $totalDiario += floatval($datos["monto_venta_final"]);
 
-                                        $hora = substr($datos["hora"], 0, 2) . ":00";
+                                        // Convierte la hora al formato 24h antes de extraer
+                                        $horaConvertida = date("H", strtotime($datos["hora"]));
+                                        $hora = $horaConvertida . ":00";
                                         $ventasPorHora[$hora] = ($ventasPorHora[$hora] ?? 0) + floatval($datos["monto_venta_final"]);
 
                                         $estado = $datos["estado_pago"] ?? "SIN ESTADO";

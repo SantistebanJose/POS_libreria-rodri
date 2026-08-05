@@ -116,6 +116,19 @@ include("cabecera.php");
                             </div>
 
                         </div>
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><b>Teléfono</b></label>
+                                <input type="text" class="form-control" id="idTelefono" value="<?php echo fnListadoDeEmisor()[0]["telefono"] ?>" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                            <div class="mb-3">
+                                <label for="" class="form-label"><b>Correo Electrónico</b></label>
+                                <input type="email" class="form-control" id="idCorreo" value="<?php echo fnListadoDeEmisor()[0]["correo_electronico"] ?>" disabled>
+                            </div>
+                        </div>
 
                         <br>
                         <div class="col-12 text-center">
@@ -161,7 +174,9 @@ include("pie.php");
             "provincia": document.getElementById("idProvincia").value,
             "distrito": document.getElementById("idDistrito").value,
             "ubigeo": document.getElementById("idUbigeo").value,
-            "direccion": document.getElementById("idDireccion").value
+            "direccion": document.getElementById("idDireccion").value,
+            "telefono": document.getElementById("idTelefono").value,        // 👈 nuevo
+            "correo_electronico": document.getElementById("idCorreo").value  // 👈 nuevo
         }
         console.log(datos_emisor)
         $.ajax({

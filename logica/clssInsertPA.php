@@ -1336,7 +1336,9 @@ function fnUpdateEmisor($jsDatos)
         direccion = :direccion,
         ubigeo = :ubigeo,
         usuario_sol = :usuario_sol,
-        clave_sol = :clave_sol
+        clave_sol = :clave_sol,
+        telefono = :telefono,                    -- 👈 nuevo
+    correo_electronico = :correo_electronico  -- 👈 nuevo
         ";
 
         $stmt = $conectar->prepare($sql);
@@ -1350,6 +1352,8 @@ function fnUpdateEmisor($jsDatos)
         $stmt->bindParam(':ubigeo', $data["ubigeo"]);
         $stmt->bindParam(':usuario_sol', $data["usuario_sol"]);
         $stmt->bindParam(':clave_sol', $data["clave_sol"]);
+        $stmt->bindParam(':telefono', $data["telefono"]);
+        $stmt->bindParam(':correo_electronico', $data["correo_electronico"]);
 
         $stmt->execute();
 
