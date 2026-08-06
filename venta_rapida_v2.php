@@ -3328,7 +3328,7 @@ if (isset($_GET['id'])) {
                                     buttons: false,
                                     timer: 1500
                                 }).then(() => {
-                                    window.open("/bazar_rodri_desarrollo/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
+                                    window.open("/ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                                     //window.open("ticket.php?id=" + parseInt(result.id_venta_generado), "_blank");
                                     
                                     // Verificar si el cliente tiene teléfono registrado

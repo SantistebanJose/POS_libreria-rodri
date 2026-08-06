@@ -119,8 +119,8 @@ function construirMensajeComprobante($idVenta, $tipoComprobante) {
     $nombreNegocio = "Librería Bazar Rodri"; // Cambiar por el nombre de tu negocio
     $tipoDoc = ($tipoComprobante === 'factura') ? 'Factura' : 'Boleta';
     
-    // URL del ticket/comprobante (ajustar según tu sistema)
-    $urlComprobante = "https://tudominio.com/bazar_rodri_desarrollo/ticket.php?id=" . $idVenta;
+    // URL del ticket/comprobante en Render (sin subcarpeta)
+    $urlComprobante = "https://libreria-rodri-pos.onrender.com/ticket.php?id=" . $idVenta;
     
     $mensaje = "🧾 *{$tipoDoc} de Venta*\n\n";
     $mensaje .= "Hola! Gracias por su compra en *{$nombreNegocio}*\n\n";
