@@ -17,7 +17,7 @@ try {
     // Incluye el puerto en el DSN, más sslmode que exige Supabase
     $conectar = new PDO("pgsql:host=$server;port=$port;dbname=$bd;sslmode=require", $user, $pass);
     $conectar->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    $conectar->exec("SET timezone = 'America/Lima'"); // Corrige el desfase de hora (Perú UTC-5)
 
 } catch (PDOException $e) {
     // Muestra el mensaje de error en caso de fallo
