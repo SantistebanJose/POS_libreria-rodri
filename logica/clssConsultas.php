@@ -1847,9 +1847,7 @@ function fnGenerarTicket($idVenta, string $formato = 'TICKET'): void
         "descuento"          => $datosprueba["perdida_utilidad"],
     ];
  
-    if (ob_get_level() > 0) {
-        ob_end_clean();
-    }
+    
  
     if ($formato === 'A4') {
         fnGenerarTicketA4($datoEmisor, $datosVenta, $datosprueba, $productos, $pagos);
