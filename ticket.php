@@ -1,4 +1,6 @@
 <?php
+// Al inicio de ticket.php, ANTES de cualquier otra línea:
+ob_start();
 require("logica/clssConsultas.php");
 require('fpdf/fpdf.php');
 

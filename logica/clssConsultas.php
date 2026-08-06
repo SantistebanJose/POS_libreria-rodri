@@ -1847,7 +1847,9 @@ function fnGenerarTicket($idVenta, string $formato = 'TICKET'): void
         "descuento"          => $datosprueba["perdida_utilidad"],
     ];
  
-    ob_clean();
+    if (ob_get_level() > 0) {
+        ob_end_clean();
+    }
  
     if ($formato === 'A4') {
         fnGenerarTicketA4($datoEmisor, $datosVenta, $datosprueba, $productos, $pagos);
@@ -2130,7 +2132,9 @@ function fnGenerarTicketA4(array $datoEmisor, array $datosVenta, array $datospru
     $pdf->Cell($ancho, 4, u('Desarrollado por CAPTAIN'), 0, 1, 'C');
     $pdf->SetTextColor(0, 0, 0);
  
-    ob_clean();
+    if (ob_get_level() > 0) {
+        ob_end_clean();
+    }
     $pdf->Output('I', 'comprobante_a4.pdf');
 }
  
