@@ -28,6 +28,7 @@ function jsonResponse(bool $ok, $data = null, string $msg = ''): void {
     exit;
 }
 
+
 /* ══════════════════════════════════════════════
    ENRUTADOR
 ══════════════════════════════════════════════ */
