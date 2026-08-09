@@ -129,7 +129,6 @@ function construirMensajeComprobante($idVenta, $tipoComprobante) {
     $mensaje .= $urlComprobante . "\n\n";
     $mensaje .= "✅ Gracias por su preferencia!\n";
     $mensaje .= "📞 Para consultas, contáctenos";
-    
     return $mensaje;
 }
 
