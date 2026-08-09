@@ -27,8 +27,6 @@ function jsonResponse(bool $ok, $data = null, string $msg = ''): void {
     echo json_encode(['ok' => $ok, 'data' => $data, 'msg' => $msg]);
     exit;
 }
-
-
 /* ══════════════════════════════════════════════
    ENRUTADOR
 ══════════════════════════════════════════════ */
