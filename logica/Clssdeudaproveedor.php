@@ -8,16 +8,9 @@
 function getConexion(): PDO {
     static $pdo = null;
     if ($pdo === null) {
-        $host   = 'localhost';
-        $port   = '5432';
-        $dbname = 'sistema_libreria_rodri';
-        $user   = 'postgres';
-        $pass   = '76008509';
-        $dsn    = "pgsql:host=$host;port=$port;dbname=$dbname";
-        $pdo    = new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
+        require __DIR__ . '/bd.php'; // ajusta esta ruta
+        // ese archivo crea la variable $conectar
+        $pdo = $conectar;
     }
     return $pdo;
 }
