@@ -15,11 +15,11 @@ function getConexion(): PDO {
     static $pdo = null;
     if ($pdo === null) {
         // ── AJUSTA ESTOS DATOS ──
-        $host   = 'localhost';
+        $host   = 'aws-1-us-west-2.pooler.supabase.com';
         $port   = '5432';
-        $dbname = 'sistema_libreria_rodri';
-        $user   = 'postgres';
-        $pass   = '76008509';
+        $dbname = 'postgres';
+        $user   = 'postgres.ubtlxfiumbewhsmpakcv';
+        $pass   = 'uhZLk9rafYFVuh6G';
         // ────────────────────────
 
         $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
