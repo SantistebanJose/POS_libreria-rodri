@@ -419,8 +419,9 @@ include("cabecera.php");
             return null;
         }
         
-        // Formato para visualización directa
-        return `https://drive.google.com/uc?export=view&id=${fileId}`;
+        // Usar el host de contenido de Drive directamente. El endpoint uc de
+        // drive.google.com redirige a esta URL y puede fallar al incrustarse.
+        return `https://drive.usercontent.google.com/download?id=${fileId}&export=view`;
     }
 
     // FUNCIÓN PARA GENERAR EL FORMULARIO
@@ -892,7 +893,17 @@ include("cabecera.php");
         try {
             var data = JSON.parse(jsonString);
             if (Array.isArray(data)) {
-                imagenesArticulo = data;
+                // Migrar al vuelo URLs antiguas de Drive para que las imágenes
+                // existentes también usen el endpoint directo al volver a editar.
+                imagenesArticulo = data.map(function(img) {
+                    if (!img || typeof img !== 'object') return img;
+                    var fileId = extraerIdDrive(img.url || '');
+                    if (fileId && (img.source === 'drive' || /drive\.google\.com/i.test(img.url || ''))) {
+                        img.url = `https://drive.usercontent.google.com/download?id=${fileId}&export=view`;
+                        img.source = 'drive';
+                    }
+                    return img;
+                });
                 imagenPrincipalIndex = 0;
             }
         } catch (e) {
