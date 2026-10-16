@@ -243,6 +243,16 @@ include("cabecera.php");
                                             $imagenes = json_decode($datosArticulo["json_url_img"], true);
                                             if (is_array($imagenes) && count($imagenes) > 0) {
                                                 $imagenPrincipal = $imagenes[0]['url'] ?? null;
+                                                $imagenSource = $imagenes[0]['source'] ?? '';
+                                                if ($imagenPrincipal && ($imagenSource === 'drive' || preg_match('/(?:drive(?:\\.usercontent)?\\.google\\.com|lh3\\.googleusercontent\\.com)/i', $imagenPrincipal))) {
+                                                    $driveFileId = null;
+                                                    if (preg_match('~/file/d/([A-Za-z0-9_-]+)~', $imagenPrincipal, $match) || preg_match('~/d/([A-Za-z0-9_-]+)~', $imagenPrincipal, $match) || preg_match('/[?&]id=([A-Za-z0-9_-]+)/', $imagenPrincipal, $match)) {
+                                                        $driveFileId = $match[1];
+                                                    }
+                                                    if ($driveFileId) {
+                                                        $imagenPrincipal = 'https://lh3.googleusercontent.com/d/' . rawurlencode($driveFileId);
+                                                    }
+                                                }
                                             }
                                         }
                                     ?>
@@ -403,6 +413,10 @@ include("cabecera.php");
         // Patrón 2: https://drive.google.com/open?id=FILE_ID
         match = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
         if (match) return match[1];
+
+        // Formato lh3.googleusercontent.com/d/FILE_ID utilizado por la tienda.
+        match = url.match(/googleusercontent\.com\/d\/([a-zA-Z0-9_-]+)/);
+        if (match) return match[1];
         
         // Patrón 3: Ya es un ID directo (sin / ni ?)
         if (url.length > 20 && !url.includes('/') && !url.includes('?')) {
@@ -419,9 +433,16 @@ include("cabecera.php");
             return null;
         }
         
-        // Usar el host de contenido de Drive directamente. El endpoint uc de
-        // drive.google.com redirige a esta URL y puede fallar al incrustarse.
-        return `https://drive.usercontent.google.com/download?id=${fileId}&export=view`;
+        // Mantener el mismo formato que usa la tienda online.
+        return `https://lh3.googleusercontent.com/d/${fileId}`;
+    }
+
+    function obtenerUrlVisualizacionImagen(img) {
+        if (img && (img.source === 'drive' || /(?:drive(?:\.usercontent)?\.google\.com|lh3\.googleusercontent\.com)/i.test(img.url || ''))) {
+            var fileId = extraerIdDrive(img.url || '');
+            if (fileId) return 'https://lh3.googleusercontent.com/d/' + encodeURIComponent(fileId);
+        }
+        return img.url;
     }
 
     // FUNCIÓN PARA GENERAR EL FORMULARIO
@@ -696,7 +717,7 @@ include("cabecera.php");
                 html += 'Tu navegador no soporta el elemento de video.';
                 html += '</video>';
             } else {
-                html += '<img src="' + img.url + '" class="preview-image" onerror="this.src=\'https://via.placeholder.com/300x200?text=Error+al+cargar\'" alt="Imagen ' + (i + 1) + '" />';
+                html += '<img src="' + obtenerUrlVisualizacionImagen(img) + '" class="preview-image" onerror="this.src=\'https://via.placeholder.com/300x200?text=Error+al+cargar\'" alt="Imagen ' + (i + 1) + '" />';
             }
             
             html += '</div>';
@@ -893,15 +914,11 @@ include("cabecera.php");
         try {
             var data = JSON.parse(jsonString);
             if (Array.isArray(data)) {
-                // Migrar al vuelo URLs antiguas de Drive para que las imágenes
-                // existentes también usen el endpoint directo al volver a editar.
+                // Conservar la URL guardada; la vista previa aplica la misma
+                // conversión a lh3.googleusercontent.com que usa la tienda.
                 imagenesArticulo = data.map(function(img) {
                     if (!img || typeof img !== 'object') return img;
-                    var fileId = extraerIdDrive(img.url || '');
-                    if (fileId && (img.source === 'drive' || /drive\.google\.com/i.test(img.url || ''))) {
-                        img.url = `https://drive.usercontent.google.com/download?id=${fileId}&export=view`;
-                        img.source = 'drive';
-                    }
+                    if (img.url && /(?:drive(?:\.usercontent)?\.google\.com|googleusercontent\.com)/i.test(img.url)) img.source = 'drive';
                     return img;
                 });
                 imagenPrincipalIndex = 0;
