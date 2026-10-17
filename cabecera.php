@@ -318,6 +318,7 @@ if ($flagRespuesta == 0) {
         .sidebar-wrapper::-webkit-scrollbar-thumb { background: rgba(254,249,124,.2); border-radius: 4px; }
 
     </style>
+    <link rel="stylesheet" href="assets/css/christmas-effects.css">
 </head>
 
 <body>
