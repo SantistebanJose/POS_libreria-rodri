@@ -80,6 +80,7 @@
     fillColor: "rgba(255, 165, 52, .14)",
   });
 </script>
+<script src="assets/js/christmas-effects.js"></script>
 </body>
 
 </html>
