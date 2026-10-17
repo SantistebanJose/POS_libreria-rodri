@@ -15,6 +15,7 @@ if (isset($_SESSION['id'])) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/christmas-effects.css?v=5">
 
     <style>
         :root {
@@ -391,6 +392,7 @@ if (isset($_SESSION['id'])) {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/js/scriptlogin.js"></script>
+<script src="assets/js/christmas-effects.js?v=5"></script>
 <script>
     document.getElementById("togglePassword").addEventListener("click", function () {
         const field = document.getElementById("password");

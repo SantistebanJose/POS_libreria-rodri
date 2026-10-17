@@ -2,6 +2,16 @@
 
 <div class="container">
     <div class="page-inner">
+        <?php $nombreNavideno = htmlspecialchars((string)($nombre ?? 'amigo'), ENT_QUOTES, 'UTF-8'); ?>
+        <section class="navidad-saludo-panel" aria-label="Saludo de Navidad">
+            <span class="navidad-santa-panel" aria-hidden="true">🎅</span>
+            <div>
+                <span class="navidad-saludo-etiqueta">UN SALUDO DESDE EL POLO NORTE</span>
+                <h2>¡Ho, ho, hola, <?php echo $nombreNavideno; ?>!</h2>
+                <p>Qué bueno tenerte aquí. Que esta temporada venga llena de alegría y buenas ventas.</p>
+            </div>
+            <span class="navidad-regalo-panel" aria-hidden="true">🎁</span>
+        </section>
         <div class="card text-start">
             <div class="card-body">
                 
