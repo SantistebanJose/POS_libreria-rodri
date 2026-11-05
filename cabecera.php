@@ -451,6 +451,7 @@ if ($flagRespuesta == 0) {
                             <ul class="nav nav-collapse">
                                 <li><a href="venta_rapida_v2.php"><span class="sub-item">Punto de Venta Rápida</span></a></li>
                                 <li><a href="listadoVenta.php"><span class="sub-item">Listado de Ventas</span></a></li>
+                                <li><a href="productos-top.php"><span class="sub-item">Ventas y reposición de stock</span></a></li>
                             </ul>
                         </div>
                     </li>

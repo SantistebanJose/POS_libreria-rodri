@@ -2,16 +2,56 @@
 include("cabecera.php");
 include("logica/bd.php");
 include("logica/clssVenta.php");
+
+// ── Plan de reposición basado en la venta del periodo seleccionado ───────────
+function obtenerPlanReposicion($fecha_ini, $fecha_fin, $categoria) {
+    global $conectar;
+    $params = [];
+    $filtroFecha = '';
+    $filtroCategoria = '';
+    if ($fecha_ini && $fecha_fin) {
+        // CAST a DATE hace inclusivo todo el día final, aunque venta.fecha tenga hora.
+        $filtroFecha = ' AND v.fecha::date BETWEEN :fecha_ini AND :fecha_fin';
+        $params[':fecha_ini'] = $fecha_ini;
+        $params[':fecha_fin'] = $fecha_fin;
+    }
+    if ($categoria) {
+        $filtroCategoria = ' AND c.abreviatura = :categoria';
+        $params[':categoria'] = $categoria;
+    }
+    $sql = "
+        SELECT a.id AS articulo_id, a.nombre AS producto,
+               c.abreviatura AS categoria, a.stock AS stock_actual,
+               COALESCE(SUM(CASE WHEN v.id IS NOT NULL THEN r.cantidad ELSE 0 END), 0) AS unidades_vendidas
+        FROM articulo a
+        LEFT JOIN categoria c ON c.id = a.categoria_id
+        LEFT JOIN rel_venta_articulo r
+               ON r.articulo_id = a.id AND r.deleted_at IS NULL
+        LEFT JOIN venta v
+               ON v.id = r.venta_id AND v.deleted_at IS NULL {$filtroFecha}
+        WHERE a.deleted_at IS NULL AND a.disponibilidad_venta_fh IS NULL
+          {$filtroCategoria}
+        GROUP BY a.id, a.nombre, c.abreviatura, a.stock
+        ORDER BY unidades_vendidas DESC, a.nombre ASC
+    ";
+    try {
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        return [];
+    }
+}
  
 // ─── Top 10 por CANTIDAD vendida ──────────────────────────────────────────────
 function obtenerTop10Productos($fecha_ini = null, $fecha_fin = null, $categoria = null) {
     global $conectar;
  
-    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL";
+    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL AND v.deleted_at IS NULL";
     $params = [];
  
     if ($fecha_ini && $fecha_fin) {
-        $where .= " AND v.fecha BETWEEN :fecha_ini AND :fecha_fin";
+        $where .= " AND v.fecha::date BETWEEN :fecha_ini AND :fecha_fin";
         $params[':fecha_ini'] = $fecha_ini;
         $params[':fecha_fin'] = $fecha_fin;
     }
@@ -49,11 +89,11 @@ function obtenerTop10Productos($fecha_ini = null, $fecha_fin = null, $categoria 
 function obtenerTop10PorIngresos($fecha_ini = null, $fecha_fin = null, $categoria = null) {
     global $conectar;
  
-    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL";
+    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL AND v.deleted_at IS NULL";
     $params = [];
  
     if ($fecha_ini && $fecha_fin) {
-        $where .= " AND v.fecha BETWEEN :fecha_ini AND :fecha_fin";
+        $where .= " AND v.fecha::date BETWEEN :fecha_ini AND :fecha_fin";
         $params[':fecha_ini'] = $fecha_ini;
         $params[':fecha_fin'] = $fecha_fin;
     }
@@ -91,11 +131,11 @@ function obtenerTop10PorIngresos($fecha_ini = null, $fecha_fin = null, $categori
 function obtenerTodosProductos($fecha_ini = null, $fecha_fin = null, $categoria = null, $orden = 'ingresos') {
     global $conectar;
  
-    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL";
+    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL AND v.deleted_at IS NULL";
     $params = [];
  
     if ($fecha_ini && $fecha_fin) {
-        $where .= " AND v.fecha BETWEEN :fecha_ini AND :fecha_fin";
+        $where .= " AND v.fecha::date BETWEEN :fecha_ini AND :fecha_fin";
         $params[':fecha_ini'] = $fecha_ini;
         $params[':fecha_fin'] = $fecha_fin;
     }
@@ -140,11 +180,11 @@ function obtenerTodosProductos($fecha_ini = null, $fecha_fin = null, $categoria 
 function obtenerMetricas($fecha_ini = null, $fecha_fin = null) {
     global $conectar;
  
-    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL";
+    $where = "WHERE r.deleted_at IS NULL AND r.articulo_id IS NOT NULL AND v.deleted_at IS NULL";
     $params = [];
  
     if ($fecha_ini && $fecha_fin) {
-        $where .= " AND v.fecha BETWEEN :fecha_ini AND :fecha_fin";
+        $where .= " AND v.fecha::date BETWEEN :fecha_ini AND :fecha_fin";
         $params[':fecha_ini'] = $fecha_ini;
         $params[':fecha_fin'] = $fecha_fin;
     }
@@ -189,6 +229,7 @@ function obtenerCategorias() {
 $fecha_ini = (isset($_GET['fecha_ini']) && $_GET['fecha_ini'] !== '') ? $_GET['fecha_ini'] : null;
 $fecha_fin = (isset($_GET['fecha_fin']) && $_GET['fecha_fin'] !== '') ? $_GET['fecha_fin'] : null;
 $categoria = (isset($_GET['categoria']) && $_GET['categoria'] !== '') ? $_GET['categoria'] : null;
+$margen_reposicion = isset($_GET['margen_reposicion']) ? max(0, min(100, (int)$_GET['margen_reposicion'])) : 15;
  
 $orden_todos = (isset($_GET['orden_todos']) && $_GET['orden_todos'] !== '') ? $_GET['orden_todos'] : 'ingresos';
  
@@ -198,6 +239,7 @@ $top10_ingresos = obtenerTop10PorIngresos($fecha_ini, $fecha_fin, $categoria);
 $todos          = obtenerTodosProductos($fecha_ini, $fecha_fin, $categoria, $orden_todos);
 $metricas       = obtenerMetricas($fecha_ini, $fecha_fin);
 $categorias     = obtenerCategorias();
+$plan_reposicion = obtenerPlanReposicion($fecha_ini, $fecha_fin, $categoria);
  
 // ─── Preparar datos Chart.js — reporte 1 (cantidad) ──────────────────────────
 $labels         = array_column($top10, 'producto');
@@ -583,12 +625,12 @@ $labels_cortos_ing = array_map(fn($l) => mb_strlen($l) > 20 ? mb_substr($l,0,20)
     <!-- FILTROS (aplica a ambos reportes) -->
     <div class="filtros-box">
         <form method="GET" class="row g-3 align-items-end">
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
                 <label>Desde</label>
                 <input type="date" name="fecha_ini" class="form-control"
                     value="<?php echo htmlspecialchars($fecha_ini ?? ''); ?>">
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
                 <label>Hasta</label>
                 <input type="date" name="fecha_fin" class="form-control"
                     value="<?php echo htmlspecialchars($fecha_fin ?? ''); ?>">
@@ -605,7 +647,12 @@ $labels_cortos_ing = array_map(fn($l) => mb_strlen($l) > 20 ? mb_substr($l,0,20)
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-12 col-md-3 d-flex gap-2">
+            <div class="col-6 col-md-2">
+                <label>Margen de seguridad (%)</label>
+                <input type="number" min="0" max="100" name="margen_reposicion" class="form-control"
+                    value="<?php echo $margen_reposicion; ?>">
+            </div>
+            <div class="col-6 col-md-3 d-flex gap-2">
                 <button type="submit" class="btn btn-filtrar flex-grow-1">
                     <i class="fas fa-search me-1"></i> Filtrar
                 </button>
@@ -614,6 +661,62 @@ $labels_cortos_ing = array_map(fn($l) => mb_strlen($l) > 20 ? mb_substr($l,0,20)
                 </a>
             </div>
         </form>
+    </div>
+
+    <!-- PLAN DE REPOSICIÓN -->
+    <div class="panel-card mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+            <div>
+                <div class="panel-title mb-1"><i class="fas fa-boxes"></i> Plan de reposición por ventas</div>
+                <div class="text-muted small">
+                    Base: unidades vendidas en el periodo + <?php echo $margen_reposicion; ?>% de seguridad.
+                    El pedido sugerido descuenta el stock actual y nunca queda por debajo de cero.
+                    <?php if ($fecha_ini && $fecha_fin): ?>
+                        Periodo <?php echo date('d/m/Y', strtotime($fecha_ini)); ?> — <?php echo date('d/m/Y', strtotime($fecha_fin)); ?>.
+                    <?php else: ?>
+                        Se consideran todas las ventas registradas.
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary btn-round btn-sm" onclick="exportarReposicionCSV()">
+                    <i class="fas fa-file-csv me-1"></i> Descargar reposición CSV
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-round btn-sm" onclick="window.print()">
+                    <i class="fas fa-print me-1"></i> Imprimir
+                </button>
+            </div>
+        </div>
+        <?php if (empty($plan_reposicion)): ?>
+            <div class="empty-box py-4"><i class="fas fa-box-open"></i><p>No hay artículos disponibles para mostrar.</p></div>
+        <?php else: ?>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tablaReposicion">
+                <thead><tr>
+                    <th>Producto</th><th>Categoría</th>
+                    <th class="text-end">Vendido</th><th class="text-end">Stock actual</th>
+                    <th class="text-end">Meta con margen</th><th class="text-end">Sugerencia de compra</th>
+                </tr></thead>
+                <tbody>
+                <?php foreach ($plan_reposicion as $item):
+                    $vendido = (float)$item['unidades_vendidas'];
+                    $stock = (float)$item['stock_actual'];
+                    $meta = (int)ceil($vendido * (1 + $margen_reposicion / 100));
+                    $reponer = max(0, (int)ceil($meta - $stock));
+                ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($item['producto'] ?? ''); ?></td>
+                        <td><?php echo htmlspecialchars($item['categoria'] ?? '—'); ?></td>
+                        <td class="text-end"><?php echo number_format($vendido, 0); ?></td>
+                        <td class="text-end"><?php echo number_format($stock, 0); ?></td>
+                        <td class="text-end"><?php echo number_format($meta, 0); ?></td>
+                        <td class="text-end fw-bold <?php echo $reponer > 0 ? 'text-danger' : 'text-success'; ?>"><?php echo number_format($reponer, 0); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
     </div>
  
     <!-- TABLA + GRAFICOS REPORTE 1 -->
@@ -1158,6 +1261,34 @@ function exportarCSVTodos() {
     a.href = URL.createObjectURL(blob);
     a.download = 'todos_productos_<?php echo date("Ymd"); ?>.csv';
     a.click();
+}
+
+// ── Exportar plan de reposición ───────────────────────────────────────────────
+function exportarReposicionCSV() {
+    const filas = <?php echo json_encode(array_map(function ($item) use ($margen_reposicion) {
+        $vendido = (float)$item['unidades_vendidas'];
+        $stock = (float)$item['stock_actual'];
+        $meta = (int)ceil($vendido * (1 + $margen_reposicion / 100));
+        return [
+            'producto' => $item['producto'] ?? '',
+            'categoria' => $item['categoria'] ?? '',
+            'vendido' => $vendido,
+            'stock' => $stock,
+            'meta' => $meta,
+            'reponer' => max(0, (int)ceil($meta - $stock)),
+        ];
+    }, $plan_reposicion), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    const escapar = valor => '"' + String(valor).replace(/"/g, '""') + '"';
+    let csv = 'Producto,Categoría,Vendido,Stock actual,Meta con margen,Sugerencia de compra\n';
+    filas.forEach(f => {
+        csv += [f.producto, f.categoria, f.vendido, f.stock, f.meta, f.reponer].map(escapar).join(',') + '\n';
+    });
+    const blob = new Blob(["\uFEFF" + csv], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'plan_reposicion_<?php echo date("Ymd"); ?>.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
 }
 </script>
 <?php endif; ?>
